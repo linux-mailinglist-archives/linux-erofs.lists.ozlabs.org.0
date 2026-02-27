@@ -1,66 +1,45 @@
-Return-Path: <linux-erofs+bounces-2438-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2439-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sJJrOF0CoWlVpQQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2438-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Feb 2026 03:33:01 +0100
+	id WAt9OO0QoWlDqAQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2439-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Feb 2026 04:35:09 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ED8E1B2118
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Feb 2026 03:32:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 930E81B24B6
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Feb 2026 04:35:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fMXRs26K1z2yFQ;
-	Fri, 27 Feb 2026 13:32:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fMYqR3WJ0z2xLv;
+	Fri, 27 Feb 2026 14:34:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.108.3.166
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772159577;
-	cv=none; b=dE83AZlRYb0kxjOAfwwwW4CopFnB0SHhBCVBybYkhH+hJQJyabYMdv5hbn6UB81ieksclqvTRFH7Cb8jlNXgWQCLbH1Kmd4hJ4SvJ3PCI1ZXeXhum0HeVbryqJm+PaRmqkyA0lHVUXi47PUNLmUaPAQeF6hY5kMf8s3iXtFltIC+SRex+F/zDT5NlVb2Dzqh5M7Kn9E67tNuQSvg3A9ZsndlmAU/OFSCauSuxwa4M49pQRXkeAjDOzHFTSav1Uk+giUvbrFrthahrrkAoJhrA1ugQ2Q3FZqHhS3j1REuMpZY0T/jLmjpe8ZRy1Rg1Zr/3EBuZyan6ZEtQX+MLo51ug==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.69
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772163299;
+	cv=none; b=R0D8b0tgLAL5fYM6N1MOX1ohi3V74z/A62q2lFCoE9L2s6M3g2Z2yXkw0PyNHViit69JcIja4GIpSaQ8+vq7oVZw5zE8lMrOlJrPNCZs8b8/EwB24cPS4vRP31drCZ4jLaYp+9wubosR4o7HeqySrtWoAlP9OR0Dc9meq2/PT6+ZNZbA4W64hAvzAzGswF5I7o2taItdX1JWpJdoB5U7HSNSejRLlMlI8zv0MfJm91rsJ5AEW2t6tnqq/qwVXU7MgqoE7YS57c8H4W7HSwEFs4dkz8M3gmxSfxA5IeTbXp/aGnT1BKge488KjUjGvh23ehYIaTHTFRocur7DtrdHtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772159577; c=relaxed/relaxed;
-	bh=Ex9qM+2XuVg2r2DvaSUmdorI2HFF8ZSJSdl1UB3maXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fIk6fmJL0UwRBkoS+JX6gcEuHWoVvl1zbzzSYXgM670BrFH+B407i3D78WsKdRUZlm6gsHich+DZlu3ZQ220NClQWir/erX5iILnhsRVHJ5nsahkC8U+CG/1f0PiGWITJSGwrkJvK/EokNFDGFMs7jsQlQZaYvc9GvajSU1d59752QBRqOIVV70D4lJvyndhRi+KLTvvi7f2RrUJ9VzMqBKKzjCaT/SWE7mLhS7rj/3+/XCJhBPM1Ao6O2sigL3wk7vsvxhACDzPtVM/qViz5FFhLNVi6U4WxpiszxKIEjz8wN+F74kLKkh4bKs1U3uHfEsOr45KbRyH7KiBUEDK3w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sina.com; dkim=pass (1024-bit key; unprotected) header.d=sina.com header.i=@sina.com header.a=rsa-sha256 header.s=201208 header.b=Sn1OLtKI; dkim-atps=neutral; spf=pass (client-ip=202.108.3.166; helo=mail3-166.sinamail.sina.com.cn; envelope-from=shengyong2026@sina.com; receiver=lists.ozlabs.org) smtp.mailfrom=sina.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=sina.com header.i=@sina.com header.a=rsa-sha256 header.s=201208 header.b=Sn1OLtKI;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sina.com (client-ip=202.108.3.166; helo=mail3-166.sinamail.sina.com.cn; envelope-from=shengyong2026@sina.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 132 seconds by postgrey-1.37 at boromir; Fri, 27 Feb 2026 13:32:53 AEDT
-Received: from mail3-166.sinamail.sina.com.cn (mail3-166.sinamail.sina.com.cn [202.108.3.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1772163299; c=relaxed/relaxed;
+	bh=ByK1s9nV771wRNJyMMAYVG9J9HzCavH2kNsqw0SBiws=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HAgjGvSDTnk5KCcLctUVC5kKbH+JNRW+WgFq/hRYlMfcDJrWCNnzrqVT5xfeRpXb0syQe39A7M4X/X7s164sYJL00vwsuZCtTbWTO/Ko07lOI7sAuxORFB1etIX5wKV0eLkszXwrn6BOeYKVsxjhicoM91ivKn8n6Dmy1ccBzSK15jiqigdGE3DPGBnuPwMACZEvxN6s8MJB+NM56rSEBX2kx3Z0fJDln9KYdfKCmdfvjhtDl0JovkphAhRUEaIrIHjtnhG2qKLH+ULbrpUcEntqb7qs0yVhYHOlQxzuKYcvooXJzOTo6pWM+yzZmWxlXf51zK+WRh3DZtTwugUgWQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.69; helo=out28-69.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.69; helo=out28-69.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-69.mail.aliyun.com (out28-69.mail.aliyun.com [115.124.28.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fMXRn31NTz2xMt
-	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Feb 2026 13:32:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1772159574;
-	bh=Ex9qM+2XuVg2r2DvaSUmdorI2HFF8ZSJSdl1UB3maXw=;
-	h=From:Subject:Date:Message-ID;
-	b=Sn1OLtKI5so7pkre3FCAUSUFOFeWXBfwJdoSxyU5o7lP3R//9dJMTbFj3mvYKG4oN
-	 eqQqt90TPQmn+acMTlEJWEMOtY+iVlTCW/St7dsiYKW2cvcDJ64poV8PSHJ5Ut6AqA
-	 Z0TFh/Nfw2fhiY1wW8J2Pc4enQ66YVuN00ebSeak=
-X-SMAIL-HELO: PC.mioffice.cn
-Received: from unknown (HELO PC.mioffice.cn)([114.247.175.198])
-	by sina.com (10.54.253.31) with ESMTP
-	id 69A101BD000067A8; Fri, 27 Feb 2026 10:30:23 +0800 (CST)
-X-Sender: shengyong2026@sina.com
-X-Auth-ID: shengyong2026@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=shengyong2026@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=shengyong2026@sina.com
-X-SMAIL-MID: 5900266816028
-X-SMAIL-UIID: 2A7E148782974AE49E6D5F2827846A8B-20260227-103023-1
-From: Sheng Yong <shengyong2026@sina.com>
-To: xiang@kernel.org
-Cc: linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Sheng Yong <shengyong1@xiaomi.com>,
-	chenguanyou <chenguanyou@xiaomi.com>,
-	Yunlei He <heyunlei@xiaomi.com>
-Subject: [PATCH v2] erofs: set fileio bio failed in short read case
-Date: Fri, 27 Feb 2026 10:30:08 +0800
-Message-ID: <20260227023008.147813-1-shengyong2026@sina.com>
-X-Mailer: git-send-email 2.43.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fMYqP2y1wz2xKh
+	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Feb 2026 14:34:53 +1100 (AEDT)
+Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.gfvraEJ_1772163284 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 27 Feb 2026 11:34:45 +0800
+From: Chengyu <hudson@cyzhu.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH 1/1] erofs-utils: mount: auto-detect platform for OCI recovery files
+Date: Fri, 27 Feb 2026 11:34:44 +0800
+Message-ID: <20260227033444.99576-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.47.1
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -73,94 +52,204 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [0.00 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[sina.com,none];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[sina.com:s=201208];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2439-lists,linux-erofs=lfdr.de];
+	DMARC_NA(0.00)[cyzhu.com];
 	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[shengyong2026@sina.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[sina.com];
-	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:shengyong1@xiaomi.com,m:chenguanyou@xiaomi.com,m:heyunlei@xiaomi.com,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2438-lists,linux-erofs=lfdr.de];
-	DKIM_TRACE(0.00)[sina.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shengyong2026@sina.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	NEURAL_HAM(-0.00)[-0.998];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FROM_NEQ_ENVFROM(0.00)[hudson@cyzhu.com,linux-erofs@lists.ozlabs.org];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sina.com:mid,sina.com:dkim,xiaomi.com:email]
-X-Rspamd-Queue-Id: 3ED8E1B2118
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cyzhu.com:mid]
+X-Rspamd-Queue-Id: 930E81B24B6
 X-Rspamd-Action: no action
 
-From: Sheng Yong <shengyong1@xiaomi.com>
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-For file-backed mount, IO requests are handled by vfs_iocb_iter_read().
-However, it can be interrupted by SIGKILL, returning the number of
-bytes actually copied. Unused folios in bio are unexpectedly marked
-as uptodate.
+erofsmount_write_recovery_oci() writes source->ocicfg.platform into
+recovery files directly, but it could be NULL when not explicitly
+configured, causing reattach failures.
 
-  vfs_read
-    filemap_read
-      filemap_get_pages
-        filemap_readahead
-          erofs_fileio_readahead
-            erofs_fileio_rq_submit
-              vfs_iocb_iter_read
-                filemap_read
-                  filemap_get_pages  <= detect signal
-              erofs_fileio_ki_complete  <= set all folios uptodate
+Fix this by falling back to ocierofs_get_platform_spec().  Also
+refactor it to return a compile-time string literal instead of
+asprintf(), eliminating the need for callers to free() the result.
 
-This patch addresses this by setting short read bio with an error
-directly.
-
-Fixes: bc804a8d7e86 ("erofs: handle end of filesystem properly for file-backed mounts")
-Reported-by: chenguanyou <chenguanyou@xiaomi.com>
-Signed-off-by: Yunlei He <heyunlei@xiaomi.com>
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
- fs/erofs/fileio.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ lib/liberofs_oci.h |  1 +
+ lib/remotes/oci.c  | 55 +++++++++++++++-------------------------------
+ mount/main.c       | 11 +++++++---
+ 3 files changed, 27 insertions(+), 40 deletions(-)
 
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index abe873f01297..98cdaa1cd1a7 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -25,10 +25,8 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
- 			container_of(iocb, struct erofs_fileio_rq, iocb);
- 	struct folio_iter fi;
+diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+index 9e0571f..2243c82 100644
+--- a/lib/liberofs_oci.h
++++ b/lib/liberofs_oci.h
+@@ -80,6 +80,7 @@ int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
  
--	if (ret >= 0 && ret != rq->bio.bi_iter.bi_size) {
--		bio_advance(&rq->bio, ret);
--		zero_fill_bio(&rq->bio);
+ char *ocierofs_encode_userpass(const char *username, const char *password);
+ int ocierofs_decode_userpass(const char *b64, char **out_user, char **out_pass);
++const char *ocierofs_get_platform_spec(void);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+index e5b2f7c..47e8b27 100644
+--- a/lib/remotes/oci.c
++++ b/lib/remotes/oci.c
+@@ -1109,54 +1109,38 @@ static int ocierofs_parse_ref(struct ocierofs_ctx *ctx, const char *ref_str)
+ 	return 0;
+ }
+ 
+-static char *ocierofs_get_platform_spec(void)
++const char *ocierofs_get_platform_spec(void)
+ {
+-	const char *os = NULL, *arch = NULL, *variant = NULL;
+-	char *platform;
+-
+ #if defined(__linux__)
+-	os = "linux";
++#define EROFS_OCI_OS "linux"
+ #elif defined(__APPLE__)
+-	os = "darwin";
++#define EROFS_OCI_OS "darwin"
+ #elif defined(_WIN32)
+-	os = "windows";
++#define EROFS_OCI_OS "windows"
+ #elif defined(__FreeBSD__)
+-	os = "freebsd";
++#define EROFS_OCI_OS "freebsd"
+ #endif
+ 
+ #if defined(__x86_64__) || defined(__amd64__)
+-	arch = "amd64";
++	return EROFS_OCI_OS "/amd64";
+ #elif defined(__aarch64__) || defined(__arm64__)
+-	arch = "arm64";
+-	variant = "v8";
++	return EROFS_OCI_OS "/arm64/v8";
+ #elif defined(__i386__)
+-	arch = "386";
++	return EROFS_OCI_OS "/386";
+ #elif defined(__arm__)
+-	arch = "arm";
+-	variant = "v7";
++	return EROFS_OCI_OS "/arm/v7";
+ #elif defined(__riscv) && (__riscv_xlen == 64)
+-	arch = "riscv64";
++	return EROFS_OCI_OS "/riscv64";
++#elif defined(__ppc64__) && defined(__BYTE_ORDER__) && \
++	  (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
++	return EROFS_OCI_OS "/ppc64le";
+ #elif defined(__ppc64__)
+-#if defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+-	arch = "ppc64le";
+-#else
+-	arch = "ppc64";
+-#endif
++	return EROFS_OCI_OS "/ppc64";
+ #elif defined(__s390x__)
+-	arch = "s390x";
++	return EROFS_OCI_OS "/s390x";
++#else
++	return NULL;
+ #endif
+-
+-	if (!os || !arch)
+-		return NULL;
+-
+-	if (variant) {
+-		if (asprintf(&platform, "%s/%s/%s", os, arch, variant) < 0)
+-			return NULL;
+-	} else {
+-		if (asprintf(&platform, "%s/%s", os, arch) < 0)
+-			return NULL;
 -	}
-+	if (ret >= 0 && ret != rq->bio.bi_iter.bi_size)
-+		ret = -EIO;
- 	if (!rq->bio.bi_end_io) {
- 		bio_for_each_folio_all(fi, &rq->bio) {
- 			DBG_BUGON(folio_test_uptodate(fi.folio));
+-	return platform;
+ }
+ 
+ /**
+@@ -1187,10 +1171,7 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
+ 		ctx->blob_digest = NULL;
+ 	ctx->registry = strdup("registry-1.docker.io");
+ 	ctx->tag = strdup("latest");
+-	if (config->platform)
+-		ctx->platform = strdup(config->platform);
+-	else
+-		ctx->platform = ocierofs_get_platform_spec();
++	ctx->platform = strdup(config->platform ?: ocierofs_get_platform_spec());
+ 	if (!ctx->registry || !ctx->tag || !ctx->platform)
+ 		return -ENOMEM;
+ 
+diff --git a/mount/main.c b/mount/main.c
+index 3530b2c..b04be5d 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -717,6 +717,7 @@ out_closefd:
+ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *source)
+ {
+ 	char *b64cred = NULL;
++	const char *platform;
+ 	int ret;
+ 
+ 	if (source->ocicfg.username || source->ocicfg.password) {
+@@ -726,11 +727,15 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
+ 			return PTR_ERR(b64cred);
+ 	}
+ 
++	platform = source->ocicfg.platform;
++	if (!platform || !*platform)
++		platform = ocierofs_get_platform_spec();
++
+ 	if ((source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) &&
+ 	    source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
+ 		ret = fprintf(f, "TARINDEX_OCI_BLOB %s %s %s %s %s %s\n",
+ 			      source->ocicfg.image_ref ?: "",
+-			      source->ocicfg.platform ?: "",
++			      platform ?: "",
+ 			      source->ocicfg.blob_digest,
+ 			      b64cred ?: "",
+ 			      source->ocicfg.tarindex_path ?: "",
+@@ -742,7 +747,7 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
+ 	if (source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
+ 		ret = fprintf(f, "OCI_NATIVE_BLOB %s %s %s %s\n",
+ 			      source->ocicfg.image_ref ?: "",
+-			      source->ocicfg.platform ?: "",
++			      platform ?: "",
+ 			      source->ocicfg.blob_digest,
+ 			      b64cred ?: "");
+ 		free(b64cred);
+@@ -752,7 +757,7 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
+ 	if (source->ocicfg.layer_index >= 0) {
+ 		ret = fprintf(f, "OCI_LAYER %s %s %d %s\n",
+ 			      source->ocicfg.image_ref ?: "",
+-			      source->ocicfg.platform ?: "",
++			      platform ?: "",
+ 			      source->ocicfg.layer_index,
+ 			      b64cred ?: "");
+ 		free(b64cred);
 -- 
-2.43.0
+2.47.1
 
 
