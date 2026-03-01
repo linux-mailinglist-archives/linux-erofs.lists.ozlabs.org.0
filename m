@@ -1,71 +1,72 @@
-Return-Path: <linux-erofs+bounces-2446-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2447-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id dQjzDH0FpGnzVAUAu9opvQ
-	(envelope-from <linux-erofs+bounces-2446-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 10:23:09 +0100
+	id EEPiH90wpGnZaAUAu9opvQ
+	(envelope-from <linux-erofs+bounces-2447-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 13:28:13 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFEE51CEF7B
-	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 10:23:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4841B1CF962
+	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 13:28:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fNxS63TDZz2xR4;
-	Sun, 01 Mar 2026 20:23:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fP1Yf10bXz2yFK;
+	Sun, 01 Mar 2026 23:28:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.209
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772356982;
-	cv=none; b=LSWWhLZ4QfgBEtKMJqSKPpVsOgRCqvhdU+EszZ9Iq/w6ymq5X7ZqgoSl0OqrNcG9RDeGK3kc6K/kAcq78pif/zPBRKn108BYvJrcd8wQwTupLegK9ISaDTIbVZo7RjJ1N8PmFyfofKKi3r2tTmi3IF3KT1eEcjkTGVobii3oPGruPdACFURpvO4IPXMDzrxxOs6x6NhovEVcFuv5pF/bjCbLBIag5M3/6nZzwstfruKFTw4l4cyasR66EOd4DhjAphXxAjuNThEQ27DEM63xUrumGmKY5LKzQgSF5xW6NnFmbgoyDfUAxmqTH1kw5AjsURb22e4fgwNfEa3xvMoaLA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=162.62.58.216
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772368086;
+	cv=none; b=dgigOUDCM4k2wo2wC3nGD1LyPO8tg4w+sLnuIzurk/xgyvdv3og5SYKALYMMkn+9ELICKqfId5UxAjLXTi66tV0byN2jeBS1jBA/e0ev2DqjV6cZ3wm4tlRX6r/JBbY5DLTNSYO+uaO6DfLkpBHXnJk1spXK9B9u+MpyNRogYX3Kfkbe6aB1LSShQDcE853I840Du6yUR7afJfdKxMRknMBXBp8Xe3opUBYfieO9du4NiEBIC33bTlzigzNjsjd2El0h5a9n66l+LM5I05n+DMn1P6OCLw4+rf+AsyhG+lk+RkMRA5fsH9VV4Lkot6nn/al+s0/R3MDh1wCaCAbpOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772356982; c=relaxed/relaxed;
-	bh=el1xSxJCG/RiEpLV1h9eSA604ayMkg5f+jHIDP++nR4=;
-	h=Message-ID:From:To:Subject:Date:MIME-Version; b=fHls1pbayP7AVu1j5Qwgw72N8N0nW3iruFmfKzwNbXwZzch2jZZfg3pCsz3Wu8kzzInXLVYUAQ8dszAmkchpqubVIByeB9lC7XKsVE3rSGECAYipbxhstGO85ZQlM4AXojfzYGvm/yB8RNnaS6KihhSSkPoJk/KUmObmpIL8DyxYVTikVw8qDi22lXxmzZBJvxtcqG9WHdQuF3GF1npL1uElcflxCJJqvUEYVnaWyFMU//ccQBiybxQWs0vBgL8yWgmjUGyQtgrLMCiRtNiWpvDAXnsiB6qgAl9zHVqxYmkzYdAEzzZm4wg/u6qIpo24zZfswxUILzd7TScsrC4p5Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=zXo9aEFi; dkim-atps=neutral; spf=pass (client-ip=203.205.221.209; helo=out203-205-221-209.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
+	t=1772368086; c=relaxed/relaxed;
+	bh=sGV16EqAn7Hfxn4QOUApjglvBnUGAg7wZqTLZmyoqQY=;
+	h=Message-ID:From:To:Subject:Date:MIME-Version; b=YWTlF9qquGogN0w1qnYRcRKBoeNcWwvbh2I827ZgE9Tjba5sRn2U/xNjxzT/lXaNWQSCYWhk5nudACcoQ5ESqzdT8zBGyvbEE/0owvWy61ipEByDPWptfpsepj7dCZxq7wXbAD46y4t2CVJ+hJeeNKRhQZzGQbXeuVzMl9Ky9/j0mxVZtMZE+cTeth5sdeRSMGLdU1njDRnec72vxkLCaZi8VZOVs0LQzcei32HWyyfg83Q4rTFwsyAtngccP+QOdI600LsVW6XKv2p78LU+BAWeZDGkHY++BmA5g+c71MPcWLD9UqiIqyzkGlbhqV6xJl+idrp6gnGPYOOvkPEGog==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=SQ1rgpCP; dkim-atps=neutral; spf=pass (client-ip=162.62.58.216; helo=out162-62-58-216.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=zXo9aEFi;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=SQ1rgpCP;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=203.205.221.209; helo=out203-205-221-209.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=162.62.58.216; helo=out162-62-58-216.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 11227 seconds by postgrey-1.37 at boromir; Sun, 01 Mar 2026 23:28:02 AEDT
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4fNxS15zLpz2xQs
-	for <linux-erofs@lists.ozlabs.org>; Sun, 01 Mar 2026 20:22:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4fP1YZ4zbQz2xqm
+	for <linux-erofs@lists.ozlabs.org>; Sun, 01 Mar 2026 23:28:00 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1772356976;
-	bh=el1xSxJCG/RiEpLV1h9eSA604ayMkg5f+jHIDP++nR4=;
+	s=s201512; t=1772368075;
+	bh=sGV16EqAn7Hfxn4QOUApjglvBnUGAg7wZqTLZmyoqQY=;
 	h=From:To:Subject:Date;
-	b=zXo9aEFi/KB6E6SKPmKzV+Df8O1wFiS0JZbpWZ3ptDlF21c/arLLDJU9nzynRGJeI
-	 oh28xPLJsHDEArT1BKBoSq0wmvgOsY9YWxltZheacoMTx15ZAymsGTxhjzzHtBYpYz
-	 9/KzSzwedDLp8AmhyGs1vhg8Ap6e3qrEHqAy8pFc=
+	b=SQ1rgpCPukibsLBXwgheYfgaYfWmMX7ehrshm++MrbHXZoXGlzIVQDdt57mV7KPIY
+	 p9mmoqUj2iWW7ycyw53+kcn3i9TLDgy+OkVKWi2AEYrYLXoC9+LwfMNcQ68cgaY2SI
+	 vFcFBgVD9f3YeNHIxfxpKkS4Wozbm3K44i2jHMdY=
 Received: from ZYF-DESKTOP.localdomain ([112.64.102.79])
-	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
-	id 4EE8022B; Sun, 01 Mar 2026 17:19:46 +0800
-X-QQ-mid: xmsmtpt1772356786tovf0p100
-Message-ID: <tencent_96714BBBDE4CE22ADE3214FDC8B3BD6B5606@qq.com>
-X-QQ-XMAILINFO: N1S+bQX1UMGdqhQ1Li+ru2EjImqtyt/gqzt1nkkgOP9kuOtmftkZ8mA3aSUJCX
-	 olySZoyefKy/+By0PghL+q55KKfNKCsAQgyaQ/iQ6Hh0PSz/sJqZ9soO/+aKTcAmcL3p6B3toTfi
-	 O3KsLHE94Etjoy8bO6a6frwn0X2E9+dDetzyOa4UG6zlFIM8pTIhkoi66nOSk5j6k0VxkBR4NOQU
-	 5c8IgvPUoqgxPCv5i+l2sOpfkI+wsE3YNgcoR+kYfDiA4+n7h1K9RKKOG9YmBtqu8ihduCVUzcbK
-	 PPkNay1ukl8BwfTwIb58L/dyGNb22E5qES2nrQ/39Aa69i0AGFbDn5q74YguZQBoZPKny2fkysQC
-	 c6A14dzTj6lKgmG98GeiEex8adUQ5xmug6m7BlUx+Qr3EkgZQGr9r5mirtafovmkzkozN5VbsI36
-	 hHrSSd9zaSDRakb+TrzZq7YZWHI8JxHRX4MWZrgVYIh+pil1HFjymfdwDExvbOIqIRABoKk/A7eT
-	 g0XYVz0ybGnIyqiOEuxxyt7AOHRKQ3jPFxoJ8e2ZizLf2I9aLrP+wgD+Ik5sN9xaIDDG6Evux1jl
-	 6SzB6F08SXugZMBkiATk7b8q2NNSLQi70iEZQJGg0pssxnVPHanmBvY0Emza2Niim7PGtVqe5DIT
-	 Zr9p4GqlpdG0vtCvW8zFK+6Gvx+yPlXZ8yZFn7K7AV+dv2aCY6ihZf23F265XLErVbPBdH4Ynbi+
-	 yVoEDkNL+bpZ5ac6jcGRA6oOJG1ZlEUox5UQBBo0lNamPO7pfk5p6TkbhUFA7yrJPeoa9FpksjDi
-	 A4x7Vj8j6KSKZmg5pQJaZvDrsd544ush0MS4Oy2mAKwnxJ5Vv2625qcBsmoXGR45khDWV7XPiie7
-	 zegZhMie1xCF6iNn0tt+/lxcblLKP+nOuZ39mZGrGk9WNv/ZgJI/wSbIzkmNGCVWmpeU91QdWQL3
-	 OoyiVdOnIiGXFtD0oSeEdPgNygs5XH110QkahS4r49hKFpYGVs9jx9JQvBDs1kW7u+OpifBG/4IC
-	 R46q9SgaTLpmv3kohcr5BbaCNMhiVg1XHqvyim/8IEuTyNmuuApNIDOvqPLfMtX0r2fVY7H2sUof
-	 ONBteaYOfbordr1yUGm7JKDeSgwNFCW1r/WMw3
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
+	id 32129A32; Sun, 01 Mar 2026 20:12:33 +0800
+X-QQ-mid: xmsmtpt1772367153thnfcora8
+Message-ID: <tencent_003DF0338EAB42F1573BC0CCFBEACE321E06@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIe7MOo7nId+jPtaDumFBzZaCC/4MmFDyIYHHFpRF4wERwuyVUWzM
+	 ZOQ5Cwze3Eal/ks4VumWdA5vZ/TCC4fvV1QikgPkyt9gZoZNsdhNGkEvd3MVX1O130aQAFwMPWCW
+	 3mc9va9VUJHsAS0PNhO87gZKnxJavFvR3fbwAXZd6dt9es5H53j4FoCSOqDMY84aXdaR5WNsor0S
+	 uZpwrVdL8kU1hslZIWPUwVtuQKCbThFKHFYTzA6tbv4B/nDC9JS28tuJba8sU9C08SJ3OOELRnWC
+	 yY1MSHe8p369M2repmaVLlze+zpW7HboUgZ4KhJCHGwpyCW3/jU1oc/mSBnE5k2AnTDYAJQslNsv
+	 1N8F2uUk1fRrELE6n/3C7CjH0bmnAQlXsJXFzQtjQebo1JzQw8L5gD5KlnhZn3WjE/ZeblvYzFLx
+	 1OaEVdLn63vzkSI1SgO3B8xEYWjl6GwFyL1l3Vt0mvXPOf4zBwWmwn3D+hfHjEjB6q6+eguNB3NM
+	 mOHL0eBxGb3ynKLhOb/NYQAiUm88TD6wUrDRGNBG+PMxu0X/6uzihPW24XaCC8dgpUoKrK6DGBDn
+	 ZzFB7cXY1qFXD5L5lOwF3BuqEOGMJuySvFchShvpp2RQUP4jtioiXks9RbULdBpuQdXdOuspRNFM
+	 bZpQxjM4ieJcVHmRRZbTXMuhD1V1hSE+SLWs0Luhp1jn31YF1DXCrQ0S3RhOwbsh/0qqkDb7Gh5O
+	 jWg17LryBd5cdKoIINf/p2u7CQYrddDHN/rDX4DvJjOxyYNPwoI5gRWTHFLPg5DHb0b/jemITHi2
+	 saOJBV7Nv2ApLjF3dCVqYFjyZbtzkYlMZ3dIFGsb/iSEjpSRRcGlBbv7Bp6E/X4gczaZ/1bBwUOl
+	 rQNr0SS2vAX6NAR7PcJCWFyNqzMipQsiSXxVkX7zhWmzlOmbATzGMtS7+iIAq31WCsvakccQEZVV
+	 a+90FWvBDE9k0/UTck1fIEBnYEENOJULDzlxDvHg7ECPzXEAJNQGGcoWSLEv7lLF//8/Kw8pge4i
+	 1He8nLWcs9lxbWuj4WBPzoVzqBWCWYnfOZ5BgF+RzVqTbnXI2+vu42dScf704MPUmm5+13fCfIuq
+	 IxO2VpZ/+AmPcPMl4=
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 From: Yifan Zhao <yifan.yfzhao@foxmail.com>
 To: linux-erofs@lists.ozlabs.org,
 	hsiangkao@linux.alibaba.com
-Subject: [PATCH] erofs-utils: mount: fix flag-clearing bug and missing error check in parse_flagopts
-Date: Sun,  1 Mar 2026 17:19:46 +0800
-X-OQ-MSGID: <20260301091946.99253-1-yifan.yfzhao@foxmail.com>
+Subject: [PATCH v2] erofs-utils: mount: fix flag-clearing bug and missing error check in parse_flagopts
+Date: Sun,  1 Mar 2026 20:12:33 +0800
+X-OQ-MSGID: <20260301121233.185105-1-yifan.yfzhao@foxmail.com>
 X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -82,14 +83,14 @@ Content-Transfer-Encoding: 8bit
 X-Spam-Flag: YES
 X-Spam-Status: Yes, score=3.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Report: 
-	*  0.0 RCVD_IN_MSPIKE_H5 RBL: Excellent reputation (+5)
-	*      [203.205.221.209 listed in wl.mailspike.net]
+	*  0.0 RCVD_IN_MSPIKE_H3 RBL: Good reputation (+3)
+	*      [162.62.58.216 listed in wl.mailspike.net]
 	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
 	*      trust
-	*      [203.205.221.209 listed in list.dnswl.org]
+	*      [162.62.58.216 listed in list.dnswl.org]
 	* -0.0 SPF_PASS SPF: sender matches SPF record
 	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
 	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
@@ -124,7 +125,7 @@ X-Spamd-Result: default: False [3.30 / 15.00];
 	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2446-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2447-lists,linux-erofs=lfdr.de];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
@@ -133,10 +134,10 @@ X-Spamd-Result: default: False [3.30 / 15.00];
 	DKIM_TRACE(0.00)[foxmail.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-0.821];
+	NEURAL_HAM(-0.00)[-0.817];
 	FREEMAIL_FROM(0.00)[foxmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: BFEE51CEF7B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 4841B1CF962
 X-Rspamd-Action: no action
 
 The MS_* constants in glibc's <sys/mount.h> are defined as members of
@@ -159,11 +160,11 @@ Reported-By: rorosen <76747196+rorosen@users.noreply.github.com>
 Closes: https://github.com/NixOS/nixpkgs/issues/494653
 Signed-off-By: Yifan Zhao <yifan.yfzhao@foxmail.com>
 ---
- mount/main.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ mount/main.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
 diff --git a/mount/main.c b/mount/main.c
-index b04be5d..5686189 100644
+index b04be5d..7c557bd 100644
 --- a/mount/main.c
 +++ b/mount/main.c
 @@ -203,15 +203,15 @@ static long erofsmount_parse_flagopts(char *s, long flags, char **more)
@@ -191,14 +192,26 @@ index b04be5d..5686189 100644
  		{"remount", MS_REMOUNT}, {"move", MS_MOVE},
  		// mand dirsync rec iversion strictatime
  	};
-@@ -307,7 +307,9 @@ static int erofsmount_parse_options(int argc, char **argv)
+@@ -281,6 +281,7 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 		{0, 0, 0, 0},
+ 	};
+ 	char *dot;
++	long ret;
+ 	int opt;
+ 	int i;
+ 
+@@ -305,9 +306,11 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 			break;
+ 		case 'o':
  			mountcfg.full_options = optarg;
- 			mountcfg.flags =
- 				erofsmount_parse_flagopts(optarg, mountcfg.flags,
+-			mountcfg.flags =
+-				erofsmount_parse_flagopts(optarg, mountcfg.flags,
 -							  &mountcfg.options);
++			ret = erofsmount_parse_flagopts(optarg, mountcfg.flags,
 +								   &mountcfg.options);
-+			if (mountcfg.flags < 0)
-+				return (int)mountcfg.flags;
++			if (ret < 0)
++				return (int)ret;
++			mountcfg.flags = ret;
  			break;
  		case 't':
  			dot = strchr(optarg, '.');
