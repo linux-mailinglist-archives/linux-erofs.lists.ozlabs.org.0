@@ -1,92 +1,72 @@
-Return-Path: <linux-erofs+bounces-2445-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2446-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OC/oIzq3ommw5AQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2445-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 Feb 2026 10:36:58 +0100
+	id dQjzDH0FpGnzVAUAu9opvQ
+	(envelope-from <linux-erofs+bounces-2446-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 10:23:09 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95BDF1C1C4E
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 Feb 2026 10:36:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFEE51CEF7B
+	for <lists+linux-erofs@lfdr.de>; Sun, 01 Mar 2026 10:23:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fNKpX2svPz30BR;
-	Sat, 28 Feb 2026 20:36:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fNxS63TDZz2xR4;
+	Sun, 01 Mar 2026 20:23:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::22f" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772271412;
-	cv=pass; b=TuQTnlbfmQDHSNFS1NFUN5yWpRTu6M53eyMbVHkUevTtfS16DKfcJ8NPp3paxQfw90jdBH8uUeR9cDLJJ3VX5HmY4+O6iO2cEkJdBLVX0YZftHZ/g+7VrHtF1aT46cnHmsZGakpGRZyODcJ3ntp3LgacdLsh8psZULMUgSU+WB3uYHsldEtr/5atYAAgHGyrkWv2YEdOGkYFmxZJD9pm8OIEi3UHhqnkseHN9Vm+HyUpojphE9sAZxr9HP9NJcRZ+ACj6gv4lMO3juD8YI/A1ZOHT/xPoLh5wf2iUs7csjqk++5iPQAyefSJrBkUJmUokasp+1QcpZRxp4C6wvfjXg==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772271412; c=relaxed/relaxed;
-	bh=JDwCmTB/AaqKZq9tyGdosEwMm5AfEG6wtdOz1OuotVY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=WidNdlBfewSsZdxNr5Agq3YjeCG+Fz06BK8P/YkcpmYPMgGrBZqLgxtUeh4YqrrlEdpeuGjyDM0yUlliT0wfpXJYSUQcGCANiqfCZ0IMGr0aHzpNNYcvtNVIquJjEGAsmtOIB8GfwrZvyNgam4e7nVRLmsiIxgWwP117KUUcklBe4rhWU+YD9O4OtfEMdVOC0AIGBtRo4Tsf+Ls45QH61C9/3V2Lfu/sYfz2U/HgNTcVg4rLRhWd4jBMoTbp8O05fcrxgeDgLfuYif/5cauLOBzn7sje5hL+uVVkoq8DDiG505zKrl/rS5XH8AvPMxGuaQNqAbxZ8YZc+mgYdLzb9A==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gcvmaKJZ; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::22f; helo=mail-lj1-x22f.google.com; envelope-from=aayushmaan.chakraborty@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.209
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772356982;
+	cv=none; b=LSWWhLZ4QfgBEtKMJqSKPpVsOgRCqvhdU+EszZ9Iq/w6ymq5X7ZqgoSl0OqrNcG9RDeGK3kc6K/kAcq78pif/zPBRKn108BYvJrcd8wQwTupLegK9ISaDTIbVZo7RjJ1N8PmFyfofKKi3r2tTmi3IF3KT1eEcjkTGVobii3oPGruPdACFURpvO4IPXMDzrxxOs6x6NhovEVcFuv5pF/bjCbLBIag5M3/6nZzwstfruKFTw4l4cyasR66EOd4DhjAphXxAjuNThEQ27DEM63xUrumGmKY5LKzQgSF5xW6NnFmbgoyDfUAxmqTH1kw5AjsURb22e4fgwNfEa3xvMoaLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1772356982; c=relaxed/relaxed;
+	bh=el1xSxJCG/RiEpLV1h9eSA604ayMkg5f+jHIDP++nR4=;
+	h=Message-ID:From:To:Subject:Date:MIME-Version; b=fHls1pbayP7AVu1j5Qwgw72N8N0nW3iruFmfKzwNbXwZzch2jZZfg3pCsz3Wu8kzzInXLVYUAQ8dszAmkchpqubVIByeB9lC7XKsVE3rSGECAYipbxhstGO85ZQlM4AXojfzYGvm/yB8RNnaS6KihhSSkPoJk/KUmObmpIL8DyxYVTikVw8qDi22lXxmzZBJvxtcqG9WHdQuF3GF1npL1uElcflxCJJqvUEYVnaWyFMU//ccQBiybxQWs0vBgL8yWgmjUGyQtgrLMCiRtNiWpvDAXnsiB6qgAl9zHVqxYmkzYdAEzzZm4wg/u6qIpo24zZfswxUILzd7TScsrC4p5Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=zXo9aEFi; dkim-atps=neutral; spf=pass (client-ip=203.205.221.209; helo=out203-205-221-209.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gcvmaKJZ;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=zXo9aEFi;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::22f; helo=mail-lj1-x22f.google.com; envelope-from=aayushmaan.chakraborty@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=203.205.221.209; helo=out203-205-221-209.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fNKpV0WPwz2ySb
-	for <linux-erofs@lists.ozlabs.org>; Sat, 28 Feb 2026 20:36:48 +1100 (AEDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-389f173b91fso42132141fa.1
-        for <linux-erofs@lists.ozlabs.org>; Sat, 28 Feb 2026 01:36:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772271400; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CnkkU1KcTm5kvLoWr96ZqCkMcikn1uGC6drx9CVVq34g9ox75TjVux9JABQpGvYpdT
-         Ak6eqitI+M/zl6qHeJa7VPVDQxTNmZz0NEZ54XOz6w3EWpRA37jfadpGgWJ/g0U1RmZZ
-         ZulkRj1+mYahnX2oPDjcDFgZGl0J7cU9A69Pn0NzuhNKM40OjDzJ0Z6xl5PRbbobmqkn
-         yo3i3u23nfcTGEk4OGNbja7OJHVePmansJg/qbkutg03b3f3kSsRnJu0RltwKbV9uIGk
-         qZ4DOqQgyFsuShmHfHsLgHExRDUSpnwXKEUSTPWWqu4I79eZAxCVl/19rac79g+4BZFg
-         MCWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=JDwCmTB/AaqKZq9tyGdosEwMm5AfEG6wtdOz1OuotVY=;
-        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
-        b=UMOU+vwMhUCGqQ32LIpwd5lfywY9t+tdP2+cgP6Mhi/g9xKmN4ZQvE1REjIH+Me8Qy
-         ceg36vuw6NtEx3ArljdcRYBn+Sd7rtYokEOcIF9snC0beSRblKejqCl07uDZu/b2+zj2
-         P57IJ7bx5y5EfjHolwZGuKFYhqSiumZHvjgmW5OrWzA5fwEHYqZO9aYvldh3gSrWtyvk
-         /vLVMMnAKV8WnS1c/NbDrfVfiZ5G4+9H5mJtEAySYXhT4MeRxoLDRDGeeWh9ZgJ57PXp
-         O9aSuJ7q/gZ6jYXwHZlJ3/iDTAMcUnFD50qoG9FPhs4/zz2Aged0Tqr/J6QwI9lr+oVW
-         0Y8A==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772271400; x=1772876200; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JDwCmTB/AaqKZq9tyGdosEwMm5AfEG6wtdOz1OuotVY=;
-        b=gcvmaKJZo1NC/1/2aATlVzCXzfb1s+jzAmkZgWqQp0/s3cPXQ5mk1UAFvS/+P38FbC
-         qCYWIPGzMoc0fowqfoFl0L2qAeG13AdeE07uo9PgtW0eQDOpLK2Ug9kals39xOjDndwa
-         JEDecu1mhZ1t0s7zVEXAN3ebNQJWUMabyVOwW2hqvlX2mWtDrLL+QslKt76sM5GiiRfH
-         ZOoYYz8u0tOSqduRtTA3ZNQVQ01mVTeIwKqKSy5NRZ9H88+2+L9vFB24Z50aoZo4x5/o
-         x4D0YPIoiMUC0wZe2S3e0gAFoOFU3g2BT8CQxaf7643u0PgCxo1cKAKKbEO97ELGvr+7
-         ppUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772271400; x=1772876200;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JDwCmTB/AaqKZq9tyGdosEwMm5AfEG6wtdOz1OuotVY=;
-        b=hHjlLg7O9SqLTR+h9gzFNSAFEcTv7fjnsvl2CmxrAE4aehVi6aF+/bxqEpLmWl5SH3
-         E54AGlmTsSgfQ4dPSDcz38E6wdn+wrjout0dRCzsHadRXFEVmiGIuD1FdMT1ou4A/9GM
-         PnkqYr46IeNXke35jOHiQyEStDJiGOevwYSocaJkQFC96u046/TWRTqPDKGVehAgmqtm
-         gmI61uTasbYmADk728SavIKIzdWv/dvrzIbmnGAvLae0ONnKYST+wNRejMovwKsPUne/
-         PGj27XLU7iql2fOA04DuERBTIJEqVi6MC/7QtGTaYa5ZlD1y4UdHqOyGqJP5KDTixya6
-         9Pvg==
-X-Gm-Message-State: AOJu0YxJiN/nBhBsK8Vuwn+dQeOM+amy04WGjsLYRDgzhC4be0E4ldbx
-	Dh8SWTBtYFJ2Mn8g0cNM2spkhUuYXUc/eCmVfQrnVz8AhMzSc61tvKA05eMIIsvrEpHfoz/7eoZ
-	vfKb3oxq2ohu7FaqKwuhifR5HJFJDxTDmeYgDhvs=
-X-Gm-Gg: ATEYQzwh08Iur3OSNXC947HFgklBvX6/ZzBKtWJx4lYNmh5onvLPVA9MvGWWr7ZQf9M
-	P6s2ryca/81C0ULEO5e79FJg7uA4AcOg27Zhdm+7HSxIkMSNj8EcEnCX6BbNiMLX2JyPjCXKvpx
-	z9npEcUXrj5Ww153FcoNaIJCYYeqahfpqZpDWavovST+YvaimrNIB6aTXkxgEt7+TP5dsE1Ouzl
-	4+m1TWIqC7VqQ0K7vCnct7PrAaZR5robN/qrqBl+GPIdBDjRV/MjoBMdKp8KGS5e5KFJl+5Oj1M
-	EgQ79snG0T0G2wOYqg==
-X-Received: by 2002:a2e:a7ca:0:b0:38a:27e:b930 with SMTP id
- 38308e7fff4ca-38a027ebd3cmr28653701fa.39.1772271399923; Sat, 28 Feb 2026
- 01:36:39 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4fNxS15zLpz2xQs
+	for <linux-erofs@lists.ozlabs.org>; Sun, 01 Mar 2026 20:22:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1772356976;
+	bh=el1xSxJCG/RiEpLV1h9eSA604ayMkg5f+jHIDP++nR4=;
+	h=From:To:Subject:Date;
+	b=zXo9aEFi/KB6E6SKPmKzV+Df8O1wFiS0JZbpWZ3ptDlF21c/arLLDJU9nzynRGJeI
+	 oh28xPLJsHDEArT1BKBoSq0wmvgOsY9YWxltZheacoMTx15ZAymsGTxhjzzHtBYpYz
+	 9/KzSzwedDLp8AmhyGs1vhg8Ap6e3qrEHqAy8pFc=
+Received: from ZYF-DESKTOP.localdomain ([112.64.102.79])
+	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
+	id 4EE8022B; Sun, 01 Mar 2026 17:19:46 +0800
+X-QQ-mid: xmsmtpt1772356786tovf0p100
+Message-ID: <tencent_96714BBBDE4CE22ADE3214FDC8B3BD6B5606@qq.com>
+X-QQ-XMAILINFO: N1S+bQX1UMGdqhQ1Li+ru2EjImqtyt/gqzt1nkkgOP9kuOtmftkZ8mA3aSUJCX
+	 olySZoyefKy/+By0PghL+q55KKfNKCsAQgyaQ/iQ6Hh0PSz/sJqZ9soO/+aKTcAmcL3p6B3toTfi
+	 O3KsLHE94Etjoy8bO6a6frwn0X2E9+dDetzyOa4UG6zlFIM8pTIhkoi66nOSk5j6k0VxkBR4NOQU
+	 5c8IgvPUoqgxPCv5i+l2sOpfkI+wsE3YNgcoR+kYfDiA4+n7h1K9RKKOG9YmBtqu8ihduCVUzcbK
+	 PPkNay1ukl8BwfTwIb58L/dyGNb22E5qES2nrQ/39Aa69i0AGFbDn5q74YguZQBoZPKny2fkysQC
+	 c6A14dzTj6lKgmG98GeiEex8adUQ5xmug6m7BlUx+Qr3EkgZQGr9r5mirtafovmkzkozN5VbsI36
+	 hHrSSd9zaSDRakb+TrzZq7YZWHI8JxHRX4MWZrgVYIh+pil1HFjymfdwDExvbOIqIRABoKk/A7eT
+	 g0XYVz0ybGnIyqiOEuxxyt7AOHRKQ3jPFxoJ8e2ZizLf2I9aLrP+wgD+Ik5sN9xaIDDG6Evux1jl
+	 6SzB6F08SXugZMBkiATk7b8q2NNSLQi70iEZQJGg0pssxnVPHanmBvY0Emza2Niim7PGtVqe5DIT
+	 Zr9p4GqlpdG0vtCvW8zFK+6Gvx+yPlXZ8yZFn7K7AV+dv2aCY6ihZf23F265XLErVbPBdH4Ynbi+
+	 yVoEDkNL+bpZ5ac6jcGRA6oOJG1ZlEUox5UQBBo0lNamPO7pfk5p6TkbhUFA7yrJPeoa9FpksjDi
+	 A4x7Vj8j6KSKZmg5pQJaZvDrsd544ush0MS4Oy2mAKwnxJ5Vv2625qcBsmoXGR45khDWV7XPiie7
+	 zegZhMie1xCF6iNn0tt+/lxcblLKP+nOuZ39mZGrGk9WNv/ZgJI/wSbIzkmNGCVWmpeU91QdWQL3
+	 OoyiVdOnIiGXFtD0oSeEdPgNygs5XH110QkahS4r49hKFpYGVs9jx9JQvBDs1kW7u+OpifBG/4IC
+	 R46q9SgaTLpmv3kohcr5BbaCNMhiVg1XHqvyim/8IEuTyNmuuApNIDOvqPLfMtX0r2fVY7H2sUof
+	 ONBteaYOfbordr1yUGm7JKDeSgwNFCW1r/WMw3
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+From: Yifan Zhao <yifan.yfzhao@foxmail.com>
+To: linux-erofs@lists.ozlabs.org,
+	hsiangkao@linux.alibaba.com
+Subject: [PATCH] erofs-utils: mount: fix flag-clearing bug and missing error check in parse_flagopts
+Date: Sun,  1 Mar 2026 17:19:46 +0800
+X-OQ-MSGID: <20260301091946.99253-1-yifan.yfzhao@foxmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -98,168 +78,131 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Aayushmaan Chakraborty <aayushmaan.chakraborty@gmail.com>
-Date: Sat, 28 Feb 2026 15:06:27 +0530
-X-Gm-Features: AaiRm52vV_HpatU2qYSvzGB1Rhk7XifK-1zFkVllwFkCmBTR3tcNjM7ttYJ27HE
-Message-ID: <CABCXVc=PYU6WBt6K1sggMT1JtX11Bu6BZAs04pNYQr3ig7c77A@mail.gmail.com>
-Subject: [PATCH] README: Add Quick Start section for beginner onboarding
-To: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/mixed; boundary="0000000000003d0901064bdf17e9"
-X-Spam-Status: No, score=0.8 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_GMAIL_RCVD,
-	FREEMAIL_FROM,HTML_MESSAGE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=3.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	*  0.0 RCVD_IN_MSPIKE_H5 RBL: Excellent reputation (+5)
+	*      [203.205.221.209 listed in wl.mailspike.net]
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [203.205.221.209 listed in list.dnswl.org]
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.0 RCVD_IN_MSPIKE_WL Mailspike good senders
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [yifan.yfzhao(at)foxmail.com]
+	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
+	*      dynamic-looking rDNS
+	*  3.2 HELO_DYNAMIC_IPADDR Relay HELO'd using suspicious hostname (IP addr
+	*      1)
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+X-Spamd-Result: default: False [3.30 / 15.00];
+	SPAM_FLAG(5.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
+	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/mixed,multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2445-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:~,4:~];
-	RCPT_COUNT_ONE(0.00)[1];
-	HAS_ATTACHMENT(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2446-lists,linux-erofs=lfdr.de];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aayushmaanchakraborty@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yifan.yfzhao@foxmail.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[foxmail.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 95BDF1C1C4E
+	NEURAL_HAM(-0.00)[-0.821];
+	FREEMAIL_FROM(0.00)[foxmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: BFEE51CEF7B
 X-Rspamd-Action: no action
 
---0000000000003d0901064bdf17e9
-Content-Type: multipart/alternative; boundary="0000000000003d08ff064bdf17e7"
+The MS_* constants in glibc's <sys/mount.h> are defined as members of
+an anonymous enum whose underlying type is unsigned int (because the
+last member, MS_NOUSER, is initialised with '1U << 31').  Therefore
+~MS_RDONLY, ~MS_NOSUID, etc. are unsigned int values that, when stored
+into a 'long flags' field, undergo zero-extension, not sign-extension.
+As a result every 'clearing' entry (rw, suid, dev, exec, async, atime,
+diratime, norelatime, loud) produced a positive long, so the
+opts[i].flags < 0 guard in erofsmount_parse_flagopts() was never true
+and the corresponding flags were set rather than cleared.
 
---0000000000003d08ff064bdf17e7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fix by casting the operand to long before applying bitwise-NOT,
+ensuring the result is a negative long with the correct bit pattern.
 
-Hi EROFS maintainers,
+Also add the missing return-value check for erofsmount_parse_flagopts()
+in the '-o' option handler.
 
-As a prospective GSoC 2026 contributor interested in low-level filesystem
-work, here's a small documentation improvement to README.md:
+Reported-By: rorosen <76747196+rorosen@users.noreply.github.com>
+Closes: https://github.com/NixOS/nixpkgs/issues/494653
+Signed-off-By: Yifan Zhao <yifan.yfzhao@foxmail.com>
+---
+ mount/main.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-- Added a prominent Quick Start section early for better onboarding
-- Full beginner workflow: build =E2=86=92 mkfs.erofs =E2=86=92 fsck =E2=86=
-=92 erofsfuse mount =E2=86=92
-cleanup
-- Compressed example + multithreading note
-- Shields badges and upstream/community links
+diff --git a/mount/main.c b/mount/main.c
+index b04be5d..5686189 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -203,15 +203,15 @@ static long erofsmount_parse_flagopts(char *s, long flags, char **more)
+ 	} opts[] = {
+ 		{"defaults", 0}, {"quiet", 0}, // NOPs
+ 		{"user", 0}, {"nouser", 0}, // checked in fstab, ignored in -o
+-		{"ro", MS_RDONLY}, {"rw", ~MS_RDONLY},
+-		{"nosuid", MS_NOSUID}, {"suid", ~MS_NOSUID},
+-		{"nodev", MS_NODEV}, {"dev", ~MS_NODEV},
+-		{"noexec", MS_NOEXEC}, {"exec", ~MS_NOEXEC},
+-		{"sync", MS_SYNCHRONOUS}, {"async", ~MS_SYNCHRONOUS},
+-		{"noatime", MS_NOATIME}, {"atime", ~MS_NOATIME},
+-		{"norelatime", ~MS_RELATIME}, {"relatime", MS_RELATIME},
+-		{"nodiratime", MS_NODIRATIME}, {"diratime", ~MS_NODIRATIME},
+-		{"loud", ~MS_SILENT},
++		{"ro", MS_RDONLY}, {"rw", ~(long)MS_RDONLY},
++		{"nosuid", MS_NOSUID}, {"suid", ~(long)MS_NOSUID},
++		{"nodev", MS_NODEV}, {"dev", ~(long)MS_NODEV},
++		{"noexec", MS_NOEXEC}, {"exec", ~(long)MS_NOEXEC},
++		{"sync", MS_SYNCHRONOUS}, {"async", ~(long)MS_SYNCHRONOUS},
++		{"noatime", MS_NOATIME}, {"atime", ~(long)MS_NOATIME},
++		{"norelatime", ~(long)MS_RELATIME}, {"relatime", MS_RELATIME},
++		{"nodiratime", MS_NODIRATIME}, {"diratime", ~(long)MS_NODIRATIME},
++		{"loud", ~(long)MS_SILENT},
+ 		{"remount", MS_REMOUNT}, {"move", MS_MOVE},
+ 		// mand dirsync rec iversion strictatime
+ 	};
+@@ -307,7 +307,9 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 			mountcfg.full_options = optarg;
+ 			mountcfg.flags =
+ 				erofsmount_parse_flagopts(optarg, mountcfg.flags,
+-							  &mountcfg.options);
++								   &mountcfg.options);
++			if (mountcfg.flags < 0)
++				return (int)mountcfg.flags;
+ 			break;
+ 		case 't':
+ 			dot = strchr(optarg, '.');
+-- 
+2.53.0
 
-Patch attached (generated from my fork:
-https://github.com/Aayushmaan-24/erofs-utils/tree/feature/readme-quick-star=
-t
-).
-
-All commands verified locally. Happy to revise or split changes.
-
-Thanks for considering!
-Aayushmaan
-GitHub: Aayushmaan-24
-Location: Chengalpattu, Tamil Nadu, India
-
---0000000000003d08ff064bdf17e7
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:trebuche=
-t ms,sans-serif">Hi EROFS maintainers,<br><br>As a prospective GSoC 2026 co=
-ntributor interested in low-level filesystem work, here&#39;s a small docum=
-entation improvement to README.md:<br><br>- Added a prominent Quick Start s=
-ection early for better onboarding<br>- Full beginner workflow: build =E2=
-=86=92 mkfs.erofs =E2=86=92 fsck =E2=86=92 erofsfuse mount =E2=86=92 cleanu=
-p<br>- Compressed example + multithreading note<br>- Shields badges and ups=
-tream/community links<br><br>Patch attached (generated from my fork: <a hre=
-f=3D"https://github.com/Aayushmaan-24/erofs-utils/tree/feature/readme-quick=
--start">https://github.com/Aayushmaan-24/erofs-utils/tree/feature/readme-qu=
-ick-start</a>).<br><br>All commands verified locally. Happy to revise or sp=
-lit changes.<br><br>Thanks for considering!<br>Aayushmaan<br>GitHub: Aayush=
-maan-24<br>Location: Chengalpattu, Tamil Nadu, India</div></div>
-
---0000000000003d08ff064bdf17e7--
---0000000000003d0901064bdf17e9
-Content-Type: application/octet-stream; name="readme-quick-start.patch"
-Content-Disposition: attachment; filename="readme-quick-start.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mm64m0tw0>
-X-Attachment-Id: f_mm64m0tw0
-
-RnJvbSBiNTBmZDdkODQ4YmIzYWQwNTA4MGQzZGVkODYyZDBiYzc0MjU0YjY1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBYXl1c2htYWFuIDxhYXl1c2htYWFuLmNoYWtyYWJvcnR5QGdt
-YWlsLmNvbT4KRGF0ZTogU2F0LCAyOCBGZWIgMjAyNiAxNDo1MDowNSArMDUzMApTdWJqZWN0OiBb
-UEFUQ0hdIFJFQURNRTogQWRkIFF1aWNrIFN0YXJ0IHNlY3Rpb24gd2l0aCBiZWdpbm5lci1mcmll
-bmRseSBidWlsZCwKIHRlc3QsIHZlcmlmeSwgYW5kIG1vdW50IGd1aWRlCgotIEluc2VydGVkIGVh
-cmx5IGZvciBiZXR0ZXIgb25ib2FyZGluZwotIERlYmlhbi9VYnVudHUgZGVwcyAoQ3Jvc3Rpbmkg
-dGVzdGVkKQotIEVuZC10by1lbmQgZmxvdyBpbmNsLiBmc2NrIHN1Y2Nlc3MgaGludCBhbmQgY29t
-cHJlc3NlZCBleGFtcGxlCi0gU2hpZWxkcyBiYWRnZXMgKyB1cHN0cmVhbS9jb21tdW5pdHkgbGlu
-a3MKLSBObyBjaGFuZ2VzIHRvIGV4aXN0aW5nIHRlY2huaWNhbCBzZWN0aW9ucwotLS0KIFJFQURN
-RSB8IDY3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2NyBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
-UkVBRE1FIGIvUkVBRE1FCmluZGV4IDFjYTM3NmYuLjY4YTAwYjEgMTAwNjQ0Ci0tLSBhL1JFQURN
-RQorKysgYi9SRUFETUUKQEAgLTEsNiArMSw5IEBACiBlcm9mcy11dGlscwogPT09PT09PT09PT0K
-IAorWyFbTGFzdCBDb21taXRdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vZ2l0aHViL2xhc3QtY29t
-bWl0L2Vyb2ZzL2Vyb2ZzLXV0aWxzL2RldildKGh0dHBzOi8vZ2l0aHViLmNvbS9lcm9mcy9lcm9m
-cy11dGlscy9jb21taXRzL2RldikKK1shW0xpY2Vuc2VdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8v
-YmFkZ2UvTGljZW5zZS1HUEwtLTIuMCUyMG9yJTIwQXBhY2hlLS0yLjAtYmx1ZSldKENPUFlJTkcp
-CisKIFVzZXJzcGFjZSB0b29scyBmb3IgRVJPRlMgZmlsZXN5c3RlbSwgY3VycmVudGx5IGluY2x1
-ZGluZzoKIAogICBta2ZzLmVyb2ZzICAgIGZpbGVzeXN0ZW0gZm9ybWF0dGVyCkBAIC0xMSw2ICsx
-NCw3IEBAIFVzZXJzcGFjZSB0b29scyBmb3IgRVJPRlMgZmlsZXN5c3RlbSwgY3VycmVudGx5IGlu
-Y2x1ZGluZzoKICAgICAgICAgICAgICAgICBhcyBleHRyYWN0b3IKIAogCisKIEVST0ZTIGZpbGVz
-eXN0ZW0gb3ZlcnZpZXcKIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIApAQCAtNDksNiArNTMs
-NjEgQEAgRm9yIG1vcmUgZGV0YWlscyBvbiBob3cgdG8gYnVpbGQgZXJvZnMtdXRpbHMsIHNlZSBg
-ZG9jcy9JTlNUQUxMLm1kYC4KIEZvciBtb3JlIGRldGFpbHMgYWJvdXQgZmlsZXN5c3RlbSBwZXJm
-b3JtYW5jZSwgc2VlCiBgZG9jcy9QRVJGT1JNQU5DRS5tZGAuCiAKK1F1aWNrIFN0YXJ0OiBCdWls
-ZCwgQ3JlYXRlLCBNb3VudCwgYW5kIFZlcmlmeSBhbiBFUk9GUyBJbWFnZQorLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCisKKzEuIElu
-c3RhbGwgZGVwZW5kZW5jaWVzOgorICAgYGBgYmFzaAorICAgc3VkbyBhcHQgdXBkYXRlCisgICBz
-dWRvIGFwdCBpbnN0YWxsIC15IGF1dG9jb25mIGF1dG9tYWtlIGxpYnRvb2wgcGtnLWNvbmZpZyBc
-CisgICAgICAgbGliZnVzZS1kZXYgbGlibHo0LWRldiBsaWJsem1hLWRldiBsaWJ6c3RkLWRldiB1
-dWlkLWRldiB6bGliMWctZGV2CisgICBgYGAKKworMi4gQ2xvbmUgYW5kIGJ1aWxkOgorICAgYGBg
-YmFzaAorICAgZ2l0IGNsb25lIGh0dHBzOi8vZ2l0aHViLmNvbS9lcm9mcy9lcm9mcy11dGlscy5n
-aXQKKyAgIGNkIGVyb2ZzLXV0aWxzCisgICAuL2F1dG9nZW4uc2gKKyAgIC4vY29uZmlndXJlIC0t
-ZW5hYmxlLWx6NCAtLWVuYWJsZS1sem1hIC0tZW5hYmxlLWZ1c2UgLS13aXRoLWxpYnpzdGQgWy0t
-ZW5hYmxlLW11bHRpdGhyZWFkaW5nXQorICAgbWFrZSAtaiQobnByb2MpCisgICBgYGAKKworMy4g
-Q3JlYXRlIGEgc2ltcGxlIHRlc3QgaW1hZ2U6CisgICBgYGBiYXNoCisgICBta2RpciBzcmNfZGly
-CisgICBlY2hvICJIZWxsbywgRVJPRlMgd29ybGQhIiA+IHNyY19kaXIvaGVsbG8udHh0CisgICBl
-Y2hvICJUaGlzIGlzIGEgdGVzdCBmaWxlLiIgPiBzcmNfZGlyL3Rlc3QudHh0CisgICAuL21rZnMv
-bWtmcy5lcm9mcyB0ZXN0LmltZyBzcmNfZGlyLworICAgYGBgCisKKzQuIFZlcmlmeSBpbnRlZ3Jp
-dHk6CisgICBgYGBiYXNoCisgICAuL2ZzY2svZnNjay5lcm9mcyB0ZXN0LmltZworICAgIyBFeHBl
-Y3RlZCBvdXRwdXQ6ICJObyBlcnJvcnMgZm91bmQiIG9yIGZpbGVzeXN0ZW0gc3RhdGlzdGljcyAo
-bm8gZXJyb3IgbWVzc2FnZXMpCisgICBgYGAKKworNS4gTW91bnQgYW5kIGV4cGxvcmUgKHVzaW5n
-IEZVU0Ug4oCUIG5vIGtlcm5lbCBtb2R1bGUgcmVxdWlyZWQpOgorICAgYGBgYmFzaAorICAgbWtk
-aXIgbW50CisgICAuL2Z1c2UvZXJvZnNmdXNlIHRlc3QuaW1nIG1udC8KKyAgIGxzIG1udC8gICAg
-ICAgICAgICAgICAgIyBTaG91bGQgbGlzdCBoZWxsby50eHQgYW5kIHRlc3QudHh0CisgICBjYXQg
-bW50L2hlbGxvLnR4dCAgICAgICMgSGVsbG8sIEVST0ZTIHdvcmxkIQorICAgZnVzZXJtb3VudCAt
-dSBtbnQvICAgICAjIFVubW91bnQgd2hlbiBkb25lCisgICBgYGAKKworNi4gQ2xlYW4gdXA6Cisg
-ICBgYGBiYXNoCisgICBybSAtcmYgc3JjX2RpciBtbnQgdGVzdC5pbWcKKyAgIGBgYAorCis3LiBD
-b21wcmVzc2VkIGltYWdlczoKKyAgIGBgYGJhc2gKKyAgIC4vbWtmcy9ta2ZzLmVyb2ZzIC16bHo0
-aGMgdGVzdC1jb21wcmVzc2VkLmltZyBzcmNfZGlyLworICAgYGBgCisgICBGb3IgY29tcHJlc3Nl
-ZCBpbWFnZXMsIGFkZCBlLmcuIGAtemx6NGhjYCBvciBgLXp6c3RkYCAob3Igb3RoZXIgYWxnb3Jp
-dGhtcykgdG8gYG1rZnMuZXJvZnNgLgorICAgU2VlIHRoZSBgbWtmcy5lcm9mc2Agc2VjdGlvbiBi
-ZWxvdyBmb3IgYWR2YW5jZWQgb3B0aW9ucyAoYmlnIHBjbHVzdGVycywKKyAgIG11bHRpLWFsZ29y
-aXRobXMsIHJlcHJvZHVjaWJsZSBidWlsZHMsIGV0Yy4pLgorCiAKIG1rZnMuZXJvZnMKIC0tLS0t
-LS0tLS0KQEAgLTI4Myw2ICszNDIsMTQgQEAgZmVlbCBmcmVlIHRvIHNlbmQgZmVlZGJhY2sgYW5k
-L29yIHBhdGNoZXMgdG86CiAgIGxpbnV4LWVyb2ZzIG1haWxpbmcgbGlzdCAgIDxsaW51eC1lcm9m
-c0BsaXN0cy5vemxhYnMub3JnPgogCiAKK1Vwc3RyZWFtIGFuZCBDb21tdW5pdHkKKy0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0KKworLSBDYW5vbmljYWwgdXBzdHJlYW06IGh0dHBzOi8vZ2l0Lmtlcm5l
-bC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3hpYW5nL2Vyb2ZzLXV0aWxzLmdpdAorLSBE
-aXNjdXNzaW9uIC8gcGF0Y2hlczogbGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZyAoc3Vic2Ny
-aWJlOiBodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXgtZXJvZnMpCistIEtl
-cm5lbCBkb2NzOiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL25leHQvZmlsZXN5c3Rl
-bXMvZXJvZnMuaHRtbAorCisKIENvbW1lbnRzCiAtLS0tLS0tLQogCi0tIAoyLjM5LjUKCg==
---0000000000003d0901064bdf17e9--
 
