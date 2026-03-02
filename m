@@ -1,71 +1,71 @@
-Return-Path: <linux-erofs+bounces-2468-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2469-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gNAXBu/spWlLHwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2468-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 21:02:55 +0100
+	id yOxYAfDspWlLHwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2469-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 21:02:56 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185411DF135
-	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 21:02:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5474F1DF13C
+	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 21:02:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fPqbv3DY3z3bnm;
-	Tue, 03 Mar 2026 07:02:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fPqbw1bGnz3bnq;
+	Tue, 03 Mar 2026 07:02:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c100::f" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772481771;
-	cv=pass; b=UNliPDFwmjiDE1wpFyvnLyV/tx56WGus8agk0BznpMLCTwnPJ3HqHdY/tsDkxEfvSjSJ/LgtfNxTc0gRquHqABEwb585vnh5jlKjzsRPEvGSRJb3NPSr28RTDsAO4TeE5/yUG/2YnImtux7AB5Ify7tAF2YiEuMw7iPGNn0Ru6gm0eF4GHkl+Mx7QCw3zo5IHq1O8CedEOSEq00gePquf1pgJDttHXFugX16RmanFxBWp32xttgQwyyyCrNAx5+V/ggYfJe6xh88IOXqtRCs9beTgbPfuTQJELRUGa4G48oDsnAw5QuNu18+ryQVaE6O8hV+I2WO/GISGltB3sc/vQ==
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772481772;
+	cv=pass; b=m5PT4fSsyG34Cm0caO51COo5w8oGL+HJ0UyKb9xga9BqI9lXc4T3U5SMxSnifjR9Hj1dlyEruINvrry3WuiKQ5UXAPjSPfsNlJTcb0yQ2EADJsh7CGnEss/bJ6LtounaZ7Jdum0rOpkJ7Bma+4ojIcUHXCLzlpeTxiHOi6UGUcPDs6c4GYyjyJxgssoan1A472t63rwkL2QfkDV4YngCl98gIzGjzxwixyFfIBobH04V2B0W7Of/Q67yD5OnfM+D71hjMxLRX7uuwXNYfsOjTxbnEWfmxV0JrBUQOb9bZ8jUR2veB3YQs3nU9IeRPQw4esjhWEoure5cqKQLkCpvOg==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772481771; c=relaxed/relaxed;
-	bh=AwIl8OU1Hs6hSQIdrDER4mSanSXiW7CishbAqn9bM7U=;
+	t=1772481772; c=relaxed/relaxed;
+	bh=+RzH4EKb6wxJJLLudaXaerxHQRiUYRTOuYiqknmkbDg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KDfXeMH1mWKNAh+ES4evBgMTU1xcscCNJaIG6LlhgNMGQPuK6+R9hQVBP8ew7AuEDJZzrtqaeoLvRbtDdr3pNLERwC227oD3JSZXqkw06egyk7qL61FQmDRZ7eF2k7RwyszmSHJXUgmWQNrFkDPrTGqjfHRQykGGCO4KJ4PSr82I/XZbVu6sE6FH2lJ3vSpJo1Xrz04ZX9rPK4EYF0fIMveqCHHDR3Nc0HZGZukh7P/sRuv8dvNtPEHRXPq3wxmXVf0Fk84gSGVX2wjB4X4j4bl5H89HAGggAIcDxx3zQ29ZvmzgIkmXbGzJmy4uY0WvTMHN4C5r11XrdAS7RafVjg==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=oc2XXFvW; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c100::f; helo=bl2pr02cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+	 Content-Type:MIME-Version; b=n/04crW2xy7p7os6686NdZ/9NWJnYX3+HyVnj5WyVe5nCV/A55Hhj1eK/FMSBw0f3IC5Ap4pD4bWcVLK7KCDwPRQp2lbh/1FI+x713Jea68Q36LDw75JzfbpwaTx59QmO9k+h5c5j8AQPMptSeU9UMXQFdV2gOxokiQz0t22vXzowdPitKDOkzLUI0EyNs4XFTOODJQOfwXRQLmJ8/mEHgrl5oLSiWMZzpbz3G62e5ngZGOhuj18FQ5EtrUBfX0/QWylWHQs8KMro9lIph4Xb9/qdUITXK8ZlCp9m1EyjgiY4jaWth7VZAVsg2Vj+w2usdTES1dJB9xh6MKk6oJwjQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=SHfhQUiT; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c100::f; helo=bl2pr02cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=oc2XXFvW;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=SHfhQUiT;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c100::f; helo=bl2pr02cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
 Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazlp17011000f.outbound.protection.outlook.com [IPv6:2a01:111:f403:c100::f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fPqbt5yvrz3bnL
-	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 07:02:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fPqbv4w5Sz3bnL
+	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 07:02:51 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wTePrFnsZgzlw5hJw5WSxKdGVSp0ycUHKqAJb+QtrxDGWALPspbELP0+seWFI1Tjqhhqy+Do47VGm+QJQaJCAjnwKOA+YoXniIVQd5r4FjCt5KCKZGcdkqEryJW65f4FH1wNQ4eBDDQE0SjjpqOvWF8TzYVoHIwdF8ZIWIKHDijQBc73hLu6CNMzID9UB7Z08TesDGPnqGWJtahYP+UAYO5xkfcBE3L/hJfjH7Ne+usAedvEJ4RRgKlSZf8Ck4YKWXNSR1T/tiHYuSQwBP1VPiJbk0BfMTXcwAEEe61NjxQChVsFB/pXOmwKqNqjnVmh0RE/tGq7JTqb19Yga5O0JA==
+ b=H5jr3ad0R5mMSTNLCjvtoqw7ircgViJJsvJAK4nW4nIpnZg2yEYqIMysMqC0SiThoRA5QFS5DDik/vpXApiV7AMQXmzE8FAyWb5r3ZU+ILQ39UtEfCqMldY8OT+L8v6YoT0WsZ62+4/cNcuKb1diQLYv7kMiNLJwIG0hI/IEfxqHMC6se44GXb20DliFqas90b90JvzUN2VffX2I13XMYA26Amb/0DxeA/514DIH0iHpnIlQvvov4zj1BltYECSpRNoFHLiezYk6eSqpobN2FQStbIFrwCCw1d1uQvLd7t+ciJ8y+tdU2hAmAUUNX6zy4e+s0VpDX8Kc56VoiD6wTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AwIl8OU1Hs6hSQIdrDER4mSanSXiW7CishbAqn9bM7U=;
- b=DrUw9exmZW236dpmnYQMyc2cNplZ+8nhB4oWaikPmDz/Rarq6grqk1XDqEck6kVbnxF/8n3Ce6orqqjGifve88azZnh6ZHog2x6chgQEUP6/GRAPrIAFZl5OEVo4WOQTfm/kIOfDAYQsk12yTcGzfWTfraB3bqgqgO0OyKLDNbeqPHfTBX2/GaB/ZdxMIoihWGaPkuq0LKZZ7y718wvomHCJ5jZUIX49KYhsGpkQAnayvjXpkVUbI4oxWNgp2WoDslOqlLb40bsEyCZnBnuhuzFhHsDDx/ug7TBcXJCMuagJQdKv/0Tj2xnxF5F1UM5A7efGa4x7m7TvD1Hr8GRcUA==
+ bh=+RzH4EKb6wxJJLLudaXaerxHQRiUYRTOuYiqknmkbDg=;
+ b=d6SbpCYn8UEj2zwxkXhZP1kMJ4w4K+M46EI+ymjzNsxWjU9M72Z6Rpq5Ioan49H5mnJzlV0+Zq2GkE2bySJqDGfl8z1VPxyTHdsZDruZrJVhKVhm5dUWVdyaz9eh2cJyPH0XoR6MvgCQsEPx0K2e+wLXJdoaZEOMFSXnA0nIYrwI/3QHvDfgxnky98dwH1I2LxAp7J0aeYXYjGAq42mQ+y/nVb7PtaAnzwJwf1ovmH0IvURkm/jbP3GTNEhFUT2VDXgY7aEgZCP61Af3AOZGb07Tc0beHOHjZGAsowMrFEbXaquX4Xr6jM+kTvYrYHgzLTAQVHjXSciNrsG25Izrdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AwIl8OU1Hs6hSQIdrDER4mSanSXiW7CishbAqn9bM7U=;
- b=oc2XXFvWe0p+ZdQ52RrTN6cdMCBH/YLZkHzMOnnQ+8HxfGxjr9NSdfwqvZ1HcSFMaO8kIj1/VqlC51K9GrPOOIB67vr3IO+vHFuQPWSA9qoddaHq2qDTGjF05slCmZhiZzaM0q4ZK3qU48oYrJwf9U35T4jk7VjR681Ab3LC0df1bm1c1i3pTOFIzcnCW7jG00uE93jKzn8mM/5CILfZrNbPG4vZOXywIGyKEQ0APFynAEkZfRmga5psspAYqMgGroowLAujKyaElS/o/FaXLxG6wVqKvHJWfczhu2tewY0bD15PPL7ogGH3j0bD6hhTb/c3wtU8za8PxXghIpuRBw==
+ bh=+RzH4EKb6wxJJLLudaXaerxHQRiUYRTOuYiqknmkbDg=;
+ b=SHfhQUiT88fih3K0lXGOwiKp4OPeyamB53Q84QEX0/2lHBvDb5xBlUwl07ywBwmFGo69A+8cfkJhFJU9UFpW7utDNpa53ouOqnohb0xyD1s3KAMGDHDO0KhNFlLoNiuZh7dUNq/04nSM79p1ZnJ2jTnB+iCF4I6XzhNuetfn4mv+ecDbrlTSn0rF7VKDDp3ddfAuMt/opNUFDhSfTsF08DEsMEZ4/o0h/L4m/WYgIy54kHP2WDm5etvXjC444ODIOJdI6pBf5VoxWELmjZUNntN6GSqfiFgsSxtJ+zmbD9FijtoIa4PCcm0MwfgOoxkBwUB370vEGBCpuKiKijhmvw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
  by DS4PR12MB9796.namprd12.prod.outlook.com (2603:10b6:8:2a2::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
- 2026 20:02:27 +0000
+ 2026 20:02:31 +0000
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9654.020; Mon, 2 Mar 2026
- 20:02:27 +0000
+ 20:02:31 +0000
 From: Lucas Karpinski <lkarpinski@nvidia.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: jcalmels@nvidia.com,
 	Lucas Karpinski <lkarpinski@nvidia.com>
-Subject: [PATCH 1/5] erofs-utils: lib: pass uniaddr_offset to erofs_rebuild_load_tree
-Date: Mon,  2 Mar 2026 15:01:50 -0500
-Message-ID: <20260302-merge-fs-v1-1-a7254423447c@nvidia.com>
+Subject: [PATCH 2/5] erofs-utils: lib: add helper function erofs_uuid_unparse_as_tag
+Date: Mon,  2 Mar 2026 15:01:51 -0500
+Message-ID: <20260302-merge-fs-v1-2-a7254423447c@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260302-merge-fs-v1-0-a7254423447c@nvidia.com>
 References: <20260302-merge-fs-v1-0-a7254423447c@nvidia.com>
@@ -87,71 +87,71 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|DS4PR12MB9796:EE_
-X-MS-Office365-Filtering-Correlation-Id: 849578f3-be14-4224-756f-08de7896a063
+X-MS-Office365-Filtering-Correlation-Id: ec46fb05-a2aa-4e23-1bd8-08de7896a2d2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7142099003;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	hgnXw/J+crP3DR7fSp5T8/wY0y4cCPBcaJv/IGEysHM8LlZu4yEbrnSVuaUMc6pEkpzy+XC8mBJQ/t8cJ0KnasTYUj7y98EmKeObCFNxlBRNF7sMIpCOJWPLJa1GtqFx1B8aSEsuPADg2f1CMJGGuxdDhNw3uq/qZjmoM1KBRlMJsEDqSAJ25xPk75kHFkflo5bkS4Btw1MIpiFXR9Pc3VmCgOw/rFopj/b6DlxUncizaU0XmF2CGQSlV2Qiik1ANkK//SqlW+j18SN+eEm4+7U+SZOaLPltFV0s7L8asRsXs/6LgL1odZAv+q1aIz6dMj5OJiT1kRjk9lzGVGsgNmAmAquj/1odHnTb5VsgFr8Y1CsYoYRMTQFkvCAXhOTnCm1X0prbiLqrrRdx62/nE9734B9HErT2qaf6MiY4+O8ECFzXZaefejlMsLbnPhkiBSrkkZ2ylZglzmCIQK7kC/XTZG0DKG0YOqFN41kRoMOT4wjHuFxdqGmi7D9Nx8OthBbXZh96YTHC2BwtuGxPWvfKhpA0w67cG6eQuZ6aVvSD+lursfYzvTTNL+Zm0lhLk6/+nMM6oaxr8RpUfUQK9vjixDpuLhRc8tGxRq9HeIgF39ijzXFTKrcIniFxRAxuCFdHVZX0RqgEoi/SqrOesPp7nq0c4kVwW7go3R6BFj0Wow9+92alOkrgU+GncVhAyzl9/LLyXMAobdvHlZxnEsiman9MHiEthzudFC+rxS0=
+	+VtTq4PeOR0tYH1FdWm4Sfg/jqPh7wi1rYJeOICwW/yT/LteCZC1pHgeAG5LMP6WGqvrEoDQS7SgvQT/BpW5QNiAaAaUZuN0UIYkPc4m1g3sfB2P/WHqS+dQeWNOU19PDFt+EHDk0lNgaYcxHmQH3Il9NNSS8qEoxB7kUijqQWgGMHDVCdqstG6bKEeHeaaA34r4MBg8beKSVk5WgDigb/gnghBBmVaty7qbzI1+4awBMU9OdmLH3v3cB8B+NfbN+G/MjB+JFGouuyI2Cokv1Nts3bchetNa3A0J/qG73AATvNRDC+UB7+GOGR4qs3qAzSbaLCuTmlDM/ZrQColeaqcGlGVJz/khMJ7T/D3x1LlOV3Isn7tQqs3nWYt8Oog0jD2gTOetiu4tRFuz1JClnyDXfMuAuDoiIrpRreSbNws8/fnlPf339ZxfkO5g4MR58qFu38blK5l/77n6lBm8uofudZubDwEkjOYdHctv9EQDZ/hTjruL+fWrpAaDSNMES6hc3znzT7FIe1TBj4GmWFeICuNRExXEfSu+lgweMSl6MyLnZK0Pf2l78C8eTAttdQkgGlKylgiqBB3EcSGTU7LDms1rLEN+m/8HXzSFd21TagJpYQpgZs4WnN/ez7fBGBPA/c2cBdqeTMVS50P8yCKI4cICQvvBglrQSVBm1MoPoEXasxp0+7kmlyRBQUbDRcgVSpsN/FGdSqBtzcfoS5eMLZEVNLXeKZtlFncyH+A=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7142099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?czEzMnQzdzFadUw3MVVpSmpuSnZ2R3ZOUnc3Wkh1em1lU3pEUEVRb05mQTdj?=
- =?utf-8?B?bm5kUWQyM3lWSW14cTMxNWllYVc5cnh2ZFMzUUg1bVZnSkc5VnN5UktJdkpH?=
- =?utf-8?B?TlV6Z1dxbVVjcU1Qd1QyZmxtM1pxNER6dmRUUm4vRGhuL0lkTDZidmdCZ3dz?=
- =?utf-8?B?RWZ3K0dHcUp2WnRxTkUzWEY5UFFuQVJITkozM2dWbmdDMHpUMTZEdjdaUHc5?=
- =?utf-8?B?anBJbVRMU2NVUnNETVNSS1UxRlFNMXF5NUJudlhjaEdIZGhKSkxWTFRCczlk?=
- =?utf-8?B?VjE5ZnlHaVR3L1lncEVacWp2aFVFSXk2dGxUTjdyc1dkVXhGT3c5MlYrQWQz?=
- =?utf-8?B?aklKT3VCWXRjcU1Ua0plQzVzNzRJcTNyVDZJQWdzT09lMk1RR0VwclZqSkNX?=
- =?utf-8?B?aXh5ejJXcWFpZ3pvVDY1a3Fjb3REQnVmdkJVTFdpOVFsMUtJNmNTd2UwVEVB?=
- =?utf-8?B?dVh0TktrWnJYTVZENFl1RkgwNUo2c3JBTFJ5WGQwUDBRb0hHQnllS1JHSktG?=
- =?utf-8?B?ckpxbytzS2ZFNFJUZ0xYSG1KMFlTaXZ5dkZ0anYwczVMOXZlWlRkR0dSV3Fi?=
- =?utf-8?B?YS82Z2ZLMXVNanUzT1J2VEk2SXEzZ2kvL0d5VldQeVhTaWpNdkZ0MVJ1Q1Fl?=
- =?utf-8?B?d1FqL1ZVKzhZeXVqck9pejc2SzAxWVdzOVFCYTBXcTBxR0hzeDY0Z3JFVURE?=
- =?utf-8?B?VklTUWd2dzFHZDBmRWFFd2s2a1pmNzRLblFlbXhtcVRQR1BZRDd1MGpzMkFu?=
- =?utf-8?B?NVRhRW01cUowTlRhOUxMQnZOS2VLVWdsWEhBQm5VYUp3akQ0MGtDRXloT3Y2?=
- =?utf-8?B?VUhTeHRtVEZvaUlIY0xHb29CR3htTDhid2NHTDFmQXdSQjBNYm02UG94Z1ZL?=
- =?utf-8?B?VUtXZzZpY0ZSNjQvSlFuV2duVHlPNHIvRUtwUzJuNTNRYm5pWDRmQzhpdkt6?=
- =?utf-8?B?YVEvOVJJdDZMc3Q5OVlDQmdjREIrV3JuNklEMm54TzAyM2lYUEZaa20yaW5y?=
- =?utf-8?B?bGQ4Qm1URGd4b1QzT3MwUFJBUmR2TXYvb3d1dnBpc01EZ0ovZ2h3dVZuMXdm?=
- =?utf-8?B?QU56bi9tSmFtSGlTQTVab21HTzltdlRvMHB5OGFiTWdSbGQ3NUQ2UkROQTUv?=
- =?utf-8?B?TXRTWWR1d0FERm91eWgxREtJSXhHNWU1YVRmeGZ1L2FHVm5xTVl1czRQdkxs?=
- =?utf-8?B?bjNRdlNDakRqS2FEdnJoQ2E0cnppbjkxR0xYOHp3RHlEWVRuaEtwb1p4S1gr?=
- =?utf-8?B?V0RGbjBTUTFsbHRRODFsZmNDLzJHbUs2Tzd6V016L1RvS0FNM3FFNi9ybGxC?=
- =?utf-8?B?UEl0cTdpWmZqZDk5V1hqZ3ZTZmdhdTJzVUlDUjBJbDl0OTJXQldia0REZEFL?=
- =?utf-8?B?ZCtkVUc5V21ZV1FqL2J1bzR5YnkyMGt1WTBpN21lT1o0WVV0Z2NTNytTNWpy?=
- =?utf-8?B?cTF1eUdtYldsNFgxVDdIMzFCSmRENU1naG4yZHRQZ2djeUU1SStTTWxjSkY5?=
- =?utf-8?B?NElqL3I1OTVTNHdZS0RNc09uY3NSYUFYb3N3S2x5ZHR1M2d3ZE56Z3dhdWE2?=
- =?utf-8?B?NWNtRGhrbHZkVE5pNGNpeVNYUXdmVXorUEJxWldFeFZIL0lEaHl2dzBtSFZH?=
- =?utf-8?B?aDk0R2V1QVhoUnhnNENFTGhNQTE4VjE5QXBCSks0MVlnR3VZUmkxRkZycVYy?=
- =?utf-8?B?Wnl0eW9mRHhUZWFTcS95ZGcrMXBSUStCcEdzdVRqYmRVTjBCSkdISzFzYUtY?=
- =?utf-8?B?MWIyT0toSHljdk5WRmVoVmh1emF1a0V3elh4WFZ5ZWp6NTF0ZzludEt6UUk2?=
- =?utf-8?B?YzNlWHNZM3FLUnRGVTBmeVRmVjVFV3RVSjNMWk1YVU1uK1RyWkVqd3lwV2xR?=
- =?utf-8?B?S2RIaGJuMVB5ZWxvRkl2UEM3UzdzSkNwMkVTR2MwZy9vVnZobGU4b0RNckZo?=
- =?utf-8?B?elYrWkVtVkJyOVNLeEJUTUg4Y1c5MVI2K1lyNzV6dnlnajc5cjNpU043ckJJ?=
- =?utf-8?B?TjFOdUcwMVAvZGs1enpxV0JlYzNJU21sQlNnR0dwbUxpRVNxd0FZbGNBVW9s?=
- =?utf-8?B?aDMzQVAycU1kbGYzc3l4dVJqS3cxNm5YQjBXQ01pQ3Bac3IxcXF3K0ljQXV5?=
- =?utf-8?B?MHJrUnpEL3lDNkV5NEUwUjZRNzRXOWN2OFppbHFXakVUMjl6SjgzNW5LU3F6?=
- =?utf-8?B?T3pueFZHc2pwbUx0LzMxNWtzM25VYXA4elR4SCtUQzJDSFM3eDVVWUwwaXFv?=
- =?utf-8?B?MnhkNUxseVBYRXF4WmVQK0k5ZWFWZ3RnRDBFYTY0VERkNkFjWktSTDBzKzlj?=
- =?utf-8?B?TEtkRUtpMm1Ma3RleGU3RUc4Sk5EYTZtVDlqOUJUbHFEMVNKcCszUT09?=
+	=?utf-8?B?YW9XcmhTSHkyWkhvc3ZIcVhOSThmOHE1WGpkMS9teVlBU3pScTZSVTZIdE80?=
+ =?utf-8?B?S0lmeHpoYXV4Nk5DOTV6VjFQdC9GdGI4WGpsa2ExQnNCaVI0clVmMzFKdlQ2?=
+ =?utf-8?B?MjM1V3JBaWhyUzBIMEhzN1U0VUxDUkhtcE85WUhPQ1lsUTUzSkd0VFd4OW52?=
+ =?utf-8?B?TFNjVy83L1NlRmZLbUczNjF3dW1keUlLYkV6dk8yZi9nTDJlcVNFd05EdzZ1?=
+ =?utf-8?B?SHBWcTdxNVZETmgxSzQxMHM5c1NXZ2lGamJKVHpoZmQ0YWJhMjhJVU9zcGM3?=
+ =?utf-8?B?djFZMWNtbyt3ZDlvN0JZUWdzRVc4QTNtQVYyU3ZpNjg4VFF2Z2dOdXhEd3Ri?=
+ =?utf-8?B?UmZvZ3lPNzl6bW9EYXM2bXVWbUphYmJOU0JoU0R1T2pKRkUyN0hsY2NNc0FU?=
+ =?utf-8?B?NDBqS2E4RWVEYzhtd3BqZE1WRHhlQytaSys4VmN1Z2ZCRVVFMlpGWEJBa0pU?=
+ =?utf-8?B?b2dMMzUrR3NaVW9FVUlkSk5uTllaSGNxWW1NZFl6SitEZnFpSWVHWXgwRm5m?=
+ =?utf-8?B?SExaTlMxMkNUUmNQSC9WNVpVc0k3UnFkNXhpYkVYTWVoU0pzdUZCSURGVmhk?=
+ =?utf-8?B?ajdrbFYyRVdzV29CeWFvZ0tNSDgwdjlqdkVucjM5SnJDdDdvbzZaQkxtOC8z?=
+ =?utf-8?B?M1dMRVN4Uk45eDVBM2FEV1B1UjF3MVFWUFZlZVZLUTk3bHJ1emxVeUt6V0ZI?=
+ =?utf-8?B?cmVML2xZZ2RiWUE2bi8yeFNCQkZxWElaVVVvd0FqbGZuOHpvWi95NHNyN2RK?=
+ =?utf-8?B?WERFcTNWRGtBL09abFFaZlViaVZXRzc4dlViV3l5NklXc3pjdVVSK05LbUdK?=
+ =?utf-8?B?TUEraThoQzZlOVU5aVBwRmYvQUJIYkpnR0lwQkNpQ0pwQTJhZ2JtZm1tdHpa?=
+ =?utf-8?B?ZUJ4emE4RkR1SEIwT3pRZHloR2VzNHFxNFJlYlA0TERIQXBNWFdhNThTKzNO?=
+ =?utf-8?B?SXVYbGJ4ZDZVY1N6bmVqK1h6QTYwSFlSc0M5MXBNeG5zRVp3M2RqT3RqNHUr?=
+ =?utf-8?B?UDJnbERmWU4vM3VyZWF4K0Q2MHhWRVNmUkxDd3NmYlZSNERJc1E2VDd2aUM5?=
+ =?utf-8?B?Q2tvczU3aFBsQWRSVnZnTENoVHpONVhYb1MvY2xCVXptWWdSTXljQVpkS0Zt?=
+ =?utf-8?B?bDlDcWF2bEtDVUdtZ3ZxRU94TVJIbExpUHg3QUlwYnl5TEl6Nk1sak81RWNZ?=
+ =?utf-8?B?VDQ3VWF6a1Z0OXE1QUZEc1F1ZGVmSE9UdTZyNFlTcFFoWTN2dENMN1g0N055?=
+ =?utf-8?B?WDN3aGNTQ2pxbEdhQmh0TGlpa29wQ1BDaVQzVkN5MDgzMUV2blJQTy96UjA1?=
+ =?utf-8?B?cmFJaWlzc0Z2VmtwMlpwVDAyVmF5RHZ4S2RVaS9zMi8xMGl5QnFIYzR1VFhn?=
+ =?utf-8?B?bENUQzhGOXVTN0tDTDlGd2VuZVR3eWZYTzl2anNWcjIwMEdHdlJqWEh2cG14?=
+ =?utf-8?B?cW4xVGc5aGtsRDVWL1dEblpQU2Q4QllGdW83dFdrOW0yQjFHbkpJUzRmRFUv?=
+ =?utf-8?B?UVlzYUthaVNzcjR1QU1NT3pZbUp6ejd4dC9wSmJ3M0pWNWNMeTJKTmtCbHRP?=
+ =?utf-8?B?K1lDQVRleElIM2JLbzN1S1ZhSGxEcisyeG4rU3lKZ0JKS3VIN1FwalFRSVYw?=
+ =?utf-8?B?K3pHVXNjM2hrSmVYenB3aW5tUnJZY0dKY3JQVEhDQ2pjNEF4azUrdlhUK2ZS?=
+ =?utf-8?B?b0p1ZEIxMU1nZXBJaGRTTGJQYVBqb0dzekRBZzloL1NKdWZ6eVcxTVlKTXdR?=
+ =?utf-8?B?WkdnVnFheDU3UE1yT0FIV3Q3RTQrdjhlQXVxMWpqanFwdUNxMkpBTXJ3cnp3?=
+ =?utf-8?B?blBkRHBySzVjN1VocUxGV0NwNDNMOHJhRS9tTUZlang5VzN2cnlGbmlhblY1?=
+ =?utf-8?B?ZmZYUlNTU1oxcWtnVE1hUlBGSmZldk1DblJaZmY3c0xnV2p4b1FaOUdzM3Mx?=
+ =?utf-8?B?ZHBrUVNQSm0rWkkrUjlmRkh2VDdsQjRnbG01aG9TeWRaKy81RXZlTUJmMlN5?=
+ =?utf-8?B?ZnpCR1dKZHpqY3R5dVFPSEV6ZnZqMS9pVFgwcHQ3SVZ2aE0rKzQ1ZWYwc2pS?=
+ =?utf-8?B?UkRSY01SVDlVUGYvV1A0OEhuT1Z2QkVJbWlvV0pwdmlSdVc4S3F6ZG9MT1Zm?=
+ =?utf-8?B?RURBa2dPSDJCY2kwNW1ZWlRCWTFrdFoxQU5QYkFHbkU3cE02dEdva2VLdGxI?=
+ =?utf-8?B?Z3A3bjEzdE9EZVlicXBCUjRJazkraWtHMHdKWXd5ajZ0ZzNZWDB5QjFQaWRL?=
+ =?utf-8?B?Y2JQMlVmbjRXRi9xYUkrSEtOMzdPWUNLTHJZVnh5NWxLaXd3M0R0RElDeFdp?=
+ =?utf-8?B?UndOWi9xQ2dKMUdJVE5JM0EzcHZkNlZWYlVHdlBTdW8zempYK1dSdz09?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 849578f3-be14-4224-756f-08de7896a063
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec46fb05-a2aa-4e23-1bd8-08de7896a2d2
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 20:02:26.9533
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 20:02:31.0831
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qHbFVW+JYo4A5+rUEFYS46lymhkDIlJ6cww2+4+FkvN+Dv9jZ2ofiAKqmQ6ibMQBcCAcQ9nmrInD8k1HrJ07Uw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: TDx+1R1to7kbETogamdxQzDBmm7/VTRbWOi9xVEcv1+LynZbC8uAsrkmXJieZcrRdyq5pPLsWKLz02fBWvM0mQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9796
 X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 185411DF135
+X-Rspamd-Queue-Id: 5474F1DF13C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
@@ -161,7 +161,7 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2468-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2469-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -180,74 +180,81 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:mid,nvidia.com:email]
 X-Rspamd-Action: no action
 
-uniaddr_offset will be needed for rebuild fulldata mode. Add a parameter
-to erofs_rebuild_load_tree and include it in the erofs_rebuild_dir_context
-struct as well.
+Add helper function for converting uuid to tag. This will also be used in
+rebuild FULLDATA mode.
 
 Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
 ---
- lib/liberofs_rebuild.h | 3 ++-
- lib/rebuild.c          | 5 ++++-
- mkfs/main.c            | 2 +-
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ lib/liberofs_uuid.h |  1 +
+ lib/uuid_unparse.c  | 16 +++++++++++++++-
+ mkfs/main.c         | 11 +----------
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/lib/liberofs_rebuild.h b/lib/liberofs_rebuild.h
-index 69802fb..d8c4c8a 100644
---- a/lib/liberofs_rebuild.h
-+++ b/lib/liberofs_rebuild.h
-@@ -14,7 +14,8 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- 		char *path, bool aufs, bool *whout, bool *opq, bool to_head);
+diff --git a/lib/liberofs_uuid.h b/lib/liberofs_uuid.h
+index 63b358a..c35762a 100644
+--- a/lib/liberofs_uuid.h
++++ b/lib/liberofs_uuid.h
+@@ -4,6 +4,7 @@
  
- int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
--			    enum erofs_rebuild_datamode mode);
-+			    enum erofs_rebuild_datamode mode,
-+			    erofs_blk_t uniaddr_offset);
+ void erofs_uuid_generate(unsigned char *out);
+ void erofs_uuid_unparse_lower(const unsigned char *buf, char *out);
++void erofs_uuid_unparse_as_tag(const unsigned char *buf, char *out);
+ int erofs_uuid_parse(const char *in, unsigned char *uu);
  
- int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
- 			       unsigned int *i_nlink);
-diff --git a/lib/rebuild.c b/lib/rebuild.c
-index f89a17c..7e62bc9 100644
---- a/lib/rebuild.c
-+++ b/lib/rebuild.c
-@@ -286,6 +286,7 @@ struct erofs_rebuild_dir_context {
- 			unsigned int *i_nlink;
- 		};
- 	};
-+	erofs_blk_t uniaddr_offset;	/* unified addressing offset for FULL mode */
- };
+ #endif
+diff --git a/lib/uuid_unparse.c b/lib/uuid_unparse.c
+index 3255c4b..18e87d1 100644
+--- a/lib/uuid_unparse.c
++++ b/lib/uuid_unparse.c
+@@ -8,7 +8,8 @@
+ #include "erofs/config.h"
+ #include "liberofs_uuid.h"
  
- static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
-@@ -419,7 +420,8 @@ out:
+-void erofs_uuid_unparse_lower(const unsigned char *buf, char *out) {
++void erofs_uuid_unparse_lower(const unsigned char *buf, char *out)
++{
+ 	sprintf(out, "%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
+ 			(buf[0] << 8) | buf[1],
+ 			(buf[2] << 8) | buf[3],
+@@ -19,3 +20,16 @@ void erofs_uuid_unparse_lower(const unsigned char *buf, char *out) {
+ 			(buf[12] << 8) | buf[13],
+ 			(buf[14] << 8) | buf[15]);
  }
- 
- int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
--			    enum erofs_rebuild_datamode mode)
-+			     enum erofs_rebuild_datamode mode,
-+			     erofs_blk_t uniaddr_offset)
- {
- 	struct erofs_inode inode = {};
- 	struct erofs_rebuild_dir_context ctx;
-@@ -452,6 +454,7 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
- 		.ctx.cb = erofs_rebuild_dirent_iter,
- 		.mergedir = root,
- 		.datamode = mode,
-+		.uniaddr_offset = uniaddr_offset,
- 	};
- 	ret = erofs_iterate_dir(&ctx.ctx, false);
- 	free(inode.i_srcpath);
++
++void erofs_uuid_unparse_as_tag(const unsigned char *buf, char *out)
++{
++	sprintf(out, "%04x%04x%04x%04x%04x%04x%04x%04x",
++			(buf[0] << 8) | buf[1],
++			(buf[2] << 8) | buf[3],
++			(buf[4] << 8) | buf[5],
++			(buf[6] << 8) | buf[7],
++			(buf[8] << 8) | buf[9],
++			(buf[10] << 8) | buf[11],
++			(buf[12] << 8) | buf[13],
++			(buf[14] << 8) | buf[15]);
++}
 diff --git a/mkfs/main.c b/mkfs/main.c
-index aaf5358..471bce2 100644
+index 471bce2..a8f9a5e 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -1735,7 +1735,7 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+@@ -1780,16 +1780,7 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 			memcpy(devs[idx].tag, tag, sizeof(devs[0].tag));
+ 		else
+ 			/* convert UUID of the source image to a hex string */
+-			sprintf((char *)g_sbi.devs[idx].tag,
+-				"%04x%04x%04x%04x%04x%04x%04x%04x",
+-				(src->uuid[0] << 8) | src->uuid[1],
+-				(src->uuid[2] << 8) | src->uuid[3],
+-				(src->uuid[4] << 8) | src->uuid[5],
+-				(src->uuid[6] << 8) | src->uuid[7],
+-				(src->uuid[8] << 8) | src->uuid[9],
+-				(src->uuid[10] << 8) | src->uuid[11],
+-				(src->uuid[12] << 8) | src->uuid[13],
+-				(src->uuid[14] << 8) | src->uuid[15]);
++			erofs_uuid_unparse_as_tag(src->uuid, (char *)g_sbi.devs[idx].tag);
  	}
- 
- 	list_for_each_entry(src, &rebuild_src_list, list) {
--		ret = erofs_rebuild_load_tree(root, src, datamode);
-+		ret = erofs_rebuild_load_tree(root, src, datamode, 0);
- 		if (ret) {
- 			erofs_err("failed to load %s", src->devname);
- 			return ret;
+ 	return 0;
+ }
 
 -- 
 Git-155)
