@@ -1,48 +1,48 @@
-Return-Path: <linux-erofs+bounces-2464-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2465-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EOYjInKwpWkiEgAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2464-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 16:44:50 +0100
+	id QG7zOkqypWk8EgAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2465-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 16:52:42 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70E821DC161
-	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 16:44:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C95A91DC30C
+	for <lists+linux-erofs@lfdr.de>; Mon, 02 Mar 2026 16:52:41 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fPjt65hfcz3bmk;
-	Tue, 03 Mar 2026 02:44:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fPk3C05Kzz3blr;
+	Tue, 03 Mar 2026 02:52:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772466286;
-	cv=none; b=if5fq6PV/xUf1hm/dG2M7+zn0bLNvmH2Kn3H9+QCZJ/hMCYqL6UNMALdxm0ioxXgeF2qhfEXR27qaY7OyHWEc7GLUKeOFC2GNa93soXEjaSKFNyPSTD/RUznqIOa0VGOZhKHqqoHsuLonpPpPWjh8f7T10KNPcA19KunZLVR3ntOnB1Pj+1hwB4yqmSjKtq3f9/QllKg/Pf1xdVphUuqeg7TWttwaH210XAqJEios2+9CvOsGVkVvvv3wN+Dyd9EAsDxsnIIuMnZrhIzlKzPTzz+MeSlaAG3t3mSuN97X5wh9n1VIsp72VbvJkLooFXDBWwoP1JtszuX4TNhs+XD8A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772466758;
+	cv=none; b=LOKQxX9jcVVRazXvgyK2epWtkLEnPp4SH83bsuTJmo7JO9t25BhBGdmgqiBOgCiA1SW2UKEfj42pmMXrQcDtiudgm4ASUOqo2uUhNnG6dWUTLNKUYaTxsvLr6YG0O0lbIQStqE/pFLN53gd9ZOByqIHMexRWh368ohhB2ouUpqBG/aQJXOHp25Yun5ApqH76MD2HEvaoQzQZYlDRYN9SwkHPDKjAL/d3Dr3ChLKYXvK7FtxaHRxNbjenWaNFS3zjwlVOLPbIxzm3BFT8AnMIvnwIGY1ufpSF9ZCukGd6+PXGD6GSFl505Z7O6/5ufhDV6LtvppvH7To9H70fAueObg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772466286; c=relaxed/relaxed;
-	bh=wj0w/xQh5o6IBz0DZYCCjc0ms03BW6MfdL9PvHTJvFs=;
+	t=1772466758; c=relaxed/relaxed;
+	bh=4laKLaCR4ZDEc+0tet5f48eBk6SE45W/YU9QOQR1/Nw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e6oLZEsCh7xreqpNS2OMvp0aVN76tb9vW+dRVQPKAfZcjd0sWAJXvhyVpiIRBUo72KKWeHjcVS1/70bXWyLkRntA3PQ5gSqdlQvC6mHe49uaRoP69Tuc7m6iS4t5VoL/0ZtVEs8PPUgS2edjCLfxKVRx3kDQslcsvJ93MMttjdc2s1IgfFDng56JIU7VEDge0Tb2nacm6NMtH/Tk1jeSJfkN+WR7UnYYzyU55rxNSqaJqJuIyvV+ujd9ozFaLK69+5I+r0I65LXglcKBHTQxN+3B9NaZulM+IS6ldYPt/ZJsX5Gzhag7DQl/ehmx0L60h5x9wuVEL7GNhQpFnOZjDQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DhTOfff8; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=d8FiGnqGmIg+t7vrG4vX8Et9KAvO7bUOg+IGF6cOrKPzJ08j+XyuMpoqxjs0Pbxsi/wwVMt0ySYXDugjEBL+OLuXv2bITbQzypgodcTKei7EAox80S/ecTc0H9o7gt1x/uIKchstMHNWJF/+OLmMEiVK+ncpWiRhvobDuD6cub7YA6wbSnrhjyPAB3zFmP7PmFwkkebqh6HZo304SgqaRq5IZom0q6pO4u7ZggejdlxwMLyWEuJrRlXYoZOe9/pii5lHKB0DURotL18oVIb7M9H1sMIdJm34+PUn0ssLkDfhUCo+vzMIeOIEw658Od9CSbcwCAVQSFvJzPhZiLb7Pw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dkfrxUBH; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DhTOfff8;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dkfrxUBH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fPjt459T5z3bmc
-	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 02:44:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fPk391gLjz3bkL
+	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 02:52:35 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1772466279; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=wj0w/xQh5o6IBz0DZYCCjc0ms03BW6MfdL9PvHTJvFs=;
-	b=DhTOfff8HMl8GVuNdzv4s7edU9imMZKG6oyg18M08VA724N9NmRoFt30LGY4pF486TGtaxJgFgSn8IBFHfsMiQ23mmmIP3pUMjz8+zYd1NUUiHbgPjVivvERm0vp1m/XrRRFnV947Q06xYR6ZMysCZbmIdV7gW+9RkBA+U7Bntc=
-Received: from 30.170.14.2(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X-6HSno_1772466276 cluster:ay36)
+	t=1772466751; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4laKLaCR4ZDEc+0tet5f48eBk6SE45W/YU9QOQR1/Nw=;
+	b=dkfrxUBH0zluk+iBAgjvFtFpJT3GAbU2kdZjlv2ydL2Cd85I3gTYYc4Nrgm+45a6iwEGyf0lH/jPn2a8xflltCBNUdsrt+rGdG7lHMgHjjGJVqb/I0jBYduemjv/7HrHRhbDyck2CHPwCEF4Yr8Oez7khH2ZM5dxSQSxxsaL7F4=
+Received: from 30.170.14.2(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X-5wOy2_1772466748 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 02 Mar 2026 23:44:37 +0800
-Message-ID: <e5ad170a-f443-48a1-9d8a-d8a0cef5a27a@linux.alibaba.com>
-Date: Mon, 2 Mar 2026 23:44:36 +0800
+          Mon, 02 Mar 2026 23:52:29 +0800
+Message-ID: <1415c632-7a4f-40e6-af3d-09ca2c02244c@linux.alibaba.com>
+Date: Mon, 2 Mar 2026 23:52:28 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,144 +55,90 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: lib: fix xattr crash in rebuild path when
- source has xattr
-To: Lucas Karpinski <lkarpinski@nvidia.com>, lishixian
- <lishixian8@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: qinbinjuan@huawei.com, caihaomin@huawei.com, caihe@huawei.com,
- wayne.ma@huawei.com, zhukeqian1@huawei.com, jingrui@huawei.com,
- zhaoyifan28@huawei.com
-References: <20260302130356.769479-1-lishixian8@huawei.com>
- <f9c910ae-a713-4c85-80bf-e79ca6386f83@nvidia.com>
- <f1d6133d-e1e2-44a4-9a58-01a917c6e114@linux.alibaba.com>
- <2ac49ff4-7177-435d-8b0a-837dd8705b4b@nvidia.com>
+Subject: Re: [PATCH] fsck.erofs: introduce multi-threaded decompression PoC
+ with pcluster batching
+To: Nithurshen <nithurshen.dev@gmail.com>, linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org
+References: <20260302073216.94384-1-nithurshen.dev@gmail.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <2ac49ff4-7177-435d-8b0a-837dd8705b4b@nvidia.com>
+In-Reply-To: <20260302073216.94384-1-nithurshen.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 70E821DC161
+X-Rspamd-Queue-Id: C95A91DC30C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-9.20 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2464-lists,linux-erofs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:lkarpinski@nvidia.com,m:lishixian8@huawei.com,m:linux-erofs@lists.ozlabs.org,m:qinbinjuan@huawei.com,m:caihaomin@huawei.com,m:caihe@huawei.com,m:wayne.ma@huawei.com,m:zhukeqian1@huawei.com,m:jingrui@huawei.com,m:zhaoyifan28@huawei.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	TAGGED_FROM(0.00)[bounces-2465-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.998];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-0.987];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,nvidia.com:email,qq.com:email,inode.sbi:url,huawei.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
+Hi Nithurshen,
 
-
-On 2026/3/2 23:39, Lucas Karpinski wrote:
-> On 2026-03-02 10:28 a.m., Gao Xiang wrote:
->> Hi Lucas,
->>
->> On 2026/3/2 23:22, Lucas Karpinski wrote:
->>> On 2026-03-02 8:03 a.m., lishixian wrote:
->>>> When rebuilding from source EROFS images, erofs_read_xattrs_from_disk()
->>>> is called for inodes that have xattr. At that point inode->sbi points to
->>>> the source image's sbi, which is opened read-only and never gets
->>>> erofs_xattr_init(), so sbi->xamgr is NULL. get_xattritem(sbi) then
->>>> dereferences xamgr and crashes with SIGSEGV.
->>>>
->>>> Fix by using the build target's xamgr when initializing src's sbi.
->>>>
->>>> Reported-by: Yixiao Chen <489679970@qq.com>
->>>> Fixes: https://github.com/erofs/erofs-utils/issues/42
->>>> Signed-off-by: lishixian <lishixian8@huawei.com>
->>>> Reviewed-by: Yifan Zhao <zhaoyifan28@huawei.com>
->>>> ---
->>>>    lib/rebuild.c | 1 +
->>>>    mkfs/main.c   | 1 +
->>>>    2 files changed, 2 insertions(+)
->>>>
->>>> diff --git a/lib/rebuild.c b/lib/rebuild.c
->>>> index f89a17c..f1e79c1 100644
->>>> --- a/lib/rebuild.c
->>>> +++ b/lib/rebuild.c
->>>> @@ -437,6 +437,7 @@ int erofs_rebuild_load_tree(struct erofs_inode
->>>> *root, struct erofs_sb_info *sbi,
->>>>            erofs_err("failed to read superblock of %s", fsid);
->>>>            return ret;
->>>>        }
->>>> +    sbi->xamgr = g_sbi.xamgr;
->>>>          inode.nid = sbi->root_nid;
->>>>        inode.sbi = sbi;
->>>> diff --git a/mkfs/main.c b/mkfs/main.c
->>>> index b84d1b4..cb0f0cc 100644
->>>> --- a/mkfs/main.c
->>>> +++ b/mkfs/main.c
->>>> @@ -1011,6 +1011,7 @@ static void erofs_rebuild_cleanup(void)
->>>>          list_for_each_entry_safe(src, n, &rebuild_src_list, list) {
->>>>            list_del(&src->list);
->>>> +        src->xamgr = NULL; /* borrowed from g_sbi, do not free */
->>>>            erofs_put_super(src);
->>>>            erofs_dev_close(src);
->>>>            free(src);
->>>
->>> I was similarly looking at this issue in my patchset so I can confirm it
->>> fixes the seg fault.
->>>
->>> Tested-by: Lucas Karpinski <lkarpinski@nvidia.com>
->>
->> Thanks for this, but as I said to lishixian we shouldn't use
->> global g_sbi in the liberofs anymore.
->>
->> Could we try to assign sbi->xamgr in the caller instead?
->>
->> And
->>
->>> in my patchset
->>
->> Do you have more urgent fixes? I'm about to release
->> erofs-utils 1.9.1 since there are some urgent fixes
->> so fixes would be better to be sent out now.
->>
->> Also I think we should have a basic testcase to cover
->> this, I will try to add one this week.
->>
->> Thanks,
->> Gao Xiang
->>
-> Sorry, responded at the same time and didn't get to see your message first.
+On 2026/3/2 15:32, Nithurshen wrote:
+> This is a Proof of Concept to introduce a scalable, multi-threaded
+> decompression framework into fsck.erofs to reduce extraction time.
 > 
-> The rest of my changes are for a new feature implementation, so nothing
-> urgent in that regard.
+> Baseline Profiling:
+> Using the Linux 6.7 kernel source packed with LZ4HC (4K pclusters),
+> perf showed a strictly synchronous execution path. The main thread
+> spent ~52% of its time in LZ4_decompress_safe, heavily blocked by
+> synchronous I/O (~32% in el0_svc/vfs_read).
+> 
+> First Iteration (Naive Workqueue):
+> A standard producer-consumer workqueue overlapping compute with pwrite()
+> suffered massive scheduling overhead. For 4KB LZ4 clusters, workers
+> spent ~44% of CPU time spinning on __arm64_sys_futex and try_to_wake_up.
+> 
+> Current PoC (Dynamic Pcluster Batching):
+> To eliminate lock contention, this patch introduces a batching context.
+> Instead of queuing 1 pcluster per task, the main thread collects an
+> array of sequential pclusters (Z_EROFS_PCLUSTER_BATCH_SIZE = 32) before
+> submitting a single erofs_work unit.
+> 
+> Results:
+> - Scheduling overhead (futex) dropped significantly.
+> - Workers stay cache-hot, decompressing 32 blocks per wakeup.
+> - LZ4_decompress_safe is successfully offloaded to background cores
+>    (~18.8% self-execution time), completely decoupled from main thread I/O.
 
-Okay, if you have any question about rebuilding feel
-free to ask.
+Glad to see the improvements, I think there are more room
+to be improved anyway.
 
-Sorry about that but my own TODO queue is full but I try to
-answer any question if helps.
+Also there are still some follow-up works, I'm busy these
+two days, but I will release a formal gsoc page later.
 
 Thanks,
 Gao Xiang
