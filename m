@@ -1,78 +1,66 @@
-Return-Path: <linux-erofs+bounces-2477-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2478-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GF8oAaFHpmkkNgAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2477-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 03 Mar 2026 03:29:53 +0100
+	id iHqwBt1JpmleNgAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2478-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 03 Mar 2026 03:39:25 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D8411E8064
-	for <lists+linux-erofs@lfdr.de>; Tue, 03 Mar 2026 03:29:51 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 306AB1E8217
+	for <lists+linux-erofs@lfdr.de>; Tue, 03 Mar 2026 03:39:23 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fQ0BN5qx9z2xpk;
-	Tue, 03 Mar 2026 13:29:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fQ0PP0nnMz2xpk;
+	Tue, 03 Mar 2026 13:39:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.18
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772504988;
-	cv=none; b=Eu578zp9ti06W6otPX0ljbuIXvIVoc1ZoFNFONuAkqlN81G/2xjk3WPNUwckw4pr69L9nztpogNS1Cl4JU3Q5WEm7v1ecSogR7JJvVFFJDUd6tnjEJ/peFV9O7Rg9FNI2M1IWwh68ATRMD65BMgL9VbmECwlSx4bI7HkJILlM2D2oIpF/GC+Tm8/5FyjrbQa+L2PVf3WvhBYX2tRPixCpQbKEWdrmFnLg2nmoj0YxWQh5w14HxrHsXof1znd8ush8hEw2FdRMtAkmd58LViudBa0PlWKYrZP/gqoB8fDL+5wFU7exR3K97BVyjvY7D89prKNy6pIeAOgxGY8NhEWhA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.216
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772505561;
+	cv=none; b=CEIaGK7HpeylF1dAHJcGf7OweU8OzAmboUWXMw5iXP9elTyY8k0s0cD+AEyNWeAWok7V9g3LrlEAMR1KOHO1A3mGeXaY1awC+MaCbaImBP2M/bC86b+pceGD/l80qSx9jvqC3AwcuYnT/t1CvQu8eYu1EgKivA3dYnndvaPZqDAAF0y2zuZdNsyNrzkzT5YB8TvdCZIg6iHjhvai+9XnePHr+dqOL12rchOgV7nP0VXBDXwOV7TwWlJGO/YgUJE0ip46BcmWNnjHf7v/djmLtd3Fqmjp53yarGkXLTGsTpNHGqyukVubepgOeI6IUJvyLNmLB/RAqVLj4Q0QqCMHhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772504988; c=relaxed/relaxed;
-	bh=LMCcbkRIV3txU7Tb9gytmQ8x6PBq+GdXBRifYw1dDAY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=N8cWqshUeXBAlPwVmtC2PGiyZVmEdRMmjrK3Q2mXrWQXQlSbyjfXTWrOioqJU8y+7eGtCV80UfzYADtXmdzzHdtdXd3cwmdwJDXfTu9bRJ5egDRbQmk8AL+HvP5Uv+EtXD0HLSFTKkNVpcHpXytC+JWBVKQjUt08Q4YCTH8Ro/7pjdlGTLQ9JFeE/gRkYvG6YLtPgwlCx8QK8AcN3+F/GD9l7ip5MohqUuZ+pggV1uVmLWX6CEKXTYM7OHf/QCtt2k69XyiZcCDvDSGFnPnIUxPHNwa935+wR02SfqmM4SytmDAkxrV+IASq3+qDYwe96+4+edzx8nWuBu0KUcI0uw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RQcT3LCq; dkim-atps=neutral; spf=pass (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1772505561; c=relaxed/relaxed;
+	bh=5UKT+75PhxqOOVNuycccQLRXqyU2OrdjwEmJHiFXYsQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VKhi40QkHWSvhItZetK99uJQhUtU5NiDdc+yTTyMDGAkMi8pcBYJbWrdaiowg4QGIzjps60VuzdNAFawPv8bD1cVGUf1Z1/6xJ2lx1vRExbLKDXkRFJfDNJzexV37IBZ/z4I7jAPacEbSzaceY7ZXiHwb2WVAUbDPNg22zVQbOO4pBVzay+KyiCH8SSURHqm3wqQdQazNg2dEISNFy14JIfzwGguq9HHMsTN8XXt5ZSPFVhNW9WaEFQonrE23EWWg9lvb7UaSPLTc313ba8zlYOWNCy3/yU22EhbrIu+DQNkIfEyuS3TG9z23YW1L/S1HeK5t55LGa9O7IZAG3c+2Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KaUZzJ0I; dkim-atps=neutral; spf=pass (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lishixian8@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RQcT3LCq;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KaUZzJ0I;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lishixian8@huawei.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 48912 seconds by postgrey-1.37 at boromir; Tue, 03 Mar 2026 13:39:18 AEDT
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fQ0BK6CF0z2xRq
-	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 13:29:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772504986; x=1804040986;
-  h=date:from:to:cc:subject:message-id;
-  bh=hkhwOT/ieSvBULFKsVOiB+1dVyPL6SqSxlyEJpm3ygY=;
-  b=RQcT3LCq/sTq8TqjMJHgRa7uTFTIEYaONoxiETpZ8BfvRki4kbfinKof
-   k82stuir7FR86Xku4qyvHabHc1EcZdY0yZLk84swG8OTVucAf4QkjLAcz
-   VeXAI8c3TXEmiezffNR9OHaGz1p4qDhq8VCHcm8lajZLufcn8TS5ewiPf
-   cjAm9z3aKQ+ZMisba9VxNmm/dtJB4YJ63snyd7LDqUf1WYYlAhU3+ICqD
-   dmTfaZDnEwqhOWy1qYvkVk/nDF7lZuAgO8boCtqNLmoWzlTySWsf0Dhgn
-   7JZsvrYwEBpwzPHPSO22gy8GIcUgpyR2FStBu2bDPC1NWWaTRVSYgrwPz
-   g==;
-X-CSE-ConnectionGUID: 7qmVzhEmRp6rHrC9UxZjxQ==
-X-CSE-MsgGUID: lMk8dqRaSQSdAb0hOhn0CQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="72727791"
-X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
-   d="scan'208";a="72727791"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 18:29:38 -0800
-X-CSE-ConnectionGUID: XsdNw3Z5S3m3wx/pUOfPew==
-X-CSE-MsgGUID: 0SlvarWOQvmlLqe9GuQzYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
-   d="scan'208";a="248341726"
-Received: from lkp-server01.sh.intel.com (HELO f27a57aa7a36) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 02 Mar 2026 18:29:37 -0800
-Received: from kbuild by f27a57aa7a36 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vxFVt-000000001ed-3qer;
-	Tue, 03 Mar 2026 02:29:33 +0000
-Date: Tue, 03 Mar 2026 10:29:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- ba76ecf45d4772d2bee316bb5912d7f4f91b6334
-Message-ID: <202603031056.k5kvLbDo-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fQ0PL1jxkz2xRq
+	for <linux-erofs@lists.ozlabs.org>; Tue, 03 Mar 2026 13:39:17 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=5UKT+75PhxqOOVNuycccQLRXqyU2OrdjwEmJHiFXYsQ=;
+	b=KaUZzJ0IchWcup5A7tiSa5QGrXjmohSB2peLZkE8TjjG+iblZXzSSWWE3cIV0GITsj8ORJB+j
+	68hAUPVsOd4zoBN3NSEdLMPqlbLZIwjUuXNW+njECqokTNW9LRtvwlLGsUCeaQhM+rRXJVT2dFW
+	psG5bDIgUe17Xu0bVzoaSXg=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fQ0HS4LTnz1T4M2;
+	Tue,  3 Mar 2026 10:34:12 +0800 (CST)
+Received: from kwepemp100012.china.huawei.com (unknown [7.202.195.77])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B5C140561;
+	Tue,  3 Mar 2026 10:39:12 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemp100012.china.huawei.com
+ (7.202.195.77) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 3 Mar
+ 2026 10:39:11 +0800
+From: lishixian <lishixian8@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <jingrui@huawei.com>,
+	<zhaoyifan28@huawei.com>, <lishixian8@huawei.com>
+Subject: [PATCH v2] erofs-utils: lib: fix xattr crash in rebuild path when source has xattr
+Date: Tue, 3 Mar 2026 10:39:11 +0800
+Message-ID: <20260303023911.792454-1-lishixian8@huawei.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260302130356.769479-1-lishixian8@huawei.com>
+References: <20260302130356.769479-1-lishixian8@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -83,110 +71,79 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-X-Rspamd-Queue-Id: 9D8411E8064
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemp100012.china.huawei.com (7.202.195.77)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+X-Rspamd-Queue-Id: 306AB1E8217
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2477-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2478-lists,linux-erofs=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[lishixian8@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	HAS_XOIP(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo,huawei.com:dkim,huawei.com:email,huawei.com:mid,qq.com:email]
 X-Rspamd-Action: no action
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: ba76ecf45d4772d2bee316bb5912d7f4f91b6334  erofs: set fileio bio failed in short read case
+When rebuilding from source EROFS images, erofs_read_xattrs_from_disk()
+is called for inodes that have xattr. At that point inode->sbi points to
+the source image's sbi, which is opened read-only and never gets
+erofs_xattr_init(), so sbi->xamgr is NULL. get_xattritem(sbi) then
+dereferences xamgr and crashes with SIGSEGV.
 
-elapsed time: 1133m
+Fix by using the build target's xamgr when initializing src's sbi.
 
-configs tested: 55
-configs skipped: 0
+Reported-by: Yixiao Chen <489679970@qq.com>
+Fixes: https://github.com/erofs/erofs-utils/issues/42
+Signed-off-by: lishixian <lishixian8@huawei.com>
+Reviewed-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ mkfs/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/mkfs/main.c b/mkfs/main.c
+index b84d1b4..58c18f9 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1735,7 +1735,9 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 	}
+ 
+ 	list_for_each_entry(src, &rebuild_src_list, list) {
++		src->xamgr = g_sbi.xamgr;
+ 		ret = erofs_rebuild_load_tree(root, src, datamode);
++		src->xamgr = NULL;
+ 		if (ret) {
+ 			erofs_err("failed to load %s", src->devname);
+ 			return ret;
+-- 
+2.47.3
 
-tested configs:
-alpha         allnoconfig    gcc-15.2.0
-alpha        allyesconfig    gcc-15.2.0
-arc          allmodconfig    gcc-15.2.0
-arc           allnoconfig    gcc-15.2.0
-arc          allyesconfig    gcc-15.2.0
-arm           allnoconfig    clang-23
-arm          allyesconfig    gcc-15.2.0
-arm64        allmodconfig    clang-19
-arm64         allnoconfig    gcc-15.2.0
-csky         allmodconfig    gcc-15.2.0
-csky          allnoconfig    gcc-15.2.0
-hexagon      allmodconfig    clang-17
-hexagon       allnoconfig    clang-23
-i386         allmodconfig    gcc-14
-i386          allnoconfig    gcc-14
-i386         allyesconfig    gcc-14
-loongarch    allmodconfig    clang-19
-loongarch     allnoconfig    clang-23
-m68k         allmodconfig    gcc-15.2.0
-m68k          allnoconfig    gcc-15.2.0
-m68k         allyesconfig    gcc-15.2.0
-microblaze    allnoconfig    gcc-15.2.0
-microblaze   allyesconfig    gcc-15.2.0
-mips         allmodconfig    gcc-15.2.0
-mips          allnoconfig    gcc-15.2.0
-mips         allyesconfig    gcc-15.2.0
-nios2        allmodconfig    gcc-11.5.0
-nios2         allnoconfig    gcc-11.5.0
-openrisc     allmodconfig    gcc-15.2.0
-openrisc      allnoconfig    gcc-15.2.0
-parisc       allmodconfig    gcc-15.2.0
-parisc        allnoconfig    gcc-15.2.0
-parisc       allyesconfig    gcc-15.2.0
-powerpc      allmodconfig    gcc-15.2.0
-powerpc       allnoconfig    gcc-15.2.0
-riscv        allmodconfig    clang-23
-riscv         allnoconfig    gcc-15.2.0
-riscv        allyesconfig    clang-16
-s390         allmodconfig    clang-18
-s390          allnoconfig    clang-23
-s390         allyesconfig    gcc-15.2.0
-sh           allmodconfig    gcc-15.2.0
-sh            allnoconfig    gcc-15.2.0
-sh           allyesconfig    gcc-15.2.0
-sparc         allnoconfig    gcc-15.2.0
-sparc64      allmodconfig    clang-23
-um           allmodconfig    clang-19
-um            allnoconfig    clang-23
-um           allyesconfig    gcc-14
-x86_64       allmodconfig    clang-20
-x86_64        allnoconfig    clang-20
-x86_64       allyesconfig    clang-20
-x86_64      rhel-9.4-rust    clang-20
-xtensa        allnoconfig    gcc-15.2.0
-xtensa       allyesconfig    gcc-15.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
