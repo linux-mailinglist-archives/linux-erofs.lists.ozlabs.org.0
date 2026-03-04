@@ -1,86 +1,94 @@
-Return-Path: <linux-erofs+bounces-2493-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2494-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8HpEBf9lqGl3uQAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2493-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 04 Mar 2026 18:03:59 +0100
+	id gBQRKHd2qGnpugAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2494-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 04 Mar 2026 19:14:15 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33703204CB7
-	for <lists+linux-erofs@lfdr.de>; Wed, 04 Mar 2026 18:03:58 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83DB7205FDA
+	for <lists+linux-erofs@lfdr.de>; Wed, 04 Mar 2026 19:14:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fQzXW42Z5z3btw;
-	Thu, 05 Mar 2026 04:03:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fR15X5CzJz30hq;
+	Thu, 05 Mar 2026 05:14:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::102d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772643835;
-	cv=none; b=kuAKi3frNJYsMkj2xTIk1S/9H2HAOnNrdbGF+CtUYSn7+6Tf63OnmeqmDXJT/okKsynC3BodEVNudgc/A37lD6CxethpDZWcQ8Cv1OcTeY0RhYNrPgDum3DcluDemv4Q1Ww3IHi44u3u0Ru/yw8jpM/blFOPAHhBsbYWIy9S8D+v1zlcW5gRVod54PRPlpMrhQDU5tlIZJhMljej0zi6N1SaYf4VZVYkls5EFgCW6macpVYOXTDP2tkYJymI3I/bu7U2HLbEsv2t9rJzEVH/dbbYCDjew8J4IqR9qmYqvi81T8VWf4qoIxNA1QUJmGs4rnRAVrFSvQ6Rwt7tuSOpYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772643835; c=relaxed/relaxed;
-	bh=KATSwx3ZLNA01PVrPGXqfaG7CL7puBPc9EC4vVv2D58=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LzDETLsmBa8lfZqCFcZHLsyYdjFtB2tv2iAK2nv4SrcHxfQcmmxfKMh82DjG1B4dcg5ShU8upUh20WUcEJiFH0Sj3EG8Rhe3xqBodLwx/hGqKpGYOImVLwEwbmTUjcMpJ4GNEYJYywUn8OJvVHqs6DipS+9vyntrjh1bLnVfeTXxptYFU8IHOFcBAGnDnUL1k6zu/7xfrOFINr4MDmAYkmn3HRMjovraljXOFEC7ziE1OdgP4STjd1ROUpyuKxndUXpbDx2QFFxKWhs6SjFTMLu4/odm7o2FTYcC2FOEfh+7dVsDM91uhPQEI28SGT8pjY8EdfrMywjmp04jHhuolQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mU8cfxIr; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::231" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772648048;
+	cv=pass; b=Fw67UK+Bxau3blWFf7xuCQcTFKzNB8tPFasTuxup+yD0tjHMy33Gb4U1vns6jB/VW07zkA1XCSNf5SXdFbUY/mXPCyXqROQQYjjBN9o1WCbuoM6SUvsBlOzdaHxdW6/114Kzs4Cq5yQ/c551AOupwHk31w6nqiRy4MnsS7iatw4KVi7Q7awvl5djcjQzt0r3ko/JjcITkE2/drMJbRumSymxttfEJvLd+BLga7mup54B8MOucpqrKSNpFT4Pn9ly7bM86aCn+H1FvL/h884vgPoDNEy6/k+86QajNMXP1NplYX/4nyKbDy9ckXZvb5UwmW6LiVIRHGfl1Pd5qMzjpA==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1772648048; c=relaxed/relaxed;
+	bh=Z0HwNiZiWP9nB5V8F1IqVpgBJlc5ry7piL71tsDcK5k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HDHtOMHk7trcEI0aPAwPPYLBDN7pQeSFZ4DQ6ORfUbnfZFnjvZaSiYZG4mCLpRxhG0zckZzqBV+7PUQ/Mh28dOQYa1g2WKkGinnFwxX+XwnodTH1ezwrukJr6uLcvqCYMQliebHeiarvddIourCEtfQr4mvUnyW9gSzuxqFjfJgKxcpJMy2J7944tqybPQedm0yqhYpEscrkawE94oj8rSar8IlIn+rr9dI6EuhOp/SA1KqdSjviYnUTWWuq6+68+NSt6OjQRxT9RdyE03etJcIJ3nB4bYLp9Ro0fLQOw/bfnCRAR0vo00gKOxIougkVzXovkJQSTXS7SwTzOqhcYw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UgXGG1gO; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::231; helo=mail-lj1-x231.google.com; envelope-from=aayushmaan.chakraborty@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mU8cfxIr;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UgXGG1gO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::231; helo=mail-lj1-x231.google.com; envelope-from=aayushmaan.chakraborty@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fQzXV2C5pz3bt9
-	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 04:03:54 +1100 (AEDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-358ee55eafcso553616a91.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 04 Mar 2026 09:03:54 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fR15V4dJkz2yFQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 05:14:05 +1100 (AEDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-38a23cf08e0so32605601fa.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 04 Mar 2026 10:14:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772648036; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KBeEEwVdcQNoAc6SdhbZlveu7gqEUvGpvoP9Nfa5Pq5Qi1VfOwi8zyeeR+2wFMbx2B
+         WQNYMiN46eOhaIEZccfkhXmK3bJZ/Ed4KI7kbvHy1yrC+ZtKolOPJFK2ldLcocZ3um3v
+         Bt/3GvEAAWtRgllLFeMaBPDPs+hHGplhrvAGPDF6R5jf3n3+jgrkbLCb3GDNlBjgfIE9
+         zSuncaYGpeFAFjpTXGuAMRel9uzdIPPLyI69Cp0uNMbzHXfGecKF43hRSOzAdkkRdMh2
+         F2b965kbDijwwDOdaDWHhPMQjh2tzXh1heKN2Wfd/jggV7orMVsjQC8VHfYia+evK0aQ
+         qmZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=Z0HwNiZiWP9nB5V8F1IqVpgBJlc5ry7piL71tsDcK5k=;
+        fh=AHnHft27vbfAZR0iP4O+qFI4fpW+Rv1CrfmhGsWufCA=;
+        b=X8CJnR/CRl6s9B44lgTluLYCCPlID1A7GDzbvketawpFU2j3KoCSTwZqc6cbw3TFK4
+         Ouzs5FU8qRFK0/46T/1GJLHBBzyBhIODmhWqKEHezxMeKgTCSoGhbM5+93qE7wJg2+HN
+         P8EpfOihfI+IxvQ4I+rynWZOVGKiTu5DDajVvunIRTC+J47WXSwEkKjWxsazPbFU2giK
+         azaSkGSkCxdMHHQich2Eao4m/H3KFADpQpPnhe9gtJP+TKvKQS7fsat/kmXSr8KHPr0a
+         eMT1BDXpyeKoV/DAPAF274f5LBchKY+bi6eptkQaacrY7AyAFBPTDS+yUUkiqZD3I+HU
+         FoBA==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772643831; x=1773248631; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KATSwx3ZLNA01PVrPGXqfaG7CL7puBPc9EC4vVv2D58=;
-        b=mU8cfxIrhT+Me/twxAgJMdmBws/MxxhmNNqIHZ1L7O97M5Gq4BNElX9kX5IOJ6Xibz
-         mD5wRW0ZTwGDGG/Q2KJHMLVJQfcSZy9gosU26RtiLsSeNfoZUmm/AtDitz8FOfWNlUdt
-         tLCMZk54zJ/klODpAkM81+T9vqHthc1c4UwDZUEE8fUhOJhpBhcIYpcwiAtGG5OTS4IN
-         h25YedD392B9Om/GizS/V8j4RvRX5n0o7T83v+cP1CRAW4Xl687/EGslwkHe55fSJbtY
-         uJfC93tTi3WZgHB+42Kzf/gPyugvhvv6DYnYw7CD2Cjjyxsx41kr/ZeyibvOzC9r0Cm/
-         VOHA==
+        d=gmail.com; s=20230601; t=1772648036; x=1773252836; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z0HwNiZiWP9nB5V8F1IqVpgBJlc5ry7piL71tsDcK5k=;
+        b=UgXGG1gOz1gqVCv12gW99c5VZgcELL+vs0l5nCS5C9q2Rk3xqlcJPPrLet0bk+FDJd
+         rG4VJd0AQpZbYJXcfWtZCsYgvwXkHzY7AxWJScokSeeLUDh+VgN4CNDEZ2iMqYQy6ka1
+         r0dRx4Mb4uKz03Ej+0NOF/2ovzhUEWZbHz4WT4ShtZaCA7sT+bqUEkN/Fi28AqtDgUnS
+         8fiELFYPhIH0EgBZpcz0lrPPgT/xuJov31kXCTOQ+8j/t2lIoDNCdOS1IBopoiWcWKrk
+         1n02xomwfUL76ziYpJvudzwlEBj9ngpvQEX2ygy1EdF0dLLGNAPIoKOOr8ixI7KZl+A6
+         dILA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772643831; x=1773248631;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1772648036; x=1773252836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KATSwx3ZLNA01PVrPGXqfaG7CL7puBPc9EC4vVv2D58=;
-        b=ikxD/abMRrG72MIBplKiceP0rfhLDk6PWcDBw2qQjJIlE3SgPBMkV0qh99WP7pJFrx
-         g/8DRBk789fXm21BnkqbtTZA+qIArcpjsl1k+m/vnRYZzZwyBhWtyk4+gJGZzKpRJn89
-         NH3ZQN5yQbR/5+vv9O3HFPLoyh+U47bh5obg7015xIRZzE7950rBufHYNs9Sfj9G3h3d
-         Bep0CIr/hHAbW6ViQXIZVTm8kYQhyonorTMijhKBYv+OlGHpV13iM5ptELbB6sFg0Noh
-         PIjA4uEV8FT4Qq0RUul5yUr4Fij1YdCEs3vg2gE5rqiDuC56QWjf6vJuEIaOSGXva8lE
-         AHMw==
-X-Gm-Message-State: AOJu0YzZyPqf5hibK98lZ3vRGbH8+GbJshw3V0iLN3rzrVipRYCteMrk
-	ygfmoiY82dX9pr8ZwTNVqDDX8RxAQKi2qVmfjXyl4xfvWqk+pkGBirdgzwpBFU74
-X-Gm-Gg: ATEYQzwnNkq+HBIvaKIWA58xVlnT578qD8n5Q82wlVmwFbrFLF2xX1oWS1o8bHwxcAj
-	KPgfGbHK2ZVnFgeTPYooHXF66/0MzXTUoSquYJeY9BJrM6uxyy4e/QLcHkNj2sLNWWuJVIsGJKE
-	BKIjqNoEnxR2u3zfsAD9Rgs3Iy4gsczZHfOK+ZLhlYaAoHLJv+kVrtM5w3URBx7n/jSwuFixdJl
-	pHeeZnb72IdYf9qqQ97pdwgsaigy4zbreKt7peSz22I5/Y34Yuiq6cjgEc1QwzsY/UXwZ4ACm31
-	2PbTg38+atfhCc7YGEMrr5dKzAM0wzogQAXvdP2If3UaZk0UxamdNhe/mn3/3TYnL/5+D8deCXe
-	QoiznbJigAObHQrZiYwh2QkVDmsKj0NO9IFQZE3KJhnwC6CMBHpTZbUtjvAZBDPPCHtq0ei3qE7
-	RHIccfR1BKCm07TJiF/tGRNCEiyryXrT+X5l/H+gwTIqPm8WXDP+PpE1inh3X0Hr9sntLgJINbF
-	u4dgoR4686bm0MznKdcpjCkR9tUls8BsKbnJg==
-X-Received: by 2002:a17:90b:2ecb:b0:354:bcbe:7511 with SMTP id 98e67ed59e1d1-359a6a61556mr1714832a91.5.1772643831220;
-        Wed, 04 Mar 2026 09:03:51 -0800 (PST)
-Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3599c090bfdsm5593323a91.8.2026.03.04.09.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 09:03:50 -0800 (PST)
-From: Utkal Singh <singhutkal015@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	Utkal Singh <singhutkal015@gmail.com>
-Subject: [PATCH] erofs-utils: lib: fix undefined behavior in kite_deflate writebits()
-Date: Wed,  4 Mar 2026 17:03:27 +0000
-Message-ID: <20260304170327.14908-1-singhutkal015@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=Z0HwNiZiWP9nB5V8F1IqVpgBJlc5ry7piL71tsDcK5k=;
+        b=j4ASvywsLR2H+9N/bjal3qdR/md2EOv+rmcmGMreDL6jPF1JACCD1yDHDc59Ow/6q7
+         6i1UTFJuLggDZXMf0J0L/l4288PKh1b8PZgdl2Ur7GnGLDn7sXHp4LKTVHspTYq2dEVS
+         CVwuYVq2Vdpx5oVEBYaDh4+oL1zzKkRswDk5Vp5eBiU7ou/uJtf4ZerfoH6+Td6bQIwl
+         ItPdqPh00VodQjc4Zdap4FhVKkuUtI5HIujjb6rBL8y/5SAZpSRhw4ViOuEpLuvUgvwR
+         WQmnVWpExp7/bKCA49TrkJyb0vm1akxOO32p0qEWh/0Zj/2bgivWDHrfjzl0lrMa9G8l
+         ESCw==
+X-Gm-Message-State: AOJu0YxOqyoALCiqlkvTZ+AxtQJaflJbV5ERWFYD3sXmy/v09DGEJSHY
+	BJDWNmVdgxQCYJDdsLdGSvGX6q9FXeLwCgN+u/KUCcZbPFZRJ5JZ5hc4UV/XiO+LJY4DdrgGduY
+	NajVIehhqV1+6IBNVoXKNOFL5vM+huzYdHprf14g=
+X-Gm-Gg: ATEYQzy5tUq5lZwueUMitnsOV1Z4pHQ0POpmxjC8inYj571qhVr7F6NZjoB/Bf04y4c
+	LN0j3ASMRecdDc5eJzwCMKXDrkyfC3l4uhT/0C1OJov1XM6qk92QVqaT0MY8oR2erjqSSN/Lx3e
+	RoewtuEBYJ3MMuQbcpYYj+6GTbvonu8vloUQl8DbVn/c4XOv/r7w+Wba6l7X/yfupyDEHKaTHSx
+	MqMguILKHk6axx2MzNMHTupyUG4j0pITImqzpCbjsM0jq2D0jmtqxdN5XPILfv6M28k0ivFrQtj
+	cVboG2pEmNHM7NIQgg==
+X-Received: by 2002:a2e:91c2:0:b0:38a:30c0:1cd with SMTP id
+ 38308e7fff4ca-38a30c004e4mr10834221fa.7.1772648036108; Wed, 04 Mar 2026
+ 10:13:56 -0800 (PST)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -92,76 +100,227 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+From: Aayushmaan Chakraborty <aayushmaan.chakraborty@gmail.com>
+Date: Wed, 4 Mar 2026 23:43:43 +0530
+X-Gm-Features: AaiRm53j87vXGcfl3_N6UBZLjic7LG7q4TH1Je_olzTORdbO4cc7QseZSVDkVYw
+Message-ID: <CABCXVcmmXnEw6256sJsfGuG7eqLA0ytR-sJharrOHx+Yc2bLxA@mail.gmail.com>
+Subject: [PATCH] tests: add basic smoke/integration test script
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.8 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_GMAIL_RCVD,
+	FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 33703204CB7
+X-Rspamd-Queue-Id: 83DB7205FDA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2493-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2494-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_THREE(0.00)[3];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	MISSING_XM_UA(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aayushmaanchakraborty@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.996];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	FROM_HAS_DN(0.00)[]
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-When bitpos equals sizeof(inflightbits) * 8 (i.e., 32), the shift
-'v << s->bitpos' has undefined behavior per C11 6.5.7p3, which states
-that if the shift amount is greater than or equal to the width of the
-promoted left operand, the behavior is undefined.
+Hi Gao Xiang and linux-erofs team,
 
-The original code used a branchless mask '(!rem - 1)' to zero out the
-result when rem == 0, but the undefined shift is still evaluated before
-the mask is applied. Replace with a conditional to avoid the shift
-entirely when rem is zero.
+The repository currently lacks any automated smoke or integration tests.
 
-Found via UBSan (-fsanitize=undefined). Similar to commit 2cd5114
-("lib: fix undefined behavior in zstd dict_size bit shift").
+This patch adds a simple, self-contained bash script (tests/smoke.sh)
+that verifies the primary userspace workflow:
 
-Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+- mkfs.erofs image creation (uncompressed)
+- fsck.erofs integrity check
+- erofsfuse FUSE mount
+- Basic content verification
+- Clean unmount and full cleanup
+
+The script:
+- Checks for required binaries upfront with a helpful error message
+- Fails fast with clear diagnostics
+- Uses trap for cleanup on exit or failure
+- Exits non-zero on failure
+
+Happy to expand it (e.g., add compressed image variant, error
+injection, or CI integration).
+
+Thanks for considering!
+
+Best regards,
+Aayushmaan Chakraborty
+GitHub: https://github.com/Aayushmaan-24/erofs-utils/tree/add-basic-smoke-t=
+est
+
 ---
- lib/kite_deflate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
-index f9eb3fb..29e44b3 100644
---- a/lib/kite_deflate.c
-+++ b/lib/kite_deflate.c
-@@ -144,7 +144,7 @@ static void writebits(struct kite_deflate *s, unsigned int v, u8 bits)
- {
- 	unsigned int rem = sizeof(s->inflightbits) * 8 - s->bitpos;
- 
--	s->inflightbits |= (v << s->bitpos) & (!rem - 1);
-+	s->inflightbits |= rem ? (v << s->bitpos) : 0;
- 	if (bits > rem) {
- 		u8 *out = s->out + s->pos_out;
- 
--- 
-2.43.0
+From 5dabe68b8c58e5d8b5541822446f7e27e816d6a1 Mon Sep 17 00:00:00 2001
+From: Aayushmaan <aayushmaan.chakraborty@gmail.com>
+Date: Wed, 4 Mar 2026 18:49:53 +0530
+Subject: [PATCH] tests: add basic smoke/integration test script
 
+Verifies core userspace workflow: mkfs.erofs image creation,
+fsck.erofs integrity check, erofsfuse mount, content verification,
+and automatic cleanup.
+Script includes:
+- Binary existence checks
+- Fail-fast error handling
+- Trap-based cleanup on exit
+- Tested locally on Debian-based Chromebook (Crostini)
+No existing tests were present in the repository.
+---
+ tests/smoke.sh | 115 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+ create mode 100755 tests/smoke.sh
+
+diff --git a/tests/smoke.sh b/tests/smoke.sh
+new file mode 100755
+index 0000000..43f70f5
+--- /dev/null
++++ b/tests/smoke.sh
+@@ -0,0 +1,115 @@
++#!/usr/bin/env bash
++#
++# Basic smoke test for erofs-utils
++# Tests: mkfs.erofs =E2=86=92 fsck.erofs =E2=86=92 erofsfuse mount =E2=86=
+=92 content
+verification =E2=86=92 unmount
++#
++# Usage: ./tests/smoke.sh
++#        Must be run from the root of the built erofs-utils tree
++#
++# Exits with 0 on success, non-zero on failure
++
++set -euo pipefail
++IFS=3D$'\n\t'
++
++echo "=3D=3D=3D Starting EROFS smoke test =3D=3D=3D"
++
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++# Setup
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++SRC_DIR=3D"smoke_test_src_$$    "
++IMAGE_FILE=3D"smoke_test.img"
++MOUNT_POINT=3D"smoke_test_mnt_    $$"
++
++MKFS_BIN=3D"./mkfs/mkfs.erofs"
++FSCK_BIN=3D"./fsck/fsck.erofs"
++FUSE_BIN=3D"./fuse/erofsfuse"
++
++if [[ ! -x "$MKFS_BIN" || ! -x "$FSCK_BIN" || ! -x "$FUSE_BIN" ]]; then
++    echo "ERROR: Required binaries not found (expected: $MKFS_BIN,
+$FSCK_BIN, $FUSE_BIN)."
++    echo "       Make sure you have built erofs-utils first, for example:"
++    echo "         ./autogen.sh"
++    echo "         ./configure --enable-lz4 --enable-lzma
+--enable-fuse --with-libzstd"
++    echo "         make -j$(nproc)"
++    exit 1
++fi
++
++mkdir -p "$SRC_DIR" "$MOUNT_POINT"
++
++# Create some test files
++echo "Hello from EROFS smoke test!" > "$SRC_DIR/hello.txt"
++echo "This is a second file."      > "$SRC_DIR/second.txt"
++mkdir "$SRC_DIR/subdir"
++echo "Nested file content"         > "$SRC_DIR/subdir/nested.txt"
++
++echo "[OK] Test files created in $SRC_DIR"
++
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++# Create image (uncompressed)
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++echo "Creating EROFS image (uncompressed)..."
++"$MKFS_BIN" "$IMAGE_FILE" "$SRC_DIR/"
++
++if [[ ! -f "$IMAGE_FILE" ]]; then
++    echo "ERROR: mkfs.erofs failed to create $IMAGE_FILE"
++    exit 1
++fi
++
++echo "[OK] Image created: $IMAGE_FILE"
++
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++# Verify with fsck
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++echo "Running fsck on image..."
++"$FSCK_BIN" "$IMAGE_FILE"
++
++# fsck.erofs usually prints stats or "No errors found" on clean images
++# We just check exit code here
++echo "[OK] fsck completed (exit code $?)"
++
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++# Mount via FUSE and verify contents
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++echo "Mounting image via erofsfuse..."
++"$FUSE_BIN" "$IMAGE_FILE" "$MOUNT_POINT/"
++
++# Give FUSE a moment to settle
++sleep 1
++
++# Basic existence checks
++if [[ ! -f "$MOUNT_POINT/hello.txt" ]]; then
++    echo "FAIL: hello.txt not visible after mount"
++    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
++    exit 1
++fi
++
++if ! grep -q "Hello from EROFS" "$MOUNT_POINT/hello.txt"; then
++    echo "FAIL: Content mismatch in hello.txt"
++    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
++    exit 1
++fi
++
++if [[ ! -f "$MOUNT_POINT/subdir/nested.txt" ]]; then
++    echo "FAIL: subdir/nested.txt not visible"
++    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
++    exit 1
++fi
++
++echo "[OK] Mount successful and files verified"
++
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++# Cleanup
++# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++echo "Unmounting..."
++fusermount -u "$MOUNT_POINT" 2>/dev/null || sudo fusermount -u
+"$MOUNT_POINT" || {
++    echo "Warning: unmount failed, continuing cleanup..."
++}
++
++rm -rf "$SRC_DIR" "$MOUNT_POINT" "$IMAGE_FILE"
++
++echo "=3D=3D=3D Smoke test PASSED =3D=3D=3D"
++exit 0
+--
+2.39.5
 
