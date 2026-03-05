@@ -1,85 +1,85 @@
-Return-Path: <linux-erofs+bounces-2522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2523-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aCivKZjEqWm2EQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:59:52 +0100
+	id KGPuHOLHqWmcEgEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2523-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 19:13:54 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18F96216B3D
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:59:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E69216E45
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 19:13:53 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRckV5pHDz3c5y;
-	Fri, 06 Mar 2026 04:59:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRd2k4Zb8z3c5y;
+	Fri, 06 Mar 2026 05:13:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::535"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772733586;
-	cv=none; b=ZCFEU7VKlhXyjIBITNix9colnCbQj1l7aJP+aHaEDwFaW+eigpc/DrituLeUiCANxS3hSpbMUWJe/cYOXsyGriTH0xy5vyayuU8GLFn2V8TFYSkKFMGQHCr30sR8tGTE1ASH5rcelhxuh3cG34S1fPdV3x69Gm2qnLGbz1ec9+a+uDrEmQV16UeHtWcIEw1//tSf7qo2PqN2b7S0weoFi3AiqR8JlzIJP3xnGvOEcGP2TtskpWg6gtlXazUMvcTWly7F3aNb6zFp/xHznC+6YfERxb12bPkXhJ3eJ5ultOhCLGsppIDjHYbiWuqjoXZNRnc6ElugOGVlPFhhyv7rhw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::536"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772734430;
+	cv=none; b=BHsjd7fyusSVnBlklKXfVJC6fvllWfX2R6fKs/+Pax7r8u9eDg56RRi9jFoG8BQ40+xegbTM4yyu1nJRRiL6h0K9LpcTG5JSP5sy3jc4yypBcbDAlfmOKEad5uIYKaM4IDu3gaXLqY+a6NZfmFPD/INJhupMpgHRR39qMsxFH4C6x+xaUOcW3PyPO7orrZsOlpdhQGRie6NG7BW8ZhwoiGWk6hsg6pfIozxdlN+gr/BT1zrlhp52+EVUX38gyvg1DUVCay79u2nl0OTSoKr0BPWBv00E03N/VGFszPtOLl3Zz95h/6pdkIMq3NGEGf+OUyWIzlo0WWGuB4BiuH1aWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772733586; c=relaxed/relaxed;
-	bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z9SMXkB9F9oSStd8XqB4EnR+oWy5HOgclMKTKd1sYuberO16BRjvksblDE4yTfzV+0ROn1/i75Ndjv+tVH8cXsSg09rry9NI2habZyKu1+YyrWb/6BW+0MK9SlV7e/xWq3VtpVIKgXttANrOyUhNQBSJnPEtBUVJGNGUNf+tHxOHDq3Sftp3yJz0cOk1xwyYJ+zAXGYDWEUYOnvzIeiLwDkAKktMxLYvSZnHch+Ke8OmS1/jNNcDPQ8iq7op76AANbNNTBXtI/YVj6MB/QbvzgPSfw5Zsd2L0wtioi2poZC9OI4xoXOHnqcTh8zuiSp9YDAPf3KHT5j3Q5BSNvvU2Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TGhaLCxQ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1772734430; c=relaxed/relaxed;
+	bh=iUT77A8bZwmqp8DK7vi7T5rdZZs+EbpQDSHCKghSAY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XNUwyJjt+j+zRQ366SGNraCbWR/zLtJZ599fZ2VOZdK+S97ehgQL3bpN7S8VhsiW2quCt0a6aa5k3oyYKkMzqzvCo9ww5EmW8ByBk/bKKuqZ+E5mfR+2y7iCPGo3WWfIVwXIslDN0laQyQaO5OVrTUVWhbnduWrZyJlPLp5m6NbGDilrdWimp4xrnDmdwZwwLqrb/u3zeeo5clyB15MQOXIsaGjI8lNT0e5c3BNsEpMSOhD/yQO5zDvVqyHoFL9RtnxeKJ6sJM5bKti/BmGIubL3o5SIWQuvJ3PvG8D0jlQRhyxIu/O2mDcHINYwNOlAWLoUvfqN/7R49oJxWdjZaw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Oho2M1x2; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::536; helo=mail-pg1-x536.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TGhaLCxQ;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Oho2M1x2;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::536; helo=mail-pg1-x536.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRckS47NXz3bhG
-	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 04:59:43 +1100 (AEDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-c738585c636so100257a12.2
-        for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 09:59:43 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRd2j3gd0z3bhG
+	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 05:13:48 +1100 (AEDT)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-c6de5ea6879so244321a12.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 10:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772733581; x=1773338381; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1772734426; x=1773339226; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
-        b=TGhaLCxQ65pSa+6eFLxKTJS1tYQkhKmRML8xL+YYmZhu+y2QEaamtd5qv0dg+hmbin
-         rKhekyr07pxLpgb2XO99tUAMdnRSsXcZlMsjjt0ffF/DbYUitlIqEMZO04ZwssJpIgjQ
-         E6tHG47sG1Um+4B15rHQ0rjhR1QhrCGDMSQoL1+C5hUZGJA6Y7C7PXzMMPYxECZc40Wi
-         Z2Zf0JvA2hzuTqOMCgXg/JPa6+VHVAHCcyRIKvHElktiuKt02wnQzoTxNgA9HYdLs/WE
-         lQpuJRPIKvJrJt27UTGgucK0rWlNiIer67i8K8vXrWaWwqThnYZsIHSp+Pz4dAesQ0gc
-         FhaQ==
+        bh=iUT77A8bZwmqp8DK7vi7T5rdZZs+EbpQDSHCKghSAY4=;
+        b=Oho2M1x2eBkUg6AID5UtaFW7PMksGVVvkTxRuRpVIM3rCsfnHEcdrS/ZO84fixbbJY
+         rV0/GqC78HiOsQvMGA6FYCjrGiq0hx1nFblWnW5WPp9P1OggDc3DXzByLeTYiTs+L2Wz
+         j0hUBK0f+sl6BneZBBYWzmtj6cAPpL/tTgR/1MCZoIjITKlbaVaPVFdRgrbe1RrEx+6U
+         Fs0YCFGt0SSGnREYhK22X2fsmJPEQ8+NoV4aY6s3TEZDwpBKyWYhH3pNfFIQ1J1qxdqx
+         8dya/06K6W7arX9mRc36EzAJNwITqwfIWIQhtJtNlynsta0qBny006IOFSsN6DSWaVms
+         72ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772733581; x=1773338381;
+        d=1e100.net; s=20230601; t=1772734426; x=1773339226;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
-        b=nJBoqjJrO/p7L9CeojgXJN0Uhff9CTM6y+Wk3/HVfLh3+9G2S6aw45Rau58yPAQtdH
-         C1OJduAYlRoF+A5D6M0vMf9RSAcMWpUHbs88N35kJfdwT+ktr3bkmAMYeTK5zaiXl8yA
-         IZHSGZTnlb+aiqEuU8FzOVP4d+E5vk0RlLSkg5LqS2lH9ecuNxodi45MAwMQCoiXxt4b
-         tvyH4M42jpSlD8rBXdP2Y5dJ88C5/I+OhZRuECuo46fcxFfBS5YO/mWbnvgDqmJEJFp3
-         99fqou9jgAlwk9KTrZ9icczBMU/wle6iFQhw2RyfrjX3jrNeZ7YuxdXKUhzMS++tAnwv
-         6EfA==
-X-Gm-Message-State: AOJu0Yy1Ymb7gEGLuochg4hDvZx7FWixCR4AEwrttoajDMRuCUuhMm6m
-	6WhxBGz56EPw68m22Z9Dd6wSGKJtZM7YmcONfczbWJfCa+gX17Z0E3PbOO74FJ/1
-X-Gm-Gg: ATEYQzzPAhOOrsaj+vfk3+F+CbhYRRSsjHKAsG212X0AbmIBc3+oTkD3R4fEzw5zzKV
-	50B8EH8KtEGuul3d6V+L+sRfI/0YBgY3Na1U+qOn4T1jskBRxg+PTvc4LHHCBClsjVO5K0GKpNK
-	sAxJybHdGpVHo7txZyAQlQzK6VlrrTf/nLNS067Lbcad8XyylwjzIF2tOw0uFSmqAs1YCKqK8u1
-	BBOinuS4aktnEkIpOMZfxIsQQk5DJAw9wNv3oWuiQ75ffxaBUlep5hrXz9UFoXPaJfBgzf2Ulp4
-	ODnC1BsjQ2HA8dQ3mkl57fHvmjVajAJym/qz3SrAhQwgfeCF/ez1lAf9q27AACVdWxSzLlVImnN
-	38E/GctSEBrJXCMRpuTL22n9/23+c+UKxJnONJj0ossV9MSuzFDupqtjsqXeBt6mQPZnfUah+r5
-	O25CPJPuiOS/ZPvF1cBnCwILSc2vc6wXLKAqyQrm9DQhLD1bWjkAo9a0CUA7EyIwmOYT4zg4+ns
-	e0Y2jcW6TDutvkU8gf56p5Ruo3zdqcGUMuhDoZssZ8mXjA=
-X-Received: by 2002:a05:6a00:12d7:b0:824:91f5:aa2d with SMTP id d2e1a72fcca58-82972ca0678mr3825074b3a.5.1772733580995;
-        Thu, 05 Mar 2026 09:59:40 -0800 (PST)
-Received: from DESKTOP-PU4IGQQ.localdomain ([112.196.126.3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8299a6938a7sm419786b3a.7.2026.03.05.09.59.39
+        bh=iUT77A8bZwmqp8DK7vi7T5rdZZs+EbpQDSHCKghSAY4=;
+        b=gSR951rxlDWFBQ6PXs01mhokbfc8G5zOtl+c2bjYIyAtQxETQ/DpPcU/8BR+pEW1L9
+         35fdSaMA8lC7Vj49i24mbpEV8Y2zaKNw8Zy6OD666AsyhyQCBNy3PQpUHXQrhyke3wWg
+         cO1Ub6g+HZUsZZ6z9C8+lrGm23bSsucf40fJmZXD93ew9/A47rKAz8zOV2kRj38NHVrK
+         qLPE+jrr/E8yF60UXve0QjxY5gXUBH6E3/kIkUH1LI43HwyPTCNf/ABzksHDktTxuo8m
+         HFha0SrDqMIUQRMf3YS5xQCc84SWU6oVzEwrX7OkaHdJeGKdy+YHk80dPf8/a5U6bqcN
+         U+TA==
+X-Gm-Message-State: AOJu0YwlwEftZQZSLFsvgq/jlCkl69U3iM3Z41XQLZe04Q2CEJMBbEqV
+	FrFKGeS9bZiuGmFaCNR2orpzmy3L9PoVcp4eNyGWAbiDCz63TL74cGl7Zj+hDI6b
+X-Gm-Gg: ATEYQzxJmBSvDxeF5eq4OrzFN/yxvrKhU+HUVsaMUgcl6Bf0iRotXKNt9ZiZvmb6pAb
+	/GWA3WnkyPcNAfOMmfLa85BDeKazUoJWUHp1zR+k8dykRrxq32Ro1T9R/UIalD2lffVSsJMACjL
+	0DKAu5h8WFmxDKypj76Cnv53of+sWTB9minE5Tas/lDhdKTrI1U2uzDg8DV+wgpTeZLDqx4MsmJ
+	HKemRClg7POmQuWCp5+jPVhlkiTuEL35N+2NSZOwyvdOb50q/qcV1Ye/jjQ+DnbRUNjzh76FemN
+	bi9mqgaXb65iC/VHkna4KYWaGmAOG/P8sYwAoEEcMH/EWRK38BJPuHPHCvNSDooAettqdCjDdmR
+	jatnraGAzqFzSR/yYoDb2YrV7HCk5xbLcezxKP596LbTXsZCEBNq+CdW+QXuZaeH1/bxO4WPn4m
+	MQXJtRanJjWCDPgXmdH8aR1nHV/PvbtK/USn5llxfOv9huPwEbZEbokg4ohDUO94c3Bw+V7EbJT
+	PMBKH9HqBPdAuYZjZVtkDe+SoDGb/QHOo/c6OYdS2x4k7mA
+X-Received: by 2002:a17:903:18d4:b0:2ae:7edc:9234 with SMTP id d9443c01a7336-2ae7edc94femr4629585ad.1.1772734425584;
+        Thu, 05 Mar 2026 10:13:45 -0800 (PST)
+Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae51bb9da6sm119930125ad.36.2026.03.05.10.13.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 09:59:40 -0800 (PST)
+        Thu, 05 Mar 2026 10:13:45 -0800 (PST)
 From: Utkal Singh <singhutkal015@gmail.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: hsiangkao@linux.alibaba.com,
 	Utkal Singh <singhutkal015@gmail.com>
-Subject: [PATCH] fsck.erofs: fix directory loop detection by tracking current nid
-Date: Thu,  5 Mar 2026 17:59:34 +0000
-Message-ID: <20260305175934.23921-1-singhutkal015@gmail.com>
+Subject: [PATCH] erofs-utils: lib: fix potential shift UB in z_erofs lclusterbits handling
+Date: Thu,  5 Mar 2026 18:13:39 +0000
+Message-ID: <20260305181339.28042-1-singhutkal015@gmail.com>
 X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -98,7 +98,7 @@ X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 18F96216B3D
+X-Rspamd-Queue-Id: 93E69216E45
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -106,14 +106,14 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2522-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2523-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -130,40 +130,112 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-The directory cycle detection in erofsfsck_check_inode() pushes the
-parent nid (pnid) onto the dirstack, but checks the current inode's
-nid against the stack entries. This means a self-referencing directory
-(a directory containing an entry whose nid points back to itself) is
-never detected, because the directory's own nid is never recorded in
-the ancestor stack.
+z_lclusterbits is computed from on-disk h_clusterbits without an upper
+bound check: blkszbits + (h_clusterbits & 15). While blkszbits is
+validated in erofs_read_superblock(), EROFS_MAX_BLOCK_SIZE can be
+overridden at compile time (e.g. 64K pages on ARM64), making
+blkszbits up to 16 and z_lclusterbits up to 31.
 
-Fix this by pushing the current directory's nid instead of pnid. This
-ensures that any descendant entry pointing back to any ancestor
-directory in the traversal path will be correctly identified as a loop
-and reported as -ELOOP.
+Several places in z_erofs_map_blocks_ext() and related functions use
+'1 << lclusterbits' where the literal 1 has type int (32-bit signed).
+Per C11 6.5.7p4, left-shifting a signed positive value such that the
+result is not representable is undefined behavior.
 
-This is critical for processing untrusted EROFS images from container
-registries, where a crafted image with directory cycles would cause
-fsck.erofs to recurse infinitely until stack overflow.
+Fix this by:
+ - Adding a validation check rejecting z_lclusterbits > 30 as
+   filesystem corruption, since no valid EROFS image uses logical
+   clusters larger than 1 GiB.
+ - Changing all '1 << lclusterbits' to '1U << lclusterbits' to
+   use unsigned arithmetic, matching the kernel EROFS driver style.
+
+This hardens the z_erofs metadata parsing path against crafted images.
 
 Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
 ---
- fsck/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/zmap.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index cf07829..cd2cb3b 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -1021,7 +1021,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- 		for (i = 0; i < fsckcfg.dirstack.top; ++i)
- 			if (inode.nid == fsckcfg.dirstack.dirs[i])
- 				return -ELOOP;
--		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = pnid;
-+		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = nid;
- 		ret = erofs_iterate_dir(&ctx, true);
- 		--fsckcfg.dirstack.top;
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 0e7af4e..42e982d 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -45,7 +45,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 	advise = le16_to_cpu(di->di_advise);
+ 	m->type = advise & Z_EROFS_LI_LCLUSTER_TYPE_MASK;
+ 	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+-		m->clusterofs = 1 << vi->z_lclusterbits;
++		m->clusterofs = 1U << vi->z_lclusterbits;
+ 		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
+ 		if (m->delta[0] & Z_EROFS_LI_D0_CBLKCNT) {
+ 			if (!(vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
+@@ -60,7 +60,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 	} else {
+ 		m->partialref = !!(advise & Z_EROFS_LI_PARTIAL_REF);
+ 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
+-		if (m->clusterofs >= 1 << vi->z_lclusterbits) {
++		if (m->clusterofs >= 1U << vi->z_lclusterbits) {
+ 			DBG_BUGON(1);
+ 			return -EFSCORRUPTED;
+ 		}
+@@ -168,7 +168,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	lo = decode_compactedbits(lobits, in, encodebits * i, &type);
+ 	m->type = type;
+ 	if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+-		m->clusterofs = 1 << lclusterbits;
++		m->clusterofs = 1U << lclusterbits;
+ 
+ 		/* figure out lookahead_distance: delta[1] if needed */
+ 		if (lookahead)
+@@ -423,7 +423,7 @@ static int z_erofs_map_blocks_fo(struct erofs_inode *vi,
+ 		return 0;
  	}
+ 	initial_lcn = ofs >> lclusterbits;
+-	endoff = ofs & ((1 << lclusterbits) - 1);
++	endoff = ofs & ((1U << lclusterbits) - 1);
+ 
+ 	err = z_erofs_load_lcluster_from_disk(&m, initial_lcn, false);
+ 	if (err)
+@@ -561,12 +561,12 @@ static int z_erofs_map_blocks_ext(struct erofs_inode *vi,
+ 			pos += sizeof(__le64);
+ 			lstart = 0;
+ 		} else {
+-			lstart = round_down(map->m_la, 1 << vi->z_lclusterbits);
++			lstart = round_down(map->m_la, 1U << vi->z_lclusterbits);
+ 			pos += (lstart >> vi->z_lclusterbits) * recsz;
+ 			pa = EROFS_NULL_ADDR;
+ 		}
+ 
+-		for (; lstart <= map->m_la; lstart += 1 << vi->z_lclusterbits) {
++		for (; lstart <= map->m_la; lstart += 1U << vi->z_lclusterbits) {
+ 			ext = erofs_read_metabuf(&map->buf, sbi, pos, in_mbox);
+ 			if (IS_ERR(ext))
+ 				return PTR_ERR(ext);
+@@ -579,9 +579,9 @@ static int z_erofs_map_blocks_ext(struct erofs_inode *vi,
+ 			}
+ 			pos += recsz;
+ 		}
+-		last = (lstart >= round_up(lend, 1 << vi->z_lclusterbits));
++		last = (lstart >= round_up(lend, 1U << vi->z_lclusterbits));
+ 		lend = min(lstart, lend);
+-		lstart -= 1 << vi->z_lclusterbits;
++		lstart -= 1U << vi->z_lclusterbits;
+ 	} else {
+ 		lstart = lend;
+ 		for (l = 0, r = vi->z_extents; l < r; ) {
+@@ -673,6 +673,13 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+ 
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
+ 	vi->z_lclusterbits = sbi->blkszbits + (h->h_clusterbits & 15);
++
++	if (vi->z_lclusterbits > 30) {
++		erofs_err("invalid lclusterbits %u of nid %llu",
++			  vi->z_lclusterbits, vi->nid | 0ULL);
++		err = -EFSCORRUPTED;
++		goto out_put_metabuf;
++	}
+ 	if (vi->datalayout == EROFS_INODE_COMPRESSED_FULL &&
+ 	    (vi->z_advise & Z_EROFS_ADVISE_EXTENTS)) {
+ 		vi->z_extents = le32_to_cpu(h->h_extents_lo) |
 -- 
 2.43.0
 
