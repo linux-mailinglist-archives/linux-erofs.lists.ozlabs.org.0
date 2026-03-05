@@ -1,85 +1,85 @@
-Return-Path: <linux-erofs+bounces-2521-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGkuFOi4qWlEDAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2521-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:10:00 +0100
+	id aCivKZjEqWm2EQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:59:52 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FD0F215E57
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:09:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18F96216B3D
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 18:59:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRbd04b43z3c5y;
-	Fri, 06 Mar 2026 04:09:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRckV5pHDz3c5y;
+	Fri, 06 Mar 2026 04:59:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::530"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772730596;
-	cv=none; b=X0fpij3ZCIROOyWLxsGPbdCgbBAGpON6Wle62Pn1Bk2lcAFtzsq91MLZBf18MIPXPB9PhGzxvtNeoClnC1TRLWf8ucmrh4FVZJLrB9vzaiAWP0XVHbrCZRXjUJpg9drKKfvApeGmt+9QAQM6o4Hp6cf4m7prNjgKKTYyMsDJvZ1CA+V+at465n57pXJUiPdk6hTIID0aoAfp8kMKSfLQfOV4YOd/oTN8kYDJdUIUBL+zF/b1RKd7jEnIPOexsqdCwQ8ptKPtJODrsXcAoXoiQTFdj+epguOaDCPV/8We+MHzhiMQBvkKK32o0sJ22pXOvI4AtykxhIxxtLcMWp+WiQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::535"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772733586;
+	cv=none; b=ZCFEU7VKlhXyjIBITNix9colnCbQj1l7aJP+aHaEDwFaW+eigpc/DrituLeUiCANxS3hSpbMUWJe/cYOXsyGriTH0xy5vyayuU8GLFn2V8TFYSkKFMGQHCr30sR8tGTE1ASH5rcelhxuh3cG34S1fPdV3x69Gm2qnLGbz1ec9+a+uDrEmQV16UeHtWcIEw1//tSf7qo2PqN2b7S0weoFi3AiqR8JlzIJP3xnGvOEcGP2TtskpWg6gtlXazUMvcTWly7F3aNb6zFp/xHznC+6YfERxb12bPkXhJ3eJ5ultOhCLGsppIDjHYbiWuqjoXZNRnc6ElugOGVlPFhhyv7rhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772730596; c=relaxed/relaxed;
-	bh=A0OckjHxS+Qnid2eCJbM6hqodDd13/GL1e/CUc38Av4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SHUMsVTSMDc6bpKo83tvYy82/1RLANp2IV5oevl1/fukPKQvQO6w3SeQSvrdL5YU3roj75dnGu9K8Fn/OZ/Ogtwy7wgQxT0cIBaE8cpWrFdoTpNNQNJ+Sm4EU8qukiqlizn+gQPi76/UuYGIH5tI0/9JCi6JlrSS+FxKjc9otx5AbtEZcBJpd4pb4OKPaumChJPQfLgs7Ghgok3Qw6f9J66ROobE4qPHAOxWMpekRYfIT2qQWtkn+JfIsYHAIUkYZxBYFaN3eQUcK+vAvG+KxEgfJ3wgMdaKXJ1/4F//VL8ObHESDJbkfDVUa76vDqMrdZ0Q/oo7Fp582tG19iloOg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mC8X682j; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::530; helo=mail-pg1-x530.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1772733586; c=relaxed/relaxed;
+	bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z9SMXkB9F9oSStd8XqB4EnR+oWy5HOgclMKTKd1sYuberO16BRjvksblDE4yTfzV+0ROn1/i75Ndjv+tVH8cXsSg09rry9NI2habZyKu1+YyrWb/6BW+0MK9SlV7e/xWq3VtpVIKgXttANrOyUhNQBSJnPEtBUVJGNGUNf+tHxOHDq3Sftp3yJz0cOk1xwyYJ+zAXGYDWEUYOnvzIeiLwDkAKktMxLYvSZnHch+Ke8OmS1/jNNcDPQ8iq7op76AANbNNTBXtI/YVj6MB/QbvzgPSfw5Zsd2L0wtioi2poZC9OI4xoXOHnqcTh8zuiSp9YDAPf3KHT5j3Q5BSNvvU2Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TGhaLCxQ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mC8X682j;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TGhaLCxQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::530; helo=mail-pg1-x530.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::535; helo=mail-pg1-x535.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRbcz5m82z3c5f
-	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 04:09:55 +1100 (AEDT)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-c46d4a02ff5so329884a12.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 09:09:55 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRckS47NXz3bhG
+	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 04:59:43 +1100 (AEDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-c738585c636so100257a12.2
+        for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 09:59:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772730593; x=1773335393; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1772733581; x=1773338381; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0OckjHxS+Qnid2eCJbM6hqodDd13/GL1e/CUc38Av4=;
-        b=mC8X682jZEoZqpYdKoP9GX0hwoIFA4BwOYf9y28SwxDric0JXZ8YT9cRvC6KBCIZVi
-         Eu6soYpn6sRZsekv99o8kr9D9PSZ8auQGMMUlCXsJU09C2w74rTl/A83y5Trc6ATYNV7
-         5kpBykrG1w3T0lUJsN7upUt165bj3Ijy2yZDOxXFs0LlwZzA9zDw8EP60WDsOw/rQztU
-         tjC/65cFxXusQrss/VfvHlc/NqhK50xEx7tJUweYs2B1uVqQGCOa6irN71O2HfCXocS0
-         fc/oLi+AmAf/1Lrkg+97apBxuuKUJp+Theckl7Nx+bYJsqGhT9EUF4SiUV2rkXlCqhK2
-         RHkg==
+        bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
+        b=TGhaLCxQ65pSa+6eFLxKTJS1tYQkhKmRML8xL+YYmZhu+y2QEaamtd5qv0dg+hmbin
+         rKhekyr07pxLpgb2XO99tUAMdnRSsXcZlMsjjt0ffF/DbYUitlIqEMZO04ZwssJpIgjQ
+         E6tHG47sG1Um+4B15rHQ0rjhR1QhrCGDMSQoL1+C5hUZGJA6Y7C7PXzMMPYxECZc40Wi
+         Z2Zf0JvA2hzuTqOMCgXg/JPa6+VHVAHCcyRIKvHElktiuKt02wnQzoTxNgA9HYdLs/WE
+         lQpuJRPIKvJrJt27UTGgucK0rWlNiIer67i8K8vXrWaWwqThnYZsIHSp+Pz4dAesQ0gc
+         FhaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772730593; x=1773335393;
+        d=1e100.net; s=20230601; t=1772733581; x=1773338381;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A0OckjHxS+Qnid2eCJbM6hqodDd13/GL1e/CUc38Av4=;
-        b=Ro8OC8StP7iaBkv1QrbtAxDe544onKKVj6fvaj9fnemdurmSa0YCiJWY1wVZbDEbtl
-         2fZvVI4DlOFXvMQ84fOVaKGES4SQJFuZ41/mj2qkO8Pc/qVwjHRZx6QJ/dsuEGgLbLhH
-         bIpGLL7b64crMBmbugHoPfaCDTWAB/8xdS/2GazhPDfxuOrVAKrag2ybdZJdeimdPELf
-         SAjDDdhvEJ1qZK5yJQIiTHuQ8cgyQQvhuFnPpFYOKOrM1ellbQok9b2k0pgdG6Y9Pni1
-         SZK8iwWrvHwVbUW20JQBZUYVSw/MF9T3uL1yFCWZuO3m8bvgogv0PAKEeGxJj5yh+RXR
-         7V8g==
-X-Gm-Message-State: AOJu0YxAoODWvG/O3uX0NvxHF0QDYbLNilQWuG1GzF7sLfSr1+k82w8b
-	ykHu82DHr4z9ZGM/YcilnP21fkzlBxUMPZYT9fXM6aHuySUgtS04Ib8F6gxYpFYAoP0=
-X-Gm-Gg: ATEYQzxr1FK0diUwg2rY6sti+BenQVVg9S/sncOuJz5TbMf0YsueMWsKiWJ4XUsT6yp
-	7xFaUNG08dRWd+8Fl018aHSOhZe/7Rc0qExvz3k+pQibc1uIx+udRYOCE4dq2+p16dYAEH+4wcn
-	JCLLX3J0zNSnVn1kHwa17067ZEKOEJftXwU/6P9vA96eIH4aAWD+xGFIpLBrbHzwmzUPM4uf682
-	QhFMxU2vv/6pFijS5TYgBYnn9cjDkC2ZMZrsNh/VAUrctDfMDK0XQOvB7deI7ywEQ6v/qxvKpqO
-	236jPjaC3EVJltfgvG2vhpdxu0RcENsg77MTVnXkemRz9lpZqAMavkovU2J92SIGlIt7bBUAqmA
-	CjGpwDM2nB8mztOJdaooN2qgcCWlmCvjqySVlBT0e+bgtDofMVa1r9jlKmdzVR3+fB0HwBDt4z0
-	ne/nBplxkyJHHKFnECkai/z9EAw8HQr5N4lB0CETgoKJj330q8NE8ciicyd9tOW9KadDNeqV2ml
-	M8EpB/yRPF7RbW9oj5imipgHw0QoppTr72x
-X-Received: by 2002:a05:6a20:244e:b0:35d:fce2:cb28 with SMTP id adf61e73a8af0-3982e2ba049mr4392424637.8.1772730592871;
-        Thu, 05 Mar 2026 09:09:52 -0800 (PST)
+        bh=Xo640XpBPc5zs58zEEsRmvpQZK+1zi5rV/WeyoOPWtg=;
+        b=nJBoqjJrO/p7L9CeojgXJN0Uhff9CTM6y+Wk3/HVfLh3+9G2S6aw45Rau58yPAQtdH
+         C1OJduAYlRoF+A5D6M0vMf9RSAcMWpUHbs88N35kJfdwT+ktr3bkmAMYeTK5zaiXl8yA
+         IZHSGZTnlb+aiqEuU8FzOVP4d+E5vk0RlLSkg5LqS2lH9ecuNxodi45MAwMQCoiXxt4b
+         tvyH4M42jpSlD8rBXdP2Y5dJ88C5/I+OhZRuECuo46fcxFfBS5YO/mWbnvgDqmJEJFp3
+         99fqou9jgAlwk9KTrZ9icczBMU/wle6iFQhw2RyfrjX3jrNeZ7YuxdXKUhzMS++tAnwv
+         6EfA==
+X-Gm-Message-State: AOJu0Yy1Ymb7gEGLuochg4hDvZx7FWixCR4AEwrttoajDMRuCUuhMm6m
+	6WhxBGz56EPw68m22Z9Dd6wSGKJtZM7YmcONfczbWJfCa+gX17Z0E3PbOO74FJ/1
+X-Gm-Gg: ATEYQzzPAhOOrsaj+vfk3+F+CbhYRRSsjHKAsG212X0AbmIBc3+oTkD3R4fEzw5zzKV
+	50B8EH8KtEGuul3d6V+L+sRfI/0YBgY3Na1U+qOn4T1jskBRxg+PTvc4LHHCBClsjVO5K0GKpNK
+	sAxJybHdGpVHo7txZyAQlQzK6VlrrTf/nLNS067Lbcad8XyylwjzIF2tOw0uFSmqAs1YCKqK8u1
+	BBOinuS4aktnEkIpOMZfxIsQQk5DJAw9wNv3oWuiQ75ffxaBUlep5hrXz9UFoXPaJfBgzf2Ulp4
+	ODnC1BsjQ2HA8dQ3mkl57fHvmjVajAJym/qz3SrAhQwgfeCF/ez1lAf9q27AACVdWxSzLlVImnN
+	38E/GctSEBrJXCMRpuTL22n9/23+c+UKxJnONJj0ossV9MSuzFDupqtjsqXeBt6mQPZnfUah+r5
+	O25CPJPuiOS/ZPvF1cBnCwILSc2vc6wXLKAqyQrm9DQhLD1bWjkAo9a0CUA7EyIwmOYT4zg4+ns
+	e0Y2jcW6TDutvkU8gf56p5Ruo3zdqcGUMuhDoZssZ8mXjA=
+X-Received: by 2002:a05:6a00:12d7:b0:824:91f5:aa2d with SMTP id d2e1a72fcca58-82972ca0678mr3825074b3a.5.1772733580995;
+        Thu, 05 Mar 2026 09:59:40 -0800 (PST)
 Received: from DESKTOP-PU4IGQQ.localdomain ([112.196.126.3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8273a01a99esm27216370b3a.47.2026.03.05.09.09.51
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8299a6938a7sm419786b3a.7.2026.03.05.09.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 09:09:52 -0800 (PST)
+        Thu, 05 Mar 2026 09:59:40 -0800 (PST)
 From: Utkal Singh <singhutkal015@gmail.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: hsiangkao@linux.alibaba.com,
 	Utkal Singh <singhutkal015@gmail.com>
-Subject: [PATCH] erofs-utils: dump: add directory loop detection to prevent infinite recursion
-Date: Thu,  5 Mar 2026 17:09:47 +0000
-Message-ID: <20260305170947.13184-1-singhutkal015@gmail.com>
+Subject: [PATCH] fsck.erofs: fix directory loop detection by tracking current nid
+Date: Thu,  5 Mar 2026 17:59:34 +0000
+Message-ID: <20260305175934.23921-1-singhutkal015@gmail.com>
 X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -98,98 +98,72 @@ X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 4FD0F215E57
+X-Rspamd-Queue-Id: 18F96216B3D
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2521-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2522-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[linux.alibaba.com,gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	RCPT_COUNT_THREE(0.00)[3];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-A crafted EROFS image with circular directory references can cause
-dump.erofs to enter infinite recursion during statistics gathering,
-leading to a stack overflow.
+The directory cycle detection in erofsfsck_check_inode() pushes the
+parent nid (pnid) onto the dirstack, but checks the current inode's
+nid against the stack entries. This means a self-referencing directory
+(a directory containing an entry whose nid points back to itself) is
+never detected, because the directory's own nid is never recorded in
+the ancestor stack.
 
-Add a dirstack similar to fsck.erofs to track visited directory nids
-during traversal. Before entering a subdirectory, check that the
-maximum depth has not been exceeded and that the directory nid has
-not already been visited. This addresses the XXXX comment that was
-already present in the code.
+Fix this by pushing the current directory's nid instead of pnid. This
+ensures that any descendant entry pointing back to any ancestor
+directory in the traversal path will be correctly identified as a loop
+and reported as -ELOOP.
+
+This is critical for processing untrusted EROFS images from container
+registries, where a crafted image with directory cycles would cause
+fsck.erofs to recurse infinitely until stack overflow.
 
 Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
 ---
- dump/main.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ fsck/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/dump/main.c b/dump/main.c
-index 567cff6..83b2809 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -72,6 +72,11 @@ struct erofs_statistics {
- };
- static struct erofs_statistics stats;
- 
-+static struct {
-+	erofs_nid_t dirs[PATH_MAX];
-+	int top;
-+} dump_dirstack;
-+
- static struct option long_options[] = {
- 	{"version", no_argument, NULL, 'V'},
- 	{"help", no_argument, NULL, 'h'},
-@@ -359,7 +364,6 @@ static int erofsdump_readdir(struct erofs_dir_context *ctx)
- 		update_file_size_statistics(occupied_size, false);
+diff --git a/fsck/main.c b/fsck/main.c
+index cf07829..cd2cb3b 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -1021,7 +1021,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 		for (i = 0; i < fsckcfg.dirstack.top; ++i)
+ 			if (inode.nid == fsckcfg.dirstack.dirs[i])
+ 				return -ELOOP;
+-		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = pnid;
++		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = nid;
+ 		ret = erofs_iterate_dir(&ctx, true);
+ 		--fsckcfg.dirstack.top;
  	}
- 
--	/* XXXX: the dir depth should be restricted in order to avoid loops */
- 	if (S_ISDIR(vi.i_mode)) {
- 		struct erofs_dir_context nctx = {
- 			.flags = ctx->dir ? EROFS_READDIR_VALID_PNID : 0,
-@@ -367,8 +371,17 @@ static int erofsdump_readdir(struct erofs_dir_context *ctx)
- 			.dir = &vi,
- 			.cb = erofsdump_dirent_iter,
- 		};
--
--		return erofs_iterate_dir(&nctx, false);
-+		int i;
-+
-+		if (dump_dirstack.top >= ARRAY_SIZE(dump_dirstack.dirs))
-+			return -ENAMETOOLONG;
-+		for (i = 0; i < dump_dirstack.top; ++i)
-+			if (vi.nid == dump_dirstack.dirs[i])
-+				return -ELOOP;
-+		dump_dirstack.dirs[dump_dirstack.top++] = vi.nid;
-+		err = erofs_iterate_dir(&nctx, false);
-+		--dump_dirstack.top;
-+		return err;
- 	}
- 	return 0;
- }
 -- 
 2.43.0
 
