@@ -1,55 +1,82 @@
-Return-Path: <linux-erofs+bounces-2517-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2518-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +KwfE76XqWlKAgEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2517-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 15:48:30 +0100
+	id 8H1GDwCbqWm7AgEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2518-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 16:02:24 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58D33213D10
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 15:48:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B72C214151
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 16:02:16 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRXTd31NNz3c5f;
-	Fri, 06 Mar 2026 01:48:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRXnc3WCpz3c5f;
+	Fri, 06 Mar 2026 02:02:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772722101;
-	cv=none; b=aC+XNFKEsssm/gnWY/Ffs9z4tQA6AnSeNvIqk8ACQjTeB7keYQZA7I8LsZuT8f9SqY6j74IEf+2Qi4OWnbn9bCQZL75W/yij5ihOFT6GeAtLlj3D1+a4YW6zmAm3yeO/gzBbh6XWTSrZ/rfA+TY3v3eYVNRX9dTjkm7U1bxtiCgOvZhJhhw17xTC2Bxkb26eZiuXBOds/HVTYGoytvlUzhN5B+alnAjxjSCp2jkn52gMIMs2O1vxngQJ5915tZo0dDMToqz3+umu6UpyWQ3is6wNWyPNrO2RZJJLKve223XKImXJwpjXFVANeeCn73LfzDperQJOLrm3cwOvR/HzAA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772722932;
+	cv=none; b=K3fKqrbuKsrzXQSDU/rZnTHeDENPuyKlNNqVJCs/WzbDmL70mRZWcV6p0CgM6IefV8Mq6PlPoNzvJ0bEUynvEwpMF9TML7H9TDu/4yVnX1GhSujTeh6KSHE+BmG1eKfF5kaCsH/F+/DMI1m9vkmTlG1uVAX0gjM/YXeqDx8X/iTS/Cl7MjR0zLhLJYEwrt9ZydCe6ZrCMyprWoB6SiCFSUxdWQ6TLXnHYQoesdiNVF/yqucppxHssFs86ib00D50elAPVNolgLP0/0iPx/VUyBtsSV8LU5t92pbERyucidKlgPJRGHh+x5TEXHF7ZHNblfNM61D2zgSsfv2DMoOrXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772722101; c=relaxed/relaxed;
-	bh=s2FkFDLoJCQXpmv+E3QyTQUefEYgfsmGgRIT/zlJWqU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJRdJX4xC2bYqrVAO7R40xqN94uIeerMg4MHi5RhkO8FgotIGoHrUUoEviHTJAzH6wxldfYxvEX4Ep3SwwQSWL9RGa+lD/N78AIlFJxh7xH3xRUpRgAB73KFefV95MSrIH3PhRvntNxfHRdn3XM1t0KJts61Hj4lKN3t2Oppn/YBSVOjp6zRMZzcjPRuq1KTbmrxu+Xdpj4DRUk5PJeoQxdA5OltFDEkrK9O10unOcR3HbFeJ+uz72vvAijGTYcQhRsG6MEg/cHY1EIlFKUxMRYEf6zHCtUs7v7AIOdbpXLkJ+3SBCSw7Fw2lrD2B7FFl631uF16Gi3zjVfF6MpqvQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=kShRucOc; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1772722932; c=relaxed/relaxed;
+	bh=JM5JonFNOVdHlApqMCLoaabF/YcXP7LkS6bAcjhuBZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lvQzHrgnGGCoJoFc26A1Z6gAcSNuZ0NsGT/OTR+t2rwIPmMAZxLl/5o3CMiVy7JGF0u9h/Nr82G0VoJ+QN46INUocXPOSbqD5r1UpzUV5wO3/9OawjfIhY9WGR3zGvun+kvaAXUDJ7UfYjSgxTtWsZZ1VBGg7hmJ9+GKypm4YctATo5I+NoYjzVvDN0VvXD/gsegxN3Zugl4QkoIpkstMygqSxHYsp58iMH4UYPML5JurXZr3nUJ6Wu3vXN6qqHsHIBhSHGwJrSgcqyaR55PeILdH3+646DWMeuVzPZR9cHWE/2Ty+EMj28opldXeWfqds77sOHyFgeZGPlP8vm5lg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=osfIcpMz; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=ljs@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=kShRucOc;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=osfIcpMz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=ljs@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRXTc2cpBz30MZ
-	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 01:48:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRXnb4dq4z3c2R
+	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 02:02:11 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1239161340;
-	Thu,  5 Mar 2026 14:48:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E191BC116C6;
-	Thu,  5 Mar 2026 14:48:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4A97943C52;
+	Thu,  5 Mar 2026 15:02:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6767AC2BCAF;
+	Thu,  5 Mar 2026 15:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772722097;
-	bh=ocIpNA1/BmcP9pkqgaytGbj1feJWcfZjn6BqjzhMNjQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kShRucOcE7Y2SVaiNf2rZAnObI2IP10yizN9PZDGcbuHf5wIhM068D9RAn/oIu9hZ
-	 z8K1lWk03gKBs5o8Wn+03V7UncL7KBTnJrxy/TqTTijxMGQCukgBYAM7Ef/BABT9cE
-	 yaKghMmV0i91CyW6A0PgjdEzY8ELHUi0EmeL0EwEfNDLhgIH+uqeW4x0ARlsWmRgdn
-	 1U96FCKzP7j96xMSU8sxGYU7oTkz6whbm2vWwY2wvcKojV5k7eFFFVYqpvh0stvArq
-	 4UYpN/efKXx8LYbx8Sv4AD9HIOSrzlZJqaNEQ3jwmSqUQQAjYu8NCScNdhyv8SpkXV
-	 mBII1Lzi9JRlA==
-Message-ID: <9d1e1a6d-b05e-47ed-9947-89bd3007e93f@kernel.org>
-Date: Thu, 5 Mar 2026 15:48:01 +0100
+	s=k20201202; t=1772722929;
+	bh=wRgZmhQjr00u6xNwov7+QTN0n9PgF8LRxMXoCLehj2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=osfIcpMz9xkEHd1thmcRC7ID5peuXO60NX3dAfXWNx8XuxafCP3huQAqeo0Z50NTL
+	 7WHXGEd9l4SBIO3qFyZSZs51cQDgZ/txEREq+UVMtkAIWHPQdU6rlIkMwasA+X4H1R
+	 0vgTKrOo0sYCn09iGpla9DwhdJK5l6HmDrrqVHFOs3zTPxZNOSLtG7KttSGuKKL7C5
+	 CGHdJwOurKzj6Z9/m8NtjplDD54vC/3JtqBAJaS9/CVLprX6BFPrW616tHCOxrmc4G
+	 1fXwqivYf5kdVG+FCyXb3KTvQbaG5LkGZXWNmjd7ibSYSDapxeuO3BMr8v1Fwg+Yeu
+	 JQAA3sGPUYrCQ==
+Date: Thu, 5 Mar 2026 15:01:55 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+	Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
+	Chunhai Guo <guochunhai@vivo.com>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+	Tony Luck <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
+	Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, 
+	Babu Moger <babu.moger@amd.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-mm@kvack.org, 
+	ntfs3@lists.linux.dev, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 6/6] tools/testing/vma: add test for vma_flags_test(),
+ vma_desc_test()
+Message-ID: <f6f396d2-1ba2-426f-b756-d8cc5985cc7c@lucifer.local>
+References: <cover.1772704455.git.ljs@kernel.org>
+ <376a39eb9e134d2c8ab10e32720dd292970b080a.1772704455.git.ljs@kernel.org>
+ <f11ec383-d688-4512-a9ea-700cc2d42f3a@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -61,150 +88,123 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] mm: always inline __mk_vma_flags() and invoked
- functions
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
- Chunhai Guo <guochunhai@vivo.com>, Muchun Song <muchun.song@linux.dev>,
- Oscar Salvador <osalvador@suse.de>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>,
- James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
- Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
- Johannes Thumshirn <jth@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
- ntfs3@lists.linux.dev, linux-fsdevel@vger.kernel.org
-References: <cover.1772704455.git.ljs@kernel.org>
- <241f49c52074d436edbb9c6a6662a8dc142a8f43.1772704455.git.ljs@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <241f49c52074d436edbb9c6a6662a8dc142a8f43.1772704455.git.ljs@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f11ec383-d688-4512-a9ea-700cc2d42f3a@kernel.org>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 58D33213D10
+X-Rspamd-Queue-Id: 7B72C214151
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2517-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:ljs@kernel.org,m:akpm@linux-foundation.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@li
- sts.linux.dev,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[david@kernel.org,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2518-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_SENDER(0.00)[ljs@kernel.org,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN_FAIL(0.00)[117.38.213.112.asn.rspamd.com:query timed out];
+	FORGED_RECIPIENTS(0.00)[m:david@kernel.org,m:akpm@linux-foundation.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@
+ lists.linux.dev,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[linux-foundation.org,arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[44];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[44];
+	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-On 3/5/26 11:50, Lorenzo Stoakes (Oracle) wrote:
-> Be explicit about __mk_vma_flags() (which is used by the mk_vma_flags()
-> macro) always being inline, as we rely on the compiler converting this
-> function into meaningful.
-> 
-> Also update all of the functions __mk_vma_flags() ultimately invokes to be
-> always inline too.
-> 
-> Note that test_bitmap_const_eval() asserts that the relevant bitmap
-> functions result in build time constant values.
-> 
-> Additionally, vma_flag_set() operates on a vma_flags_t type, so it is
-> inconsistently named versus other VMA flags functions.
-> 
-> We only use vma_flag_set() in __mk_vma_flags() so we don't need to worry
-> about its new name being rather cumbersome, so rename it to
-> vma_flags_set_flag() to disambiguate it from vma_flags_set().
-> 
-> Also update the VMA test headers to reflect the changes.
+On Thu, Mar 05, 2026 at 02:52:20PM +0100, David Hildenbrand (Arm) wrote:
+> On 3/5/26 11:50, Lorenzo Stoakes (Oracle) wrote:
+> > Now we have helpers which test singular VMA flags - vma_flags_test() and
+> > vma_desc_test() - add a test to explicitly assert that these behave as
+> > expected.
+> >
+> > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> > ---
+> >  tools/testing/vma/tests/vma.c | 36 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/tools/testing/vma/tests/vma.c b/tools/testing/vma/tests/vma.c
+> > index f031e6dfb474..1aa94dd7e74a 100644
+> > --- a/tools/testing/vma/tests/vma.c
+> > +++ b/tools/testing/vma/tests/vma.c
+> > @@ -159,6 +159,41 @@ static bool test_vma_flags_word(void)
+> >  	return true;
+> >  }
+> >
+> > +/* Ensure that vma_flags_test() and friends works correctly. */
+> > +static bool test_vma_flags_test(void)
+> > +{
+> > +	const vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
+> > +					       VMA_EXEC_BIT, 64, 65);
+>
+> When already using numbers, I was wondering whether you'd want to stick
+> to numbers only here.
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Numbers are for flags > 64 bits, we currently don't define any, it's to make
+sure everything works at higher bitmap sizes, the tests currently set the bitmap
+size to 128 bits.
 
--- 
-Cheers,
+>
+> > +	struct vm_area_desc desc;
+>
+>
+> struct vm_area_desc desc = {
+> 	.vma_flags = flags,
+> };
+>
+> ?
 
-David
+Ack can do, fix-patch for Andrew below :)
+
+Cheers, Lorenzo
+
+----8<----
+From 5cc64e6c1884aaf995ce6398e36d5844c246352d Mon Sep 17 00:00:00 2001
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Date: Thu, 5 Mar 2026 14:59:58 +0000
+Subject: [PATCH] fix
+
+Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+---
+ tools/testing/vma/tests/vma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/vma/tests/vma.c b/tools/testing/vma/tests/vma.c
+index 1aa94dd7e74a..f6edd44f4e9e 100644
+--- a/tools/testing/vma/tests/vma.c
++++ b/tools/testing/vma/tests/vma.c
+@@ -164,9 +164,9 @@ static bool test_vma_flags_test(void)
+ {
+ 	const vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
+ 					      VMA_EXEC_BIT, 64, 65);
+-	struct vm_area_desc desc;
+-
+-	desc.vma_flags = flags;
++	struct vm_area_desc desc = {
++		.vma_flags = flags,
++	};
+
+ #define do_test(_flag)					\
+ 	ASSERT_TRUE(vma_flags_test(&flags, _flag));	\
+--
+2.53.0
 
