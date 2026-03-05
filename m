@@ -1,65 +1,101 @@
-Return-Path: <linux-erofs+bounces-2506-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2507-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AO/hAWwmqWkL2gAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2506-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 07:45:00 +0100
+	id 6PbZHgFgqWnj6QAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2507-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 11:50:41 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57A4B20BCDC
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 07:44:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 879AC20FFC7
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 11:50:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRKlk3FDyz3c2k;
-	Thu, 05 Mar 2026 17:44:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRRCH2xlbz3c5f;
+	Thu, 05 Mar 2026 21:50:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772693090;
-	cv=none; b=mVd/GVHSj3wF9byfWC/ss4+XBoYj4Nv3AEXcrmn+5MH1h5irTuDIq+6VZV4UNL8oDkUrTV8dV55j0IjY3JjVllx92jZOse/77yWuV2TWkHnN3RV/TYp/OWhfkCXrY12I09+pQwm2f/Q3iUV7FDrQ6AB+odA+i8ZYeE3bDuXSVSVFIlO2QEigEgI6bc/MTv0gk2WsUS8J1WPBFs93Q4bCIM9k5UbTRrYTViEN3dc4iHiyGQpBYBc6F2FGimweV+icUffQOpnK+tqLmJf7D3nTUdV2c5uCTYrsvYwjuJAcm/ZiVPEmS0HGeznvQp2j15PQYwSh0XcUH+UwvhAeE3RMdw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772707835;
+	cv=none; b=c9O5ySqWpq6KEhxPWTkx/+rKFpzc+5LeuMu0JMU7i3mEptJpW285W+dGPNdTE6n5GaREdaxc34ZbXVixaMPvDYD4VsyDvTcdGjqA23OE0Fdp0J06c0Cl0vWKOoWjyWErzKZtqAd1KVeAZxxJDq4miNumhbd90/Blprg0Ki1406d0ww0o/63VsckUAVqL9Nzdr565ikCQ1BB0yrDV6z5ZG4F0NDF9eNaSxwDtWBXNEdRal7OrmAlQmGSKJ32gdABCHo4aAZaxOGvqeMGnRTO+q2sY3csr55Rh0z0OBFn7QW8HSebOYJt+p9Ss10jvA++q2MrkEOauCrI5h/8LbKK+7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772693090; c=relaxed/relaxed;
-	bh=CdgpyTruSz0lkCGoGw+Mexu2uEf1R1zNw2yigg5yqd4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WSO2KbILBQTTKVRsbfBbXebCURDuNH6uE5KET0MV+btYROep/Id1FMuQ7ZROlOqDp6UF79Ywa7lFdeALUcpx3tUJw4REco+4FrqyjaKfg2By0rC/p9UdiCXxBpqFSZ4ZvTq50FZqO/+/KnqiQ9fg2erqMCFm24/H1SL2+eHYopM8niD1uS2se2NcWLofMJMFhoH4Dxj8014cSzIvh4RY+bQCoFlMMVsV7w8+EdG2X4K8K48i7/KO7q22V6E24oNY1QTLPITpHSmXB5K/ybkHCFfx3zExY/wjpulN24nRfsMhGUwhflr0aeQOB5xn+VvEjTa6yzxkIzpyJyOo9esE0A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=5Cos5Q8v; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1772707835; c=relaxed/relaxed;
+	bh=KhG9m/1nKVNbvlbE2x8YzN2aakDEcNzRzVMeo+ykMaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ArwxycvxYiIpvJJ0eSxBOYd9bcVjrMOgPOz6nczqZ1IrngV7wnQG9I+8KWaHq1PlItyHqGEQlrnE63QobaLmIpLr8G3MnlQEyZ3lW4Sr42hiYzTH7HD+Y25qIHD3vjC9LlFr8yznCnxiKy5E3vOfy+o2yBd9CLl7kCDXshXojYTDmGsnP81SW9jAz/5V74ISF38lOqChAVFYroU95VSwfqsU5AlbMQjzy+LtyNNl/97+XPSaoV+iRTionWvF8exXro2R2sP9bz1nQrN4C7CshIqUpbnom8+3XF5uZHQP8m7PwlQz0yIdAo02kuqIFPyHhvUVathZ7u5dCJQhjqbnuA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ks2WnXhB; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=ljs@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=5Cos5Q8v;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ks2WnXhB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=ljs@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRKlg2hGHz3c1T
-	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 17:44:45 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=CdgpyTruSz0lkCGoGw+Mexu2uEf1R1zNw2yigg5yqd4=;
-	b=5Cos5Q8vtkEImuDCeU7xAhVGYt4gl+FEaHFV/r3FV8zDxPKkqwXEfQMjG5XKfVi4lRj28R7l7
-	SlUNIPldtQJClKYj8Lci224kPfm6KscJyYFu25qsaqFU2NfnWRFZwz47RUOB8qdqen9PAhJ7oYK
-	EH49UeTK1ZKUpZYqxsoKNXk=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fRKdh6zmrzpTJ3;
-	Thu,  5 Mar 2026 14:39:36 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id E2EEB40363;
-	Thu,  5 Mar 2026 14:44:37 +0800 (CST)
-Received: from huawei.com (10.67.174.162) by kwepemr500015.china.huawei.com
- (7.202.195.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 5 Mar
- 2026 14:44:37 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <chao@kernel.org>, <hsiangkao@linux.alibaba.com>
-CC: <lihongbo22@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] erofs: using iomap mechanisms in fileio for reading unencoded data
-Date: Thu, 5 Mar 2026 06:31:40 +0000
-Message-ID: <20260305063140.47375-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20260305013146.46349-1-lihongbo22@huawei.com>
-References: <20260305013146.46349-1-lihongbo22@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRRCG0QQvz30MZ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 21:50:33 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 3146061339;
+	Thu,  5 Mar 2026 10:50:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD7BC116C6;
+	Thu,  5 Mar 2026 10:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772707830;
+	bh=0/QAvDFwZi+F+9QH+vbMTA5rIfdw8VEPToPzhoxxIs8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ks2WnXhBZhJYCciDsJ/Fjo8g68UnOm1+2N5sQ4oKF/kGeATt0cOgG+p7IStQiz3z2
+	 EaiKLpNcYuvQR0g+WTb5buzNJSSfOvUyoPW9kVP1mxiGLOY0aaIL36Y8HeRxCRWjH0
+	 xPNNxHX1xyrDEsAcz9u21dlmMcxuEfinuXRzrRvtJ7zbfASMxifc8jFI1uuXm0VkKV
+	 vO8JJM2Fd72GNEUcYoWCy/ySVJ/YSjCa2F7WYjhFHDQGWKarW2sHEvezQchoGe9GZ5
+	 xra3AjQzJT0q+i6jzWOOPQIuXDSNX56qDPetnPGikvlCk8ESka3PTrdJXR50wB3Usv
+	 cHc1r7gvVBIug==
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	linux-mm@kvack.org,
+	ntfs3@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/6] mm: vma flag tweaks
+Date: Thu,  5 Mar 2026 10:50:13 +0000
+Message-ID: <cover.1772704455.git.ljs@kernel.org>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -72,358 +108,127 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.162]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 57A4B20BCDC
+X-Rspamd-Queue-Id: 879AC20FFC7
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_FROM(0.00)[bounces-2506-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:chao@kernel.org,m:hsiangkao@linux.alibaba.com,m:lihongbo22@huawei.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2507-lists,linux-erofs=lfdr.de];
+	FREEMAIL_CC(0.00)[arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
+	FORGED_SENDER(0.00)[ljs@kernel.org,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[44];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:akpm@linux-foundation.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@
+ lists.linux.dev,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	HAS_XOIP(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:email,huawei.com:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-In EROFS file-backend mount mode, the whole folio may trigger
-multiple backend file I/Os. The original read process mainly uses
-the @erofs_fileio_scan_folio, which employs a custom iteration
-mechanism on the folio and then to handle the I/Os. It requires
-complex mechanisms to manage the synchronization of multiple
-split file I/Os. This way couples the iteration operation with
-the data reading operation. We can decouple these two steps by
-using the iomap mechanism, thereby simplifying the implementation
-of the read process.
+The ongoing work around introducing non-system word VMA flags has
+introduced a number of helper functions and macros to make life easier when
+working with these flags and to make conversions from the legacy use of
+VM_xxx flags more straightforward.
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
-Changes from v1:
-  - add folio release/invalidate hook.
----
- fs/erofs/data.c     |  11 +--
- fs/erofs/fileio.c   | 176 ++++++++++++++++++++++----------------------
- fs/erofs/internal.h |   8 ++
- 3 files changed, 101 insertions(+), 94 deletions(-)
+This series improves these to reduce confusion as to what they do and to
+improve consistency and readability.
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index f79ee80627d9..d1931fd6eed7 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -267,12 +267,6 @@ void erofs_onlinefolio_end(struct folio *folio, int err, bool dirty)
- 	folio_end_read(folio, !(v & BIT(EROFS_ONLINEFOLIO_EIO)));
- }
- 
--struct erofs_iomap_iter_ctx {
--	struct page *page;
--	void *base;
--	struct inode *realinode;
--};
--
- static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
- {
-@@ -313,6 +307,9 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		else
- 			iomap->bdev = mdev.m_bdev;
- 		iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
-+		/* keep device context when mapping to device */
-+		if (ctx)
-+			ctx->dif = mdev.m_dif;
- 		if (flags & IOMAP_DAX)
- 			iomap->addr += mdev.m_dif->dax_part_off;
- 	}
-@@ -357,7 +354,7 @@ static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
- 	return written;
- }
- 
--static const struct iomap_ops erofs_iomap_ops = {
-+const struct iomap_ops erofs_iomap_ops = {
- 	.iomap_begin = erofs_iomap_begin,
- 	.iomap_end = erofs_iomap_end,
- };
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index abe873f01297..bdf086a992a7 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -13,10 +13,9 @@ struct erofs_fileio_rq {
- 	refcount_t ref;
- };
- 
--struct erofs_fileio {
--	struct erofs_map_blocks map;
--	struct erofs_map_dev dev;
-+struct erofs_fileio_ctx {
- 	struct erofs_fileio_rq *rq;
-+	struct erofs_device_info *dif;
- };
- 
- static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
-@@ -32,7 +31,8 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
- 	if (!rq->bio.bi_end_io) {
- 		bio_for_each_folio_all(fi, &rq->bio) {
- 			DBG_BUGON(folio_test_uptodate(fi.folio));
--			erofs_onlinefolio_end(fi.folio, ret < 0, false);
-+			iomap_finish_folio_read(fi.folio, fi.offset, fi.length,
-+						ret < 0 ? ret : 0);
- 		}
- 	} else if (ret < 0 && !rq->bio.bi_status) {
- 		rq->bio.bi_status = errno_to_blk_status(ret);
-@@ -88,111 +88,113 @@ void erofs_fileio_submit_bio(struct bio *bio)
- 						   bio));
- }
- 
--static int erofs_fileio_scan_folio(struct erofs_fileio *io,
--				   struct inode *inode, struct folio *folio)
-+static int erofs_fileio_read_folio_range(const struct iomap_iter *iter,
-+					 struct iomap_read_folio_ctx *ctx, size_t len)
- {
--	struct erofs_map_blocks *map = &io->map;
--	unsigned int cur = 0, end = folio_size(folio), len, attached = 0;
--	loff_t pos = folio_pos(folio), ofs;
--	int err = 0;
--
--	erofs_onlinefolio_init(folio);
--	while (cur < end) {
--		if (!in_range(pos + cur, map->m_la, map->m_llen)) {
--			map->m_la = pos + cur;
--			map->m_llen = end - cur;
--			err = erofs_map_blocks(inode, map);
--			if (err)
--				break;
--		}
-+	struct erofs_iomap_iter_ctx *iter_ctx = iter->private;
-+	struct erofs_device_info *dif = iter_ctx->dif;
-+	struct inode *realinode = iter_ctx ? iter_ctx->realinode : iter->inode;
-+	struct folio *folio = ctx->cur_folio;
-+	struct erofs_fileio_ctx *fileio_ctx = ctx->read_ctx;
-+	struct iomap *iomap = (struct iomap *)&iter->iomap;
-+	size_t poff = offset_in_folio(folio, iter->pos);
-+	loff_t pos = iter->pos;
-+	int ret = 0;
-+
-+	if (iomap->type == IOMAP_HOLE) {
-+		folio_zero_range(folio, poff, len);
-+		return 0;
-+	}
- 
--		ofs = folio_pos(folio) + cur - map->m_la;
--		len = min_t(loff_t, map->m_llen - ofs, end - cur);
--		if (map->m_flags & EROFS_MAP_META) {
--			struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
--			void *src;
--
--			src = erofs_read_metabuf(&buf, inode->i_sb,
--				map->m_pa + ofs, erofs_inode_in_metabox(inode));
--			if (IS_ERR(src)) {
--				err = PTR_ERR(src);
--				break;
--			}
--			memcpy_to_folio(folio, cur, src, len);
--			erofs_put_metabuf(&buf);
--		} else if (!(map->m_flags & EROFS_MAP_MAPPED)) {
--			folio_zero_segment(folio, cur, cur + len);
--			attached = 0;
--		} else {
--			if (io->rq && (map->m_pa + ofs != io->dev.m_pa ||
--				       map->m_deviceid != io->dev.m_deviceid)) {
--io_retry:
--				erofs_fileio_rq_submit(io->rq);
--				io->rq = NULL;
--			}
--
--			if (!io->rq) {
--				io->dev = (struct erofs_map_dev) {
--					.m_pa = io->map.m_pa + ofs,
--					.m_deviceid = io->map.m_deviceid,
--				};
--				err = erofs_map_dev(inode->i_sb, &io->dev);
--				if (err)
--					break;
--				io->rq = erofs_fileio_rq_alloc(&io->dev);
--				io->rq->bio.bi_iter.bi_sector =
--					(io->dev.m_dif->fsoff + io->dev.m_pa) >> 9;
--				attached = 0;
--			}
--			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
--				goto io_retry;
--			if (!attached++)
--				erofs_onlinefolio_split(folio);
--			io->dev.m_pa += len;
-+	while (len > 0) {
-+		sector_t sector = iomap_sector(iomap, pos);
-+		unsigned int off = offset_in_folio(folio, pos);
-+		unsigned int n = min(len, folio_size(folio) - off);
-+		struct erofs_map_dev mdev = {};
-+
-+		if (!n)
-+			break;
-+		if (!fileio_ctx->rq ||
-+		    fileio_ctx->dif != dif ||
-+		    bio_end_sector(&fileio_ctx->rq->bio) != sector) {
-+			erofs_fileio_rq_submit(fileio_ctx->rq);
-+			mdev = (struct erofs_map_dev) {
-+				.m_dif = dif,
-+				.m_sb = realinode->i_sb,
-+				.m_pa = (sector << SECTOR_SHIFT) + off,
-+			};
-+			fileio_ctx->dif = mdev.m_dif;
-+			fileio_ctx->rq = erofs_fileio_rq_alloc(&mdev);
-+			fileio_ctx->rq->bio.bi_iter.bi_sector =
-+				(mdev.m_dif->fsoff + mdev.m_pa) >> SECTOR_SHIFT;
-+		}
-+		if (!bio_add_folio(&fileio_ctx->rq->bio, folio, n, off)) {
-+			erofs_fileio_rq_submit(fileio_ctx->rq);
-+			fileio_ctx->rq = NULL;
-+			continue;
- 		}
--		cur += len;
-+		pos += n;
-+		len -= n;
- 	}
--	erofs_onlinefolio_end(folio, err, false);
--	return err;
-+	return ret;
-+}
-+
-+static void erofs_fileio_submit_read(struct iomap_read_folio_ctx *ctx)
-+{
-+	struct erofs_fileio_ctx *fileio_ctx = ctx->read_ctx;
-+
-+	erofs_fileio_rq_submit(fileio_ctx->rq);
-+	fileio_ctx->rq = NULL;
- }
- 
-+static const struct iomap_read_ops erofs_fileio_read_ops = {
-+	.read_folio_range = erofs_fileio_read_folio_range,
-+	.submit_read = erofs_fileio_submit_read,
-+};
-+
- static int erofs_fileio_read_folio(struct file *file, struct folio *folio)
- {
-+	struct erofs_fileio_ctx fileio_ctx = {};
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops = &erofs_fileio_read_ops,
-+		.cur_folio = folio,
-+		.read_ctx = &fileio_ctx,
-+	};
- 	bool need_iput;
--	struct inode *realinode = erofs_real_inode(folio_inode(folio), &need_iput);
--	struct erofs_fileio io = {};
--	int err;
-+	struct erofs_iomap_iter_ctx iter_ctx = {
-+		.realinode = erofs_real_inode(folio_inode(folio), &need_iput),
-+	};
- 
--	trace_erofs_read_folio(realinode, folio, true);
--	err = erofs_fileio_scan_folio(&io, realinode, folio);
--	erofs_fileio_rq_submit(io.rq);
-+	trace_erofs_read_folio(iter_ctx.realinode, folio, true);
-+	iomap_read_folio(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- 	if (need_iput)
--		iput(realinode);
--	return err;
-+		iput(iter_ctx.realinode);
-+	return 0;
- }
- 
- static void erofs_fileio_readahead(struct readahead_control *rac)
- {
-+	struct erofs_fileio_ctx fileio_ctx = {};
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops = &erofs_fileio_read_ops,
-+		.rac = rac,
-+		.read_ctx = &fileio_ctx,
-+	};
- 	bool need_iput;
--	struct inode *realinode = erofs_real_inode(rac->mapping->host, &need_iput);
--	struct erofs_fileio io = {};
--	struct folio *folio;
--	int err;
-+	struct erofs_iomap_iter_ctx iter_ctx = {
-+		.realinode = erofs_real_inode(rac->mapping->host, &need_iput),
-+	};
- 
--	trace_erofs_readahead(realinode, readahead_index(rac),
-+	trace_erofs_readahead(iter_ctx.realinode, readahead_index(rac),
- 			      readahead_count(rac), true);
--	while ((folio = readahead_folio(rac))) {
--		err = erofs_fileio_scan_folio(&io, realinode, folio);
--		if (err && err != -EINTR)
--			erofs_err(realinode->i_sb, "readahead error at folio %lu @ nid %llu",
--				  folio->index, EROFS_I(realinode)->nid);
--	}
--	erofs_fileio_rq_submit(io.rq);
-+	iomap_readahead(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- 	if (need_iput)
--		iput(realinode);
-+		iput(iter_ctx.realinode);
- }
- 
- const struct address_space_operations erofs_fileio_aops = {
- 	.read_folio = erofs_fileio_read_folio,
- 	.readahead = erofs_fileio_readahead,
-+	.release_folio = iomap_release_folio,
-+	.invalidate_folio = iomap_invalidate_folio,
- };
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index a4f0a42cf8c3..cda927225b9a 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -411,6 +411,13 @@ struct erofs_map_dev {
- 	unsigned int m_deviceid;
- };
- 
-+struct erofs_iomap_iter_ctx {
-+	struct page *page;
-+	void *base;
-+	struct inode *realinode;
-+	struct erofs_device_info *dif;
-+};
-+
- extern const struct super_operations erofs_sops;
- 
- extern const struct address_space_operations erofs_aops;
-@@ -427,6 +434,7 @@ extern const struct file_operations erofs_file_fops;
- extern const struct file_operations erofs_dir_fops;
- extern const struct file_operations erofs_ishare_fops;
- 
-+extern const struct iomap_ops erofs_iomap_ops;
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
- /* flags for erofs_fscache_register_cookie() */
--- 
-2.22.0
+Firstly the series renames vma_flags_test() to vma_flags_test_any() to make
+it abundantly clear that this function tests whether any of the flags are
+set (as opposed to vma_flags_test_all()).
 
+It then renames vma_desc_test_flags() to vma_desc_test_any() for the same
+reason. Note that we drop the 'flags' suffix here, as
+vma_desc_test_any_flags() would be cumbersome and 'test' implies a flag
+test.
+
+Similarly, we rename vma_test_all_flags() to vma_test_all() for
+consistency.
+
+Next, we have a couple of instances (erofs, zonefs) where we are now
+testing for vma_desc_test_any(desc, VMA_SHARED_BIT) &&
+vma_desc_test_any(desc, VMA_MAYWRITE_BIT).
+
+This is silly, so this series introduces vma_desc_test_all() so these
+callers can instead invoke vma_desc_test_all(desc, VMA_SHARED_BIT,
+VMA_MAYWRITE_BIT).
+
+We then observe that quite a few instances of vma_flags_test_any() and
+vma_desc_test_any() are in fact only testing against a single flag.
+
+Using the _any() variant here is just confusing - 'any' of single item
+reads strangely and is liable to cause confusion.
+
+So in these instances the series reintroduces vma_flags_test() and
+vma_desc_test() as helpers which test against a single flag.
+
+The fact that vma_flags_t is a struct and that vma_flag_t utilises sparse
+to avoid confusion with vm_flags_t makes it impossible for a user to misuse
+these helpers without it getting flagged somewhere.
+
+The series also updates __mk_vma_flags() and functions invoked by it to
+explicitly mark them always inline to match expectation and to be
+consistent with other VMA flag helpers.
+
+It also renames vma_flag_set() to vma_flags_set_flag() (a function only
+used by __mk_vma_flags()) to be consistent with other VMA flag helpers.
+
+Finally it updates the VMA tests for each of these changes, and introduces
+explicit tests for vma_flags_test() and vma_desc_test() to assert that they
+behave as expected.
+
+Lorenzo Stoakes (Oracle) (6):
+  mm: rename VMA flag helpers to be more readable
+  mm: add vma_desc_test_all() and use it
+  mm: always inline __mk_vma_flags() and invoked functions
+  mm: reintroduce vma_flags_test() as a singular flag test
+  mm: reintroduce vma_desc_test() as a singular flag test
+  tools/testing/vma: add test for vma_flags_test(), vma_desc_test()
+
+ drivers/char/mem.c                 |   2 +-
+ drivers/dax/device.c               |   2 +-
+ fs/erofs/data.c                    |   3 +-
+ fs/hugetlbfs/inode.c               |   2 +-
+ fs/ntfs3/file.c                    |   2 +-
+ fs/resctrl/pseudo_lock.c           |   2 +-
+ fs/zonefs/file.c                   |   3 +-
+ include/linux/dax.h                |   4 +-
+ include/linux/hugetlb_inline.h     |   2 +-
+ include/linux/mm.h                 | 100 +++++++++++++++++++++--------
+ include/linux/mm_types.h           |   2 +-
+ mm/hugetlb.c                       |  12 ++--
+ mm/memory.c                        |   2 +-
+ mm/secretmem.c                     |   2 +-
+ tools/testing/vma/include/custom.h |   5 +-
+ tools/testing/vma/include/dup.h    |  48 ++++++++++----
+ tools/testing/vma/tests/vma.c      |  58 +++++++++++++----
+ 17 files changed, 177 insertions(+), 74 deletions(-)
+
+--
+2.53.0
 
