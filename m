@@ -1,62 +1,57 @@
-Return-Path: <linux-erofs+bounces-2503-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2504-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UPQqCSLgqGnzyAAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2503-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 02:45:06 +0100
+	id IO1dNdvrqGnnygAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2504-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 03:35:07 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C64209FA4
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 02:45:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F26420A38A
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 03:35:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRC5l2vlbz30MZ;
-	Thu, 05 Mar 2026 12:44:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRDCV2lkmz30MZ;
+	Thu, 05 Mar 2026 13:35:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.227
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772675099;
-	cv=none; b=VZrx4amegXM6BbflBw74PSZU8886F/jt5rjxIuIZsh3TqLsleWgSkkT2sxjzTM0NiY/tkPqfOiEJmp8+GJtsvJmjftANKCkd3upK+CfGolb+/1Syy0NHH4Z9WOmZ11xa69H5YvFhAsSfCT8CXMBnO6xOGmFxqgDXMm1/1PmyUNBCn31hKzym9WuF9vKVbsZVBQdgb3pRb1qMHs5PBzorRRXPSmLDe9W0D9Pk90in8tvkL3CCni1q1QWwPOtxnQTnu7Y0ItIf7cnVdmC9Cri0xY5OALkaGCWC3Xq33h2jzExme+bPh23TGqIakf/BHY7MPhieIQk0g7TkZjQ+BC4uDg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772678102;
+	cv=none; b=lKlL4iG4gVDpFD1xgbqBfWai/BPBLHqbOUd4KUbkyF/uTKd3PEmjEQJwiEV0cjy3Dk4gN918/0AZx7yna160Oo9Yui6LKnkiiM7jby7SyqPbE3hm9Z+mbR4vn1bglDVshNNDN/73QrEru2lN2O9tMApTGH6+JTVyuzBt47I95oTjJz45c5H5HntYAKd7dtG8oKHYq3CvtR66joV6S00bBS0+7WMm5Vm++y95CD5cluA8NFe5k7954kbI5AnDYlgUuomzV8RUIyIUUXcoYP3rbhlVrAU03uwOtF1/hUwe11WIYTPjDlSXiMCTTMfi/SaXNZUGI42RraOBY1T9PYCkdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772675099; c=relaxed/relaxed;
-	bh=8eYxlxW8/pKdRJu0JJxU4ct+1CkwjELdzJd57wNDHEM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XK8HAt06xEhBd2WMpd3yt3zpax3yX2B13BEa9+ScwOS+t2pYEmrThQScDJ2WqaGJDCFwgTy7ipC7WwwiKVttEQKr5J4L0dGMY3EQfprWH4iH/mDcLZKHf09ymgqzdRmnGi/5KNCZ8Yr+mMgS57vwMrr7Eo0zlZS1ByRu/ymObir9c9cUIPSzJ+THvxaA4f3/hT25dUfakdxkNZISGSkso6zlgZLFl2nbI7vjqgc7xgTclw2vuECPYgMIn7NFZVAKcDKgY7Q5YTK42jihfpGm0OLjCzkqZgfQzwZg6E7g/Shm/Huj+H5+79JCjOyXt4O/dIA2ud21CKBkjaI7pB6B1A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=NXiUxNrv; dkim-atps=neutral; spf=pass (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	t=1772678102; c=relaxed/relaxed;
+	bh=HzvTbUZ6MsrkMIAD/mXn/Fy+qMSjHjDdRGbhCwZ5nyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=efT+yEH0R7ESGs+j6MjrZtQmfI84NOhPeg2nE/128nmMEmMCC6WV66Wz0mb1Ro/yXvGUupu3b93yVdwRRTYaGY2zHknEUSai9aUXavEcGtkZ9xHPVzX6MDPZUzjsF3Q2D3/hDyyRz8eEzY6xKlXwy6Zqh06EoocrPcqylIEeuVHLUV23gVhwm030GbitT+vNJ0m+c3tiu4gyf4vDGVOYNTcIrQzdq3lVDRuJFwUfVRQAnpP4BEH2n0z0G1bOyon4o+2JlH4VwtzVrP3zwv6Nnx5PmerNERybbMqmAkXQhEXnoX/u+5MuACCLS+RvdwZDxQhOt8DdEZtCRHlaA9a7Hg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=pIFS9zhh; dkim-atps=neutral; spf=pass (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=NXiUxNrv;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=pIFS9zhh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
 Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRC5h0Kdkz30FF
-	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 12:44:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRDCR492nz30FF
+	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Mar 2026 13:34:55 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=8eYxlxW8/pKdRJu0JJxU4ct+1CkwjELdzJd57wNDHEM=;
-	b=NXiUxNrvXIMlXiKLlb+/KCAkVkp9fpkSEaGMzGPlkgMZISfIDB/GSj/G2yqQ713yGDuold0k+
-	q2RNwO5NmOTLsUVx1QxHYP+MJ2gqXFFke5d/2EPoPH3VVLwb2OP4zVE0RgwBHFn90z4eRm8itOV
-	D/n5PZXJpejDaUR33ciRKqk=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fRC0B4N9KznTxk;
-	Thu,  5 Mar 2026 09:40:10 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id DBC0740539;
-	Thu,  5 Mar 2026 09:44:46 +0800 (CST)
-Received: from huawei.com (10.67.174.162) by kwepemr500015.china.huawei.com
- (7.202.195.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 5 Mar
- 2026 09:44:46 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <hsiangkao@linux.alibaba.com>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<lihongbo22@huawei.com>
-Subject: [PATCH] erofs: using iomap mechanisms in fileio for reading unencoded data
-Date: Thu, 5 Mar 2026 01:31:46 +0000
-Message-ID: <20260305013146.46349-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	bh=HzvTbUZ6MsrkMIAD/mXn/Fy+qMSjHjDdRGbhCwZ5nyY=;
+	b=pIFS9zhhsgEPCta5KX6goQyprutzQtga5vc988rSv4WH+BW2gDb/qlQbY52PXAfI+IeJLVuSG
+	1FsSWpnVxFPH6sYhHlSQKgegtbku5KZzneTNIJhc0T1Y3TM5IOymwwMZ6vwhwhqR7HYv2pEpjCz
+	d5fsZLbzastvqt6x+5iwP40=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fRD5x5YcHznV02;
+	Thu,  5 Mar 2026 10:30:13 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 07AE840562;
+	Thu,  5 Mar 2026 10:34:50 +0800 (CST)
+Received: from [100.103.109.96] (100.103.109.96) by
+ kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Thu, 5 Mar 2026 10:34:49 +0800
+Message-ID: <9df761dd-7ec1-4471-8a2b-2949e043e9fb@huawei.com>
+Date: Thu, 5 Mar 2026 10:34:49 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -68,350 +63,398 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.162]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemr500015.china.huawei.com (7.202.195.162)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] erofs-utils: mfks: add rebuild FULLDATA for combined
+ EROFS images
+To: Lucas Karpinski <lkarpinski@nvidia.com>, <linux-erofs@lists.ozlabs.org>
+CC: <jcalmels@nvidia.com>
+References: <20260302-merge-fs-v1-0-a7254423447c@nvidia.com>
+ <20260302-merge-fs-v1-4-a7254423447c@nvidia.com>
+From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
+In-Reply-To: <20260302-merge-fs-v1-4-a7254423447c@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [100.103.109.96]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 23C64209FA4
+X-Rspamd-Queue-Id: 5F26420A38A
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:chao@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:lihongbo22@huawei.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-2503-lists,linux-erofs=lfdr.de];
-	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	RCVD_TLS_LAST(0.00)[];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TO_DN_NONE(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2504-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:lkarpinski@nvidia.com,m:linux-erofs@lists.ozlabs.org,m:jcalmels@nvidia.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[3];
 	HAS_XOIP(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	FROM_HAS_DN(0.00)[]
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:mid,nvidia.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-In EROFS file-backend mount mode, the whole folio may trigger
-multiple backend file I/Os. The original read process mainly uses
-the @erofs_fileio_scan_folio, which employs a custom iteration
-mechanism on the folio and then to handle the I/Os. It requires
-complex mechanisms to manage the synchronization of multiple
-split file I/Os. This way couples the iteration operation with
-the data reading operation. We can decouple these two steps by
-using the iomap mechanism, thereby simplifying the implementation
-of the read process.
+On 2026/3/3 4:01, Lucas Karpinski wrote:
+> This patch introduces experimental support for merging multiple source
+> images in mkfs. Each source image uses its stored UUID as the device table
+> tag. The raw block data from each source is copied using
+> erofs_copy_file_range.
+>
+> This does not yet support chunk-based files at this time or compressed
+> images.
+>
+> Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
+> ---
+>   lib/cache.c            |   6 ++
+>   lib/liberofs_cache.h   |   1 +
+>   lib/liberofs_rebuild.h |   5 ++
+>   lib/rebuild.c          | 169 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>   mkfs/main.c            |   6 +-
+>   5 files changed, 183 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/cache.c b/lib/cache.c
+> index 4c7c386..49742bc 100644
+> --- a/lib/cache.c
+> +++ b/lib/cache.c
+> @@ -544,6 +544,12 @@ erofs_blk_t erofs_total_metablocks(struct erofs_bufmgr *bmgr)
+>   	return bmgr->metablkcnt;
+>   }
+>   
+> +void erofs_bset_tail(struct erofs_bufmgr *bmgr, erofs_blk_t blkaddr)
+> +{
+> +	if (blkaddr > bmgr->tail_blkaddr)
+> +		bmgr->tail_blkaddr = blkaddr;
+> +}
+> +
+>   void erofs_buffer_exit(struct erofs_bufmgr *bmgr)
+>   {
+>   	DBG_BUGON(__erofs_bflush(bmgr, NULL, true));
+> diff --git a/lib/liberofs_cache.h b/lib/liberofs_cache.h
+> index baac609..55e8f25 100644
+> --- a/lib/liberofs_cache.h
+> +++ b/lib/liberofs_cache.h
+> @@ -138,6 +138,7 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
+>   		 struct erofs_buffer_block *bb);
+>   
+>   void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke);
+> +void erofs_bset_tail(struct erofs_bufmgr *bmgr, erofs_blk_t blkaddr);
+>   void erofs_buffer_exit(struct erofs_bufmgr *bmgr);
+>   
+>   #ifdef __cplusplus
+> diff --git a/lib/liberofs_rebuild.h b/lib/liberofs_rebuild.h
+> index d8c4c8a..32d9e2f 100644
+> --- a/lib/liberofs_rebuild.h
+> +++ b/lib/liberofs_rebuild.h
+> @@ -17,6 +17,11 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+>   			    enum erofs_rebuild_datamode mode,
+>   			    erofs_blk_t uniaddr_offset);
+>   
+> +int erofs_rebuild_load_trees_full(struct erofs_inode *root,
+> +				  struct erofs_sb_info *sbi,
+> +				  struct list_head *src_list,
+> +				  unsigned int src_count);
+> +
+>   int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
+>   			       unsigned int *i_nlink);
+>   #endif
+> diff --git a/lib/rebuild.c b/lib/rebuild.c
+> index 7e62bc9..16ef0cf 100644
+> --- a/lib/rebuild.c
+> +++ b/lib/rebuild.c
+> @@ -14,8 +14,10 @@
+>   #include "erofs/xattr.h"
+>   #include "erofs/blobchunk.h"
+>   #include "erofs/internal.h"
+> +#include "erofs/io.h"
+>   #include "liberofs_rebuild.h"
+>   #include "liberofs_uuid.h"
+> +#include "liberofs_cache.h"
+>   
+>   #ifdef HAVE_LINUX_AUFS_TYPE_H
+>   #include <linux/aufs_type.h>
+> @@ -221,9 +223,60 @@ err:
+>   	return ret;
+>   }
+>   
+> +static int erofs_rebuild_write_full_data(struct erofs_inode *inode,
+> +					 erofs_blk_t uniaddr_offset)
+> +{
+> +	struct erofs_sb_info *src_sbi = inode->sbi;
+> +	int err = 0;
+> +
+> +	if (inode->datalayout == EROFS_INODE_FLAT_PLAIN) {
+> +		if (inode->u.i_blkaddr != EROFS_NULL_ADDR)
+> +			inode->u.i_blkaddr += uniaddr_offset;
+> +	} else if (inode->datalayout == EROFS_INODE_FLAT_INLINE) {
+> +		erofs_blk_t nblocks = erofs_blknr(src_sbi, inode->i_size);
+> +		unsigned int inline_size = inode->i_size % erofs_blksiz(src_sbi);
+> +
+> +		if (nblocks > 0 && inode->u.i_blkaddr != EROFS_NULL_ADDR)
+> +			inode->u.i_blkaddr += uniaddr_offset;
+> +
+> +		inode->idata_size = inline_size;
+> +		if (inline_size > 0) {
+> +			struct erofs_vfile vf;
+> +			erofs_off_t tail_offset = erofs_pos(src_sbi, nblocks);
+> +
+> +			inode->idata = malloc(inline_size);
+> +			if (!inode->idata)
+> +				return -ENOMEM;
+> +			err = erofs_iopen(&vf, inode);
+> +			if (err) {
+> +				free(inode->idata);
+> +				inode->idata = NULL;
+> +				return err;
+> +			}
+> +			err = erofs_pread(&vf, inode->idata, inline_size,
+> +					  tail_offset);
+> +			if (err) {
+> +				free(inode->idata);
+> +				inode->idata = NULL;
+> +				return err;
+> +			}
+> +		}
+> +	} else if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
+> +		erofs_err("chunk-based files not yet supported: %s",
+> +			  inode->i_srcpath);
+> +		err = -EOPNOTSUPP;
+> +	} else if (is_inode_layout_compression(inode)) {
+> +		erofs_err("compressed files not yet supported: %s",
+> +			  inode->i_srcpath);
+> +		err = -EOPNOTSUPP;
+> +	}
+> +	return err;
+> +}
+> +
+>   static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
+>   				      struct erofs_inode *inode,
+> -				      enum erofs_rebuild_datamode datamode)
+> +				      enum erofs_rebuild_datamode datamode,
+> +				      erofs_blk_t uniaddr_offset)
+>   {
+>   	int err = 0;
+>   
+> @@ -265,6 +318,8 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
+>   			err = erofs_rebuild_write_blob_index(dst_sb, inode);
+>   		else if (datamode == EROFS_REBUILD_DATA_RESVSP)
+>   			inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
+> +		else if (datamode == EROFS_REBUILD_DATA_FULL)
+> +			err = erofs_rebuild_write_full_data(inode, uniaddr_offset);
+>   		else
+>   			err = -EOPNOTSUPP;
+>   		break;
+> @@ -387,7 +442,8 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+>   			inode->i_nlink = 1;
+>   
+>   			ret = erofs_rebuild_update_inode(&g_sbi, inode,
+> -							 rctx->datamode);
+> +							 rctx->datamode,
+> +							 rctx->uniaddr_offset);
+>   			if (ret) {
+>   				erofs_iput(inode);
+>   				goto out;
+> @@ -425,6 +481,7 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+>   {
+>   	struct erofs_inode inode = {};
+>   	struct erofs_rebuild_dir_context ctx;
+> +	struct erofs_inode *mergedir;
+>   	char uuid_str[37];
+>   	char *fsid = sbi->devname;
+>   	int ret;
+> @@ -447,16 +504,19 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+>   		erofs_err("failed to read root inode of %s", fsid);
+>   		return ret;
+>   	}
+> +
+> +	mergedir = root;
+>   	inode.i_srcpath = strdup("/");
+>   
+>   	ctx = (struct erofs_rebuild_dir_context) {
+>   		.ctx.dir = &inode,
+>   		.ctx.cb = erofs_rebuild_dirent_iter,
+> -		.mergedir = root,
+> +		.mergedir = mergedir,
+>   		.datamode = mode,
+>   		.uniaddr_offset = uniaddr_offset,
+>   	};
+>   	ret = erofs_iterate_dir(&ctx.ctx, false);
+> +
+>   	free(inode.i_srcpath);
+>   	return ret;
+>   }
+> @@ -556,3 +616,106 @@ int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
+>   	};
+>   	return erofs_iterate_dir(&ctx.ctx, false);
+>   }
+> +
+> +static int erofs_rebuild_copy_src_blocks(struct erofs_sb_info *sbi,
+> +					 struct list_head *src_list)
+> +{
+> +	struct erofs_device_info *devs = sbi->devs;
+> +	struct erofs_sb_info *src;
+> +	erofs_blk_t current_addr = sbi->primarydevice_blocks;
+> +	int idx = 0;
+> +
+> +	list_for_each_entry(src, src_list, list) {
+> +		erofs_blk_t src_blocks = devs[idx].blocks;
+> +		u64 src_off = 0, dst_off;
+> +		u64 len;
+> +		int src_fd, dst_fd;
+> +
+> +		devs[idx].uniaddr = current_addr;
+> +
+> +		erofs_info("Copying %s: %u blocks at unified address %u",
+> +			   src->devname, src_blocks, current_addr);
+> +
+> +		src_fd = src->bdev.fd;
+> +		dst_fd = sbi->bdev.fd;
+> +
+> +		if (src_fd < 0 || dst_fd < 0) {
+> +			erofs_err("failed to get file descriptors");
+> +			return -EINVAL;
+> +		}
+> +
+> +		dst_off = erofs_pos(sbi, current_addr);
+> +		len = erofs_pos(src, src_blocks);
+> +
+> +		while (len > 0) {
+> +			ssize_t copied = erofs_copy_file_range(
+> +				src_fd, &src_off, dst_fd, &dst_off, len);
+> +			if (copied < 0) {
+> +				erofs_err("failed to copy data from %s: %s",
+> +					  src->devname, erofs_strerror(-copied));
+> +				return copied;
+> +			}
+> +			if (copied == 0)
+> +				break;
+> +			len -= copied;
+> +		}
+> +
+> +		current_addr += src_blocks;
+> +		idx++;
+> +	}
+> +	sbi->primarydevice_blocks = current_addr;
+> +	return 0;
+> +}
+> +
+> +int erofs_rebuild_load_trees_full(struct erofs_inode *root,
+> +				  struct erofs_sb_info *sbi,
+> +				  struct list_head *src_list,
+> +				  unsigned int src_count)
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- fs/erofs/data.c     |  11 +--
- fs/erofs/fileio.c   | 174 ++++++++++++++++++++++----------------------
- fs/erofs/internal.h |   8 ++
- 3 files changed, 99 insertions(+), 94 deletions(-)
+Hi Karpinski,
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index f79ee80627d9..d1931fd6eed7 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -267,12 +267,6 @@ void erofs_onlinefolio_end(struct folio *folio, int err, bool dirty)
- 	folio_end_read(folio, !(v & BIT(EROFS_ONLINEFOLIO_EIO)));
- }
- 
--struct erofs_iomap_iter_ctx {
--	struct page *page;
--	void *base;
--	struct inode *realinode;
--};
--
- static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
- {
-@@ -313,6 +307,9 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		else
- 			iomap->bdev = mdev.m_bdev;
- 		iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
-+		/* keep device context when mapping to device */
-+		if (ctx)
-+			ctx->dif = mdev.m_dif;
- 		if (flags & IOMAP_DAX)
- 			iomap->addr += mdev.m_dif->dax_part_off;
- 	}
-@@ -357,7 +354,7 @@ static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
- 	return written;
- }
- 
--static const struct iomap_ops erofs_iomap_ops = {
-+const struct iomap_ops erofs_iomap_ops = {
- 	.iomap_begin = erofs_iomap_begin,
- 	.iomap_end = erofs_iomap_end,
- };
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index abe873f01297..ea0ff673ae4c 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -13,10 +13,9 @@ struct erofs_fileio_rq {
- 	refcount_t ref;
- };
- 
--struct erofs_fileio {
--	struct erofs_map_blocks map;
--	struct erofs_map_dev dev;
-+struct erofs_fileio_ctx {
- 	struct erofs_fileio_rq *rq;
-+	struct erofs_device_info *dif;
- };
- 
- static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
-@@ -32,7 +31,8 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
- 	if (!rq->bio.bi_end_io) {
- 		bio_for_each_folio_all(fi, &rq->bio) {
- 			DBG_BUGON(folio_test_uptodate(fi.folio));
--			erofs_onlinefolio_end(fi.folio, ret < 0, false);
-+			iomap_finish_folio_read(fi.folio, fi.offset, fi.length,
-+						ret < 0 ? ret : 0);
- 		}
- 	} else if (ret < 0 && !rq->bio.bi_status) {
- 		rq->bio.bi_status = errno_to_blk_status(ret);
-@@ -88,108 +88,108 @@ void erofs_fileio_submit_bio(struct bio *bio)
- 						   bio));
- }
- 
--static int erofs_fileio_scan_folio(struct erofs_fileio *io,
--				   struct inode *inode, struct folio *folio)
-+static int erofs_fileio_read_folio_range(const struct iomap_iter *iter,
-+		struct iomap_read_folio_ctx *ctx, size_t len)
- {
--	struct erofs_map_blocks *map = &io->map;
--	unsigned int cur = 0, end = folio_size(folio), len, attached = 0;
--	loff_t pos = folio_pos(folio), ofs;
--	int err = 0;
--
--	erofs_onlinefolio_init(folio);
--	while (cur < end) {
--		if (!in_range(pos + cur, map->m_la, map->m_llen)) {
--			map->m_la = pos + cur;
--			map->m_llen = end - cur;
--			err = erofs_map_blocks(inode, map);
--			if (err)
--				break;
--		}
-+	struct erofs_iomap_iter_ctx *iter_ctx = iter->private;
-+	struct erofs_device_info *dif = iter_ctx->dif;
-+	struct inode *realinode = iter_ctx ? iter_ctx->realinode : iter->inode;
-+	struct folio *folio = ctx->cur_folio;
-+	struct erofs_fileio_ctx *fileio_ctx = ctx->read_ctx;
-+	struct iomap *iomap = (struct iomap *)&iter->iomap;
-+	size_t poff = offset_in_folio(folio, iter->pos);
-+	loff_t pos = iter->pos;
-+	int ret = 0;
-+
-+	if (iomap->type == IOMAP_HOLE) {
-+		folio_zero_range(folio, poff, len);
-+		return 0;
-+	}
- 
--		ofs = folio_pos(folio) + cur - map->m_la;
--		len = min_t(loff_t, map->m_llen - ofs, end - cur);
--		if (map->m_flags & EROFS_MAP_META) {
--			struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
--			void *src;
--
--			src = erofs_read_metabuf(&buf, inode->i_sb,
--				map->m_pa + ofs, erofs_inode_in_metabox(inode));
--			if (IS_ERR(src)) {
--				err = PTR_ERR(src);
--				break;
--			}
--			memcpy_to_folio(folio, cur, src, len);
--			erofs_put_metabuf(&buf);
--		} else if (!(map->m_flags & EROFS_MAP_MAPPED)) {
--			folio_zero_segment(folio, cur, cur + len);
--			attached = 0;
--		} else {
--			if (io->rq && (map->m_pa + ofs != io->dev.m_pa ||
--				       map->m_deviceid != io->dev.m_deviceid)) {
--io_retry:
--				erofs_fileio_rq_submit(io->rq);
--				io->rq = NULL;
--			}
--
--			if (!io->rq) {
--				io->dev = (struct erofs_map_dev) {
--					.m_pa = io->map.m_pa + ofs,
--					.m_deviceid = io->map.m_deviceid,
--				};
--				err = erofs_map_dev(inode->i_sb, &io->dev);
--				if (err)
--					break;
--				io->rq = erofs_fileio_rq_alloc(&io->dev);
--				io->rq->bio.bi_iter.bi_sector =
--					(io->dev.m_dif->fsoff + io->dev.m_pa) >> 9;
--				attached = 0;
--			}
--			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
--				goto io_retry;
--			if (!attached++)
--				erofs_onlinefolio_split(folio);
--			io->dev.m_pa += len;
-+	while (len > 0) {
-+		sector_t sector = iomap_sector(iomap, pos);
-+		unsigned int off = offset_in_folio(folio, pos);
-+		unsigned int n = min(len, folio_size(folio) - off);
-+		struct erofs_map_dev mdev = {};
-+
-+		if (!n)
-+			break;
-+		if (!fileio_ctx->rq ||
-+		    fileio_ctx->dif != dif ||
-+		    bio_end_sector(&fileio_ctx->rq->bio) != sector) {
-+			erofs_fileio_rq_submit(fileio_ctx->rq);
-+			mdev = (struct erofs_map_dev) {
-+				.m_dif = dif,
-+				.m_sb = realinode->i_sb,
-+				.m_pa = (sector << SECTOR_SHIFT) + off,
-+			};
-+			fileio_ctx->dif = dif;
-+			fileio_ctx->rq = erofs_fileio_rq_alloc(&mdev);
-+			fileio_ctx->rq->bio.bi_iter.bi_sector =
-+				(mdev.m_dif->fsoff + mdev.m_pa) >> 9;
-+		}
-+		if (!bio_add_folio(&fileio_ctx->rq->bio, folio, n, off)) {
-+			erofs_fileio_rq_submit(fileio_ctx->rq);
-+			fileio_ctx->rq = NULL;
-+			continue;
- 		}
--		cur += len;
-+		pos += n;
-+		len -= n;
- 	}
--	erofs_onlinefolio_end(folio, err, false);
--	return err;
-+	return ret;
-+}
-+
-+static void erofs_fileio_submit_read(struct iomap_read_folio_ctx *ctx)
-+{
-+	struct erofs_fileio_ctx *fileio_ctx = ctx->read_ctx;
-+
-+	erofs_fileio_rq_submit(fileio_ctx->rq);
-+	fileio_ctx->rq = NULL;
- }
- 
-+static const struct iomap_read_ops erofs_fileio_read_ops = {
-+	.read_folio_range = erofs_fileio_read_folio_range,
-+	.submit_read = erofs_fileio_submit_read,
-+};
-+
- static int erofs_fileio_read_folio(struct file *file, struct folio *folio)
- {
-+	struct erofs_fileio_ctx fileio_ctx = {};
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops = &erofs_fileio_read_ops,
-+		.cur_folio = folio,
-+		.read_ctx = &fileio_ctx,
-+	};
- 	bool need_iput;
--	struct inode *realinode = erofs_real_inode(folio_inode(folio), &need_iput);
--	struct erofs_fileio io = {};
--	int err;
-+	struct erofs_iomap_iter_ctx iter_ctx = {
-+		.realinode = erofs_real_inode(folio_inode(folio), &need_iput),
-+	};
- 
--	trace_erofs_read_folio(realinode, folio, true);
--	err = erofs_fileio_scan_folio(&io, realinode, folio);
--	erofs_fileio_rq_submit(io.rq);
-+	trace_erofs_read_folio(iter_ctx.realinode, folio, true);
-+	iomap_read_folio(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- 	if (need_iput)
--		iput(realinode);
--	return err;
-+		iput(iter_ctx.realinode);
-+	return 0;
- }
- 
- static void erofs_fileio_readahead(struct readahead_control *rac)
- {
-+	struct erofs_fileio_ctx fileio_ctx = {};
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops = &erofs_fileio_read_ops,
-+		.rac = rac,
-+		.read_ctx = &fileio_ctx,
-+	};
- 	bool need_iput;
--	struct inode *realinode = erofs_real_inode(rac->mapping->host, &need_iput);
--	struct erofs_fileio io = {};
--	struct folio *folio;
--	int err;
-+	struct erofs_iomap_iter_ctx iter_ctx = {
-+		.realinode = erofs_real_inode(rac->mapping->host, &need_iput),
-+	};
- 
--	trace_erofs_readahead(realinode, readahead_index(rac),
-+	trace_erofs_readahead(iter_ctx.realinode, readahead_index(rac),
- 			      readahead_count(rac), true);
--	while ((folio = readahead_folio(rac))) {
--		err = erofs_fileio_scan_folio(&io, realinode, folio);
--		if (err && err != -EINTR)
--			erofs_err(realinode->i_sb, "readahead error at folio %lu @ nid %llu",
--				  folio->index, EROFS_I(realinode)->nid);
--	}
--	erofs_fileio_rq_submit(io.rq);
-+	iomap_readahead(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- 	if (need_iput)
--		iput(realinode);
-+		iput(iter_ctx.realinode);
- }
- 
- const struct address_space_operations erofs_fileio_aops = {
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index a4f0a42cf8c3..cda927225b9a 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -411,6 +411,13 @@ struct erofs_map_dev {
- 	unsigned int m_deviceid;
- };
- 
-+struct erofs_iomap_iter_ctx {
-+	struct page *page;
-+	void *base;
-+	struct inode *realinode;
-+	struct erofs_device_info *dif;
-+};
-+
- extern const struct super_operations erofs_sops;
- 
- extern const struct address_space_operations erofs_aops;
-@@ -427,6 +434,7 @@ extern const struct file_operations erofs_file_fops;
- extern const struct file_operations erofs_dir_fops;
- extern const struct file_operations erofs_ishare_fops;
- 
-+extern const struct iomap_ops erofs_iomap_ops;
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
- /* flags for erofs_fscache_register_cookie() */
--- 
-2.22.0
 
+Thanks for your patches and it works well in my simple test.
+
+
+I really think this function has some similar logic with 
+erofs_rebuild_load_trees,
+
+could we integrate it with the existing logic?
+
+
+Thanks,
+
+Yifan
+
+> +{
+> +	struct erofs_device_info *devs;
+> +	struct erofs_sb_info *src;
+> +	int ret, idx = 0;
+> +
+> +	ret = erofs_mkfs_init_devices(sbi, src_count);
+> +	if (ret) {
+> +		erofs_err("failed to initialize devices: %s",
+> +			  erofs_strerror(ret));
+> +		return ret;
+> +	}
+> +	devs = sbi->devs;
+> +
+> +	/* Read source superblocks and populate device table */
+> +	list_for_each_entry(src, src_list, list) {
+> +		ret = erofs_read_superblock(src);
+> +		if (ret) {
+> +			erofs_err("failed to read superblock of %s: %s",
+> +				  src->devname, erofs_strerror(ret));
+> +			return ret;
+> +		}
+> +		devs[idx].blocks = src->primarydevice_blocks;
+> +		erofs_uuid_unparse_as_tag(src->uuid, (char *)devs[idx].tag);
+> +		idx++;
+> +	}
+> +
+> +	/* Copy source data blocks */
+> +	ret = erofs_rebuild_copy_src_blocks(sbi, src_list);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Advance buffer manager past copied data */
+> +	erofs_bset_tail(sbi->bmgr, sbi->primarydevice_blocks);
+> +
+> +	/* Load filesystem trees with unified block addresses */
+> +	idx = 0;
+> +	list_for_each_entry(src, src_list, list) {
+> +		ret = erofs_rebuild_load_tree(root, src,
+> +					      EROFS_REBUILD_DATA_FULL,
+> +					      devs[idx].uniaddr);
+> +		if (ret) {
+> +			erofs_err("failed to load %s", src->devname);
+> +			return ret;
+> +		}
+> +		idx++;
+> +	}
+> +	return 0;
+> +}
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index a8f9a5e..124a024 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -15,9 +15,11 @@
+>   #include <getopt.h>
+>   #include "erofs/config.h"
+>   #include "erofs/print.h"
+> +#include "erofs/io.h"
+>   #include "erofs/importer.h"
+>   #include "erofs/diskbuf.h"
+>   #include "erofs/inode.h"
+> +#include "erofs/dir.h"
+>   #include "erofs/tar.h"
+>   #include "erofs/dedupe.h"
+>   #include "erofs/xattr.h"
+> @@ -1726,7 +1728,9 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+>   		break;
+>   	case EROFS_MKFS_DATA_IMPORT_FULLDATA:
+>   		datamode = EROFS_REBUILD_DATA_FULL;
+> -		break;
+> +		return erofs_rebuild_load_trees_full(root, &g_sbi,
+> +						     &rebuild_src_list,
+> +						     rebuild_src_count);
+>   	case EROFS_MKFS_DATA_IMPORT_RVSP:
+>   		datamode = EROFS_REBUILD_DATA_RESVSP;
+>   		break;
+>
 
