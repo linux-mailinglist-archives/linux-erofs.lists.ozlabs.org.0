@@ -1,82 +1,80 @@
-Return-Path: <linux-erofs+bounces-2525-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2526-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SOHrMAvmqWnuHQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2525-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 21:22:35 +0100
+	id UI1mL8UtqmkyMwEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2526-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 02:28:37 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E4432181C6
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Mar 2026 21:22:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0820F21A3C0
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 02:28:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fRgv55mphz3bhG;
-	Fri, 06 Mar 2026 07:22:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fRphH5WDmz3bn7;
+	Fri, 06 Mar 2026 12:28:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c101::7" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772742145;
-	cv=pass; b=oGRZf7y5HBxFz7uDt+6AxU6fad7CqI4dMNCn345B1vC48IJeILoH2VrySB4D0OBZXsOkRVI9wc3980kUPEDyYBgEYaIuOA84BWNaREd5sisfRHSZJRAMXHLX8y/tlF7ONw2ijZ14mG/Maz5FCN3Cm2Fb/rXZ8gxdAzmARqfFe2k9SRf2ziqLVVjwpsDFGF6W6QdEdqxeI4QX38eWu85wGklaFlPVMtcKu1X+KhJGZt7Xy8fMXjLoiBmMmytCyeyMWVF0I5iAxd+LzHiiCPdT1PJZWrpwpSd/XvIqWjyOd9Rd+TzjUCROZFB51GWiD0GqOV1GR2ABAVBPyveYJJbzuQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772742145; c=relaxed/relaxed;
-	bh=hmjbAhoJd4SNyJJyZ+rAAKVKeQz3DWGkWh+ybmU1988=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ff616OhHE9FRqv5XfaHHt0mbNIWyx6neuFAfBYCqKqIx5jrMOlmKPMPQDK+EjzYdRfHWD9uqctFz1sufuMy4901yr6utmFk2d3Prv/YPcxETg0QFRhE0/2haggAcyjcOEPykz7jAuvxGZhubxbRTX9V+yuZ3l/I4+sk4z+khzjh0x0KOV9nMOl8Y9hTo/LS1E1PHcuE9fIMLT1EHXFz0MlS9t9xvRIusB/S689781qfHw6Bu8uI7ZAOG9iYs/Fc01+UiS/ftrawyktUz+42zFIUsRay9jkr66i+Db7Zg9rfxOxCLcOZbn+GNAFUyI573+IW+WCTh8k+y9F6zW7dhOQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=GYKD//P3; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c101::7; helo=bl0pr03cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772760511;
+	cv=none; b=BGum7a3otLLRuioeAWVcfB7UJ7MJ6bg5wG7E93LSz1HfwXvHtU5X59ecZK2yXaRbHWevykm9m1ie6jiY56+Cr6x9q4KeRLUtishqP54wKiUT1HYSBOEgzwCfTwqnuH2IJcou6pX3uvzAeHIUUdQYztibia0LXonUDpXuj4PI6cwjA2R+BHSVziIyo8OFLAua2f/fvSwiRZ3Mkh/Q1DqD63pZCg6W2aCH18ZDXZ0rn4w/UyOKeAL1kZKD5+jegqYNYtiNgUvj8wLopqCLTQ6fqDzOc+YZeAozp+CZwciOwZ68/Gu6Pkc8IkaXE+ky0gK+Bk+6x/dBP3SPHtv2NY6+Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1772760511; c=relaxed/relaxed;
+	bh=CaG7jr+VfjnCoSN4V62oLqn5tLh2gzx8QQSFMx4Q7MA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UTvMk5VpBxz/mEnZCTbor8Ubu6TM0bxBuTdbaDlblOKpkKINHdYlkZPZX1ED0ccDORmSAUOI9k2AeTLbndHSrZnRw4BzxxK/AQ292fExKJNGS6UR9sua8VrpejC8/qdAhdoC+IHJXXk+qbH5yn5qlIFBU+Mk5diAjwPMCJhhlILTq4lT0646lY1yrFzyh2Fc2lWiibm8/uIe4sFRZ4Dshr9ct7S3J6/iPiYr2QLBl4oh7WssW0+Pa/rG4WwQp9WG7JOjBfF81ncneeiST9EpiMw5ewHOQzIV3W28EXegz9eUA2OXAR3UD78niwnJROooxRZh5alKx6/3x/9T+lrvoQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; dkim=pass (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=GLd0s/ch; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=akpm@linux-foundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linux-foundation.org
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=GYKD//P3;
+	dkim=pass (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=GLd0s/ch;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c101::7; helo=bl0pr03cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazlp170120007.outbound.protection.outlook.com [IPv6:2a01:111:f403:c101::7])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux-foundation.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=akpm@linux-foundation.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRgv3584Jz30BR
-	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 07:22:23 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ccptXS0up54bHqZs3P2yonfibrfsbpQIqZCKO+Tyt80p96aHVIB9z4EDSnbRvFwBUByXhrZa0vBGGBAkVlMwGYrVSVoZvYW1eJEv+NzXoxXu2+Ep1B1h5NH5pfRnovW0MezqTj/E/iWK6/VMYTYnXi+MBcwI6GyMUfoe6DpHcQy1aXFlClIGgTEi7Bc8uVvkrC4XtDY53qzqCWO3gLiJiU91avPZZQi2uKFn0CxpBAEVum591aIvZ9d9VmBX3PEDOZAnC+6NZ9Pej9eXMCbLYlXEjpzTLE1H9d/GAQ7beY+keVrQdIqWqo/Gi0uKzxo/EbVMsz7fgKgFnXTruKpcCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hmjbAhoJd4SNyJJyZ+rAAKVKeQz3DWGkWh+ybmU1988=;
- b=zMy5727Smolae2+QgBDmWTlZDev5NrBa0VSKCX310lVWFy12MmtpDXSWTCXA6H10fAPBCfpIWTtPJhFsUvMOxGiDADoSrHEqgZQtDoRoMWbppLmYOTLTR4tK8lWS4Hw9yiuv+7ZGLR1AAQya8ipt4t4a7AFnXndtlhr8toSS3Q0DfwLLHZITTFNy2d2o4dbOP3VXE5PfEtjWGa6lvffG24VZBvVye7eIthOtI5ckbSI4AckgjxBHLr6vV7iaJ6ywlxkQ3aBnU8p2R3iVbQ4fWopZAd7hP6HCD6dgm1bw1PwcyfYi0ZcCW5RLT4YKvTmquzULxls9ejE1uPmEelIQEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hmjbAhoJd4SNyJJyZ+rAAKVKeQz3DWGkWh+ybmU1988=;
- b=GYKD//P3ekPrMxZc9rc4V06NbfmB9qNHfEmNNEC/Xp7hts3VCjIXjq3qn71M+mByK0Abm9qr8G19AalZFZ3bewaZszxhL0oF+XsDmeIyuZ1/hTf4WFa6IRGiQD6GJRWR0SaHDi7aWJM8/ToVEY469pHsBA+TeM8uR3uR8ijTxqbipPzfh+0ovQWjKsjv+Qpk+sPrwpffserdlgW9/vH+lr3R3LHliWcpZyYSzYc7bl6JACmuEn1544ZwqppFN5V6eMZ7wlq9NZ8dMxvVkFaKYgZ9V66lrQ1pXqruR4rONmORcXu3A4uVUeW5paqEP7aq+JHZZbytH3NCnRy8HKisHA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
- by SJ0PR12MB7035.namprd12.prod.outlook.com (2603:10b6:a03:47c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.18; Thu, 5 Mar
- 2026 20:21:54 +0000
-Received: from DS0PR12MB8502.namprd12.prod.outlook.com
- ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
- ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9678.017; Thu, 5 Mar 2026
- 20:21:54 +0000
-Message-ID: <2e2ae86a-d858-48d1-8016-6fb5c3503317@nvidia.com>
-Date: Thu, 5 Mar 2026 15:21:52 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] erofs-utils: mfks: add rebuild FULLDATA for combined
- EROFS images
-To: "zhaoyifan (H)" <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: jcalmels@nvidia.com
-References: <20260302-merge-fs-v1-0-a7254423447c@nvidia.com>
- <20260302-merge-fs-v1-4-a7254423447c@nvidia.com>
- <9df761dd-7ec1-4471-8a2b-2949e043e9fb@huawei.com>
-Content-Language: en-CA
-From: Lucas Karpinski <lkarpinski@nvidia.com>
-In-Reply-To: <9df761dd-7ec1-4471-8a2b-2949e043e9fb@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0137.namprd13.prod.outlook.com
- (2603:10b6:806:27::22) To DS0PR12MB8502.namprd12.prod.outlook.com
- (2603:10b6:8:15b::16)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fRphG2Dlmz3bfV
+	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 12:28:29 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 6F214400A8;
+	Fri,  6 Mar 2026 01:28:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9ABBC116C6;
+	Fri,  6 Mar 2026 01:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1772760506;
+	bh=xoqtM6KgSSyBmEncwbFJBFIEM74nLDE4UHST+ZsEmS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GLd0s/chsfmYvy+LIH62gG5cEGAEj5HMdsosVlCij4305RrtKNFRubz7oaemcCLGp
+	 cYE1e6xHiziyBEv2LfZDfBA0YvxGjkdcmwIMHkbsWGB3BeloGCws11aDALA3BnxMIh
+	 KTm0M6zqfZxOWL8K7hZizyGYcV4OsvQCT4Rk4jEc=
+Date: Thu, 5 Mar 2026 17:28:24 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu
+ <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, Chunhai
+ Guo <guochunhai@vivo.com>, Muchun Song <muchun.song@linux.dev>, Oscar
+ Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Tony Luck
+ <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Dave
+ Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, Babu Moger
+ <babu.moger@amd.com>, Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota
+ <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, Matthew Wilcox
+ <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Liam R . Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
+ Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Jann Horn <jannh@google.com>, Pedro
+ Falcato <pfalcato@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-mm@kvack.org, ntfs3@lists.linux.dev, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/6] mm: vma flag tweaks
+Message-Id: <20260305172824.fd712ae310748dc6338d6d5b@linux-foundation.org>
+In-Reply-To: <cover.1772704455.git.ljs@kernel.org>
+References: <cover.1772704455.git.ljs@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -87,126 +85,60 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|SJ0PR12MB7035:EE_
-X-MS-Office365-Filtering-Correlation-Id: dbdba1c8-eeb7-4ec9-092e-08de7af4d776
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	3E2wFRr8rj3HMUZzPDiyK9IGHFH7C3AqXtmYBuK6dd3phGq2r/u98Cm3r2PW77SmVA2Gqm/EUid/PYRPl9SnVYZkEiVurBeugSUheA//VEpdNOhpoPd5yzm0i4NfBJJj418u1QVQqEXnZs3Ye9scfR3n3+JtWRKE1O2FQwJn33vwOG55U3vy8kz9HB3a5OxrOJGUtsXkpOkAZogfkGDFKsezmgGMSH5CNnSmup2S7SWoNeqMESrUcXoL7PmhD+2VjSPkm97Q3iukoTdB8WAXwpSpK0o6g5hHDehUYAKBwYP2EXtEMH0Ajop8nlCagx8Y8YF1o+TJoO1Kb26d3YBcHrxa9iooEYnsh/hqczkUUegvG76u/IzpDmD6fHdjLtj3OxzTO0ELHC4HQLxiMilcR/PK52MkVcEe4vgdI4qOr1Lk/KyXsfn7K++3URpPR4xC8HuUtOdlHRhXrqEAuG3gkZuMZ51/UEfOLBKsrIH+P9pG7ZjofxFUaqCXt4Wviqpv1V21SKsRnXhQzJaym4/bU/xfJwkvcmRCwWBSKTJXRh9fY091DZ72zOmVCo46RVRX0EwweD8NZR9MjPtxbKUg8GodYlLXLeuKlSfP/bEp0xV3KTLQL49/x6liwODJbm21ghLy6hFJ7e9EORAFXZt9ol4SxDrNk7x7zg0PIJDwIUuxy7H05Mz0C8b5Yr1vUbK3n3ivu6Uwy/i2FkJzuNwv23PXrXhZ+FrbUwZDMGlCnAk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHJzMjRTUEN5RTVINVR3cDErZm4yU3A5NzVoTWJWQ24zUW02ckw3QXZKVWxw?=
- =?utf-8?B?T0p5Wkh5UmcvOHcyWXFmUHp0Uk81SG5MdHRkQXNHcm8vejFFR2x0L0pJZVds?=
- =?utf-8?B?K1BieDR4SDJ3K3JjdzlEZFM3OVh0c2pMYzRqeGUrMHdaTWw0V1Z0YWtaTHBr?=
- =?utf-8?B?ZG1WVjJKUlN5UTlsNjBxMWZQV2lDQ0pSZFJ2eXdnL2pXNWdURmhYaTRVSkJn?=
- =?utf-8?B?eVlNaHVXbFVWQjNZRnptam5pRS91Z3grR1J4MXZxbVR0QmsxQSs4MmRiMHk3?=
- =?utf-8?B?YzBOU1BweUtyeENLQ0J2MUtIMCtSNURidEZDcyttOXRWL3ZYd2dXc3lCcFNQ?=
- =?utf-8?B?dVBhVlpDODVHWkpqUDVwQy8wMzE3OFYybjJNcGdNK3JFY29GcGdIMEZLRUdW?=
- =?utf-8?B?RlBuNkhCZVhYejNZODRjbFB4amlLdEFDMkNDVWpjNkppbW43SElZUTZoV0ZD?=
- =?utf-8?B?RmkxSEgwd0xFSW8wajUwRGhYWWJMcmtvKzVidVZIWDFQVGhTYUZsQy9rUTFj?=
- =?utf-8?B?OGE5eTNqdVhidnNHcjZqcm5jZG5DdUdZT21Sa2xBMVduTk5aRWE2S0N1dVgv?=
- =?utf-8?B?RVNZR1pQNUdmWFJMZGhzME1Fa0g4Zyt1K3FCV2t1SHFpN1dTaDNUem5ici82?=
- =?utf-8?B?MGVnRy9NWU8reEpMWkhuU296amx4TGtRUzFNTUo5b05kYi9uenl3eVZDc2xM?=
- =?utf-8?B?aTRKTUtqb1hscDEvUnl5MndObkR0S0dlTzY2aXFIZHlreG1LbjRzbkNTOWh3?=
- =?utf-8?B?dnZhVy8xTXFiS00wSXk2NHJXajhhSzJrcXpFZElDRE1nT1M0SDR0dk1iNG5v?=
- =?utf-8?B?U01SalM5NERzYVFsQ0JJcU1IZVozeVo4d2FZait2VjFIeEpUamYwdFQrbW8y?=
- =?utf-8?B?b0VjeitvdXBYbkxGRS9tTVNLOVBPNFFvVzJFR01KWVZFWUVsNmFHTHU3S0Ri?=
- =?utf-8?B?YVpMM1lhb3lET1BvTXc3bUo0ZEpXYTRBNThqTXNVWldFU3R4azdlZVRYaG5k?=
- =?utf-8?B?TnM3bkRpcDhvTHBtM3o2eit1cDRWOHRNZFBMYjl5M3NNdFR3SGJ1ZmFyV1hm?=
- =?utf-8?B?R3A0Wm1FVXd5VWFVSkkyRXppeE11VzVVZW9Ia3dIc1U4SHFzOVVGN2tCUHRa?=
- =?utf-8?B?NXBURncxMVBXZXJZL0NSdGRZd0I5dU1CTVZKYWxTLzdtdDM1SE1kc2RwNWpw?=
- =?utf-8?B?K0Zwd292R2hyMkw3aGZMeWEyc3g2MEFGL0lOWk5ML1AzVDVRRDZLcEpOMy9z?=
- =?utf-8?B?dzJmSU0zRjZoNUNFWm1rNGI3MmErMTMwekVvMkhvR01nQWVlMHlJNVRWZWd1?=
- =?utf-8?B?eFd2QnFMSzd4di9hdm5KRTJ3RHJWQjVVNVBGVzFSSDZlSVJRNkRyT1c0cks0?=
- =?utf-8?B?aDMvS01Zd0orN3dZakVDUFlTZmNOYXgzVlNVZEhIYllaN0kwTEErSVNlYnQ0?=
- =?utf-8?B?bE1WdG81NXF3SWNlblJ3YzdyTmtjSThPdzRDbmk1UXlZTjBoUDBydGJXcFl1?=
- =?utf-8?B?dDIrZ2o2WUw5SVAzaWJCZnl1TndVNHk0Wld5OFFqKzQxVUYvN2Z4dEpicU9B?=
- =?utf-8?B?WFRPQnIzMlQ1RjZYWTRVTUNaRlpKTmJBakc3S3hONllIQmpQWENDKzlmeGRL?=
- =?utf-8?B?VDVmUWIvb09jZUZFUHljcWNDYnJiUUwyUFUveWdvUUhMVDIrcXNJWFprV0RD?=
- =?utf-8?B?YUFhL3d2bmIxOUFuVVh4QmlVM2YyOHRWa3hiRWdTamtvVDluTzhXVXg0ZytU?=
- =?utf-8?B?ZWl2WldHQXRzcHVyYldmdjRKeXBVZlFrOUh4N01DeWdQTEFNaUY2b2lJUDJQ?=
- =?utf-8?B?aURFd0RxNFNVR1h0QXptZTY2NnVEekVPcEN6TjhDNm9rV1RSR3BzNGFUWTZB?=
- =?utf-8?B?S2FDY2Q0VmJ1MG9ibGJnM0lDVnF6VFFkRmlzYmh4Y1Jad3VpUy84V3h0UGYv?=
- =?utf-8?B?YWRaZmpPbWlpS0tNQTdsOWMxNXZKUTlzOVFnUklSYU5nMVI4eVZXSCtwNUFh?=
- =?utf-8?B?ZWlidFNmd25wdFhiSlhWa2xFTmlQbEppaDhkWlRtNlNWNzNrOU5oUVFZa0Z5?=
- =?utf-8?B?WHltL3VSV1A2dGxvcnFTbWQyYWFMblR4dllSTVJtZXFydjQzK2oxSWYzUDJ3?=
- =?utf-8?B?NXJJbUZyOUYwenNweDJzLzVjekJZem9NL1ZIak5uMjVMZThUaWswbGRrSWMx?=
- =?utf-8?B?TnpkY3lmQlhNQ2dtSHMxQ2JuYjNXTzVLWFVOTUZKQXNpb0JyRVJidmFXTVlo?=
- =?utf-8?B?TlRvcTVFUFN0RVFBWXo4aVVKaGVCQzRvRXVzejdXRjdyb2RGdkY4ckZMRVo1?=
- =?utf-8?B?YmNUcWwrTFdBTjFQMjlmcDdiU20wOU0xKzI5MS9uYmJRNlZFclRrUT09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbdba1c8-eeb7-4ec9-092e-08de7af4d776
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 20:21:54.2502
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /wxDyyG783D/rtcaJVA+qaB8Ihoarzo6FzzsKrsVA4klBuMU358kv7e44aKgL/cZ2mttbtBUElZfM6ECIWBTwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7035
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 8E4432181C6
+X-Rspamd-Queue-Id: 0820F21A3C0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+X-Spamd-Result: default: False [-1.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2525-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:jcalmels@nvidia.com,s:lists@lfdr.de];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:ljs@kernel.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux
+ .dev,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[akpm@linux-foundation.org,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2526-lists,linux-erofs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	DMARC_NA(0.00)[linux-foundation.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[akpm@linux-foundation.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux-foundation.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	TO_DN_SOME(0.00)[]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:dkim,linux-foundation.org:mid]
 X-Rspamd-Action: no action
 
-On 2026-03-04 9:34 p.m., zhaoyifan (H) wrote:
+On Thu,  5 Mar 2026 10:50:13 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
+
+> The ongoing work around introducing non-system word VMA flags has
+> introduced a number of helper functions and macros to make life easier when
+> working with these flags and to make conversions from the legacy use of
+> VM_xxx flags more straightforward.
 > 
-> Hi Karpinski,
-> 
-> 
-> Thanks for your patches and it works well in my simple test.
-> 
-> 
-> I really think this function has some similar logic with
-> erofs_rebuild_load_trees,
-> 
-> could we integrate it with the existing logic?
-> 
-> 
-> Thanks,
-> 
-> Yifan
-> 
-ACK. I'll update in v2.
-Regards,
-Lucas Karpinski
+> This series improves these to reduce confusion as to what they do and to
+> improve consistency and readability.
+
+Thanks, I quietly added this (and the -fix) to mm.git's mm-new branch.
 
