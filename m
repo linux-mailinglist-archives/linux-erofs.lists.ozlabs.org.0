@@ -1,87 +1,87 @@
-Return-Path: <linux-erofs+bounces-2529-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2530-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qEArGQaXqmnJUAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2529-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 09:57:42 +0100
+	id gF2LIwqXqmnJUAEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2530-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 09:57:46 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C48CD21D85F
-	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 09:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E54C121D866
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Mar 2026 09:57:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fS0fW0D8dz3c5f;
-	Fri, 06 Mar 2026 19:57:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fS0fb3Tq1z3c9j;
+	Fri, 06 Mar 2026 19:57:43 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::432"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772787459;
-	cv=none; b=f/sedcJDDiRMid9Le/4l2OODjgTvN2YcUUVo7hKx6MnpMSrYXALFPj2mPTIaJJ28Gqg1K6UshRouxMrF+SbauAy6In3rSnrgD8LC53gp/DRIgbQO1svjJTtOTQjnthbNneab/BR1F33eX6kaHtyzG2gGCMFgXYG2ceY6yQEt12TIaZfN47EZtcorSanZb/AT+Tg6tB0gA+7hwIsg4/JdbmoHnQlbEpAwOmTk4i0lv6Qu9LqW1rdWPmdR0nKlpwoFIXl7ahuKp6xRulnDy2jMMBDf+U9BVIXpak8xAorGcP+RzQ/yI/Tf3+6R7mO6s8qiKIbZgvYqCBEdFlbvxVMGSg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42b"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772787463;
+	cv=none; b=FlcRq0y3oRBHf/Y5x/cxf/w9G6MaaFlid5GQQEASo8heBKTD+q83dDZJUQZFE616HwTnPKZCDlppZEzB1gb5sVZ45qfW1GaSELWKVPO+IPVQn6cbfmbkz2OH0ElmkyB7/SxQhwo41vzFFvlL4tVDYG8rYZ2JXqSYOZgIBdQZAGRJkjARb/oN06Kwf6QYCgs24ZaymVUFTM3aCdJyBcbqg+qsGC6QS+tD/D1BIF3d3cFPHblfjIAPBTbKf8dOICC3PxYywKEg61K4lvJ5h4oDuXzfEAy34MCno5L60XLi/2dvzziyV+LHJea2hBZYxLuUVPtZOZambAkVl5GTTxn6FQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772787459; c=relaxed/relaxed;
-	bh=d26g9qUGClymG7vagLdb7C3RciNtFptAZbMuGRkBYcs=;
+	t=1772787463; c=relaxed/relaxed;
+	bh=nOy2INI4KU/H9jgqMOQSD/SeiIe5PhzGz1ueJzs8S30=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=am8ghBqG/84jde9EJJe4/I5SgU7vo/HCb6ZJLmo4xr6zsr2nvdOxg+87lNEHVZwq3Xe0o8P0pMSuBPKruN77T/p7Pc820heehzbP9HBqnXu7cHywI61qf087ZLjRlL8vgayJYh9AySBBYXO+b19w1EIHdb67surKfdHvDSUzshngbQXoyDUVdW9YmyLZsUhPkmevlp+tIxHknyChOnCxffWE6vb8PHi+w/9NKJRPjDTbeRjP8mOFcu9PVZ3bKHfiLQbJkuCeIy00aJbEVtgBstBmunAOn5N7bzm5eNPCU+H8nTXM6ZQLkaY485xHdzg6P5SAKbBJw+QQo/L86NhtJA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=DEVLG5Bz; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::432; helo=mail-pf1-x432.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	 MIME-Version; b=Z4RwFV1cLRk2tfQTsESZsRGjcnopYCS6dTPD/fPJtc2xM7mHw5Rzk4YfU4AcbIUVKKehJMIF9esjylrxIv/g2UbwYPOH02c8e90c2EAPaR/TwIrMIuSk7eRr1ukpT6GHzVsLtPIRLpBEfVstQlhyrbMVTDAITUl5h0tjl95BBRqdIux+mYbETJdKKTpk9Kx7czbZico3GhBtV5hAdWMqDA2T72NVEGGFTmUR2xowQRpW1Ypmq4u6HY6HdqBrG3m8g1y/aDQIxNbtoeCEz8uE0IIsxj408xysvXfgEQnnBirbEWL7U1ood4yR0/mn7W9+3Xw2VnmXofz2TLintouzIQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=P+1pHht+; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=DEVLG5Bz;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=P+1pHht+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::432; helo=mail-pf1-x432.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fS0fV2KLWz30T9
-	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 19:57:38 +1100 (AEDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-826c49b7628so5683720b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 00:57:38 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fS0fZ52y6z30T9
+	for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 19:57:42 +1100 (AEDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-829756f3ee9so2556381b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 00:57:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772787456; x=1773392256; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1772787461; x=1773392261; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d26g9qUGClymG7vagLdb7C3RciNtFptAZbMuGRkBYcs=;
-        b=DEVLG5BzrkdufUFhaRHb7jBOCBVrZ1KYnWfoi87ZsVHx1mnpSDzy5a0PZE3TE2hmp6
-         qWfVfyk5DBOGNJJIndpkTiAO3s6tByCFGIdFlT2E890xA6NF4EgeOR6Yei147DZuuWL4
-         U5H6a5sVBPCg//G91DC2omobOM7lZ6DlplteHz/mKoza9u3d2dhpN1X6Ilbni2meC0Aj
-         B1oRpXIgrPMAxiTP9Q0DBSYnJ2gyPEeEiUhB3RL7uybfWr5qY5NhxC7gybzSLg3Fmhrx
-         vUM4syKJL7Mgr9RjMRjKauG8VTHZQV10owfkyv3r3JzSDxHYEvw0gQ32zuKcCKZYJV4f
-         HNag==
+        bh=nOy2INI4KU/H9jgqMOQSD/SeiIe5PhzGz1ueJzs8S30=;
+        b=P+1pHht+NRZOv4u+ZYfzODdYgh+/IuVHaZLG2nX9r7rNHNK4J1iqgrmxehGlXCTBBS
+         nElpYLh1P9SvK1BO/wbH4PkpWL8cDsPXWJ+a0sKwLElPepgoAiaZACYTDVS7C5NMcPy/
+         qVLZjKIg5mi0TyDZAH9CM0kufl+JnXhJaadDqq4LtGny3eiO6Om9kdiqqeZ8ULNVX7uh
+         uq2JOVGg2woV5FnLjqCajnLc4rKksIoXSwyS2jc0bVeH8lxy81B2XSQgve6kpU+4kdKF
+         xidwiNDKoTizKdLc5Zbdj9gldgEkaSxpNEJLVwADx0xR8alo9ZXNO3jshTACeVwqvz8L
+         SjYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772787456; x=1773392256;
+        d=1e100.net; s=20230601; t=1772787461; x=1773392261;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=d26g9qUGClymG7vagLdb7C3RciNtFptAZbMuGRkBYcs=;
-        b=HbZMkZdcsnP0jStAzSAL/TT+JENqq7jjottTeK1wfAX2gTx+XnnfWzrm/QnvDE+Cbw
-         UKrJ5VZJcIygMibsmHnxUXhSeAFx/wbOX4E3iLR306RvTyjg4hhx0YJ0gmlK5Tt/ADQ/
-         Lx0kQq4zXtjAR79O4oKRwqgF6ovkoLOyvSwUKSlS/1r0XPR37fM77FGiBPi0I3n6zqNj
-         POjDyBamjE9/Iq4jeJK+b2/huu3BbBtSm5yb4C460QhHEGB61g6/msvp11l1clnmNlkn
-         eCWg7k4CkeRV07oaYgBl5g7sAzlahX/UMenDv+YSfAkofOm36NfmoHES/lRR7kqNyb/F
-         RLNQ==
-X-Gm-Message-State: AOJu0YwD5/HILsiV9KRzWDvaOKmfLMv3WHTlM91zYhmomO/aO5FCeSht
-	BW727Hhp4JkDC1V+6eu90CQbOoTATEfwQW+kZcclwBRIjKS1ZRIQ5uajAp0nmC9y
-X-Gm-Gg: ATEYQzyHsuPBIlL4AefptxotLL9Te4A/mp91q6CWcGHBg7hSz8NvHgN1pE1/ulxw2WT
-	WMFTjN9gGIjIVfwdmxOe4k8xzWTOajok2J0dzkpc19sAgZHP4hVs1/92ocaG0q7TzMt6VLcd327
-	OpJZv/lsA6UbIwHio5WHDTNXfOWVYhqx1T/IZTjpRWSu9wRytuTnQVUvouF6v29qIQHWsIxySSE
-	wSfcQ3T8wWq5qrOi2a7nQzuMgnl+SjAvjfsnJ4uxl7aDB7Aaant7ax6uAKgaQKn/8MDhlIp5uaC
-	Ny3kUWw/VwsUU+nQxngzUvjembqJo+W5aFkqQgDSF0Dk1TIwnlZjK5GR90RA01SkIsxVsszCNHT
-	XCpMiG65Qmna6z3X6sddwN1k3huYyuocnx0EZBVKtY9c2xTBvdb6BvWOvg5PCJ8d+yrioTMBnFg
-	cboShSvkIIUjC1DIQmeZ/KKSfw+EglkXhuzk/C6xawc0DceUY=
-X-Received: by 2002:a05:6a00:4511:b0:81c:96b7:7faa with SMTP id d2e1a72fcca58-829a2f4fa0amr1402071b3a.41.1772787456354;
-        Fri, 06 Mar 2026 00:57:36 -0800 (PST)
+        bh=nOy2INI4KU/H9jgqMOQSD/SeiIe5PhzGz1ueJzs8S30=;
+        b=N7unlgQqGKwyuH7dmMHfFOx4nf6rLdv79FQhsLxrkzvmmbMKoZLbDM6eB7aYpPA7BT
+         IyWseP01NA4NozsetWtEUFrEdN9sj58LYbe3ORlBpQPXC7nKIJ2V+oYdK5LBuRP3GoTZ
+         xMPVv76uNiCLMuq5HnClX5qLyjU8qZJnw3yjZnjmMBtUCvmIY/YFRUAL98GOgD1Qj90I
+         j+MDlmAQhPlrTbIv0HhfEjJ1hK3FRAKvUP8YnFmPpaEoVWa3sL3RDL7rE/0SjrMEO7SQ
+         aheCs7uXYAUXl/e/mkMyUt+RqD4TWefNBodQZBld2XSmAY/6uBsM3B1e45LIFIvRUitq
+         xEOw==
+X-Gm-Message-State: AOJu0Yzu/NmP92OT2Hu4Irz9UgoPrpSD2OpuJS3pu+gMomLhVMo3asfj
+	UGFzNuuurJtqoGvl/TmW7uTfatJ8xsgDHdJdGuy3NAdh3WXIU3rxcwQ/OMjo3Zp4
+X-Gm-Gg: ATEYQzxC6ZJRHdfBWm2tM1WlobAeVDbLxYN002jVZbUzqrYDFdR+3BRKbkcw0FiiX4H
+	zzr2CNxgBHKvUl/8YSXWjSULCTpp/1ABvqrKaKsTFt/o9Iup9VlYa9Pi4zCa4m/P/umhWOU8N91
+	z/YzfDM9bS39AG7t4QdgVhUENi2kie+YAHcJnx5kzlbPciKdJUxDUJ2CpjG65vAMt3ZyP+bE4GY
+	CEp9EukGNNw7q+DRn/iuloo3W0UgJXF+N7nPEkjW9bG7dVuvKBZ5G2FPVJTLQ0BNwEJIUD5WYyN
+	IyDe0jLNmPKzVYbwh1R2bhc9vxeIjNNtEaXdCo5vzlykaQ3QCK9X6HZLvyEGjHgxrOGz7R/qIUQ
+	nQJ1YpaNwVeFkMLu/Mw89K8MAUEEobcodsjN5kcYagIKGyxIVudX+kzZAEBjvmgkwAUbBiMfTNh
+	cBs+LQjd2msg26ZZ6Xr2nEXnqAdBk27XQAlyah
+X-Received: by 2002:a05:6a00:800e:b0:821:8492:7f73 with SMTP id d2e1a72fcca58-829a2f7d4f7mr1398706b3a.63.1772787460835;
+        Fri, 06 Mar 2026 00:57:40 -0800 (PST)
 Received: from ubuntu-arm-nithurshen.SNU.IN ([45.114.151.85])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a48b406csm1175294b3a.53.2026.03.06.00.57.34
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a48b406csm1175294b3a.53.2026.03.06.00.57.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 00:57:36 -0800 (PST)
+        Fri, 06 Mar 2026 00:57:40 -0800 (PST)
 From: Nithurshen <nithurshen.dev@gmail.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Nithurshen <nithurshen.dev@gmail.com>
-Subject: [PATCH 1/2] erofs-utils: dump: remove redundant conditional branch in filesize distribution
-Date: Fri,  6 Mar 2026 14:27:16 +0530
-Message-ID: <20260306085717.12776-2-nithurshen.dev@gmail.com>
+Subject: [PATCH 2/2] erofs-utils: fsck: add warning for unsupported file types during extraction
+Date: Fri,  6 Mar 2026 14:27:17 +0530
+Message-ID: <20260306085717.12776-3-nithurshen.dev@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260306085717.12776-1-nithurshen.dev@gmail.com>
 References: <20260306085717.12776-1-nithurshen.dev@gmail.com>
@@ -101,7 +101,7 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: C48CD21D85F
+X-Rspamd-Queue-Id: E54C121D866
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.20 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2529-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2530-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,linux.alibaba.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -135,30 +135,29 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-The logic for printing the filesize distribution chart in `dump.erofs` contained an `else if (i <= 6)` branch that executed the exact same sprintf statement as the fallback `else` branch.
+When extracting an image using `fsck.erofs`, if the tool encounters an unsupported file type (falling into the `default` case of the switch statement), it currently skips extraction silently and jumps straight to verifying the data chunk layout.
 
-Remove the redundant `else if` condition to clean up the code and simplify the logic.
+Add a warning message to the `default` case so the user is explicitly informed that a specific file type was not extracted, rather than failing silently.
 
 Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
 ---
- dump/main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fsck/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/dump/main.c b/dump/main.c
-index 567cff6..78c50d5 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -522,10 +522,7 @@ static void erofsdump_filesize_distribution(const char *title,
- 		memset(col4, 0, sizeof(col4));
- 		if (i == len - 1)
- 			sprintf(col1, "%6d ..", lowerbound);
--		else if (i <= 6)
--			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
- 		else
--
- 			sprintf(col1, "%6d .. %-6d", lowerbound, upperbound);
- 		col2 = file_counts[i];
- 		if (stats.file_category_stat[EROFS_FT_REG_FILE])
+diff --git a/fsck/main.c b/fsck/main.c
+index 16cc627..16a354f 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -963,7 +963,8 @@ verify:
+ 		ret = erofs_extract_special(inode);
+ 		break;
+ 	default:
+-		/* TODO */
++		erofs_warn("unsupported file type %o @ nid %llu, skipped extraction",
++			inode->i_mode, inode->nid | 0ULL);
+ 		goto verify;
+ 	}
+ 	if (ret && ret != -ECANCELED)
 -- 
 2.51.0
 
