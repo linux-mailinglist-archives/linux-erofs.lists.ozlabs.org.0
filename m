@@ -1,85 +1,85 @@
-Return-Path: <linux-erofs+bounces-2532-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2533-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id fDN4NIvFq2n3ggEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2532-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 07 Mar 2026 07:28:27 +0100
+	id ePeNKnXxrGk/wQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2533-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 08 Mar 2026 04:48:05 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDED022A604
-	for <lists+linux-erofs@lfdr.de>; Sat, 07 Mar 2026 07:28:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BCD022E71B
+	for <lists+linux-erofs@lfdr.de>; Sun, 08 Mar 2026 04:48:03 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fSYHp4DXlz3cBd;
-	Sat, 07 Mar 2026 17:28:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fT5hJ6Cy8z2xdL;
+	Sun, 08 Mar 2026 14:48:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::52d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772864902;
-	cv=none; b=GMDr2INYV1lpuCjX6RWe+flmEI/JgPf7kyfur53w0vovIe24CkFEVkQ9/eTCgaP8aQEiBUIhzhrdQGPPmif1hFSgaS0+qmexb4S6G0sUNSSr/rQlpcylkIgzmozl+e5yld+BNEQBb6dSA9sdzNXnFIo4lnuoTKvbj4/8xRSDymrCPfa/JyTVZCSZNjd4IBQ91zmYRkDuApyyc+BoDkY2nXGtVOJ8m3dK6Ga9l8/Xe8N+WqacKZzQeIQxwZmB1kJ6N23WZJbKYhNzqH0z7cKvalZV+925rrL1PZTWgjV80toBcdSX9/39LpvD0H7pK+7pBUxRGp+tIuMUxZ3cz3bjfg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772941680;
+	cv=none; b=L5WbCFDE3XQw3QmvdkyA/JW9vi6h/kWCcB3RifVm8vaKWPbWAdf4GqgXBFKW2iOv/deGzg5Bf9d4dadlA2frSJlRF0OZW30PmPH6eoEwBL44BINxhMDHcovi9Pc8gRXaNuDAqFM+XoLD9KFkjjQRTGF7V/8fkyNB4cX0apn7y8IH5G2ofKQXuXElmjEg//tDLew6a8TwD6elgz2Xd8Y5EUdLSg9Ll/z9tDJtt0atVWh5YL3Jg/R5wVlfJ+oElAjyhEy8Raz87OxjX9W5WhpCPPP8unV9risa2oBwrPpDaCJdZ+zK1DPQXUwy0LaMol2cWdSSKCkIq9KsUZqmd44Nqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772864902; c=relaxed/relaxed;
-	bh=pp6459sEHgDvXHzZslA/d/z7MVfjL94uWh8GF3sNGHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CKAABmtAz2J8/TE/DfoRG5PlkAIFFQylaODIcPE53yM5qD9vgF3HYuZy5FPpsCQBCJjaoYaMD/2RfviWDlTWnVGAJD7cGYh+DyWNBTRllny+5XqYzZ4gizjHo0mPaC9o4BYLXlzLqWodXAu0VmZCE/Qi0i88qH/m3saJhziFd3/eHMer8tXpCVQ40svnbCp1y/wEejcGJFlinBVjZQRB3gupkCTBoMcaOPzas/mARDk0KYBT/xne3J3tOkrl3rrrHELSQb2d+vALpo95YtyaiwyAU8u9RYKBOVWVdHyqyQ9ueAoCdYIf7fSbbygSndOIF4OZV5QL6aciLDps2bFodA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=kNM/W6ZR; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::52d; helo=mail-pg1-x52d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1772941680; c=relaxed/relaxed;
+	bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EUf900jqwvZnU9dQ6oB17uwCaFV9lZA57gr+mL1kBTXuJE7cSmyJ3y+EHVhhZ2RTDFE53DG1co2rYddn5zXiwh0krYUkQ3ayD2JHNZzSoviVefxkhxa6wWVXunHgmUJ6S0yr8mE0ZqgEjEHwvQD5ioRfw0q/KYHOmEFTVoS7hGnVOnOiIBWveAvGHAgLuoDxWAZ/MCTnyxDIi21dYzJbRHZ2ZmnbnJ5F/zwQ5IsIn7Mj70A/uU9zu8LfcxeSjwRVDeGoR9NeyPcexKExs2S7jk2AS1mOfMko9NzamVcDPG1jc9XCy9kxrAJAagAr4P2z2KvN4PUC4dn+KzfhFjSFVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Nwnbm7Ms; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=kNM/W6ZR;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Nwnbm7Ms;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52d; helo=mail-pg1-x52d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fSYHn3LHPz3c9y
-	for <linux-erofs@lists.ozlabs.org>; Sat, 07 Mar 2026 17:28:20 +1100 (AEDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-c738d327336so1558198a12.0
-        for <linux-erofs@lists.ozlabs.org>; Fri, 06 Mar 2026 22:28:20 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fT5hH4cYxz2xS2
+	for <linux-erofs@lists.ozlabs.org>; Sun, 08 Mar 2026 14:47:58 +1100 (AEDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-829928e512aso1525953b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Sat, 07 Mar 2026 19:47:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772864898; x=1773469698; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1772941676; x=1773546476; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pp6459sEHgDvXHzZslA/d/z7MVfjL94uWh8GF3sNGHE=;
-        b=kNM/W6ZRAm6RnxHh7hdJIi7lxhhCX0kOcPLGjSVKv98clEXqFpH3y7swXM9hQeik9i
-         ORFlZrlDwP3Stsg+C1GAxk/awWckhMua57kfkdz57y8LLlmWHcqP9aDrUNS57rdbhPKb
-         35ZBI4PtdtIWplJSQjW3tGWia1YpsWoFwPJhs7VveMlN6S+6iRwGHdCzqx3MS7hTFSjR
-         estqTPZrqY7Xk//G5aors4mCBcfUDOaji9U0S1vaFD27DFZrE90Fv1U6MIisNns5x4sK
-         u7wXXywDhk9qN2GwmH6X7oMDrMkC6udrYYM7VWEGEs8mWWUHQS8wlsNJZWAUx0tE0+8Y
-         ucMg==
+        bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
+        b=Nwnbm7MsliGpyXl+sRksAWoiOWyAI+EASgb9GNnD4SZHSkK89JbCkibz4O/3JDZUvV
+         rqwsFnCsW0POtjIM0kDaaNTSp7Gw1p1lwz/kEUvUmbwU+8J1b9nZlbLg7KHt9h7vAZ7x
+         vg08wClGzUlfRiqiPekV6YPXQv2gIB2nPqUiIxARw3zd4Zg1Ont3i4dem3YyB/5sMAbT
+         3KgZ15M6aAY9oroK1hjgZasOmuXab3dhfc/7DrJxI/Vd1iu1wFuo8gXxmf1kfqRT9n/a
+         3svBwzhKbkhTxUsBss9XF/TPrio5JWfasKZIfMVxS9nh144d3MGOPny19QuMt7Jo8bU/
+         SEgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772864898; x=1773469698;
+        d=1e100.net; s=20230601; t=1772941676; x=1773546476;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pp6459sEHgDvXHzZslA/d/z7MVfjL94uWh8GF3sNGHE=;
-        b=m/RHefSvXHhBnmIv6XauSTOoSwePA3zTySP9gB9WyrOads6tgi+sAXFWcD2lVKE+wM
-         dP4P/VoW5jBlO2Zq4nttghbp+qCPoEjpDXj0EUQ8Q/6OcnLNks3CPXpmYTkssIcB0hno
-         JFa9o0R7SCisbsuiACbOlVTucAsu2mOAA45k1nLEPfnUgcc2MwSrgrfOf7OQQQArKvQf
-         kR7itujkwurrvFN6ym85jAfaLAspb2wihlOXsJJDvlf1rBThBHRVVzAZjJa5xSjOyovx
-         S/L8WWiBvPhtPiziVSbhVf3zeKNOWmKVgn/i6Hv5CinSFbe94qs/peEtRnRCjiYyP3RX
-         lZyQ==
-X-Gm-Message-State: AOJu0Yzrl/j+cBhhLcUzkir12G6MM0l8Urie3vz01XBa3JZ8up4EK9TN
-	8ftQ9Kurvc8yg7L7VSZlDgCLt+8lXCrGcvVUj8wqTthFL+H9b8Fwd4Mkd9AOmJAV
-X-Gm-Gg: ATEYQzytv8csJ04GsvNXS0OJq3dy+c56fDnwSwTZNLGoH7se1+zqUEuA6VEJTwwL39A
-	Dn5BozTvs45nOoQqBn64+d1cpRoFVr3O65+pg2ATgxBeBKwWTDycb3XmrcpN6sO+dtcV5AzTq4c
-	wtqlWuC7CcgfOYb5Z1dL/gEyG443XLumwYNNKrLyTMIE4k/iMuie+bgKJrrGTPkg1uh1dtcoLZM
-	u/3B3zX/o4vCekTZEOmkoAuBxEYAd5fYDk0nq0xJ7+ou83EqzlPLwY8CVb7tqXpy0OpWtvA/ukM
-	4jmgNzCjQ2F6WmSEop8OEEOu2PhmM7xenKpG1jeB51Yv2cBjndjuZ8c5JExvThvBrwSy9Iv3Uhb
-	9mXANu3fN+OQWCZjz1dFSwOBKVHrnTNKYp2xntoe3BKheNJCf4ptmoccLKeH/hhPvr7bJAi3zIx
-	wsNJ6ty3T4ipOn1DfwCj/0JEs0HgEYmSs1tDCX
-X-Received: by 2002:a05:6a21:7107:b0:371:53a7:a4ba with SMTP id adf61e73a8af0-39859009d9cmr4327894637.30.1772864897737;
-        Fri, 06 Mar 2026 22:28:17 -0800 (PST)
+        bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
+        b=wr7L850VdSNESjStoG3RbLMiIJd8f5eMxkqjE4IXRcU3wDr8m4GFUpF0+UdIz5exGx
+         DnIm+wiyW5Suxw3iC9QE57yjkYt023l8XAKnHHWl0+Osw1AfHS20JBHerWwqgWZ0Wy9B
+         OBChttCoUni6UJVtQhKcWGffu6GyaUYfgcqABT/7QGiJiRl1Po2nS9ck+gLdIJS6AIJZ
+         KQuGAI3x+qREWhVJ4LktS6bTNHrNnmTUIZluiCBS+FDyOr0lTObWeZbr0wXWO87A3O2K
+         k9bZrwIb/DuPQVI8BwCyMSJilbqwnibFtir0HJORRcdDKvCmfCESGPYHfINXQlRqvrrv
+         CxfQ==
+X-Gm-Message-State: AOJu0YwYBPP8+3ycRhn1+pALvXuY1hJ0MvRaNAZ5j7UG0RcKfRTWXLab
+	DGTDmYCjxfWYXaMWsGhn1diSiap3AwTrcT/hl5Ji5c3uHWB+CG3JQ5TDnEE05U60
+X-Gm-Gg: ATEYQzxWOrakndJHK9C1p4120m5aKRaU7HQ/sEFwhPmqFlT9ont6mHsw2/c2JT+q+1Z
+	OlvmAjHvbm3Cj/LqUNGc8c38FIIjcpfq1Gh+FioAVY/+9OXWFmoX0h5Z7oT7/oe/CM39Qp0SNLl
+	w5V6Kv4jiuKnyOr+oT5A6lIwkH71GHpfXdZE/bgDt7vjfptonx2355lIhXiFbQaMcdmDue+jS/P
+	F6Vd7nf/nGfFLEo3eIZ7VanvY3eKUB0iXNXFtD+edGVGbtL/1jVaPrZHcof3tyoUya7vGWBR0B+
+	CkI/IyEJnXjDbKxDR7goszJa98UxSByPNOkpQKV+zvssszaK2EbpDyyvFs+gx9CEYgwMR74wVqe
+	6QjWzXzDb9kGJTzpEeOWCXO7y6re87sX/JFJP2QMMMS+yiV89BG2mypDn4iU/tUTwYTTAB07Uqz
+	qTPQ+HIdFp2lowY0tSfHr9HPrzOuyHFsivUPDYRmQxkG9Wz6aHaV8=
+X-Received: by 2002:a05:6a00:8d94:b0:821:7d7e:41d5 with SMTP id d2e1a72fcca58-829a2f9fa0emr5947704b3a.52.1772941676118;
+        Sat, 07 Mar 2026 19:47:56 -0800 (PST)
 Received: from ubuntu-arm-nithurshen.SNU.IN ([45.114.151.85])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c739e183020sm3163029a12.26.2026.03.06.22.28.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4638141sm6155903b3a.6.2026.03.07.19.47.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 22:28:17 -0800 (PST)
+        Sat, 07 Mar 2026 19:47:55 -0800 (PST)
 From: Nithurshen <nithurshen.dev@gmail.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Nithurshen <nithurshen.dev@gmail.com>
-Subject: [PATCH] mkfs: support block map for blob devices
-Date: Sat,  7 Mar 2026 11:58:10 +0530
-Message-ID: <20260307062810.19862-1-nithurshen.dev@gmail.com>
+Subject: [PATCH] erofs-utils: mkfs: add --exclude-from option
+Date: Sun,  8 Mar 2026 09:17:49 +0530
+Message-ID: <20260308034749.22233-1-nithurshen.dev@gmail.com>
 X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -97,7 +97,7 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: BDED022A604
+X-Rspamd-Queue-Id: 0BCD022E71B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.20 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2532-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2533-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -130,104 +130,77 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-Currently, using --blobdev to specify an extra device is restricted from working with the block map chunk format. This was previously noted as a task that could be implemented by mapping the device blocks using a global address.
+Currently, users who want to exclude multiple specific files or paths must pass them one-by-one using --exclude-path or --exclude-regex via the command line. This becomes cumbersome for complex build systems with dozens of exclusions.
 
-This patch implements this support by allowing the block map to reference chunks residing on extra devices. This is achieved by:
-	1) Removing the -EINVAL check in mkfs/main.c that blocked this combination of flags.
-	2) Calculating the global startblk address for the block map by summing the blocks of the primary device and any preceding extra devices.
-	3) Ensuring that EROFS_CHUNK_FORMAT_INDEXES is only set if the user has not forced the block map format, and adjusting the index unit size to EROFS_BLOCK_MAP_ENTRY_SIZE accordingly.
-	4) Updating erofs_inode_fixup_chunkformat to correctly identify when 48-bit addressing is required for a block-mapped file on an extra device.
+This patch introduces an \`--exclude-from=FILE\` flag to mkfs.erofs.
+
+Similar to standard archiving tools, it allows users to supply a text file containing a list of paths or regexes to exclude, which are read line-by-line and applied to the EROFS build process.
 
 Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
 ---
- lib/blobchunk.c | 34 ++++++++++++++++++++++++++++------
- mkfs/main.c     |  7 -------
- 2 files changed, 28 insertions(+), 13 deletions(-)
+ mkfs/main.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 96c161b..2ef7462 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -159,7 +159,17 @@ void erofs_inode_fixup_chunkformat(struct erofs_inode *inode)
- 		if (chunk->blkaddr == EROFS_NULL_ADDR)
- 			continue;
- 		if (chunk->device_id) {
--			if (chunk->blkaddr > UINT32_MAX) {
-+			if (!(inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
-+				erofs_blk_t mapped_blkaddr = inode->sbi->primarydevice_blocks;
-+				unsigned int i;
-+
-+				for (i = 0; i < chunk->device_id - 1; i++)
-+					mapped_blkaddr += inode->sbi->devs[i].blocks;
-+				if (mapped_blkaddr + chunk->blkaddr > UINT32_MAX) {
-+					_48bit = true;
-+					break;
-+				}
-+			} else if (chunk->blkaddr > UINT32_MAX) {
- 				_48bit = true;
- 				break;
- 			}
-@@ -201,8 +211,16 @@ int erofs_write_chunk_indexes(struct erofs_inode *inode, struct erofs_vfile *vf,
- 		if (chunk->blkaddr == EROFS_NULL_ADDR) {
- 			startblk = EROFS_NULL_ADDR;
- 		} else if (chunk->device_id) {
--			DBG_BUGON(!(inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES));
--			startblk = chunk->blkaddr;
-+			if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES) {
-+				startblk = chunk->blkaddr;
-+			} else {
-+				unsigned int i;
-+
-+				startblk = sbi->primarydevice_blocks;
-+				for (i = 0; i < chunk->device_id - 1; i++)
-+					startblk += sbi->devs[i].blocks;
-+				startblk += chunk->blkaddr;
-+			}
- 			extent_start = EROFS_NULL_ADDR;
- 		} else {
- 			startblk = remapped_base + chunk->blkaddr;
-@@ -324,7 +342,7 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
- 	chunksize = 1ULL << chunkbits;
- 	count = DIV_ROUND_UP(inode->i_size, chunksize);
- 
--	if (sbi->extra_devices)
-+	if (sbi->extra_devices && cfg.c_force_chunkformat != FORCE_INODE_BLOCK_MAP)
- 		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
- 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
- 		unit = sizeof(struct erofs_inode_chunk_index);
-@@ -494,8 +512,12 @@ int tarerofs_write_chunkes(struct erofs_inode *inode, erofs_off_t data_offset)
- 	inode->u.chunkformat |= chunkbits - sbi->blkszbits;
- 	if (sbi->extra_devices) {
- 		device_id = 1;
--		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
--		unit = sizeof(struct erofs_inode_chunk_index);
-+		if (cfg.c_force_chunkformat != FORCE_INODE_BLOCK_MAP)
-+			inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
-+		if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
-+			unit = sizeof(struct erofs_inode_chunk_index);
-+		else
-+			unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
- 		DBG_BUGON(erofs_blkoff(sbi, data_offset));
- 		blkaddr = erofs_blknr(sbi, data_offset);
- 	} else {
 diff --git a/mkfs/main.c b/mkfs/main.c
-index 58c18f9..07ef086 100644
+index 07ef086..a6cd251 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -1565,13 +1565,6 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
- 		return -EINVAL;
- 	}
- 
--	/* TODO: can be implemented with (deviceslot) mapped_blkaddr */
--	if (cfg.c_blobdev_path &&
--	    cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
--		erofs_err("--blobdev cannot work with block map currently");
--		return -EINVAL;
--	}
--
- 	if (optind >= argc) {
- 		erofs_err("missing argument: FILE");
- 		return -EINVAL;
+@@ -39,6 +39,7 @@ static struct option long_options[] = {
+ 	{"help", no_argument, 0, 'h'},
+ 	{"exclude-path", required_argument, NULL, 2},
+ 	{"exclude-regex", required_argument, NULL, 3},
++	{"exclude-from", required_argument, NULL, 540},
+ #ifdef HAVE_LIBSELINUX
+ 	{"file-contexts", required_argument, NULL, 4},
+ #endif
+@@ -199,6 +200,7 @@ static void usage(int argc, char **argv)
+ 		" --dsunit=#             align all data block addresses to multiples of #\n"
+ 		" --exclude-path=X       avoid including file X (X = exact literal path)\n"
+ 		" --exclude-regex=X      avoid including files that match X (X = regular expression)\n"
++		" --exclude-from=X       avoid including files listed in file X\n"
+ #ifdef HAVE_LIBSELINUX
+ 		" --file-contexts=X      specify a file contexts file to setup selinux labels\n"
+ #endif
+@@ -1246,6 +1248,39 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 		case 7:
+ 			params->fixed_uid = params->fixed_gid = 0;
+ 			break;
++		case 540: {
++			FILE *f = fopen(optarg, "r");
++			if (!f) {
++				erofs_err("failed to open exclude file: %s", optarg);
++				return -errno;
++			}
++
++			char *line = NULL;
++			size_t len = 0;
++			ssize_t read;
++
++			while ((read = getline(&line, &len, f)) != -1) {
++				if (read > 0 && line[read - 1] == '\n') {
++					line[read - 1] = '\0';
++					read--;
++				}
++
++				if (read == 0) continue;
++
++				opt = erofs_parse_exclude_path(line, false);
++				if (opt) {
++					erofs_err("failed to parse exclude path from file: %s",
++						  erofs_strerror(opt));
++					free(line);
++					fclose(f);
++					return opt;
++				}
++			}
++			free(line);
++			fclose(f);
++			break;
++			}
++
+ #ifndef NDEBUG
+ 		case 8:
+ 			cfg.c_random_pclusterblks = true;
 -- 
 2.51.0
 
