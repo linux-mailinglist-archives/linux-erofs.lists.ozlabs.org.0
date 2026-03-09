@@ -1,107 +1,77 @@
-Return-Path: <linux-erofs+bounces-2545-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2546-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cKziLffIrmlwIwIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2545-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 14:19:51 +0100
+	id KOTuDrn3rmnZKgIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2546-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:21 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C274023996D
-	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 14:19:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 58C8F23CDA4
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:20 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fTyKb0t1Tz309P;
-	Tue, 10 Mar 2026 00:19:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fV2ln2RjWz3c9r;
+	Tue, 10 Mar 2026 03:39:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773062387;
-	cv=none; b=hYZFNiczzoyDQvSxnERrS5n5m4MjjWqzfQMt4eiLLMqB7DE5Un8MJXtMiveJJ27cNRvFjnlj3KRkvmlRIGdQjRIHMuoCC1rgJaUM0wjHMgY/5u1TehIakWNNTf/Ojk0+FUX3QcRUUM8ZQZwVyCFPRorQqJ4LHSXhYgXOeK8C/1BsqhOtgrsprU52YqxiRBY9vNdYAJHj58/4ymuJERvg67PM0Fy8PDop7iGUWlG15s/N2ZnXa8BqKd+BMZ5SPu+YPEkS4w59MXVkF1c2qblWC4f/MiG+tc0/kR0CADgOaxCDWOkJyd13MglYfTWJprBiIvFnVyQzE9bG6qLG7aoAow==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773062387; c=relaxed/relaxed;
-	bh=TT/1bYm1dwRQZUPFZgVug+I9OLpG8KAv6cj/Pd2b+bI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyE8a/w4oYh5F5xA7Pu0s87yMAvepPgQYN4sDOZkvY2mN/xgygX//LKsWB3g9XzcWmhLdz47hpMLqG11gdoaC8rfx4Ny19WEwyKlIOnqK89zjrHH5uqmjZdhYkSQG/d6CdLQ5eg4bNGmfWhe0e65Ve3SNXf4u0jXdHrWTUR+2JH99Tb9YpUUU2ATMCYPPT3QVhG1eiEk+cPbTWQiHRH5Q9Q3NzZhhDzMhkFhqHGRsclGNDrzk7NQP9DEsVCl9o5tMtxMxfs2LrsYhu2/nTwhUf8vRYFfddYoiN2jYgsa9Y0WJKymNmgERsvk5PWAXqIqYc0qT13GF9ilI9oh/i4mJg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Bn6XQwcP; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ze4Ub3DI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Bn6XQwcP; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ze4Ub3DI; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c105::5" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773074357;
+	cv=pass; b=lI0GYKLTV7RNzlWIw+5c9qCnQJm0P4JGpwxDkC46iAMiC8EUIWi7QYxuT0ohjkiJqnaAq0QpKEBng5C8Jc4EFcfBAUV/bTbJkspHmt/X2nL4Dfby7qR8K+dw1/u/mk1uUmLcjhj/YcgJ9qtZx+Obu3xtWWr9g2YIwOEt0T8PRL7h6n47boRJ3rQVOMHcDpO7BNwLK2X3MLkrpqd4m14e3lX9CrfPQaQd0yg/oduEbTjpLjfRhnT/hKp21qODHfg3X2f7cAH55l9yfC0WbCKH+E8MNwshopFiUO67G1m2f4MxABROdi7DiHbf3AnrbGT06k7O3513z7kPDPvUkkOXdw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773074357; c=relaxed/relaxed;
+	bh=ELYbY/8Klbd65f6MaHEMctJ5KJ56Dag1+LiHg7VI9EQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Wd6s0sfKaRkp0IAqU3XyWzkDdHnV5aAS1cyr1ku0+GZwMCRa2uqQDLGgZgga4ohfSxAHFaqeh2i0+oVEt6O4VCsP7hF/SACbpCgsV2QvdH/ESEhmNcSFGGZoFaG5jt41CBpaBkgPsd9VD0fCF0ikHay4eKWpncl32oV/J9az7JUoHoE6g4uyfOVkNaXW5AeOSFhdNSM32rWCY4Qo2+I1D9N0JrNC9XBYRM+w1x493/P2MThGlq/dTR0tpmWfai1aav2BiaAOGMdjZEIEsxZgB8e0rR34Ba1HT01TJHQBtg/wmyDP0LWcOMitQUN/JR0yeY9AJ90URkPPBi5yfH4U9g==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=fLpqK9ye; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c105::5; helo=ch5pr02cu005.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Bn6XQwcP;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ze4Ub3DI;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Bn6XQwcP;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ze4Ub3DI;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=fLpqK9ye;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c105::5; helo=ch5pr02cu005.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazlp170120005.outbound.protection.outlook.com [IPv6:2a01:111:f403:c105::5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fTyKY1MLhz2ySb
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 00:19:45 +1100 (AEDT)
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 34B9E4D21E;
-	Mon,  9 Mar 2026 13:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773062378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TT/1bYm1dwRQZUPFZgVug+I9OLpG8KAv6cj/Pd2b+bI=;
-	b=Bn6XQwcPXAgwu0+tSZyNzhttjDFeOR8MgizI8c7TE36XXQ5/qv0/SOLJZViesyAbUs4m7n
-	G5vzmrh/VgV7OuDguf4Ab8mImUTSnvyR/zW0O5NYeanX2IOqE0EjcCkQ6r8U3O3nQLbkvz
-	cV1sGL6vaCGsrjf25OI9UGQbEvlM9P0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773062378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TT/1bYm1dwRQZUPFZgVug+I9OLpG8KAv6cj/Pd2b+bI=;
-	b=ze4Ub3DItqqlILMfCsqWQFJzHzBwV3g0ipMqNzhypHKLV4rlb4YFMWn3aMNpA0sM1CthKr
-	tUvOz6TStNYmkaBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773062378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TT/1bYm1dwRQZUPFZgVug+I9OLpG8KAv6cj/Pd2b+bI=;
-	b=Bn6XQwcPXAgwu0+tSZyNzhttjDFeOR8MgizI8c7TE36XXQ5/qv0/SOLJZViesyAbUs4m7n
-	G5vzmrh/VgV7OuDguf4Ab8mImUTSnvyR/zW0O5NYeanX2IOqE0EjcCkQ6r8U3O3nQLbkvz
-	cV1sGL6vaCGsrjf25OI9UGQbEvlM9P0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773062378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TT/1bYm1dwRQZUPFZgVug+I9OLpG8KAv6cj/Pd2b+bI=;
-	b=ze4Ub3DItqqlILMfCsqWQFJzHzBwV3g0ipMqNzhypHKLV4rlb4YFMWn3aMNpA0sM1CthKr
-	tUvOz6TStNYmkaBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2502D3EEFF;
-	Mon,  9 Mar 2026 13:19:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id w5wBCerIrmlXfQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 09 Mar 2026 13:19:38 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DDFD9A09A4; Mon,  9 Mar 2026 14:19:33 +0100 (CET)
-Date: Mon, 9 Mar 2026 14:19:33 +0100
-From: Jan Kara <jack@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Chao Yu <chao@kernel.org>, 
-	xiang@kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
-	Sandeep Dhavale <dhavale@google.com>, Chunhai Guo <guochunhai@vivo.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Jan Kara <jack@suse.cz>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] erofs: introduce nolargefolio mount option
-Message-ID: <tofvy7pnryumcbar5s5gqt7245ynfzwurhnl742zj6bdruyay6@kk6myv2r6w3r>
-References: <20260309023053.1685839-1-chao@kernel.org>
- <02925ac8-64a6-4cd6-bbd4-c37d838f862a@linux.alibaba.com>
- <aa7FJfgwkdXlifJX@casper.infradead.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fV2ll65NQz3c9l
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 03:39:15 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uX7XQCBqQ1D1kc1uBcB5Az+a4NC7Gmv6E71UIKSSepno5GTIk7dm2q0Bdd2n99yF3px8pE8nro29+fL8EDxsNHv2ydgdgAdm6oRPFjeVJDrlk7tBpUyyJt/wtSRZhsJbEnb2xDbTRS8KDG3E67UkMTowKlpEFzym4R8ws9yHnaFAHl0Pc/5R5bn39hLvTQrPF7YuRTLGxkSOcvjAMJM/pHJN/yihUXpGnFqQ2sCBGmT9I8bHrqWaWuF1JPzxee4elrOB4M5rxFYkiLh7VkKSawb4Bm7TD4scsECnmiE+mBzo8m+A5HxaZ/ofPts4HDqJXNVgVVv8fPOqy16yHRaQsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ELYbY/8Klbd65f6MaHEMctJ5KJ56Dag1+LiHg7VI9EQ=;
+ b=KSWpKnYlSDYjut+eAlwI8HZElkr6UTvj1Nv4Yv45eeYvYJzwkYvOwK3amJr8SgZ3ONxR5S0YLZ7AaNHht6GSa3wUAVC75SlKL7U159wcLmhQIGDGI/+h07dzacRI1zVTzYtILlqiKNVniUVGSxtQlwokjQnUZmwQ5fhUY5LXF6RCQmvDTSGHeKWZQVhOXFw1N6Vyr/DufeBPaBWPSlXJ2MQAxSTmvdFEoquRiymmIsBPznUDRuo4AqXllCrPzHARR8X/rvxsR169dWVQLeqc7eXXRgTMUBCnNo3/kJXIKFIeMRnre8yvFr7msf2UUj+E24Oeo1FRXhA2zsZB9NFIjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ELYbY/8Klbd65f6MaHEMctJ5KJ56Dag1+LiHg7VI9EQ=;
+ b=fLpqK9ye2eOm60FEHEYTlAFpRr3Tfm6p2b4KoY+C15odm4tmwg4tjLGy/3xGyC3VR2bTOQV6cDPcMZFQJDZK3ekI7XDCbcsGhpHIrROGfDynPo5A+0gjaQERVozNWjeVqrZv6x/QgN6AzamIoCQ8Ohu61Skyn4JMBMAqEJOM2ZbPBESA5eFjWh62X7wCTMjY7SAuoU5yyxgfVYbaArq7w+rcB/iZassv7jByhfno2KmuNIyq6GdnjWAfTgF4b8wGOrnKqUap4bjftR5+ln1AMmiivQ2XCEgPvyxsquxbGrtwFwZ/33A13MzBuY1geEpbX9QWgrWINqz60HuSNjnmeQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
+ by LV8PR12MB9417.namprd12.prod.outlook.com (2603:10b6:408:204::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Mon, 9 Mar
+ 2026 16:38:44 +0000
+Received: from DS0PR12MB8502.namprd12.prod.outlook.com
+ ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
+ ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9700.010; Mon, 9 Mar 2026
+ 16:38:43 +0000
+From: Lucas Karpinski <lkarpinski@nvidia.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: jcalmels@nvidia.com,
+	Lucas Karpinski <lkarpinski@nvidia.com>
+Subject: [PATCH v2 0/5] erofs-utils: implement the FULLDATA rebuild mode
+Date: Mon,  9 Mar 2026 12:38:16 -0400
+Message-ID: <20260309-merge-fs-v2-0-2dd0ef53db4d@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20260220-merge-fs-e6231a3a3a1c
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1P221CA0024.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c5::31) To DS0PR12MB8502.namprd12.prod.outlook.com
+ (2603:10b6:8:15b::16)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -113,193 +83,141 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa7FJfgwkdXlifJX@casper.infradead.org>
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|LV8PR12MB9417:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1af17d36-59dc-4af6-0618-08de7dfa53a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	SojR7Wi2e6SoHFdO/M3D+zDv90vZT9gNkhgCvg7R7V0XmFj9Q5hYpqVSRvFtzVq0C6teAJZ3gZcBT9n2Ws+4D8ZXzJpIymZE4h6ChWikORxc4nU4S1nJacutQ8CAJp1LosIsDqaXfAuJxLkHVZ62kXY7DbjPZ+lifeNFL2g3fbeaxDhyBKfSP5gdPh7IOLHaSHOEi1LC4hIObFso/Om3KwPOLP1DDl1UPZkceo2bXQEUp9w5jolofGaVCgGhtQ0kxEER7keMMLz/70XgiSfA2dSYpbFaWmIKlFeCGEQN7crsAPgt7hOtIwABPzBQjKFAw9kl11G0hAV1NdHQUxx78o8E2Q4d4/Gb6mzEPY7bq9TrFKLDpadbsr2xEcQdkahrW25w4UxSH8n/e5dWgKm67LZl32us6wKF/V8IXVbYJPgvDsVm8uFGvsteuHy53wFB1eCAb4zBbJhexH596lJleqpYqy0Ajg9DP8QHNQzf7eis3zdFKQoOywplauKGqaaFop6xgKEDyT1o20E6qNtzylgLD3BC6AKYArp24TwiAXBXMLAaKFF9jOJ0R2Wx3BguTSdUrXCyiE7V4SMVJSzSOBe/y2bHZTSeMKeaWS3qA0Nsg09QyaesMskThU+UvAVHFaD+M9NfCYej4j8NOGXMhFZO5m9/Z3dQDwMsHBmR7uHsJIkqw3XMoXpGyUpVGSVSp5fo4upWt0ErRYGc2liSLOp9CRO0yeY+uUP3P9QS2Tk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VVNyYmRZYTZiVEtER3FTKzhUbVZIMGZyWmQ3M0dxd2dGUkZVc1VDLzVtb3hH?=
+ =?utf-8?B?VXhmeDlSMm1jTm1iK1RCU2M3N2tWK0w1dVNTaTNCdGxaL3g5dSsvM01kbWo3?=
+ =?utf-8?B?SDJsd1FicG1MMVAzcjZWRTJZNHdNcjVHOURhMGVrWEE5VWFPc0ptZ2pVMnkw?=
+ =?utf-8?B?M2FJUGZaRndOVzVNK2ZSS250Y0hkcXc0RitRaHErcTNlZ2FHdEpPYW9BcWd5?=
+ =?utf-8?B?cnc5SklXemh1Y016TEFmMXk1a215K0kzNGpWdU9qeFpHY3JULzFpR3B1QVFu?=
+ =?utf-8?B?Qng1dUtoQzBwbFZWZ2p0b1hWeThyc0JDaVRzWWtzZ2ZLSU44Q09EbXVMSTNy?=
+ =?utf-8?B?TEorVmtZNWpXVzRhcENPbTJNVDZSd1R3U3JrTzBnK0ZadkdWdlpOWlBYZFZG?=
+ =?utf-8?B?L0hTN2tSUGVPeTZkbHpQcUdrc2JrOFRPYld5bWpHUHIyNC92ZE1nWGoxNmMw?=
+ =?utf-8?B?aFIrTUk2WERUNGdheitTVUNxMjQzTm9jUzFnR1l0cCtBSFpZdzBvMW50STl2?=
+ =?utf-8?B?UFJWTGZ3dHQvMkNtYUpGcjRIaVFNc2pCSE11S1IzaDF5ZDJ4MzZiY0ppTW1F?=
+ =?utf-8?B?OGhKdXUwY2ZWeEthVWxwYTFzSjNkemJ1OFJBaTRHOEs0RGpZdkZ6RG9tVjJn?=
+ =?utf-8?B?UEVZUThWY1JkTkppNlJTd3ljVld6ZEFXN0pZTzY2Tm5mOG5rTi80M1BFYjhh?=
+ =?utf-8?B?bUQ3SDZHbmU2YjdSTlFjalh1bGNhY1d3UTdvNXpQODhxeWR3UkJOTGdNbDdQ?=
+ =?utf-8?B?QzBIdDlvUEpycU81bGE5dXlBSFEwdFMxbzNSbGdpbENEekdJQlpyNUxnQTVs?=
+ =?utf-8?B?eCtlelcyM3FNQkhhQ0tBcXpabnN3WUJ6allxOUZqRmtyMFNhWW5FT1RxK1Z1?=
+ =?utf-8?B?VWlFY3RwL2dLM3Z1Z2p5QzkyUkd5cFB4VEJOMXY1SG1XdTBpM24veXRNTTFy?=
+ =?utf-8?B?UHRqeE1aZ1NkZ1RScFcrakxLRW0rSkZ2WWc2dWdIUnBzR3JyRS9mRG50K3Fi?=
+ =?utf-8?B?SkE3TFVJYUJuMUpPMmpGRkw4L3lKTXBwdStQY2VRM0Ryb1picEgxemlIeVQr?=
+ =?utf-8?B?OFB3eFNWQzh6UksvdkpjNHVLSjFDUjlnczhvejFHYm9EWUhBMVI4ckpxalEw?=
+ =?utf-8?B?akMvbWtQUzlsUFRFYVpoY1dXY294dmExOUNCcXJzMHd4UzJST0hoa2FZdEwv?=
+ =?utf-8?B?WWxhcllmazk2dTNUdEFodHh2c1ZIVkZyQkdzQmwycjdJZjMwVmsyUWgwd2pH?=
+ =?utf-8?B?U1Q2THdLRnR3VjNJQlYzTThFcFQ4ZUF0dmhSMTFPOSt2c3JjL3VOYmE0Y1NF?=
+ =?utf-8?B?L3gxM3pOTzh1eUMrdklLaUljNCtqd3BOSVlxWllJbXovcWlybGZiYnVnZ25u?=
+ =?utf-8?B?L2oxU0ozeDU4NmJjM1V2b0tzVXVHUzBRK29rVEp3Nm9rUUQvRW1WNmhUTjN6?=
+ =?utf-8?B?S1JaVXo0RTNlaEJKbG9tSW1hMkpwL3JEc1d5R3Q2NVN6NGFUcVVDVEVPL0tR?=
+ =?utf-8?B?T0xNRlNNOU5RSlJKL2sreENQZnhhWWVYQ2tjQlhvZmZ3dnY5dXoyOXJ4ckNL?=
+ =?utf-8?B?VDkyMm1FY0ozNm5HdnlpbHQ5UXRFM1dPcXk3KzZnTVRwdzVyemxQeFdVU2tO?=
+ =?utf-8?B?bUtZb0pJZ1ljZVNPdURPbk9JM0JjUnkrVlJ5N3ZjdlNqcy9QVUZVSGFjR0FI?=
+ =?utf-8?B?VVFqQVIxanM0SHNUaldseXIrNTlQajI3OUw4QXV1SHozZTdSQ2krdmUxTUZj?=
+ =?utf-8?B?d1Zuck82U2p6bkNpVTI0SzMrakppdWtjcWxKRnQrOGw2U3RaS3hhTFBqNjFL?=
+ =?utf-8?B?Zjl6eHFUbjN0bElRLzhBZ2hNOVBNdkV0OVI3djlwdk1xc1ZRaFEyaVgyVjlh?=
+ =?utf-8?B?MnpSV2FNaVRLczdYUTMxaVJzQjZaOS9OR2JvV3VHVjFoeVVhd0ZtQ1ZjV21K?=
+ =?utf-8?B?eGY4WHFUTVNvT3pOZWo1NGVLMWRNbTlDZnpnc1BqUTQ2S0ZTeHNTc3lpMjVQ?=
+ =?utf-8?B?ZjBuN0NjUEpzUHJHeklIOEhqMDFRVDNnbTY5dWZwYVRXbm4zeE5idnRGYVhF?=
+ =?utf-8?B?ZndOZGtwcVNnQlhJUEJwV0JSUWJaekNaTDFQTlVpdkNHTkd5QS9UR09TQTlE?=
+ =?utf-8?B?T2RVem5Qc0o1YmRNVktydk9xekxvbGZrTGtDUUtaRFgrM1BnbjY3aDJoR1Ja?=
+ =?utf-8?B?dXF2R0w4aGF4emRZMVNTazRKV2Rqd015ZWI0ZEg1Ris1a0pYU0U0TlY2TVVV?=
+ =?utf-8?B?STVzZkY0dFdJendxb0VTcjQ4N1NSSGpJd1RMazl1UElsQzZKSjFzYURyMEhZ?=
+ =?utf-8?B?VlQwNDBNQStqVXB2VUF1VmVyZ3hlMGdPbXJRUVBZdHkwblExbU5zZz09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1af17d36-59dc-4af6-0618-08de7dfa53a1
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 16:38:43.4513
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qWuNG2ckkwxTSfdHeDbQfx5zOy3AEVGOxMP27xEMxpiGEd9w3uyx25xIp/99tpIdMBufBA7T3ZblNEbABJrSeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9417
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: C274023996D
+X-Rspamd-Queue-Id: 58C8F23CDA4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2545-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2546-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:willy@infradead.org,m:hsiangkao@linux.alibaba.com,m:chao@kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:guochunhai@vivo.com,m:lihongbo22@huawei.com,m:jack@suse.cz,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	DMARC_NA(0.00)[suse.cz];
-	FORGED_SENDER(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,kernel.org,lists.ozlabs.org,vger.kernel.org,gmail.com,google.com,vivo.com,huawei.com,suse.cz];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	NEURAL_HAM(-0.00)[-0.995];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[3];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[googlesource.com:url,lists.ozlabs.org:rdns,lists.ozlabs.org:helo,suse.com:email]
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,Nvidia.com:dkim]
 X-Rspamd-Action: no action
 
-On Mon 09-03-26 13:03:33, Matthew Wilcox wrote:
-> On Mon, Mar 09, 2026 at 11:03:43AM +0800, Gao Xiang wrote:
-> > Hi Chao,
-> > 
-> > (+cc -fsdevel, willy, Jan kara)
-> > 
-> > On 2026/3/9 10:30, Chao Yu wrote:
-> > > This patch introduces a new mount option 'nolargefolio' for EROFS.
-> > > When this option is specified, large folio will be disabled by
-> > > default for all inodes, this option can be used for environments
-> > > where large folio resources are limited, it's necessary to only
-> > > let specified user to allocate large folios on demand.
-> > 
-> > For this kind of options, I think more real backgrounds
-> > about avoiding high-order allocations are needed in the
-> > commit message (at least for later reference) also like
-> > what I observed in:
-> > https://android-review.googlesource.com/c/kernel/common/+/3877981
-> > 
-> > because the entire community tends to enable large folios
-> > unconditionally if possible.  Without enough clarification,
-> > even I merge this, there will be endless questions again
-> > and again about this.
-> 
-> This was a decision made early on.  If the heuristics are wrong, they
-> need to be fixed.  It's very disappointing to see people try to sneak
-> these changes into individual filesystems.  Thanks for catching it and
-> preventing it from sneaking in.  Chao is not a new contributor; he
-> should know better than this by now.
+Currently, erofs-utils supports backing blobs for multi-image setups.
+This implements the FULLDATA import which allows for the merging of
+multiple source images into a single self-contained erofs image.
 
-I agree improving the heuristics is much better (fixes the problem for
-everyone) than disabling large folios (even more so on per-fs basis). As
-I'm rereading the old thread Gao referenced the concern here is about small
-(as in below 1g of memory) devices where apparently the memory overhead of
-large folios hurts significantly. Perhaps we could tune the folio order we
-allocate based on the current size of the page cache on the device or
-something like that?
+To optimize the rebuild process, erofs_copy_file_range() is used to
+leverage the copy_file_range(2) if available. This bypasses userspace
+buffering and enables kernel side data transfers.
 
-								Honza
+Verification:
+1. Created a source directory containing flat inodes, inline inodes,
+   symlinks and absolute symlinks. Verified data integrity by comparing
+   checksums of files within the mounted image.
+2. Built same image with default rebuild and rebuild with FULLDATA. Then
+   ran F-i-f/tdiff comparing the two.
 
-> > And Jan once raised up if it should be a user interface
-> > or auto-tuning one:
-> > https://lore.kernel.org/r/z2ule3ilnnpoevo5mvt3intvjtuyud7vg3pbfauon47fhr4owa@giaehpbie4a5
-> > 
-> > My question is that if the needs are real, I wonder if
-> > it should be a vfs generic decision instead (because
-> > it's not due to the filesystem restriction but due to
-> > real system memory pressure or heavy workload for
-> > example).  However, if the answer is that others don't
-> > really care about this, I'm fine to leave it as an
-> > erofs-specific option as long as the actual case is
-> > clear in the commit message.
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > 
-> > > 
-> > > Signed-off-by: Chao Yu <chao@kernel.org>
-> > > ---
-> > >   Documentation/filesystems/erofs.rst | 1 +
-> > >   fs/erofs/inode.c                    | 3 ++-
-> > >   fs/erofs/internal.h                 | 1 +
-> > >   fs/erofs/super.c                    | 8 +++++++-
-> > >   4 files changed, 11 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-> > > index fe06308e546c..d692a1d9f32c 100644
-> > > --- a/Documentation/filesystems/erofs.rst
-> > > +++ b/Documentation/filesystems/erofs.rst
-> > > @@ -137,6 +137,7 @@ fsoffset=%llu          Specify block-aligned filesystem offset for the primary d
-> > >   inode_share            Enable inode page sharing for this filesystem.  Inodes with
-> > >                          identical content within the same domain ID can share the
-> > >                          page cache.
-> > > +nolargefolio           Disable large folio support for all files.
-> > >   ===================    =========================================================
-> > >   Sysfs Entries
-> > > diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-> > > index 4b3d21402e10..26361e86a354 100644
-> > > --- a/fs/erofs/inode.c
-> > > +++ b/fs/erofs/inode.c
-> > > @@ -254,7 +254,8 @@ static int erofs_fill_inode(struct inode *inode)
-> > >   		return 0;
-> > >   	}
-> > > -	mapping_set_large_folios(inode->i_mapping);
-> > > +	if (!test_opt(&EROFS_SB(inode->i_sb)->opt, NO_LARGE_FOLIO))
-> > > +		mapping_set_large_folios(inode->i_mapping);
-> > >   	aops = erofs_get_aops(inode, false);
-> > >   	if (IS_ERR(aops))
-> > >   		return PTR_ERR(aops);
-> > > diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> > > index a4f0a42cf8c3..b5d98410c699 100644
-> > > --- a/fs/erofs/internal.h
-> > > +++ b/fs/erofs/internal.h
-> > > @@ -177,6 +177,7 @@ struct erofs_sb_info {
-> > >   #define EROFS_MOUNT_DAX_NEVER		0x00000080
-> > >   #define EROFS_MOUNT_DIRECT_IO		0x00000100
-> > >   #define EROFS_MOUNT_INODE_SHARE		0x00000200
-> > > +#define EROFS_MOUNT_NO_LARGE_FOLIO	0x00000400
-> > >   #define clear_opt(opt, option)	((opt)->mount_opt &= ~EROFS_MOUNT_##option)
-> > >   #define set_opt(opt, option)	((opt)->mount_opt |= EROFS_MOUNT_##option)
-> > > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> > > index 972a0c82198d..a353369d4db8 100644
-> > > --- a/fs/erofs/super.c
-> > > +++ b/fs/erofs/super.c
-> > > @@ -390,7 +390,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
-> > >   enum {
-> > >   	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
-> > >   	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
-> > > -	Opt_inode_share,
-> > > +	Opt_inode_share, Opt_nolargefolio,
-> > >   };
-> > >   static const struct constant_table erofs_param_cache_strategy[] = {
-> > > @@ -419,6 +419,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
-> > >   	fsparam_flag_no("directio",	Opt_directio),
-> > >   	fsparam_u64("fsoffset",		Opt_fsoffset),
-> > >   	fsparam_flag("inode_share",	Opt_inode_share),
-> > > +	fsparam_flag("nolargefolio",	Opt_nolargefolio),
-> > >   	{}
-> > >   };
-> > > @@ -541,6 +542,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
-> > >   		else
-> > >   			set_opt(&sbi->opt, INODE_SHARE);
-> > >   		break;
-> > > +	case Opt_nolargefolio:
-> > > +		set_opt(&sbi->opt, NO_LARGE_FOLIO);
-> > > +		break;
-> > >   	}
-> > >   	return 0;
-> > >   }
-> > > @@ -1105,6 +1109,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
-> > >   		seq_printf(seq, ",fsoffset=%llu", sbi->dif0.fsoff);
-> > >   	if (test_opt(opt, INODE_SHARE))
-> > >   		seq_puts(seq, ",inode_share");
-> > > +	if (test_opt(opt, NO_LARGE_FOLIO))
-> > > +		seq_puts(seq, ",nolargefolio");
-> > >   	return 0;
-> > >   }
-> > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+changes in v2:
+- reworked erofs_rebuild_load_trees_full into
+  erofs_mkfs_rebuild_load_trees.
+- removed --merge option (use --clean=data instead).
+- updated man.
+
+Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
+---
+Lucas Karpinski (5):
+      erofs-utils: lib: pass uniaddr_offset to erofs_rebuild_load_tree
+      erofs-utils: lib: add helper function erofs_uuid_unparse_as_tag
+      erofs-utils: lib: preserve primarydevice_blocks if already larger
+      erofs-utils: mfks: add rebuild FULLDATA for combined EROFS images
+      erofs-utils: manpages: update to reflect fulldata support
+
+ lib/cache.c            |   6 +++
+ lib/importer.c         |   5 ++-
+ lib/liberofs_cache.h   |   1 +
+ lib/liberofs_rebuild.h |   7 ++-
+ lib/liberofs_uuid.h    |   1 +
+ lib/rebuild.c          | 117 +++++++++++++++++++++++++++++++++++++++++++++++--
+ lib/uuid_unparse.c     |  16 ++++++-
+ man/mkfs.erofs.1       |   7 ++-
+ mkfs/main.c            |  53 ++++++++++++++--------
+ 9 files changed, 185 insertions(+), 28 deletions(-)
+---
 
