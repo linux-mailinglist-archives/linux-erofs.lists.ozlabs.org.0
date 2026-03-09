@@ -1,71 +1,71 @@
-Return-Path: <linux-erofs+bounces-2548-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2550-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gNGRA733rmnZKgIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2548-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:25 +0100
+	id KDxABsD3rmnZKgIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2550-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:28 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 636F523CDB3
-	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 626EA23CDC4
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 17:39:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fV2lp6zmHz3cB3;
-	Tue, 10 Mar 2026 03:39:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fV2lv33Tjz3cBP;
+	Tue, 10 Mar 2026 03:39:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c105::5" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773074358;
-	cv=pass; b=MfSLciP26QuzT9zU9Uvkm80MZ6j8Z4q7Cf90Lo6MGGAMOhowOS0f1aAA3vE9hLmNOOrfrm3H8W44Sm8rh+hVUNlc0JS38dFzwlfZSDqd+3o1ZmDMdmJiAW9iwRAebvZ3ZUie+ymmKzo8upsKj+cT89nWSxzqsivmnv1dQ/oIE3eNq7ECcndQGNv+ftyqKg45BBfbc1geUicTwNvhasgWAJi3ivW1UJpVFAhhuOyp9edbOKL3w9Gk47el8yJuph48ry301BlzMHRK02d2kb9M6jBXCRtGsDV7KjQ/zVSb5UazPjQCF+uDwxM8ZW+yyTSNF3LaAjh0Ps47BYV1Fc5Y6g==
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773074363;
+	cv=pass; b=QT2+LKiyf5xtRaNov6ms5BUXqqXE+snHhN2NuxePotIE4ywiXHj8sWMzRgU0mXyFIXoLT52oerh3UIebIq0gG20NuKm79KiFwR+VO4u4O/Ycfso4lQ+XJwAhzlV0HSnf7KS1stLWYNTmTj+hoziPZA2XfZY3e/LwEM7SPUK8NzOKgk5SABCTnc2m0Aq63fzzSy/Gya5ezQ05HzRi8PINAFObuR7cA3fompjK2HQMHtdxhO2s4t7kp49PFq58S3n5MJYun6u6B/LwOM6//dW0ZgWhJIQMtx4gjJE0asV0kTzBuCjhMkxgUJv2RZTjK7NbYm/4VtnRR/XuR8g7lo5bkw==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773074358; c=relaxed/relaxed;
-	bh=2ZEa4Md6K9ngNQn8nCxwxSfS6pNZu+FBHensqT0iJ0w=;
+	t=1773074363; c=relaxed/relaxed;
+	bh=QlnZpnY53JO84rUTkNY+xZhccTcnArYoYnsN7BT0DI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kYi+3ZInigIKP5N3MRC14ZQtc834O9kWPktpdYoUkibNYmNuemcPI32CDcVIakKBkxbZ33Tsuot6buZzDcQtzOoKYHafNX973J5bxz6TDowNYM6YRIOJlgTx6tSmwfRQGlbmT0bh/D6qLwVvK5dBMm9Bd53QO6gNrmp7SE/eXe+X7RHxmXd+rrN15h1xFCEw8qACSPHFTHjdCwCiot2r9A/1khXt1k2MUZYEYXeMZas2aghd+qM8NzXoLDiQWvLWgT2uCewCnMOHXDi42lT5LempfvhyBJQMNTXlzir+27rpnjAixDXKMtt/YDjycRWEmpLH/iseC36KvHkpNkSsQg==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=NW1SbliW; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c105::5; helo=ch5pr02cu005.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+	 Content-Type:MIME-Version; b=ABAXgYGYBur4ltmNsi4SA+wxR+O6Q0SouPHysB6Gy/AD1PJHeqBy1JQ2UI0pt3TW3kldbuQ1kz+JgBLgylDJeeZI1XfsFIL46YhyUkO3dX2Qrayj1EtiYkTQKJnWBVwrbO9LaxGgUosdWD6oFZYCivODGIv9vinrHgp88Z5cTH+TQHVpqTBsuTn+u4W/GwyhLb9f8KLxXNg2HYPMYrlw8KVNwKahBAwZJN9CL/7Co/VmV/8eM0yXcAHPTdu6ZNufxHLkXbs4zn2ytvNFK7gg/2Km3gGrjjxWCWnVZBKNaNc0FHIVgAUpqRuEDdYpruVMQfG7wTcq/x6y5Nq64ntEyQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=oLn8mrbQ; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c105::5; helo=ch5pr02cu005.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=NW1SbliW;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=oLn8mrbQ;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c105::5; helo=ch5pr02cu005.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
 Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazlp170120005.outbound.protection.outlook.com [IPv6:2a01:111:f403:c105::5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fV2lp3PnYz3c9l
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 03:39:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fV2lt5bbgz3cBN
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 03:39:22 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H3/VmECLHugbw56fIXlY/vmzExEaWbXc0sPySBuPHrh6UoNsUCUxAwP+TdNPgQNy+X0rqSTBUsG7UXZ8gTzstd9xvwqNiCJYkufd5valhzv4kf2i2BYy/mUOW2+ECFdmKhpOC3IzNe8trudmtU90jq4Dt7jKACdVQJK2VzLrYYHwj93IuA2XeWDsU24apvHgc/SSQ5xTtxtXbqPM3cj/1S8Pbn7njCu+09Q9cI+XlhXpDUSYCiWR2KEN5F6rcONpkVYMypteqfb2u04DxlskneZP8H0Cjf/JvbTdKEKQki+pqU1UoV4+excn5+s1+d7sBLN4fZYw+cTqmsN5y1sJZw==
+ b=p6oQLaSR9KBi9qZ/x08N/rZk2xPkhqIqgEama3WrB9qGQFW0w26HLoHW8JIgF0rgMqDdMBCbAZbka78I5y+rLOEIt7QcndAFUvs+TGjCAhQ2SZardDnlb5k6uebWvmUNuDPHicQ+YFAvSdr4tTv+cv7xPhyGxWiH530greUlE9OaLsnBIFDMT4/azVb58Jb2JegugIzFluJ4Copu55u4bz5Ax/1WWvEasYLmoRMeDHk1d75nQ0+PW2lCWZx+MAwcF863uk9CwG356IObe3NWYqHirXzlDUJjyNyrHntDHtKmjVNMO9TqW18cS7MLj3fPHCxn/uF33Dbt+Z+r6MpbFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ZEa4Md6K9ngNQn8nCxwxSfS6pNZu+FBHensqT0iJ0w=;
- b=hwz4vDxMynW6MXvMWprstZkmOLbTp/tbTin2DXbdjDoYIAf2KQu3lpc0vy+eOTqVsZngh+Z8x+qk55WaLY3G3TOGNlIDVY/8oA6Yf961EucOefeSkPSFIy4mSTvJN7twueP+H2usHUo8nAEBtNGG7ViXYQZpk/hDs9Deha6hI60uQxWgBMVgaDCEEd3mUmIt28LS/UXCoBeGgdRWeZOPNeNxe6FRfRihO806aWl2KCYG5SnXrNRC5QGxeQPN5WgDFtIpVM4T217lPL3j/b6r+nyQ9ltiaD/CUzTdRLTYtjxMfDALED359CcCt3iFzR0EojV85RdzR4TqsVohuFuezA==
+ bh=QlnZpnY53JO84rUTkNY+xZhccTcnArYoYnsN7BT0DI4=;
+ b=sM6vtSj4R9/nW4NycLHccitmIcbe7AzBuUORDDhhPa+ydmPCBOp3sOCYu/F9f4V5xdnNfw3JrkFhxVOagbHbWpUZUP/0mYxiIF3hXYVwC/mSKct4DW4bmJgyy1YS8ajYZtrHm4xTobHcCVlABNmTkVV/NDmWSGNEHE0E8ej0XSglzQpoz68JAt8EkJKtd776l64LGx7ORB8pJlUJ5vgagm1MxM0WeY3gwN7EO6gWjN/1kb99gv4ll+bXf2yN2VZeafH19S9IrY4XTa5OKJpvFQuVi0RQoiQ8I94L+pzrjpBoxK3UJI5VCwqXuOVhKSf3El6U+E3aM2Ug58BcHUtWUw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ZEa4Md6K9ngNQn8nCxwxSfS6pNZu+FBHensqT0iJ0w=;
- b=NW1SbliWeHNkIVIkN90LL0X0vQEpMtiXUAMtdhZQKQtFFmPQiDWoc91vq3EcaYt94UOPd8IRkpLBZfW0av9dsnHPoZ1MUTmdQ6Y24lU9MaUX2PpJzjcS5WgX8fMicfLmUtu3Fw8XWR8WsNdOqqFZrHU+u1rnTW/iHA+J4OCGTo3O1NsAL6DVmEf0+KgEE18A92lzThXxZKa8EYwQvzLpSMGy2l+3lSizd0Dc0J1dR/wY+SHQwNwPzD9ws4HZXo3zPkqfszBJP581sEZaTCG4zRQ8hx5p6ibE8HKfb/5o1bf6prm5orKFemXYSAdLzGy6GcPlwFrXwSZ+Su/RCK6bSA==
+ bh=QlnZpnY53JO84rUTkNY+xZhccTcnArYoYnsN7BT0DI4=;
+ b=oLn8mrbQXSpqpbvz+McyLDO/MM+higyOEDOWj417Qgzkz2EiCJnA3exIUV1jf1V8m5UxjC8f0xTKhKNJtTlHo+S3XnjWgO2S2M/ahPRfxIm/Pl1jpS6bHRSJnjQc77C/h5+d9fX1Ko0QH0oRH8Pi1ognHppp4LQNNpKN6LdHfNqUPIRK8YkutRIqkPGm8yTl7dWeGZeqh3JF8+6hyuvyCwUteDYTsvleh7gm+7/uws6wYiOio8dm3l5mJz78FYhhKUzzcapjguDz98/9Vg2Hj4c37UI12ElfGhnwWPcoO2k4b9oV8/mO/9ui81GQrvJKl8ipbjTJswabkz/6k/eVsQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
  by LV8PR12MB9417.namprd12.prod.outlook.com (2603:10b6:408:204::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Mon, 9 Mar
- 2026 16:38:55 +0000
+ 2026 16:38:56 +0000
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9700.010; Mon, 9 Mar 2026
- 16:38:53 +0000
+ 16:38:56 +0000
 From: Lucas Karpinski <lkarpinski@nvidia.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: jcalmels@nvidia.com,
 	Lucas Karpinski <lkarpinski@nvidia.com>
-Subject: [PATCH v2 3/5] erofs-utils: lib: preserve primarydevice_blocks if already larger
-Date: Mon,  9 Mar 2026 12:38:19 -0400
-Message-ID: <20260309-merge-fs-v2-3-2dd0ef53db4d@nvidia.com>
+Subject: [PATCH v2 4/5] erofs-utils: mfks: add rebuild FULLDATA for combined EROFS images
+Date: Mon,  9 Mar 2026 12:38:20 -0400
+Message-ID: <20260309-merge-fs-v2-4-2dd0ef53db4d@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260309-merge-fs-v2-0-2dd0ef53db4d@nvidia.com>
 References: <20260309-merge-fs-v2-0-2dd0ef53db4d@nvidia.com>
@@ -87,72 +87,72 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|LV8PR12MB9417:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00d1169b-1a5f-47a4-9154-08de7dfa558a
+X-MS-Office365-Filtering-Correlation-Id: fd832d31-9b4d-4a58-24e5-08de7dfa560c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	eQ97eSgkKbtSxU+pOnX8jeLcbN9N7ONHbNjxxiJSv3ohlDyYNC6chy4VlY+6v2SObefp0K8aQpuSqVA2CpFlE5r6n6J+VS2c8ydv9K4YHIRk2B764HFFMuBNIOQoS/J8XceB0+9M85iv23nI0GSa1J/wz0iGcOMDwweGL+m4FGBih8o1cLIMC9UdQwIKCR5b5tl2EhnWOH4paMpotX08eXA6ms+oZncRI0Ey1RtiAYwhoqX8mWLOUPCAr1sMl8oxgbjgIupw+HNsXk5wC+83oSRO3jjyle3VTosNVs4goBdekmVRDEIqxLvjWogMGHEYr2Q5a2XQL+yTt84FFzafzIpPJyqCTrP/e6pjBdZGv9GUxhHiOBnh0TBfFHgAufeS6sRQcwkBMGSjx9fZJQ889SS9ModsQZqCjTgSOcZv6WwRQx68u4NUpOYMFOdN3QTN0jprXhyAuDNVNKr6MI2Gy25Q5+fW8m0nUkUBzFXrRkCxqxgaOv0bI1G3uNQjZJD3Dl5kXL5vHADBj/9dtv2ODLCdcharAkPxzGprjWH0zF86U1B+YNYJYJ2R2Q+s0FXJlGgqItVmUEUmkLo3D3QxmIdpAc9VkfaZ42aixZamfbxCy7zUcSJVUe905/UTREcVwco5JHornCqVZOITe3hKJtHFo8u8eiKxrWz9/QB3P1SGMg8LLvhn+Xad65zMqjWXzPsP31r3JchHAqHdjaYOY+EheC4yZsAINVSMbfUqGD4=
+	EiLGoqwhX7LwpZ9uKaEHBiK02itIo+bVtB92nDrdRMt+PXnYzwAK7I+hy5zC1AO/e/grX2eVSNi9AkSOx9WaTDbJpPqsWGm/dcdMmsooqcbN8DGe3gEq6jJoC6HToa+2Ubgb+Nxc2aH/i23IgBEJB9xCZc4OXl0z7DBMNKvk1CaM4ySy2OMZdGX6MYUJWQNQX27Bi/FAAW5UaGR3NLhFn51ceuSHe2wrboZxFsGTeMnhmoW6WvKwGRAil9acmyjo+TNDnAzvP2hMrJ+nU6NG0rJFq+RJ0jmdLLUYdKIaHgEl6lbzDgSI4MFJKA0RM9ltzdTyI+Ck5VrUWaCvSAbh/AL6LNRgdGmo5n2yf3JXPOw0VJgXTk03/LeYDIedB9gd/W6kLR8xqcAkA01QNdbhw5lCQIFasJ/v5IuiJQyiFCVVafjrLTYye+DXYutLoe5b69i23PGbao4IqePOgGkvswwnqq4IEEpcRadpzNJ3SBcIOTPUAkpiYuupA1ND8Ot6dZPIaHcNboJoXXuRUjNt9VPqGSc6lVfgonYAwQI29I07Gxww0SkMogbwPmHUURt+yMe0ThkbO98AZbjaZmmO+MhW7HYkPxuKCZrdwG6rbrs7to0v86sCTqMY+PMqQxWpTw6tlpNMWWCrI5f8bGZXJnN4FMUmBIvAZYT6wcCf7LkBnFnfmxkqWqNGzE8fSZwXFU8nHcwYBizrNXPO0Y+xkErgyG/3GQ/Igi1yVuPMhqU=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MDI2eFRrUXQxMmpGeVpvWmlYbWc5a0IwQzBxZWRpVVZWOGpwdXVuSmlTSVc1?=
- =?utf-8?B?ZGd0M0hlblhVRXU5bzlTYnpqOElRQ1JhaEV6ZU05S3ZJYUFLajBKeGpPMkZK?=
- =?utf-8?B?VHR1YTFyb2dTNkpzU2FKd3ltdEs4aWYxU0sveUhPdFNmRVRLU1dmcDNWbG1s?=
- =?utf-8?B?ZEsrZ1ErUUlLS2FPOXRXZ0VqcGREM3FOMXNaQkcyTnVGQTRRWFdic3V2azB5?=
- =?utf-8?B?KzFsSUFMVEYxblBYN0ZzOEpFOVViY05QeFhrZW96a3dkV2VEVzdzV3E4L2xl?=
- =?utf-8?B?U0dkNEQ2VmYzOVluWkltUnhMYUp2WTlycGJycFBmWS9lUzFRaVAzL2VKcTBZ?=
- =?utf-8?B?Mm5aQlhwNmQwdW1tWThuZHVieFBmVWlTL20raUZRc2sxYzlzd2NUNTF2TWdo?=
- =?utf-8?B?YWQxQ0ZUbmpFSXJ1Y1Z6WnNVTHVZM1diY0hUNUg2V1J1VGNmVHg2NEFCenFT?=
- =?utf-8?B?Mk1jL0VFa054THJOSWNxN1ZrcDY1d3oxS2JRdWRBY3JqYnZQanNlVmpsZGU2?=
- =?utf-8?B?MElhcndDaFppMXdyeGxrWkpmekl0Qm5vS2Z1SmdQQ1UrcDYzc09VaytNdDZI?=
- =?utf-8?B?YWI2VXpUbXhjTkMxS3E3bDVyVUJxVXd3N3ZCZStlaVAzY2xoTTBDUVIvdita?=
- =?utf-8?B?UWUyaDBaMGhqZjhoUEZoOWlSZnpDeWZqOWVXOFpCK2dPK2U0SW9EQnBGOFRF?=
- =?utf-8?B?cWVIOUQ2MEtwNVJkOWUvRGg1NXpQWTJEZ1FzbTZDQWZxRk5nRzd1aElFSUFi?=
- =?utf-8?B?NnFOSHRaRG80MWtDbG5pSnM5R0pOTTgySUtXOFo4V1RsRTAzNnhmcjVHcGlO?=
- =?utf-8?B?TklmcmhYU2lxMFpFZjgwREJzYXVYMzZham01M3I4ZTlCaHh1c2JtL2gwcHZh?=
- =?utf-8?B?V053VEZlbTRyWFc4WFA2bFF5WjZGYXFuQ20xNVdEQ2lQMVVNdkR2dGJHM0pG?=
- =?utf-8?B?Q2Zlbzl2dFJlSTZIZngyUExqcVE2VU12a0laSHk5eGF5QnpheFRXdVE0V0p4?=
- =?utf-8?B?YUwzMEFjNEYzN1pGbU1razJEcFRnVFRzSG1CMUJIN1ZVaXBWYmVrcUt5Nzlz?=
- =?utf-8?B?c0ZoOWJJc1hvWlh2bm5yWWsyQ0wzQzNjUFBBWjhXWnlJTWt2RHlJclpBeWVS?=
- =?utf-8?B?cVFHa2hLSCsvUU5BbU9KREFyMnFTT3RhVTZ0TFdROE9XdjdsSXplZEVyUmNx?=
- =?utf-8?B?bFl5STV1cnM1ZW5FMWp5QytiMTNnUVB1SEFDd2FLTnlIbHl4RlozSXVZSlVS?=
- =?utf-8?B?RnFDdGRoSjR1WDI2ZXZNMUhidm01aWdGelhHWEVFNnpWZFZRVERraUwzNUM4?=
- =?utf-8?B?U2lxclkvRGNXdyt2VllPSnh4UjJxYWRwcUlzTWVmT0d0LzhGMDhob3V0YkpO?=
- =?utf-8?B?aFBXV2Fpd3cxbHI2MXF6clV2V2wvdlhkSGhzOThpMVl2ZFFQUncveW54aUw3?=
- =?utf-8?B?UTU4djJseDd4YVgvZERJd01WWndiQnY1b2pSTU9jYmRBZDQ4RFhBNTRpb1g5?=
- =?utf-8?B?QnFJKzlIb0tBZjZzbjlXTHZzVndnYUdTc3VJOGpxMytLZG4xUy9JbTZpOE41?=
- =?utf-8?B?Q2VvYTd6SFFsZTJseTF2NndCZTBZL0JWVDY2Q2x3ZS92TVY5RlphUzJ6REVX?=
- =?utf-8?B?Z0VUMDdiaUhGQ25uelVyYlh1VDlkYXRQU0NZZ2dmb3RIMjFoN0hwbTZnb1hS?=
- =?utf-8?B?ay9mUG81L0V1bExCV0FqQlBjVTJwYzJQSUg5TUthN2NDUVdYVStCV2xVUTNy?=
- =?utf-8?B?ajY4NUE4a1piRnNBcC8rVEQvY0Vhb2EzUVVtb3JDWUY3eXlIRjdVVE1pS3A1?=
- =?utf-8?B?QXg4MzBhZG02WWUyOVdUS2ZTT0xSdC82dHg1Rk1XdUhWMUFxc29lOHg5aUxr?=
- =?utf-8?B?cG9TdTdja0ZLVHdzZDRycHBFbW5PM3NjaUxlRUIzMndyYmR3OTJJY2h4R0dH?=
- =?utf-8?B?QWE1eGtJMmIxaEpSNW1ZTGxmdEJKNEpGZ3FWU3BDQ05jQUcvR1dqNXVkVCtD?=
- =?utf-8?B?bmw5YmpKZG1rV1ZRK2ZEU2ZXRDk3OWhKTUFMNU42K2JvcjhkYkRlajhrNHNG?=
- =?utf-8?B?MFgrRTNPdFo4ejB5WXBLRldpbEJCWWtFYit3aFY4bjhGRUIyMmtjSytTbmpK?=
- =?utf-8?B?TUMvcndpWkZWOExTWHdxdE8rSUc4L2Eycy9zK29FNTlkbFNaTWhXKzROODZq?=
- =?utf-8?B?ZEFRb3ZrODNzU3JJUFcvOXhZUWdNYnZYS21wbG0yem9WajRmK3BQZXk4Q3VE?=
- =?utf-8?B?UURaVjdRcUJYZ0daUEtwZUExNFYxMFBzZmxyQ3J0c25YUkdDZGRrYVpSNzIz?=
- =?utf-8?B?SVpGRnJZQVAyRjJLTUp3MEwvcVUvdm9NbDhpZStmOFFualZKL2NXdz09?=
+	=?utf-8?B?SW1LR2J5akpUM1RVUmVPK0pMaFh5aVBnd0F6Sk5BaEFjWUpWWXhiNFgzbGNP?=
+ =?utf-8?B?NitLRnlqekxwbmU1U2JRMW1GSnJ1aHczY3JrV2kxOS9TcFNkcmppVmpwYXZt?=
+ =?utf-8?B?cU1laTNUa1YxT0N2NmI3UHVTQXFZT3ZmbzJEeHVyUWYvOWVtQVN5NHpVVk5D?=
+ =?utf-8?B?bjgzcCtKM0d5RnpGN1FoRWxHamlPUUNTWU9lcUNXRng2dUFPeVZ4bGdzTEIw?=
+ =?utf-8?B?d3VWelVGay80d1VYZkIwYUlzUXdXSHd1eEs3YkE3TnFUbGZZeHFmdzlZOWZX?=
+ =?utf-8?B?UFNjQ3o3Z09nWCtvN3R3VE52bXY2MURQb1lLdE1HenBxUmc4SG1CL2tZOC9u?=
+ =?utf-8?B?VXBOenlydWdoY2NqNlJ4aW1tYlNLUEd4SVZVSlZ3MFNyM1B2MkRuQW5OTmZM?=
+ =?utf-8?B?RXFrUDdyd3JnREtnWWZDbncwcjZWTExKeWxwME9nM1phNEZueDRYcVBJNHJo?=
+ =?utf-8?B?VzF3VFdwemNENys0ZkJvZ205akNRS0NOMTBkNU5WOHdpcEMzcHpoeDBVck9C?=
+ =?utf-8?B?cDZFSlhuMGJTWXFvb2NwcUZ3MDBpUUpoelVIa04rUDJKMzREUmk1Z204RHFj?=
+ =?utf-8?B?QVhZbVR6SnVybWVaVW5iREhvKzFTZUg4dTZJaEVkbjYvZFhsRFJucWJxSUdy?=
+ =?utf-8?B?ZXQ0cWloem9WTEVYb1o3UFRHcDkrRGdFWlZmOWZ3YWhadG4xUTFkaldRMnVl?=
+ =?utf-8?B?emdHMTRsV0ZseC95QlZXa1FuSDVFeFNRMUF3YUZpRUNqWUFyYlRKak5IMk94?=
+ =?utf-8?B?RmxweHNFZmMxci9Xa3QvM1VJNDJlQXRISzYvZ0xYcklFUm53NWVUc3JIdkZB?=
+ =?utf-8?B?QXM2cnhSdkpwOWk2YkJJenFKZEh3Q0lpS2xzZ1pWc2dtNGJOb0lRWGk5bkxJ?=
+ =?utf-8?B?Ty9YUDdEd3d2WUpiTGMvVFByVFdLYm9ESndCRm5NUSszMmtjVWV6Vkd2U29p?=
+ =?utf-8?B?bHRGdzJaaGpab1hVWEpxWlBLNWdORG9ZZ3VXRExydUwyNmFkRG1oQUk5WGVn?=
+ =?utf-8?B?VGxDMm9aNXo0ZlRBZFRSeDd5SkFPOHdLOXFWU0ZrT0VpOHZnZ1V4MTE0S0lv?=
+ =?utf-8?B?T3dXcXVKRUxkRmo4MnB0aTFQVEZoUUgzNUFBTlhuR2R5dEJWekN1dVFzUDZM?=
+ =?utf-8?B?K0w1V2pqUktlTVZLN3VQZ2FKbEFQaGF3Z1duT2dLZXpFVDN4bXFkaGlkNmNH?=
+ =?utf-8?B?U3VUeDhPQkJoYnBRTkhXRGdvVWR2aUtsZmlIZmM4ZmpCYkNIQktUU3MzMnVV?=
+ =?utf-8?B?OFArd1lOVVczdVdzeUNLYmI1WlBoYkZXZzNCQ21qNVRxQjVka1VSUVk3UTlM?=
+ =?utf-8?B?cnRoTUtCM0NyU3c2dGc0aUVCOGY0YTFPOEFzUHFscnlKZjJiT244ODlPKzJM?=
+ =?utf-8?B?eldLdEFMUlNHNy85OTd6V29KVUU3UkI0S2RrcGxOOTRJWkVSR3F5TmZ5cjhG?=
+ =?utf-8?B?SUNUVDdFa1c4WERoNWhYd0hjWjJxNmtCdGduemxlMEpTVHcxM2hqVlhyM0RK?=
+ =?utf-8?B?c29HSkRqbExiTjRLVis2WllvUkpGWXJaNmRpNWpRUDN0TVg2bnZsQkQxdVlK?=
+ =?utf-8?B?VVlXYjAwV1FpQjVJMDFKcjdLYnNUZHVQWlkzb1hWUGJtS2pDc09mM1pCdkM4?=
+ =?utf-8?B?T2RZQ243QW1Rb1RqSHkyOXBhaENGcGluMk9vM1pEVmFxams4Y1g1SEkyckRM?=
+ =?utf-8?B?MzFNTUtPL014US9nYXJDMXJjaG50dlE2Q2JFc1NBUTMyUFUxbGxOWE05Qk9Q?=
+ =?utf-8?B?dnozZjhjUU94dVpRN0lSYk9aY3VoNTFGRmt2YkNUbmtJQ3Q3NDFzajRHcTRS?=
+ =?utf-8?B?b0hVbHNGWjcwdjk1dXp0cE9jcUJSWkI0L3hYU2ZtUzArR3JtVzFkVHNneFc4?=
+ =?utf-8?B?Y21VR3AxZXY4enVBZjVXalM0b2xnNUxidGxrSzNTM0F4VEt1VC9uS2lxV2o3?=
+ =?utf-8?B?UjFnSTZGMXo5ZElMS0NmT1IxK3RlYW5UcUE5bkNiaHpjemZCSmtoZjJnOFc4?=
+ =?utf-8?B?Q1VSMzJIUUxuYmw1U1JBa0NiVDd4NXA5UUE5YXd6d3pIUUdRUHI4WTY5bHd6?=
+ =?utf-8?B?ckNYcElmTzJoWnBBN1BoWU9CeFRFdnlWSSsxRW1SZllqV0pIWVFIbG9JK2tL?=
+ =?utf-8?B?LzYzcEV6NEpSemkvQVBPVW9neXF1QzM5ejAza1JTNkRwSDhETWQrYWZ4eHVW?=
+ =?utf-8?B?VmVjYU4wR095eDZuUVcvbFljT1pSdXJ6dEJCL0lMZi9JKzlteVd0UzJzMVpW?=
+ =?utf-8?B?WDJpZTZLY08vL0VSamJMOFFCOTUrZjJXaTFvemVvYnFyV3A2S2hidHdyNnQw?=
+ =?utf-8?B?U0tCRGhDczVTRWNwU3lMV2NXNGkwbkFGeEN3Y3hNZHQwMlJSNFBnUT09?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d1169b-1a5f-47a4-9154-08de7dfa558a
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd832d31-9b4d-4a58-24e5-08de7dfa560c
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 16:38:46.5772
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 16:38:47.5528
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OOcbeledy+yhLVw4merOizXHxaEa5LrKzyUONqy/7Oa54j5l2MLeov1iRXzQjCR2kNPDJrzwuIZDBQCuc+akSw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: XnJ0jdv2K2b3ODz8fe6PzLwEZfS7vAjCYm19jrPwKhv1nr2Ce8+t1zzB5+2PuQF9TUjmc962ceTNqzUfXMGKIQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9417
 X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 636F523CDB3
+X-Rspamd-Queue-Id: 626EA23CDC4
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
@@ -162,7 +162,7 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2548-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2550-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -174,37 +174,361 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
 	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-0.998];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,Nvidia.com:dkim]
 X-Rspamd-Action: no action
 
-Change erofs_importer_flush_all() to use max(). This allows callers to
-pre-allocate space for data beyond the metadata region.
+This patch introduces experimental support for merging multiple source
+images in mkfs. Each source image becomes a directory directly under root
+and keeps its UUID stored as a device table tag. The raw block data from
+each source is copied using erofs_copy_file_range. We preserve the file
+metadata and layout (FLAT_PLAIN and FLAT_INLINE). Symlink paths are handled
+by reading and copy link targets.
+
+This does not yet support chunk-based files at this time or compressed
+images.
 
 Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
 ---
- lib/importer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/cache.c            |   6 +++
+ lib/liberofs_cache.h   |   1 +
+ lib/liberofs_rebuild.h |   4 ++
+ lib/rebuild.c          | 112 +++++++++++++++++++++++++++++++++++++++++++++++--
+ mkfs/main.c            |  44 ++++++++++++++-----
+ 5 files changed, 154 insertions(+), 13 deletions(-)
 
-diff --git a/lib/importer.c b/lib/importer.c
-index 26c86a0..56c8ea8 100644
---- a/lib/importer.c
-+++ b/lib/importer.c
-@@ -126,8 +126,9 @@ int erofs_importer_flush_all(struct erofs_importer *im)
+diff --git a/lib/cache.c b/lib/cache.c
+index 4c7c386..49742bc 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -544,6 +544,12 @@ erofs_blk_t erofs_total_metablocks(struct erofs_bufmgr *bmgr)
+ 	return bmgr->metablkcnt;
+ }
  
- 	fsalignblks = im->params->fsalignblks ?
- 		roundup_pow_of_two(im->params->fsalignblks) : 1;
--	sbi->primarydevice_blocks = roundup(erofs_mapbh(sbi->bmgr, NULL),
--					    fsalignblks);
-+	sbi->primarydevice_blocks = max_t(erofs_blk_t, sbi->primarydevice_blocks,
-+					  roundup(erofs_mapbh(sbi->bmgr, NULL),
-+						  fsalignblks));
- 	err = erofs_write_device_table(sbi);
- 	if (err)
- 		return err;
++void erofs_bset_tail(struct erofs_bufmgr *bmgr, erofs_blk_t blkaddr)
++{
++	if (blkaddr > bmgr->tail_blkaddr)
++		bmgr->tail_blkaddr = blkaddr;
++}
++
+ void erofs_buffer_exit(struct erofs_bufmgr *bmgr)
+ {
+ 	DBG_BUGON(__erofs_bflush(bmgr, NULL, true));
+diff --git a/lib/liberofs_cache.h b/lib/liberofs_cache.h
+index baac609..55e8f25 100644
+--- a/lib/liberofs_cache.h
++++ b/lib/liberofs_cache.h
+@@ -138,6 +138,7 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
+ 		 struct erofs_buffer_block *bb);
+ 
+ void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke);
++void erofs_bset_tail(struct erofs_bufmgr *bmgr, erofs_blk_t blkaddr);
+ void erofs_buffer_exit(struct erofs_bufmgr *bmgr);
+ 
+ #ifdef __cplusplus
+diff --git a/lib/liberofs_rebuild.h b/lib/liberofs_rebuild.h
+index d8c4c8a..fba7f39 100644
+--- a/lib/liberofs_rebuild.h
++++ b/lib/liberofs_rebuild.h
+@@ -17,6 +17,10 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+ 			    enum erofs_rebuild_datamode mode,
+ 			    erofs_blk_t uniaddr_offset);
+ 
++int erofs_rebuild_copy_src(struct erofs_sb_info *sbi,
++			   struct erofs_sb_info *src,
++			   struct erofs_device_info *dev);
++
+ int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
+ 			       unsigned int *i_nlink);
+ #endif
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 7e62bc9..451307a 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -14,8 +14,10 @@
+ #include "erofs/xattr.h"
+ #include "erofs/blobchunk.h"
+ #include "erofs/internal.h"
++#include "erofs/io.h"
+ #include "liberofs_rebuild.h"
+ #include "liberofs_uuid.h"
++#include "liberofs_cache.h"
+ 
+ #ifdef HAVE_LINUX_AUFS_TYPE_H
+ #include <linux/aufs_type.h>
+@@ -221,9 +223,60 @@ err:
+ 	return ret;
+ }
+ 
++static int erofs_rebuild_write_full_data(struct erofs_inode *inode,
++					 erofs_blk_t uniaddr_offset)
++{
++	struct erofs_sb_info *src_sbi = inode->sbi;
++	int err = 0;
++
++	if (inode->datalayout == EROFS_INODE_FLAT_PLAIN) {
++		if (inode->u.i_blkaddr != EROFS_NULL_ADDR)
++			inode->u.i_blkaddr += uniaddr_offset;
++	} else if (inode->datalayout == EROFS_INODE_FLAT_INLINE) {
++		erofs_blk_t nblocks = erofs_blknr(src_sbi, inode->i_size);
++		unsigned int inline_size = inode->i_size % erofs_blksiz(src_sbi);
++
++		if (nblocks > 0 && inode->u.i_blkaddr != EROFS_NULL_ADDR)
++			inode->u.i_blkaddr += uniaddr_offset;
++
++		inode->idata_size = inline_size;
++		if (inline_size > 0) {
++			struct erofs_vfile vf;
++			erofs_off_t tail_offset = erofs_pos(src_sbi, nblocks);
++
++			inode->idata = malloc(inline_size);
++			if (!inode->idata)
++				return -ENOMEM;
++			err = erofs_iopen(&vf, inode);
++			if (err) {
++				free(inode->idata);
++				inode->idata = NULL;
++				return err;
++			}
++			err = erofs_pread(&vf, inode->idata, inline_size,
++					  tail_offset);
++			if (err) {
++				free(inode->idata);
++				inode->idata = NULL;
++				return err;
++			}
++		}
++	} else if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
++		erofs_err("chunk-based files not yet supported: %s",
++			  inode->i_srcpath);
++		err = -EOPNOTSUPP;
++	} else if (is_inode_layout_compression(inode)) {
++		erofs_err("compressed files not yet supported: %s",
++			  inode->i_srcpath);
++		err = -EOPNOTSUPP;
++	}
++	return err;
++}
++
+ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
+ 				      struct erofs_inode *inode,
+-				      enum erofs_rebuild_datamode datamode)
++				      enum erofs_rebuild_datamode datamode,
++				      erofs_blk_t uniaddr_offset)
+ {
+ 	int err = 0;
+ 
+@@ -265,6 +318,8 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
+ 			err = erofs_rebuild_write_blob_index(dst_sb, inode);
+ 		else if (datamode == EROFS_REBUILD_DATA_RESVSP)
+ 			inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
++		else if (datamode == EROFS_REBUILD_DATA_FULL)
++			err = erofs_rebuild_write_full_data(inode, uniaddr_offset);
+ 		else
+ 			err = -EOPNOTSUPP;
+ 		break;
+@@ -387,7 +442,8 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+ 			inode->i_nlink = 1;
+ 
+ 			ret = erofs_rebuild_update_inode(&g_sbi, inode,
+-							 rctx->datamode);
++							 rctx->datamode,
++							 rctx->uniaddr_offset);
+ 			if (ret) {
+ 				erofs_iput(inode);
+ 				goto out;
+@@ -425,6 +481,7 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+ {
+ 	struct erofs_inode inode = {};
+ 	struct erofs_rebuild_dir_context ctx;
++	struct erofs_inode *mergedir;
+ 	char uuid_str[37];
+ 	char *fsid = sbi->devname;
+ 	int ret;
+@@ -447,16 +504,19 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+ 		erofs_err("failed to read root inode of %s", fsid);
+ 		return ret;
+ 	}
++
++	mergedir = root;
+ 	inode.i_srcpath = strdup("/");
+ 
+ 	ctx = (struct erofs_rebuild_dir_context) {
+ 		.ctx.dir = &inode,
+ 		.ctx.cb = erofs_rebuild_dirent_iter,
+-		.mergedir = root,
++		.mergedir = mergedir,
+ 		.datamode = mode,
+ 		.uniaddr_offset = uniaddr_offset,
+ 	};
+ 	ret = erofs_iterate_dir(&ctx.ctx, false);
++
+ 	free(inode.i_srcpath);
+ 	return ret;
+ }
+@@ -556,3 +616,49 @@ int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
+ 	};
+ 	return erofs_iterate_dir(&ctx.ctx, false);
+ }
++
++int erofs_rebuild_copy_src(struct erofs_sb_info *sbi,
++			   struct erofs_sb_info *src,
++			   struct erofs_device_info *dev)
++{
++	erofs_blk_t cur = sbi->primarydevice_blocks;
++	u64 src_off = 0, dst_off, len;
++	int src_fd, dst_fd;
++	int ret;
++
++	ret = erofs_read_superblock(src);
++	if (ret) {
++		erofs_err("failed to read superblock of %s: %s",
++			  src->devname, erofs_strerror(ret));
++		return ret;
++	}
++
++	dev->blocks = src->primarydevice_blocks;
++	dev->uniaddr = cur;
++
++	erofs_info("Copying %s: %u blocks at unified address %u",
++		   src->devname, dev->blocks, cur);
++
++	src_fd = src->bdev.fd;
++	dst_fd = sbi->bdev.fd;
++	if (src_fd < 0 || dst_fd < 0) {
++		erofs_err("failed to get file descriptors");
++		return -EINVAL;
++	}
++	dst_off = erofs_pos(sbi, cur);
++	len = erofs_pos(src, dev->blocks);
++	while (len > 0) {
++		ssize_t copied = erofs_copy_file_range(src_fd, &src_off,
++						       dst_fd, &dst_off, len);
++		if (copied < 0) {
++			erofs_err("failed to copy data from %s: %s",
++				  src->devname, erofs_strerror(-copied));
++			return copied;
++		}
++		if (copied == 0)
++			break;
++		len -= copied;
++	}
++	sbi->primarydevice_blocks += dev->blocks;
++	return 0;
++}
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 48da20f..4ac835f 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -15,9 +15,11 @@
+ #include <getopt.h>
+ #include "erofs/config.h"
+ #include "erofs/print.h"
++#include "erofs/io.h"
+ #include "erofs/importer.h"
+ #include "erofs/diskbuf.h"
+ #include "erofs/inode.h"
++#include "erofs/dir.h"
+ #include "erofs/tar.h"
+ #include "erofs/dedupe.h"
+ #include "erofs/xattr.h"
+@@ -30,6 +32,7 @@
+ #include "../lib/liberofs_metabox.h"
+ #include "../lib/liberofs_oci.h"
+ #include "../lib/liberofs_private.h"
++#include "../lib/liberofs_cache.h"
+ #include "../lib/liberofs_rebuild.h"
+ #include "../lib/liberofs_s3.h"
+ #include "../lib/liberofs_uuid.h"
+@@ -1717,7 +1720,7 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 	struct erofs_sb_info *src;
+ 	unsigned int extra_devices = 0;
+ 	erofs_blk_t nblocks;
+-	int ret, idx;
++	int ret, idx = 0;
+ 	enum erofs_rebuild_datamode datamode;
+ 
+ 	switch (dataimport_mode) {
+@@ -1734,9 +1737,33 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 		return -EINVAL;
+ 	}
+ 
++	if (datamode != EROFS_REBUILD_DATA_RESVSP) {
++		ret = erofs_mkfs_init_devices(&g_sbi, rebuild_src_count);
++		if (ret) {
++			erofs_err("failed to initialize devices: %s",
++				  erofs_strerror(ret));
++			return ret;
++		}
++		devs = g_sbi.devs;
++	}
++
+ 	list_for_each_entry(src, &rebuild_src_list, list) {
++		erofs_blk_t uniaddr = 0;
++
++		if (datamode == EROFS_REBUILD_DATA_FULL) {
++			/* Copy source data blocks */
++			ret = erofs_rebuild_copy_src(&g_sbi, src, &devs[idx]);
++			if (ret)
++				return ret;
++
++			uniaddr = devs[idx].uniaddr;
++
++			/* Advance buffer manager past copied data */
++			erofs_bset_tail(g_sbi.bmgr, g_sbi.primarydevice_blocks);
++		}
++
+ 		src->xamgr = g_sbi.xamgr;
+-		ret = erofs_rebuild_load_tree(root, src, datamode, 0);
++		ret = erofs_rebuild_load_tree(root, src, datamode, uniaddr);
+ 		src->xamgr = NULL;
+ 		if (ret) {
+ 			erofs_err("failed to load %s", src->devname);
+@@ -1748,9 +1775,10 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 			return -EOPNOTSUPP;
+ 		}
+ 		extra_devices += src->extra_devices;
++		idx++;
+ 	}
+ 
+-	if (datamode != EROFS_REBUILD_DATA_BLOB_INDEX)
++	if (datamode == EROFS_REBUILD_DATA_RESVSP)
+ 		return 0;
+ 
+ 	/* Each blob has either no extra device or only one device for TarFS */
+@@ -1760,11 +1788,6 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	ret = erofs_mkfs_init_devices(&g_sbi, rebuild_src_count);
+-	if (ret)
+-		return ret;
+-
+-	devs = g_sbi.devs;
+ 	list_for_each_entry(src, &rebuild_src_list, list) {
+ 		u8 *tag = NULL;
+ 
+@@ -1775,14 +1798,15 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ 			tag = src->devs[0].tag;
+ 		} else {
+ 			nblocks = src->primarydevice_blocks;
+-			devs[idx].src_path = strdup(src->devname);
++			if (datamode == EROFS_REBUILD_DATA_BLOB_INDEX)
++				devs[idx].src_path = strdup(src->devname);
+ 		}
+ 		devs[idx].blocks = nblocks;
+ 		if (tag && *tag)
+ 			memcpy(devs[idx].tag, tag, sizeof(devs[0].tag));
+ 		else
+ 			/* convert UUID of the source image to a hex string */
+-			erofs_uuid_unparse_as_tag(src->uuid, (char *)g_sbi.devs[idx].tag);
++			erofs_uuid_unparse_as_tag(src->uuid, (char *)devs[idx].tag);
+ 	}
+ 	return 0;
+ }
 
 -- 
 Git-155)
