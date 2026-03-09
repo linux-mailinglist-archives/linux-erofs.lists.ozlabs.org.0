@@ -1,86 +1,66 @@
-Return-Path: <linux-erofs+bounces-2533-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2534-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ePeNKnXxrGk/wQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2533-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 08 Mar 2026 04:48:05 +0100
+	id CLI7MnQxrmlrAQIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2534-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 03:33:24 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BCD022E71B
-	for <lists+linux-erofs@lfdr.de>; Sun, 08 Mar 2026 04:48:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D61522334D4
+	for <lists+linux-erofs@lfdr.de>; Mon, 09 Mar 2026 03:33:22 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fT5hJ6Cy8z2xdL;
-	Sun, 08 Mar 2026 14:48:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fTgzf2DJ7z3bnm;
+	Mon, 09 Mar 2026 13:33:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772941680;
-	cv=none; b=L5WbCFDE3XQw3QmvdkyA/JW9vi6h/kWCcB3RifVm8vaKWPbWAdf4GqgXBFKW2iOv/deGzg5Bf9d4dadlA2frSJlRF0OZW30PmPH6eoEwBL44BINxhMDHcovi9Pc8gRXaNuDAqFM+XoLD9KFkjjQRTGF7V/8fkyNB4cX0apn7y8IH5G2ofKQXuXElmjEg//tDLew6a8TwD6elgz2Xd8Y5EUdLSg9Ll/z9tDJtt0atVWh5YL3Jg/R5wVlfJ+oElAjyhEy8Raz87OxjX9W5WhpCPPP8unV9risa2oBwrPpDaCJdZ+zK1DPQXUwy0LaMol2cWdSSKCkIq9KsUZqmd44Nqw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773023598;
+	cv=none; b=jAcBOsjsw/v0iDhFuEFODHKLMzQgPMtv7DCsBYtMIKmVT1+FJKP/wf3CB2DbspOkw5lWHQi2Nnmxx5de26KibnTrO7nGlxykdcL3s9xc3Ru49Nq35JyokWY459DFYV6D0b0YV1bXGTnsVIOViUxTINwgYnmS2/NTUd/UVuQ0GQNL6fxM9TBwrqmwRQ4zoRNZsI5zKYk+AfaGiODN005+1dmrukp4RCdpxHtygvz3IRs+40hBZdW4cWwT+sAUDfsprzdCasLQE+wd0Vcq6zthTf8GEiA1+2gavOcPDFA4Qd5Fi9nfO2f+UhuSduZAdP8oFC6jPIeMlQcS5itipnIJSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772941680; c=relaxed/relaxed;
-	bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EUf900jqwvZnU9dQ6oB17uwCaFV9lZA57gr+mL1kBTXuJE7cSmyJ3y+EHVhhZ2RTDFE53DG1co2rYddn5zXiwh0krYUkQ3ayD2JHNZzSoviVefxkhxa6wWVXunHgmUJ6S0yr8mE0ZqgEjEHwvQD5ioRfw0q/KYHOmEFTVoS7hGnVOnOiIBWveAvGHAgLuoDxWAZ/MCTnyxDIi21dYzJbRHZ2ZmnbnJ5F/zwQ5IsIn7Mj70A/uU9zu8LfcxeSjwRVDeGoR9NeyPcexKExs2S7jk2AS1mOfMko9NzamVcDPG1jc9XCy9kxrAJAagAr4P2z2KvN4PUC4dn+KzfhFjSFVg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Nwnbm7Ms; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1773023598; c=relaxed/relaxed;
+	bh=Sw7G+FAJvQoL5iq5LVrP56rZpu1xJ282zNbZHOs2M70=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJ02l69aFfbN5yXehsYMK8j4X7yV7y0qALsLAklTimzQy6IJPVuspj6Eq8Er0Uyw5wXtP0oQt6cBFe0/zKxZFV3kzT+4bzt0IrBWA+v8xPgg9RKzhObwXI2JYS4o4H38cTxW5vuqlZOjj09kfg0kBDkf0NXBLNgXdlN7OeQr89Nb+6yyE/IeHZ+SAAE2zrvlraJlllPJv9ELZEZ4zd0GzLWNGEm6rakqlcsoUK1cpLnv3Jv3Ozurlx8vOxKPcpDrRrAMd8zvLVIASh9kdcVyvdpJxmxEWCYweojs8MWh0LtOTTEt3ZTjv8V7tp6rWVBJehxyvzO96Blhov7MqZDJaA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XFcW3XHB; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Nwnbm7Ms;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XFcW3XHB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fT5hH4cYxz2xS2
-	for <linux-erofs@lists.ozlabs.org>; Sun, 08 Mar 2026 14:47:58 +1100 (AEDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-829928e512aso1525953b3a.2
-        for <linux-erofs@lists.ozlabs.org>; Sat, 07 Mar 2026 19:47:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772941676; x=1773546476; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
-        b=Nwnbm7MsliGpyXl+sRksAWoiOWyAI+EASgb9GNnD4SZHSkK89JbCkibz4O/3JDZUvV
-         rqwsFnCsW0POtjIM0kDaaNTSp7Gw1p1lwz/kEUvUmbwU+8J1b9nZlbLg7KHt9h7vAZ7x
-         vg08wClGzUlfRiqiPekV6YPXQv2gIB2nPqUiIxARw3zd4Zg1Ont3i4dem3YyB/5sMAbT
-         3KgZ15M6aAY9oroK1hjgZasOmuXab3dhfc/7DrJxI/Vd1iu1wFuo8gXxmf1kfqRT9n/a
-         3svBwzhKbkhTxUsBss9XF/TPrio5JWfasKZIfMVxS9nh144d3MGOPny19QuMt7Jo8bU/
-         SEgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772941676; x=1773546476;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFa2ndSF4p4Wqz2MqpBaWtBCgQBOTYyTI+WKfe9IqGg=;
-        b=wr7L850VdSNESjStoG3RbLMiIJd8f5eMxkqjE4IXRcU3wDr8m4GFUpF0+UdIz5exGx
-         DnIm+wiyW5Suxw3iC9QE57yjkYt023l8XAKnHHWl0+Osw1AfHS20JBHerWwqgWZ0Wy9B
-         OBChttCoUni6UJVtQhKcWGffu6GyaUYfgcqABT/7QGiJiRl1Po2nS9ck+gLdIJS6AIJZ
-         KQuGAI3x+qREWhVJ4LktS6bTNHrNnmTUIZluiCBS+FDyOr0lTObWeZbr0wXWO87A3O2K
-         k9bZrwIb/DuPQVI8BwCyMSJilbqwnibFtir0HJORRcdDKvCmfCESGPYHfINXQlRqvrrv
-         CxfQ==
-X-Gm-Message-State: AOJu0YwYBPP8+3ycRhn1+pALvXuY1hJ0MvRaNAZ5j7UG0RcKfRTWXLab
-	DGTDmYCjxfWYXaMWsGhn1diSiap3AwTrcT/hl5Ji5c3uHWB+CG3JQ5TDnEE05U60
-X-Gm-Gg: ATEYQzxWOrakndJHK9C1p4120m5aKRaU7HQ/sEFwhPmqFlT9ont6mHsw2/c2JT+q+1Z
-	OlvmAjHvbm3Cj/LqUNGc8c38FIIjcpfq1Gh+FioAVY/+9OXWFmoX0h5Z7oT7/oe/CM39Qp0SNLl
-	w5V6Kv4jiuKnyOr+oT5A6lIwkH71GHpfXdZE/bgDt7vjfptonx2355lIhXiFbQaMcdmDue+jS/P
-	F6Vd7nf/nGfFLEo3eIZ7VanvY3eKUB0iXNXFtD+edGVGbtL/1jVaPrZHcof3tyoUya7vGWBR0B+
-	CkI/IyEJnXjDbKxDR7goszJa98UxSByPNOkpQKV+zvssszaK2EbpDyyvFs+gx9CEYgwMR74wVqe
-	6QjWzXzDb9kGJTzpEeOWCXO7y6re87sX/JFJP2QMMMS+yiV89BG2mypDn4iU/tUTwYTTAB07Uqz
-	qTPQ+HIdFp2lowY0tSfHr9HPrzOuyHFsivUPDYRmQxkG9Wz6aHaV8=
-X-Received: by 2002:a05:6a00:8d94:b0:821:7d7e:41d5 with SMTP id d2e1a72fcca58-829a2f9fa0emr5947704b3a.52.1772941676118;
-        Sat, 07 Mar 2026 19:47:56 -0800 (PST)
-Received: from ubuntu-arm-nithurshen.SNU.IN ([45.114.151.85])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4638141sm6155903b3a.6.2026.03.07.19.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2026 19:47:55 -0800 (PST)
-From: Nithurshen <nithurshen.dev@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	Nithurshen <nithurshen.dev@gmail.com>
-Subject: [PATCH] erofs-utils: mkfs: add --exclude-from option
-Date: Sun,  8 Mar 2026 09:17:49 +0530
-Message-ID: <20260308034749.22233-1-nithurshen.dev@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fTgzd0VKlz2xdL
+	for <linux-erofs@lists.ozlabs.org>; Mon, 09 Mar 2026 13:33:16 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id BDD7841849;
+	Mon,  9 Mar 2026 02:33:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4815CC116C6;
+	Mon,  9 Mar 2026 02:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773023594;
+	bh=UHRXakrTsc1OnCQv6OjdV+IhrIi1MUaKGJuHYt9KXeQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XFcW3XHBvVitVs7wcNZ8765c72X8hjCd4D5CzQ8WC3T746MqJmVcsCtmfUd33VqLv
+	 229Pqj3TQOGPpxJ8QXHfXm/IxFwQge1Q/qeuHdRunZxT3yFNkHSwcAtAxOlvJHm3c0
+	 dw3dwKyurfPEB42cXSemghcQnh9TjdL6qlC3ndg3CXqDb6lRFVaFk3KoQPo/yiawaK
+	 sDbm3mzVyq45k44Jq1IuB49ipYjyBshejPimx0L/OL9bOaIfPn5l5fwwO/SwAsjP8c
+	 ciljk3QR06ekuRJgrk7bHeGZKL30xhowx9KU4uZXSRfSH3x/lx1TxcCF/oSlgtkm/e
+	 bNPLTGnLq2zQw==
+From: Chao Yu <chao@kernel.org>
+To: xiang@kernel.org
+Cc: linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Chunhai Guo <guochunhai@vivo.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] erofs: introduce nolargefolio mount option
+Date: Mon,  9 Mar 2026 02:30:53 +0000
+Message-ID: <20260309023053.1685839-1-chao@kernel.org>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -93,115 +73,139 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 0BCD022E71B
+X-Rspamd-Queue-Id: D61522334D4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2533-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-2534-lists,linux-erofs=lfdr.de];
+	FREEMAIL_CC(0.00)[lists.ozlabs.org,vger.kernel.org,gmail.com,linux.alibaba.com,google.com,vivo.com,huawei.com,kernel.org];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[kernel.org,linux.alibaba.com,gmail.com];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER(0.00)[chao@kernel.org,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:guochunhai@vivo.com,m:lihongbo22@huawei.com,m:chao@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chao@kernel.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-Currently, users who want to exclude multiple specific files or paths must pass them one-by-one using --exclude-path or --exclude-regex via the command line. This becomes cumbersome for complex build systems with dozens of exclusions.
+This patch introduces a new mount option 'nolargefolio' for EROFS.
+When this option is specified, large folio will be disabled by
+default for all inodes, this option can be used for environments
+where large folio resources are limited, it's necessary to only
+let specified user to allocate large folios on demand.
 
-This patch introduces an \`--exclude-from=FILE\` flag to mkfs.erofs.
-
-Similar to standard archiving tools, it allows users to supply a text file containing a list of paths or regexes to exclude, which are read line-by-line and applied to the EROFS build process.
-
-Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- mkfs/main.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/filesystems/erofs.rst | 1 +
+ fs/erofs/inode.c                    | 3 ++-
+ fs/erofs/internal.h                 | 1 +
+ fs/erofs/super.c                    | 8 +++++++-
+ 4 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 07ef086..a6cd251 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -39,6 +39,7 @@ static struct option long_options[] = {
- 	{"help", no_argument, 0, 'h'},
- 	{"exclude-path", required_argument, NULL, 2},
- 	{"exclude-regex", required_argument, NULL, 3},
-+	{"exclude-from", required_argument, NULL, 540},
- #ifdef HAVE_LIBSELINUX
- 	{"file-contexts", required_argument, NULL, 4},
- #endif
-@@ -199,6 +200,7 @@ static void usage(int argc, char **argv)
- 		" --dsunit=#             align all data block addresses to multiples of #\n"
- 		" --exclude-path=X       avoid including file X (X = exact literal path)\n"
- 		" --exclude-regex=X      avoid including files that match X (X = regular expression)\n"
-+		" --exclude-from=X       avoid including files listed in file X\n"
- #ifdef HAVE_LIBSELINUX
- 		" --file-contexts=X      specify a file contexts file to setup selinux labels\n"
- #endif
-@@ -1246,6 +1248,39 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
- 		case 7:
- 			params->fixed_uid = params->fixed_gid = 0;
- 			break;
-+		case 540: {
-+			FILE *f = fopen(optarg, "r");
-+			if (!f) {
-+				erofs_err("failed to open exclude file: %s", optarg);
-+				return -errno;
-+			}
-+
-+			char *line = NULL;
-+			size_t len = 0;
-+			ssize_t read;
-+
-+			while ((read = getline(&line, &len, f)) != -1) {
-+				if (read > 0 && line[read - 1] == '\n') {
-+					line[read - 1] = '\0';
-+					read--;
-+				}
-+
-+				if (read == 0) continue;
-+
-+				opt = erofs_parse_exclude_path(line, false);
-+				if (opt) {
-+					erofs_err("failed to parse exclude path from file: %s",
-+						  erofs_strerror(opt));
-+					free(line);
-+					fclose(f);
-+					return opt;
-+				}
-+			}
-+			free(line);
-+			fclose(f);
-+			break;
-+			}
-+
- #ifndef NDEBUG
- 		case 8:
- 			cfg.c_random_pclusterblks = true;
+diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+index fe06308e546c..d692a1d9f32c 100644
+--- a/Documentation/filesystems/erofs.rst
++++ b/Documentation/filesystems/erofs.rst
+@@ -137,6 +137,7 @@ fsoffset=%llu          Specify block-aligned filesystem offset for the primary d
+ inode_share            Enable inode page sharing for this filesystem.  Inodes with
+                        identical content within the same domain ID can share the
+                        page cache.
++nolargefolio           Disable large folio support for all files.
+ ===================    =========================================================
+ 
+ Sysfs Entries
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 4b3d21402e10..26361e86a354 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -254,7 +254,8 @@ static int erofs_fill_inode(struct inode *inode)
+ 		return 0;
+ 	}
+ 
+-	mapping_set_large_folios(inode->i_mapping);
++	if (!test_opt(&EROFS_SB(inode->i_sb)->opt, NO_LARGE_FOLIO))
++		mapping_set_large_folios(inode->i_mapping);
+ 	aops = erofs_get_aops(inode, false);
+ 	if (IS_ERR(aops))
+ 		return PTR_ERR(aops);
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index a4f0a42cf8c3..b5d98410c699 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -177,6 +177,7 @@ struct erofs_sb_info {
+ #define EROFS_MOUNT_DAX_NEVER		0x00000080
+ #define EROFS_MOUNT_DIRECT_IO		0x00000100
+ #define EROFS_MOUNT_INODE_SHARE		0x00000200
++#define EROFS_MOUNT_NO_LARGE_FOLIO	0x00000400
+ 
+ #define clear_opt(opt, option)	((opt)->mount_opt &= ~EROFS_MOUNT_##option)
+ #define set_opt(opt, option)	((opt)->mount_opt |= EROFS_MOUNT_##option)
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 972a0c82198d..a353369d4db8 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -390,7 +390,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
+ enum {
+ 	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+ 	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
+-	Opt_inode_share,
++	Opt_inode_share, Opt_nolargefolio,
+ };
+ 
+ static const struct constant_table erofs_param_cache_strategy[] = {
+@@ -419,6 +419,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+ 	fsparam_flag_no("directio",	Opt_directio),
+ 	fsparam_u64("fsoffset",		Opt_fsoffset),
+ 	fsparam_flag("inode_share",	Opt_inode_share),
++	fsparam_flag("nolargefolio",	Opt_nolargefolio),
+ 	{}
+ };
+ 
+@@ -541,6 +542,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		else
+ 			set_opt(&sbi->opt, INODE_SHARE);
+ 		break;
++	case Opt_nolargefolio:
++		set_opt(&sbi->opt, NO_LARGE_FOLIO);
++		break;
+ 	}
+ 	return 0;
+ }
+@@ -1105,6 +1109,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ 		seq_printf(seq, ",fsoffset=%llu", sbi->dif0.fsoff);
+ 	if (test_opt(opt, INODE_SHARE))
+ 		seq_puts(seq, ",inode_share");
++	if (test_opt(opt, NO_LARGE_FOLIO))
++		seq_puts(seq, ",nolargefolio");
+ 	return 0;
+ }
+ 
 -- 
-2.51.0
+2.49.0
 
 
