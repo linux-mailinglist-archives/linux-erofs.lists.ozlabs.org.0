@@ -1,46 +1,55 @@
-Return-Path: <linux-erofs+bounces-2599-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4FbZNU4IsGkUewIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2599-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 13:02:22 +0100
+	id iJ87FUAIsGkUewIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 13:02:08 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C12924C29E
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 13:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B884024C218
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 13:02:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fVXXt2G2Xz3cG6;
-	Tue, 10 Mar 2026 23:01:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fVXXm2gKWz3cFN;
+	Tue, 10 Mar 2026 23:01:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=212.42.244.94
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773144094;
-	cv=none; b=O0/nChpPoN74WgkjIdI+txg2vWW8fecatijRRveEmurObFHno64f8HhnJhZx2YXPllMiuodpRsb+CFa4h6qPd0RF1UdOpZGOstvVSrPGFISHipUesP6ZqN97LHYWNzHnbr0Nf45ZZAoSwP8oi9h8pMHgpDVwEjIuCfAUtxQDsohkb7g4atLay/70l6BKzh3koGWzgH2MkhdT/dHBMKsHxhofFenhljZdENR0jnIClAVAWjWJfRbkMaIZt4mj4AGEG6YMTS2iB9EDP+NiwmcN0BXtLRI78owhlIqd5H7IkBYbCFMzrlcfvxsE4lL93+mpJGJjTowxE1LLq+b6cfc8yQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:bf0:244:244::119"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773144088;
+	cv=none; b=O6FMd0uC226eF6ln+Mi3mTqRhej9QFo/OTGgtOEBwNjaKNA2+3XoO4qRalqSsn8lvoqk6kpmWwJ3KK+8hc+nEEDQ8vnet7aA5lhoPjI0XLktPb7pAnzRIHVBml+z/LImU5djZ0eDtMygNvxt2ADOAHzgBfOWfZ7jU4p69xyixIg8ivQ8geSn1n2Jl8oE+bjnmFXNngP+hJ7VYeuztIkJTctaS4J71UsNaTphnnzM8lz9DFTHPHuJHcU55/c6987uMOopIamxiA/z9vdBl6CN20UB1BJzUvYgxNWDyj+pY5wCYYcdbkRkKlgQtHNhZaF32VaTTU3TGZLQzF0qb300RA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773144094; c=relaxed/relaxed;
-	bh=wXP6inC1ot/jec8Yz2mJDj/4GFF4TcysvA1pHXvsm5c=;
+	t=1773144088; c=relaxed/relaxed;
+	bh=0/roifme+WLdPTziKMwbNdr5N/yzFbOWcvPcd+8xFnU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cNj0s4A/UYA2tWXR6g8saaHGwDslIfA9OTJx1QlGUST4N66Dd1d4hfdKJUEqJCi0gr+dYpDtNixEPf2y1vsVNFe4QlWi4J2/bQrpPYcvMByCJqgpvKpFfzOWuNSeDetorrlSDm+Prl0RhsuPBY0Of8w8mUWyiQUREZJQyEQ0a9HBVYirQHod6b+Fnz9JroD9tYMmj8YBc9IUGUUL4jSm5TnYoxGv/ifSg51jQQM60VSIHR0N484547XJ3qN02raGJI0LkB17Pu4EcmSdX/JX7DjCiOr02FvpF3GbVSmEiAunhLEzP6OxVxtc7P3h/5v4nlXxil8/wLcV+sJQgKpvFQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass (client-ip=212.42.244.94; helo=mail.avm.de; envelope-from=phahn-oss@avm.de; receiver=lists.ozlabs.org) smtp.mailfrom=avm.de
+	 In-Reply-To:To:Cc; b=RWj+CNNU+JGZP2o4VblJlZ8hK5SYoELHd4YSy6TciYSo+OSXx2XyW9oh2+/C9XtYVni013oIMnZQ6Oyf1yX/NroyuNac/Zhh2nCNjdYisqWmaGdClp9w9pHpX5XOILe7aBJ/N00wL+u1S0lmazD/Zp7UdmOvcqlK8xj3I0Fz8ozJ9okM3uaWtemnJF3cd5Uoty20nsOomA92iHWlcO+DN7A2rAb0I5O3dG4Gcs0rL9EewatrNz4x6G8Mzp5zvGhTARg2SNF2Xho5W4NJVDuF/FL8X02gLpqDlkfi/4ALCHjaExqmkjDISuNQVQIEr7Q+f3IMVbYrnS7ZVjwCUvUSFw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; dkim=pass (1024-bit key; unprotected) header.d=avm.de header.i=@avm.de header.a=rsa-sha256 header.s=mail header.b=lEAp/s1F; dkim-atps=neutral; spf=pass (client-ip=2001:bf0:244:244::119; helo=mail.avm.de; envelope-from=phahn-oss@avm.de; receiver=lists.ozlabs.org) smtp.mailfrom=avm.de
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=avm.de (client-ip=212.42.244.94; helo=mail.avm.de; envelope-from=phahn-oss@avm.de; receiver=lists.ozlabs.org)
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=avm.de header.i=@avm.de header.a=rsa-sha256 header.s=mail header.b=lEAp/s1F;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=avm.de (client-ip=2001:bf0:244:244::119; helo=mail.avm.de; envelope-from=phahn-oss@avm.de; receiver=lists.ozlabs.org)
+Received: from mail.avm.de (mail.avm.de [IPv6:2001:bf0:244:244::119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fVXXs4VzVz3cG9
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 23:01:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fVXXj13Hlz3cBW
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 23:01:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
+	t=1773143723; bh=wq/KSwJcA3hqLetMFo3dTHFYxjONcw4I7Ih9VV1gllk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=lEAp/s1FGs3gh/G3BwLm92E1HCxjGWlqxsQSbz/j1CB+Vlb/y59DpH7suq9qWHqSS
+	 sYNh9xzFzAwYyP3SKrKt2sCrYh94W00YkOJHULlnCDrzYXE+bJd6oNQ88ujEwWl/IW
+	 WDyVvJrtHTQ4L2Ennx46mVzCXGqAvMhY+uWIILEA=
 Received: from [212.42.244.71] (helo=mail.avm.de)
 	by mail.avm.de with ESMTP (eXpurgate 4.55.2)
 	(envelope-from <phahn-oss@avm.de>)
-	id 69b006ab-e21d-7f0000032729-7f000001d976-1
+	id 69b006ab-2367-7f0000032729-7f0000019cd2-1
 	for <multiple-recipients>; Tue, 10 Mar 2026 12:55:23 +0100
 Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
 	by mail.avm.de (Postfix) with ESMTPS;
 	Tue, 10 Mar 2026 12:55:23 +0100 (CET)
 From: Philipp Hahn <phahn-oss@avm.de>
-Date: Tue, 10 Mar 2026 12:48:29 +0100
-Subject: [PATCH 03/61] ceph: Prefer IS_ERR_OR_NULL over manual NULL check
+Date: Tue, 10 Mar 2026 12:48:30 +0100
+Subject: [PATCH 04/61] ext4: Prefer IS_ERR_OR_NULL over manual NULL check
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,7 +63,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-b4-is_err_or_null-v1-3-bd63b656022d@avm.de>
+Message-Id: <20260310-b4-is_err_or_null-v1-4-bd63b656022d@avm.de>
 References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
@@ -84,63 +93,65 @@ To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
  sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
  tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, 
  Philipp Hahn <phahn-oss@avm.de>
-Cc: Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
- Viacheslav Dubeyko <slava@dubeyko.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1465; i=phahn-oss@avm.de;
- h=from:subject:message-id; bh=FEizU4OZfQ9wQ3wvLqHfhAD95k5qump7I9MIi0BZQKk=;
- b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAXdroDlhymGqsGkbn1SZv53cw4YuzOIIwtui
- bzXW6sBBQWJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAF3QAKCRA0LQZT0ays
- 2/1wB/sGTAYBPIahrXD3EXFQ9FcpHqqnw1r9sZLiba/u035gmw5LoaZhwTxHDBskl2iaWkVnIXz
- Iy7Anuu/HF1GBhMkP4ZE553CQedkoQLkwUxzFneqcFtg8dEj/bcSSJoqNhuTbcFTeYPFZ2FuuJR
- mi6wxSHOtk1jHNn9K4y3/ujXKX8zNKkMQCDkESe1H1kZKzWifi4aoEVftzahJtLslDJIa2qDL4i
- OSDOnojL7uRKrSwdvp+XJGBIrrn9XWylS2+dg5zaohBqwfc9ulGK+fMI3nM/n2Gqrv2OPrXEBM6
- 17i7pbPmqS6afMN4bPYcsNPNwynB+aJ8jBm/4wPpjycn86fZ
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2748; i=phahn-oss@avm.de;
+ h=from:subject:message-id; bh=wq/KSwJcA3hqLetMFo3dTHFYxjONcw4I7Ih9VV1gllk=;
+ b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAXjBVZQh0oHFoS6hdf46zx6cg9yKqCoM11bV
+ 3iWUec0h4iJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAF4wAKCRA0LQZT0ays
+ 29vPB/9f5lFIt+0FtFBJpiKbUGS7UgY9T4E/E6CJ5zu/RqCe6vd531NLZdsmBEosrdFBBXDX57H
+ sd8LCXF/sp89Zga6l1XIWkSIeHW4dDtT/UJNpkUGlvpmR4wd6cIocUQ2SKJZm2I5Ny799jzRqsU
+ 77XwGSzBy8rHgewt3q+d77K7620aLC+ceQfquSvw5IkT7R5aPt+VaJGvb/4d0wK060SD2e3AbrD
+ KG5aPg5rty9abqBDIFiMe9sH7jc7Ssmy8RQOhQUuB/vX9zXXRZULMf0v4sI8el0Gl3lDI9uBnpn
+ 7EXyqizDRxBWqqlsbAFrtlRuPcNXRB2sNpMKxVhp0my3RZH1
 X-Developer-Key: i=phahn-oss@avm.de; a=openpgp;
  fpr=58AF7C2E007CDBE62C59E078F50EFDCF8AD04B1A
-X-purgate-ID: 149429::1773143723-7B60AF2F-D466ABAE/0/0
+X-purgate-ID: 149429::1773143723-7D482E1F-03DD7EA2/0/0
 X-purgate-type: clean
-X-purgate-size: 1467
+X-purgate-size: 2750
 X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
 X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
 X-purgate: clean
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 1C12924C29E
+X-Rspamd-Queue-Id: B884024C218
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.50 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[avm.de : SPF not aligned (relaxed), No valid DKIM,quarantine];
+X-Spamd-Result: default: False [-0.70 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[avm.de,quarantine];
+	R_DKIM_ALLOW(-0.20)[avm.de:s=mail];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2599-lists,linux-erofs=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,redhat.com,dubeyko.com];
+	TAGGED_FROM(0.00)[bounces-2587-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:amd-gfx@lists.freedesktop.org,m:apparmor@lists.ubuntu.com,m:bpf@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:cocci@inria.fr,m:dm-devel@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:gfs2@lists.linux.dev,m:intel-gfx@lists.freedesktop.org,m:intel-wired-lan@lists.osuosl.org,m:iommu@lists.linux.dev,m:kvm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-block@vger.kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mips@vger.kernel.org,m:linux-mm@kvack.org,m:linux-modules@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-phy@l
- ists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-scsi@vger.kernel.org,m:linux-sctp@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-trace-kernel@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-wireless@vger.kernel.org,m:netdev@vger.kernel.org,m:ntfs3@lists.linux.dev,m:samba-technical@lists.samba.org,m:sched-ext@lists.linux.dev,m:target-devel@vger.kernel.org,m:tipc-discussion@lists.sourceforge.net,m:v9fs@lists.linux.dev,m:phahn-oss@avm.de,m:idryomov@gmail.com,m:amarkuze@redhat.com,m:slava@dubeyko.com,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+ ists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-scsi@vger.kernel.org,m:linux-sctp@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-trace-kernel@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-wireless@vger.kernel.org,m:netdev@vger.kernel.org,m:ntfs3@lists.linux.dev,m:samba-technical@lists.samba.org,m:sched-ext@lists.linux.dev,m:target-devel@vger.kernel.org,m:tipc-discussion@lists.sourceforge.net,m:v9fs@lists.linux.dev,m:phahn-oss@avm.de,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[phahn-oss@avm.de,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[phahn-oss@avm.de,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[avm.de:+];
+	MISSING_XM_UA(0.00)[];
+	RSPAMD_EMAILBL_FAIL(0.00)[tytso.mit.edu:query timed out];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_GT_50(0.00)[57];
+	RCPT_COUNT_GT_50(0.00)[56];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[phahn-oss@avm.de,linux-erofs@lists.ozlabs.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.619];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:mid,avm.de:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo,dubeyko.com:email]
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:dkim,avm.de:email,avm.de:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo,dilger.ca:email]
 X-Rspamd-Action: no action
 
 Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
@@ -148,43 +159,70 @@ check.
 
 Change generated with coccinelle.
 
-To: Ilya Dryomov <idryomov@gmail.com>
-To: Alex Markuze <amarkuze@redhat.com>
-To: Viacheslav Dubeyko <slava@dubeyko.com>
-Cc: ceph-devel@vger.kernel.org
+To: "Theodore Ts'o" <tytso@mit.edu>
+To: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 ---
- fs/ceph/dir.c  | 2 +-
- fs/ceph/snap.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/fast_commit.c | 2 +-
+ fs/ext4/mballoc.c     | 2 +-
+ fs/ext4/namei.c       | 2 +-
+ fs/ext4/symlink.c     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-index 86d7aa594ea99335af3e91a95c0a418fdc1b8a8a..934250748ae4fd4c148fd27bdf91175047c2877d 100644
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -889,7 +889,7 @@ int ceph_handle_notrace_create(struct inode *dir, struct dentry *dentry)
- {
- 	struct dentry *result = ceph_lookup(dir, dentry, 0);
+diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
+index f575751f1cae430eead31afa4f7d03ade1099d4a..bc69ac1195acb823465e735572b8a21255d485f5 100644
+--- a/fs/ext4/fast_commit.c
++++ b/fs/ext4/fast_commit.c
+@@ -320,7 +320,7 @@ void ext4_fc_mark_ineligible(struct super_block *sb, int reason, handle_t *handl
+ 	if (ext4_fc_disabled(sb))
+ 		return;
  
--	if (result && !IS_ERR(result)) {
-+	if (!IS_ERR_OR_NULL(result)) {
- 		/*
- 		 * We created the item, then did a lookup, and found
- 		 * it was already linked to another inode we already
-diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
-index 52b4c2684f922bfed39550311e793bfe3622cd26..528ad581be160713f91416115659e2dc6f259576 100644
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -902,7 +902,7 @@ int ceph_update_snap_trace(struct ceph_mds_client *mdsc,
- bad:
- 	err = -EIO;
- fail:
--	if (realm && !IS_ERR(realm))
-+	if (!IS_ERR_OR_NULL(realm))
- 		ceph_put_snap_realm(mdsc, realm);
- 	if (first_realm)
- 		ceph_put_snap_realm(mdsc, first_realm);
+-	if (handle && !IS_ERR(handle))
++	if (!IS_ERR_OR_NULL(handle))
+ 		tid = handle->h_transaction->t_tid;
+ 	else {
+ 		read_lock(&sbi->s_journal->j_state_lock);
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 20e9fdaf4301b61c9d54401ed95067db6b6b8173..d7f004817c1ff758e4e25f84b2c27238b7420f84 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -2870,7 +2870,7 @@ ext4_group_t ext4_mb_prefetch(struct super_block *sb, ext4_group_t group,
+ 		    EXT4_MB_GRP_NEED_INIT(grp) &&
+ 		    ext4_free_group_clusters(sb, gdp) > 0 ) {
+ 			bh = ext4_read_block_bitmap_nowait(sb, group, true);
+-			if (bh && !IS_ERR(bh)) {
++			if (!IS_ERR_OR_NULL(bh)) {
+ 				if (!buffer_uptodate(bh) && cnt)
+ 					(*cnt)++;
+ 				brelse(bh);
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index c4b5e252af0efbfcbaf83688a32d445327a74a02..4fdfc81f79028a588b3c1f912bff5e8a52cd9f13 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -723,7 +723,7 @@ struct stats dx_show_entries(struct dx_hash_info *hinfo, struct inode *dir,
+ 		struct stats stats;
+ 		printk("%s%3u:%03u hash %8x/%8x ",levels?"":"   ", i, block, hash, range);
+ 		bh = ext4_bread(NULL,dir, block, 0);
+-		if (!bh || IS_ERR(bh))
++		if (IS_ERR_OR_NULL(bh))
+ 			continue;
+ 		stats = levels?
+ 		   dx_show_entries(hinfo, dir, ((struct dx_node *) bh->b_data)->entries, levels - 1):
+diff --git a/fs/ext4/symlink.c b/fs/ext4/symlink.c
+index 645240cc0229fe4a2eda4499ae4a834fe3bd3a66..b612262719ede35d2612c5834d2bef7f18215516 100644
+--- a/fs/ext4/symlink.c
++++ b/fs/ext4/symlink.c
+@@ -92,7 +92,7 @@ static const char *ext4_get_link(struct dentry *dentry, struct inode *inode,
+ 
+ 	if (!dentry) {
+ 		bh = ext4_getblk(NULL, inode, 0, EXT4_GET_BLOCKS_CACHED_NOWAIT);
+-		if (IS_ERR(bh) || !bh)
++		if (IS_ERR_OR_NULL(bh))
+ 			return ERR_PTR(-ECHILD);
+ 		if (!ext4_buffer_uptodate(bh)) {
+ 			brelse(bh);
 
 -- 
 2.43.0
