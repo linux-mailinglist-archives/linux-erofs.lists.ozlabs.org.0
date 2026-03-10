@@ -1,48 +1,55 @@
-Return-Path: <linux-erofs+bounces-2553-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2554-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kFNIMw/Cr2kucAIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2553-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 08:02:39 +0100
+	id mEmfLpfEr2nWcAIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2554-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 08:13:27 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCE30246178
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 08:02:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2D6824629F
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Mar 2026 08:13:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fVPvw0Z2dz3bjb;
-	Tue, 10 Mar 2026 18:02:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fVQ8N1rd6z3bjb;
+	Tue, 10 Mar 2026 18:13:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773126156;
-	cv=none; b=SAQZhqjx9tpzmz32fpgsNJwGKpko/6Q8X0Tgsyj+zu59fIpFaK/Fs80xzZ2ms0ZuGtEvbAmUgyu03GO32ed8UKX5W8EZZeF2e7KO+nczxcjj8AM7SG8b2/jP3GpxM6dIOg3BlKNhjjJDB1636LeUfZLuKnrHXRob+1jyODmzWh9jZlzl8omZIBfeQsEzElT5ws494mdb68U8blivMFq8TWisR3IsiI5L7eV2eoPhahwWqFJYkinU9GQ6dIFLMl4FuTRon0FUlnNddAaCC94sTzZu3nc45PWjwrBu0EDdQwLigzHMaHtlISWnxklDVM+RqSWoT+tNvBNAK9Zn5GCJZw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773126804;
+	cv=none; b=cB/uvOkXRpVKJQKDW3L9BfhURMe6N4nOI8LJdTUiKOO+4qiDQIfkjIUPZfSGD1KZSWKUyyl2IzGmy2sMplAiRV6Wf8A0tuiAaROWQxhW5QTjJxA3X1FyWfV0jRql112E3hkzbXIuorTE5/M8f3uzqayfm+iHq3iqiP7DiDK5W5p16frSTBnnNR78HAx8cVaiLfn+XhIvf+eaEnWkW+7JXyGxKsdABvRCwtGH+NLZoWhRIh/jeVlHeP12pkdP/Z0PGg9MxjvobwPrZjGBonOX/Z0BcqoNdyDn3oH7yknh+wo1kr5ZMauisGt6NJoNLFPftI8eudtyoF6axE1cQQL8Sw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773126156; c=relaxed/relaxed;
-	bh=8OfXxbZRS7165p6jxMorXrfU7kFI5hv4wFv/bCV1+9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CRKLDAcundYfu7doQLOvhv2hTvb34MY8XsaDFTXmqfUTP8YE+xlbJky04DkwNtNt95CpSEXbcTFHin0u8GNFyyqI9/erCwfr6FzUWnq6CSc9eHUYkwG1StjZ36jqJyfeOP5taRRY+zwsNfjHj/AkLZd6HKqFIk1e2Kz+l7pkm90i2FlZVh5Wb2+6DQPUMjQ/H8pbBycvkrK3oA6ZYVgGj+KOkJ26rDrcvNpteHLFDqTFAwikhVAIO/tDWJb08Xtbfro79dW79Y4av6xGs7ZVreckwigPnRWhqTE/EqKQ+6dWaDHO/fJzLKFD7ard7g5H3VaZnMAPjH+YaqSrfp2+Sg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aQ+yv2k1; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1773126804; c=relaxed/relaxed;
+	bh=Ulz+gmRsPDLV5zOUy/2/bPIkvC308dY6Mfd822z+ffs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=f+cd3HBJk8d+bdxtkIhpPFUfiOSwXidpcNihl1I3ROH2qjK6sVipgil3FoS6KV/SEiJpigwcNP3f0/6afromck/DYwQmJ7eSF6Hodt+XA4Bid1L+vMIOHMM04ztZQEjx+96Cq/9jrExs/bnFRzgo7thbjqrA2XeohCoxOMI0evD2inqUEaje16eXnh0eZ82dePTwcUTPOlFcMHT/76XtVyQgFT2mMEZLrRy+cF8V5aKPpg7KTTST9GkCPJ5nWf1/HzcJdSH+kzMV0LI0CyfSIDM6D4te91RQhZMBne5JTuaYZXXOMD7K2+KtmS5hs5RacHFkD+ss17lD5Ps2ynqtLQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gS+v42Ll; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aQ+yv2k1;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gS+v42Ll;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fVPvs35xSz2yFY
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 18:02:31 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1773126146; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=8OfXxbZRS7165p6jxMorXrfU7kFI5hv4wFv/bCV1+9s=;
-	b=aQ+yv2k1eXwy1tglptd+aOxzp14ntmoyARiLFP7omumCw9l3qrVMSzUz9luqfbX0w5C2gh9mMTf469aziMQh2abu65CJ85rrMmLyESP8cYsjUGyI3OypsN1r/8F3eRj9/CnxrPNJX7jTo6ha0x5KXZogXamjdO9wwY8F9++CIZc=
-Received: from 30.221.132.177(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X-fCCDd_1773126144 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 10 Mar 2026 15:02:25 +0800
-Message-ID: <a15eeac5-8035-4ac5-93b5-5c71f3ce7105@linux.alibaba.com>
-Date: Tue, 10 Mar 2026 15:02:24 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fVQ8M3C5Jz2yFY
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Mar 2026 18:13:23 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id ED265435EF;
+	Tue, 10 Mar 2026 07:13:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF0CC19423;
+	Tue, 10 Mar 2026 07:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773126800;
+	bh=Q6xcBXHNuicDNA0HG45fl3n9eDQDK7GjZ8Lp4YQEqQo=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=gS+v42LlsueP8KIMsq3bUeernz7YGdezod33aJ5up60bWgpCLl2UknWMSK54P+32R
+	 ptq1mpcCQUTED/DZGCBSW6uCSMAZx7Fc837t1gZw7HKPMafe5fyV7KYopJalZVoobD
+	 kZ+nl02uqurLUmVCSn8YGkMKkrPJpFKohS4NVD2WtsqAYXZcU+SukpFo/odsU66xHk
+	 jj85YsGoniF4miPxhP7DyfUS6SDjoDpdEY4N3LY85CD6Krwzib+q6Ly1eWGDjTeHdf
+	 8uY8Z1hOUeS8WfEfrXs8ZEeqak/Mjnu5rUyo8nO2L9BZDOjmc/fn1o0RN3P19WqzOm
+	 WsSYgsgTyqyTA==
+Message-ID: <aac25712-a3f4-4f1a-9200-d16cc7ea97a7@kernel.org>
+Date: Tue, 10 Mar 2026 15:13:13 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,104 +62,120 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: introduce nolargefolio mount option
-To: Chao Yu <chao@kernel.org>, xiang@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Chunhai Guo <guochunhai@vivo.com>,
+Cc: chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Chunhai Guo <guochunhai@vivo.com>,
  Hongbo Li <lihongbo22@huawei.com>, Matthew Wilcox <willy@infradead.org>,
  Jan Kara <jack@suse.cz>,
  "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] erofs: introduce nolargefolio mount option
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org
 References: <20260309023053.1685839-1-chao@kernel.org>
  <02925ac8-64a6-4cd6-bbd4-c37d838f862a@linux.alibaba.com>
  <dc645bd1-2881-4472-8918-0eada3786ab3@kernel.org>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <dc645bd1-2881-4472-8918-0eada3786ab3@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+ <a15eeac5-8035-4ac5-93b5-5c71f3ce7105@linux.alibaba.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <a15eeac5-8035-4ac5-93b5-5c71f3ce7105@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: DCE30246178
+X-Rspamd-Queue-Id: D2D6824629F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2553-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2554-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:chao@kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:guochunhai@vivo.com,m:lihongbo22@huawei.com,m:willy@infradead.org,m:jack@suse.cz,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FREEMAIL_CC(0.00)[lists.ozlabs.org,vger.kernel.org,gmail.com,linux.alibaba.com,google.com,vivo.com,huawei.com,infradead.org,suse.cz];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,lists.ozlabs.org,vger.kernel.org,gmail.com,linux.alibaba.com,google.com,vivo.com,huawei.com,infradead.org,suse.cz];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FORGED_RECIPIENTS(0.00)[m:chao@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:guochunhai@vivo.com,m:lihongbo22@huawei.com,m:willy@infradead.org,m:jack@suse.cz,m:linux-fsdevel@vger.kernel.org,m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[chao@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[chao@kernel.org,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.995];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo,googlesource.com:url,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[googlesource.com:url,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-
-
-On 2026/3/10 14:43, Chao Yu wrote:
-> Xiang,
+On 3/10/26 15:02, Gao Xiang wrote:
 > 
-> On 3/9/26 11:03, Gao Xiang wrote:
->> Hi Chao,
->>
->> (+cc -fsdevel, willy, Jan kara)
->>
->> On 2026/3/9 10:30, Chao Yu wrote:
->>> This patch introduces a new mount option 'nolargefolio' for EROFS.
->>> When this option is specified, large folio will be disabled by
->>> default for all inodes, this option can be used for environments
->>> where large folio resources are limited, it's necessary to only
->>> let specified user to allocate large folios on demand.
->>
->> For this kind of options, I think more real backgrounds
->> about avoiding high-order allocations are needed in the
->> commit message (at least for later reference) also like
->> what I observed in:
->> https://android-review.googlesource.com/c/kernel/common/+/3877981
 > 
-> Basically, the background is about contention scenario on large folio allocation,
-> it's among multiple users including EROFS in Android-system, as it's related to
-> internal scene of product, so I can not provide more details now, I'm sorry
-> about that, but I'm glad to discuss based on the background and pain point once
-> if I can share more, let's see. :)
+> On 2026/3/10 14:43, Chao Yu wrote:
+>> Xiang,
+>>
+>> On 3/9/26 11:03, Gao Xiang wrote:
+>>> Hi Chao,
+>>>
+>>> (+cc -fsdevel, willy, Jan kara)
+>>>
+>>> On 2026/3/9 10:30, Chao Yu wrote:
+>>>> This patch introduces a new mount option 'nolargefolio' for EROFS.
+>>>> When this option is specified, large folio will be disabled by
+>>>> default for all inodes, this option can be used for environments
+>>>> where large folio resources are limited, it's necessary to only
+>>>> let specified user to allocate large folios on demand.
+>>>
+>>> For this kind of options, I think more real backgrounds
+>>> about avoiding high-order allocations are needed in the
+>>> commit message (at least for later reference) also like
+>>> what I observed in:
+>>> https://android-review.googlesource.com/c/kernel/common/+/3877981
+>>
+>> Basically, the background is about contention scenario on large folio allocation,
+>> it's among multiple users including EROFS in Android-system, as it's related to
+>> internal scene of product, so I can not provide more details now, I'm sorry
+>> about that, but I'm glad to discuss based on the background and pain point once
+>> if I can share more, let's see. :)
+> 
+> Understood, but I think it's hard to justify an upstream
+> solution without a public load for discussion.  Anyway,
+> I can imagine some real workloads which large folios could
+> cause unnecessary pressure since I once worked for Android,
+> but I think others need an explicit one anyway to justify
+> this.
 
-Understood, but I think it's hard to justify an upstream
-solution without a public load for discussion.  Anyway,
-I can imagine some real workloads which large folios could
-cause unnecessary pressure since I once worked for Android,
-but I think others need an explicit one anyway to justify
-this.
+Yes,
 
-As Matthew and Jan mentioned, it's hard to add a per-fs
-knob like this.  If it's Android-specific and no possible
-public infos, I suggest leaving the changes Android
-downstream for now, until the workloads can be made public.
+> 
+> As Matthew and Jan mentioned, it's hard to add a per-fs
+> knob like this.  If it's Android-specific and no possible
+> public infos, I suggest leaving the changes Android
+> downstream for now, until the workloads can be made public.
+
+Sure, I can understand that we're not going to accept per-fs change
+on large folio policy, as if there is conclusion or agreement about
+this in previous discussion from community.
+
+Thanks for the suggestion, I can take a look from downstream side.
 
 Thanks,
-Gao Xiang
+
+> 
+> Thanks,
+> Gao Xiang
+
 
