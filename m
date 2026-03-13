@@ -1,102 +1,92 @@
-Return-Path: <linux-erofs+bounces-2684-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2685-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eHknAMUWs2mDSAAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2684-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Mar 2026 20:40:53 +0100
+	id aHbvMVjQs2ncbAAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2685-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Mar 2026 09:52:40 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91A4F27836B
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Mar 2026 20:40:51 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FDE927FF84
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Mar 2026 09:52:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fWydr4TfFz3cHH;
-	Fri, 13 Mar 2026 06:40:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fXJCS4qX5z3cJk;
+	Fri, 13 Mar 2026 19:52:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=116.203.167.152
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773344448;
-	cv=none; b=S4lhCAlhTLzRIcCeGPruVwSijUBjEIEXIeHYApQvqWVMcLNTvR75DiDNImLzOiVpgApHZTj0ajSS6yJGsRlkTcV8YxVwOe1F1ycnsBrwZmn0IBDl5xziE7ma+9oXZmLnm7XrSzVaMzFUDvTVNqX/qr+rSzofQPzzQezOxwQzUsyAfxeuquZWac35KrVeaepUrLFn2VVhFoh99/t6N2tODz+cjtrmiq1r+jVD141P2Bf1RqeOnGisu4ArTw8rvHFx/I75hmunOgS3p4FOF/p4d4W9Fyiy+zxAKNDQ4UhJW2JS2e7iOaYiQ0IFwJbZYGrDHe3j11bPCso6QS1LbIINNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773344448; c=relaxed/relaxed;
-	bh=VQ4I1//oujMg/wMbvtHZ1fNg62i5rEhIWcPKRohhj4U=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=CzPciRDKpznxsIS/9OXno2bGsiamn6aDwxdJTUgqpcTMAbYoiAagMqvbRAq2zXp1C+OBE1FrLIIFn9OVozXr09FUyzdXv12eLa4TIZCKti8sUH3srZKzoK4cOZ/o03ZQErKBtOLW70EkyvCBAaHfqQOZDsAD/+bQiSx3sbHWnxVYPg75vvWcVYV2djyWmqg23zh00WvLg6LwtEvCLnnTW2Fpi1Zo5GzkCvqsdqT5Mn9f0nTUwXeGQb1Y3F03Y2otAfKdvqcvUbOEkY3XhUYWt6PHEuKWWiA/R4LMj00tY2tvRmmrLnC74zLJhKTGzbdkCKaRHvuOLvJzJevECj4RCQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=permerror (client-ip=116.203.167.152; helo=lithops.sigma-star.at; envelope-from=richard@nod.at; receiver=lists.ozlabs.org) smtp.mailfrom=nod.at
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Unknown mechanism found: ipv4:195.201.40.130) smtp.mailfrom=nod.at (client-ip=116.203.167.152; helo=lithops.sigma-star.at; envelope-from=richard@nod.at; receiver=lists.ozlabs.org)
-X-Greylist: delayed 417 seconds by postgrey-1.37 at boromir; Fri, 13 Mar 2026 06:40:47 AEDT
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::532" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773391956;
+	cv=pass; b=FLe/X/L/qPec6aYdsrV0xYk5t/uNMfpUd793ZiruPWk041C2Hhpf/FCBvB51z7NQGId5okhewCQT/ituLhg/NlGwF0GIVTcTzJ2moI7jvzFK1oSEIeHsf1WaQNJDAbUF7LDjxlR+FAXv5JFPMFrDS6m74cX1iGT/ajtlHgdKtxKteOsJBj+PdGvbHL4nOKl8hwGbHW5L3gOvIwwZRrcxAOrbmoLC5RV6gDQMFwQgT4VGN6mLrDNpLIrqJPhdXkKwSxZhnHjSUA3iMgAWYdQVX/XUAUZ1RK5VMUIBisBDhNhC2Wu4DQrHhxM9rDZOdoi7LsfdzfE5MInR4nkZjgqTpw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773391956; c=relaxed/relaxed;
+	bh=C5vwVuyfgvZir0tYszdsRlorCdfBQqqbHF8qRE8bu1I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ejmzlH1I0g06eZmLvTE6e4hT7mf23PsQ9jO7CV0SzeMgy2Ijeo610sdtlCA5zxwHSK0/Cdb1uq+WKH1UDLPUeOqYvSNTlz+i4SYCSU+p89lOXpHkHqVZeanY7PwqlL0He8ih/48gnv5foj3A+p2g46qToKJy1CjnGvNhtPiSfeRwLHcuQNxOzqOpLUSDqEwgBaFR+vdNFmwd4Xg3YiGdq184Hc/unVldDZpC4EZO6Sp6KYzmxltX6Ol6WGryAiKGT+YTno0lc8bZr4hwMY/X1pjbtrSVGbvFd7ZOlTth/U+/18nmHy6ZPJuwdejMWW0ocLvRkccp6ut3xR82la4AVw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FsEWI9M1; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::532; helo=mail-ed1-x532.google.com; envelope-from=lasyaprathipati@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FsEWI9M1;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::532; helo=mail-ed1-x532.google.com; envelope-from=lasyaprathipati@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fWydq2KwPz3cGf
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Mar 2026 06:40:47 +1100 (AEDT)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 4DE582C14A8;
-	Thu, 12 Mar 2026 20:33:44 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id yCwNT8mwVvHB; Thu, 12 Mar 2026 20:33:43 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 8A34D2C14AA;
-	Thu, 12 Mar 2026 20:33:43 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3HN7guaAFMsE; Thu, 12 Mar 2026 20:33:43 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id ABF4A2C14A6;
-	Thu, 12 Mar 2026 20:33:42 +0100 (CET)
-Date: Thu, 12 Mar 2026 20:33:42 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx <amd-gfx@lists.freedesktop.org>, 
-	apparmor <apparmor@lists.ubuntu.com>, bpf <bpf@vger.kernel.org>, 
-	ceph-devel <ceph-devel@vger.kernel.org>, cocci <cocci@inria.fr>, 
-	dm-devel@lists.linux.dev, 
-	DRI mailing list <dri-devel@lists.freedesktop.org>, 
-	gfs2 <gfs2@lists.linux.dev>, 
-	intel-gfx <intel-gfx@lists.freedesktop.org>, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, 
-	kvm@vger.kernel.org, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	linux-block <linux-block@vger.kernel.org>, 
-	linux-bluetooth@vger.kernel.org, 
-	linux-btrfs <linux-btrfs@vger.kernel.org>, 
-	linux-cifs <linux-cifs@vger.kernel.org>, linux-clk@vger.kernel.org, 
-	linux-erofs <linux-erofs@lists.ozlabs.org>, 
-	linux-ext4 <linux-ext4@vger.kernel.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-gpio@vger.kernel.org, 
-	linux-hyperv <linux-hyperv@vger.kernel.org>, 
-	linux-input@vger.kernel.org, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-leds@vger.kernel.org, 
-	linux-media <linux-media@vger.kernel.org>, 
-	linux-mips <linux-mips@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, linux-modules@vger.kernel.org, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-nfs <linux-nfs@vger.kernel.org>, 
-	linux-omap <linux-omap@vger.kernel.org>, 
-	linux-phy@lists.infradead.org, linux-pm <linux-pm@vger.kernel.org>, 
-	linux-rockchip <linux-rockchip@lists.infradead.org>, 
-	linux-s390 <linux-s390@vger.kernel.org>, 
-	linux-scsi <linux-scsi@vger.kernel.org>, linux-sctp@vger.kernel.org, 
-	LSM <linux-security-module@vger.kernel.org>, 
-	linux-sh <linux-sh@vger.kernel.org>, 
-	linux-sound <linux-sound@vger.kernel.org>, 
-	linux-stm32 <linux-stm32@st-md-mailman.stormreply.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	linux-usb@vger.kernel.org, 
-	linux-wireless <linux-wireless@vger.kernel.org>, 
-	netdev <netdev@vger.kernel.org>, ntfs3 <ntfs3@lists.linux.dev>, 
-	samba-technical <samba-technical@lists.samba.org>, 
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
-	tipc-discussion@lists.sourceforge.net, v9fs <v9fs@lists.linux.dev>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <1584421372.26258.1773344022512.JavaMail.zimbra@nod.at>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-48-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-48-bd63b656022d@avm.de>
-Subject: Re: [PATCH 48/61] mtd: Prefer IS_ERR_OR_NULL over manual NULL check
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fXJCR02fkz3cGf
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Mar 2026 19:52:34 +1100 (AEDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-660dcafc85aso3597214a12.0
+        for <linux-erofs@lists.ozlabs.org>; Fri, 13 Mar 2026 01:52:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773391951; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NchMRq6qvfDtKFVy/RRvFct1FY//FWMsKTwqpFYuEpNdMUIHeg/IFa0sOntomcufVk
+         58+woc7ai0x93ZEeJcYHPYqyUk5XuqIBW92WsaY6lRcHCd+WfD/Of/v4BXANgtt8cpFp
+         upyNDkAkIDQlim7X0reNf3yLc12UWzyzLGuF9VUoPCjDhQgMXfwMXY3u0JAtCpu6nBn5
+         WTCgSis7tAwVJE93aDrDjgOYyf1v7r22TGDnFQJIVb6vrcj7OyIHQDw3kCFB1ojWdKFn
+         hnfD4zBgXylH02Iy/gTFpIowhQdYeTasJgRt/wfsPuuaf52LeiP9acYEw9lN8iGgbMSJ
+         dkmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=C5vwVuyfgvZir0tYszdsRlorCdfBQqqbHF8qRE8bu1I=;
+        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
+        b=UIj9D91liPrD4gQ8T2QsWLosEPeL4Oaxnw60aOFvvASUmuPZpZhZdXW//cmN83t2vN
+         DNMw/Woe9tjzKcxa3rkFoletKZCvMy0isp3gjud6rDw2bOcHtbXxEg8SHFjXQpKCu1Jl
+         KtfD3bO7PSW1+xtJtFPrA5YbLGS0YaKgABxCXOfkkBnaNEGdhkt3V22Na27UnWPO9lq5
+         V3YQbFxYEXdy/jAQPgVxmfK9RJ0ZUDumywle/OBTyQlhvjSS9VZoWO5NdPlAlKC05rWp
+         GtoCvq8uyohKFohtykQW1J4Vhr/dWY8i8YtCZ8IjVhKflxv5IfZjAtzNZ5lJo15xVjaO
+         ekyA==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773391951; x=1773996751; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=C5vwVuyfgvZir0tYszdsRlorCdfBQqqbHF8qRE8bu1I=;
+        b=FsEWI9M1whxIxLsWTauH5fqaEzXAyL1LRW5CWdNB9qQwcC2IHyH3L8oE53eHips9w+
+         hOPZUS1c5UClW6Dr+PJbto3mhYVX+EWR6GRDvLYj3MoQqDTGXv39s0selbJIVP95+xvA
+         HvktGFFGBywmz0T5f4lUS4nue1/IQhTw/9BEqFcG9BaFmjo2z0yaB3S54EQbqbyXIcYB
+         C0Mt2NzajYZDVgG4nuE/R7Fk5wex8hQf1ChyuogdoAe+s7Lg9D5z/ticAxlzxdhOOdV6
+         407uExYoieqs6KHgQxQozUvSTbYNqVK47EOv0GhqRi/jvcD3T4oUao6TsbKb3ptonm/8
+         hI5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773391951; x=1773996751;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C5vwVuyfgvZir0tYszdsRlorCdfBQqqbHF8qRE8bu1I=;
+        b=bygJWOlRfJkY4WZu9N34zbiwFOu7r2BzNaf5yZHsHz8U5QwBZ65VwhiKxc/zk8S7bm
+         XE2qGN5bfte+B9b/AEOTpWsSwI+Z9OhEQ1aCujlP/uOOr1GwmIRX1ElKfcNOTT3Sjh+m
+         oUFV0quFqCxTWDjTaSFITPMe+PdgM6PYtHJ046YnBQe1lwyvJIGhC6OhRj+sryheyYja
+         yVAdZ5HkmsoYYJTxCSnMWxduFnC9XRF8pMrhW6LhlPluvNqW3wimNMxQ1HCAG89UFLsB
+         nwxquwD6+nMTDYbqi2yYObCbEZDkIC0GVwe+7OaoATqLHb3bcvqPZWEB8X53JmeT8AEj
+         EsoA==
+X-Gm-Message-State: AOJu0YybLnfdWg8k+203xTYfrr8CeLqYYsWVIlvz16VLtyzr6Qeo8Fif
+	AIdkY4wxlBrX5fLFV5mgg60u4Z3ylqRgvPJAnHuIaQwmGQxs7kbh9bva6SnGP4/w7vdNU9N310o
+	NPul7SF5pC/nBUqtX/i9iV1fHlgaxhRp+HHLjL6Q=
+X-Gm-Gg: ATEYQzz5h+bUf3vZ/cIWsQ+IHykGFCb8bYSueKy/n5XNQszJcBq03B+r22mp1vuOktj
+	2/sY/hduS4bo+TWa1oAkGQ9pBoQvpHNz5nkGih8ocWDub/ceFXQB+l8EONJ5OIMSAY9i7Iw20zf
+	6gq0EyInLtQhOYfe66yMscdLf4gxgw62z5zNmO4+jxx16GnLNZkFz5iyxFeJEie+TwnWv4HupiE
+	EyxYmdQvC6KvYg8+/q5rnt6bmKXGtS/gTgGnJ/tRX0f+NBzCBEpXbTkSkLCefmcj71VwzPEpSv0
+	jAjGY6M=
+X-Received: by 2002:a17:907:c11:b0:b96:ef71:49f1 with SMTP id
+ a640c23a62f3a-b97650f1896mr153299666b.15.1773391950940; Fri, 13 Mar 2026
+ 01:52:30 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -108,63 +98,91 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF148 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Prefer IS_ERR_OR_NULL over manual NULL check
-Thread-Index: 0l8CyewQmrWlgaG6N3QgQFfukutRbA==
-X-Spam-Status: No, score=1.0 required=3.0 tests=PDS_BAD_THREAD_QP_64,
-	SPF_HELO_NONE,T_SPF_PERMERROR autolearn=disabled version=4.0.1
-X-Spam-Level: *
+From: Sri Lasya Prathipati <lasyaprathipati@gmail.com>
+Date: Fri, 13 Mar 2026 14:22:19 +0530
+X-Gm-Features: AaiRm51lBikqmgVRx6iyZF0gBKip7rRgiamL2eJKzS4euqNcciaZDly33yfhspI
+Message-ID: <CABDnCWkfX7jNZEcaCQhnJKw86WJijYVSrOov8DZSPDJT=S4F0w@mail.gmail.com>
+Subject: [GSoC 2026] Introduction and Project Interest: Support generating
+ filesystems from manifests
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [0.00 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	INTRODUCTION(2.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2684-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[richard@nod.at,linux-erofs@lists.ozlabs.org];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:phahn-oss@avm.de,m:amd-gfx@lists.freedesktop.org,m:apparmor@lists.ubuntu.com,m:bpf@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:cocci@inria.fr,m:dm-devel@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:gfs2@lists.linux.dev,m:intel-gfx@lists.freedesktop.org,m:intel-wired-lan@lists.osuosl.org,m:iommu@lists.linux.dev,m:kvm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-block@vger.kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mips@vger.kernel.org,m:linux-mm@kvack.org,m:linux-modules@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:linux-omap@vger.kerne
- l.org,m:linux-phy@lists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-scsi@vger.kernel.org,m:linux-sctp@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-trace-kernel@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-wireless@vger.kernel.org,m:netdev@vger.kernel.org,m:ntfs3@lists.linux.dev,m:samba-technical@lists.samba.org,m:sched-ext@lists.linux.dev,m:target-devel@vger.kernel.org,m:tipc-discussion@lists.sourceforge.net,m:v9fs@lists.linux.dev,m:miquel.raynal@bootlin.com,m:vigneshr@ti.com,s:lists@lfdr.de];
-	DMARC_NA(0.00)[nod.at];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCVD_COUNT_SEVEN(0.00)[7];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[richard@nod.at,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2685-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[56];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_ONE(0.00)[1];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lasyaprathipati@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_XOIP(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:email,nod.at:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 91A4F27836B
+	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,autogen.sh:url]
+X-Rspamd-Queue-Id: 9FDE927FF84
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Philipp Hahn" <phahn-oss@avm.de>
-> -=09if (gpiomtd->nwp && !IS_ERR(gpiomtd->nwp))
-> +=09if (!IS_ERR_OR_NULL(gpiomtd->nwp))
+Subject: [GSoC 2026] Introduction and Project Interest: Support
+generating filesystems from manifests
 
-No, please don't.
+Body:
 
-This makes reading the code not easier.
+Hello EROFS Community,
 
-Thanks,
-//richard
+My name is Lasya, and I am a 3rd-year Computer Science Engineering
+student. I am writing to express my strong interest in the GSoC 2026
+project: "Support generating filesystems from manifests."
+
+I have spent the last few days familiarizing myself with the project's
+goals and the erofs-utils codebase. I wanted to share my progress to
+demonstrate my commitment to this task:
+
+Development Environment: I have successfully configured a WSL2
+(Ubuntu) environment and verified that I can compile the project from
+source using autogen.sh and make. The local mkfs.erofs binary is
+functional on my system.
+
+Code Analysis: I have begun a deep dive into lib/tar.c. I am
+specifically studying the tarerofs_parse_tar() function (line 700) to
+understand how it iterates through the tar_header and maps metadata to
+the erofs_inode structure. I see this as the primary template for the
+manifest parser I intend to build.
+
+Initial Research: I am currently comparing the "unix proto" and "BSD
+mtree" formats. My goal is to design a manifest parser that is robust
+enough to handle various metadata types (UIDs, GIDs, and permissions)
+while remaining consistent with the existing importer logic in
+erofs-utils.
+
+I am highly motivated to contribute to EROFS and would welcome any
+early feedback on whether there are specific manifest formats the
+community prioritizes, or any architectural nuances I should keep in
+mind while drafting my formal proposal.
+
+Thank you for your time and for this opportunity.
+
+Best regards,
+
+Lasya
 
