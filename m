@@ -1,129 +1,87 @@
-Return-Path: <linux-erofs+bounces-2687-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2688-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8FXcBftjtGngnAAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2687-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Mar 2026 20:22:35 +0100
+	id 9B8JNu3PtWnQ5QAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2688-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Mar 2026 22:15:25 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 368D5289344
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Mar 2026 20:22:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E44F728EF6F
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Mar 2026 22:15:24 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fXZBG2B8Pz3cKj;
-	Sat, 14 Mar 2026 06:22:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fYDSC1nmSz2xb3;
+	Sun, 15 Mar 2026 08:06:51 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773429750;
-	cv=none; b=B0eQEO5gylw15nlo8MkQjtbuo00RqCEUHXWUgNT++J04TpmnKZcDi3KR2GcB6y9cvxxxwZfJ4mZHW8UWutgbD0zdmA1Kvw7YQ+jEHJeNl3wArfRAQgLcK8R3kOSjuCmDrkkR3Ja/rsPtw3KB7ix1K3rbV3vh/Mpnn+JCKKJVvvFvJvnay73cSZq0LkEIa7ObsUnpdhtHOq5ZmLu0wwkQG6Wlrfgzg6WoyRNnc9sX+CADO/Snuq7bWT4kEly0+rZlz09aKkPO+2bdOHiQIWOaseNlSlEE8cay0gdKYC3xC1Fo87qVh4b4P8vxr9WpTWI91/tn+2AmkP29XEr0UEaqsQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::430"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773522411;
+	cv=none; b=d2B1+azzj1nqNsEM4maduSXr2mkDBsc70zwl1peDIEZgKJRcbxs3vkqrLgPg4QbR6Pe1wJJQhBYXKe0//hEMRQBbSmY5vVT0y8EWSPwWQVcp63hxgZvfcW+vRAsfs5TP4ZFKZ156plbVeT08+v3yT1tIALUKFAs7StFAwaNttlpY+EYauuhfy7XXeW+Tp+Ey73QOxy94MZ+quxhtEdy5ufIuiDj8vBD1BcX1mj/aWBiMnl+ax8UCQ0rAHYj1CMo+5BtYBhpL9DfnseAhcxNWtEGscDTadhbgUgdGtxxYkdti6h1wEiz4Kz0xGaIGnqvmjZO0mY8+oKbfB4Zo/dLWjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773429750; c=relaxed/relaxed;
-	bh=lEZDbFbdaiqtR0DORmYiMySif6us6CTI89GNtF8koIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCuz7SCQcW6W7IJRFlU5B0mciFpGsmt9OCPz//gfIovAaTUq3QTOV9tSLo4vsC8a08dGVrAFSCiVfjXonJ/NlRrpUGiJcz4tNlQTZIoJOiMwRJRrr9QEj5W25eLMMPgjVY8NEPTKJiE+XAyrjL2Op4MNROr2AUSk2B7nTO5MPKhsqvtZgSjssEBCPqpEMMFKfFVW5LJN5cudm/TjD3sddB56wfbesL0swhwbes2b+p62usGK8M88KfjuzawVYPRJTumwK4AUaYtMwGwXRMbRTiFyxQ6KiGCRI/dsGXC9MWXQ2SGscJwYEPuy8g4vSj7BAMXjH263yGJ6vxysgktHWg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=cwr9QvSb; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=K+U59XI2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=cwr9QvSb; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=K+U59XI2; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=dsterba@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
+	t=1773522411; c=relaxed/relaxed;
+	bh=BWuYkfEXLX9Bejai/eD6AwzJJbgaI0E7lXkE38A4GUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IS+6bZEPKaPR4156bpHofGw5Zzgql17RlkWgbj+M6C03Udp1yygUH2+0h72W5x7K2ha0rQdgKaXwlyeiyz/rYu9Zzw1qO9CPS5v6CMaiUJFXhHgnZTxAs/5R8lkk4QrGmPM98ODmElNtLd8UGlV7WRt2ggkqRQN49fpU49eHS3qFm7wLZlo27uvuY9wqZpvHXL4kUf4jtrYwVXzwiKIf6MiDEJjiyEkzQxWq4onoTHC0rwjPMPj1uiMcrfX4oKparjYCHeh9FsZAZVrCDHA5pO/tduW0/VP7w0l6TC0YBPwPUJf8uRDKOJBgPTxqOSqHFKjd344SS1nW44xid5uWMA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RQMiwoQg; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=cwr9QvSb;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=K+U59XI2;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=cwr9QvSb;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=K+U59XI2;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RQMiwoQg;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=dsterba@suse.cz; receiver=lists.ozlabs.org)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fXZBD4rYfz3cKT
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Mar 2026 06:22:28 +1100 (AEDT)
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B208C4D943;
-	Fri, 13 Mar 2026 19:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773429744;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lEZDbFbdaiqtR0DORmYiMySif6us6CTI89GNtF8koIU=;
-	b=cwr9QvSbf3addifFtJFaEE3S5jwqDpZlb749Rs1kTiqHHQe0wIw+TMnTma/8mfA3QiWv+t
-	IZuKpLsIb+k3xwyZAXuL8F5GTiyGUJh1olDjZfpDExV1+UvdVwgZIIojOm6APRysjO8/lt
-	9WDXlxlJVmMpUXoO3id4LXjiv7t5UI0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773429744;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lEZDbFbdaiqtR0DORmYiMySif6us6CTI89GNtF8koIU=;
-	b=K+U59XI2u6gqS+yANGWtG/Pii/V0SpIQQ7wMg6BtOp5KKFcWyvgFtoDkwX90d0NOWdybeR
-	Ua+tdtixGZm/opAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773429744;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lEZDbFbdaiqtR0DORmYiMySif6us6CTI89GNtF8koIU=;
-	b=cwr9QvSbf3addifFtJFaEE3S5jwqDpZlb749Rs1kTiqHHQe0wIw+TMnTma/8mfA3QiWv+t
-	IZuKpLsIb+k3xwyZAXuL8F5GTiyGUJh1olDjZfpDExV1+UvdVwgZIIojOm6APRysjO8/lt
-	9WDXlxlJVmMpUXoO3id4LXjiv7t5UI0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773429744;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lEZDbFbdaiqtR0DORmYiMySif6us6CTI89GNtF8koIU=;
-	b=K+U59XI2u6gqS+yANGWtG/Pii/V0SpIQQ7wMg6BtOp5KKFcWyvgFtoDkwX90d0NOWdybeR
-	Ua+tdtixGZm/opAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F14A406AC;
-	Fri, 13 Mar 2026 19:22:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6cTyGvBjtGnfZAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 13 Mar 2026 19:22:24 +0000
-Date: Fri, 13 Mar 2026 20:22:15 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 02/61] btrfs: Prefer IS_ERR_OR_NULL over manual NULL check
-Message-ID: <20260313192215.GH5735@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <20260310-b4-is_err_or_null-v1-2-bd63b656022d@avm.de>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fYDS91XW3z2xZK
+	for <linux-erofs@lists.ozlabs.org>; Sun, 15 Mar 2026 08:06:48 +1100 (AEDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-829b4a26a75so31923b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Sat, 14 Mar 2026 14:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773522405; x=1774127205; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BWuYkfEXLX9Bejai/eD6AwzJJbgaI0E7lXkE38A4GUk=;
+        b=RQMiwoQgBz5btXLCI672PzqUvVZAW4GhabaoJEush4quTnOLqs1kC5xFAjYO4RPC1g
+         /CLapAIDSXHfr623QgyHhNMawwefmInGp01FKC9e4K0osQAhT+tLwxkcZXUYxlZbNbdt
+         Y49nvW2yY4tgJuNHMfgQVOXYX+1HtcNyTscAwJI0gX9zErvyQl3kJXNVAyt3rPLZ3jB2
+         bWvQSBGJ3bdAg2fxA8PoCtiSh5oXowUJfw6j+8t56QGOahkEoEPT5wyeYLbWUlT8Lt9Y
+         2M4Q7zYjbfsmN2uuiq0e0KMzk/77sDo9bwTxsLCXiOPTWooGsdCuurTI+xujfTGkDaf3
+         QeYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773522405; x=1774127205;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BWuYkfEXLX9Bejai/eD6AwzJJbgaI0E7lXkE38A4GUk=;
+        b=jlOrsfuZvtsaHY3F7yGe/JYgNHCZwbGAbK5gHOh3HTMRtDPrLUVjga+vbr571fWoxI
+         AmCQcNSlCSzV153qBuxScHq3emUHDnXt4sIStbPR+pweubJ6gqt5vV/C7rdU9JhGpoaR
+         zon7pNro46pGHzh2cDmbQ8pQgEH8liRsLflhKBBhnDZUaLbhJY3B9N5F0qqZJpeSlfdh
+         N5w8oiHmaCoruDmu9YluZKWEYN616ESrEok8ZFdXDw9yNfZzRtcRe60QjoAedabrA8Tx
+         xHhHUMqwZFo4u2AIRuG4s1lkfmgyfr3VLckXxEP0S4wZ6/pdwGALsNs+H58aaXICjx+P
+         OgZA==
+X-Gm-Message-State: AOJu0YwihVbVDF+LgnCXWZeYc6W8BUrSUpsK45iPF8m4xuXk7MhdFuJT
+	1RTUwfbfBw1ke3ggN1AH0fE1DtlSM0SjxCigTzoAnSCJII3A6n4A0lYeTfaOMsai
+X-Gm-Gg: ATEYQzwy+nYznWDut5ZJUlf2qhtJDzEXQXWzplVPfR40smU/5zgffH4Vj94DfQQRlXK
+	FfRKrOztJ0k5rnzckb2RWF3I5/gC96LU7CqazkAPaLNSJjYNw2kW4o5/N1H0glJdK2a7Yk5tShN
+	lRDq+I9pFO4EB0rtmdQpGfx81yzLMwaoauHfDF1P29p39wT9Rq08JNFHSfLVsK1lmltdZq0MHSo
+	+ULTzXiP4H1JkC02jhLQzyUCCCaDjjwY8tc0+QG26xsWoSpjtvA+tIImcEhXrZ06G5oAIriWcGT
+	uxb+LiZ4fj1rIJRZIRDB2gCvjRTgcslvm6R8TT9WYYYdRvCZrOfF8K9qCm7YCkdA6zfLmulCMgm
+	W29f8GQmpXxJdJEUjPlX4v2tZj6egzrQyxEn02DA9c6iyhUBGSqaesirw3tou8FSYwBWDlZ5nCl
+	WlzXorH/LCQ592MUNAK5yc15fKWUhQvNvKiYq6+OuzYZIFtxOUbVO5IYdqZbtjitxllGy5a4XtC
+	KDhli8Q7caOwZNPVdZlgt7yz549PHGbGa+c1w==
+X-Received: by 2002:a05:6a00:a257:b0:827:3fc9:e848 with SMTP id d2e1a72fcca58-82a196ee0e6mr4375563b3a.2.1773522405230;
+        Sat, 14 Mar 2026 14:06:45 -0700 (PDT)
+Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a0736edd2sm9314197b3a.52.2026.03.14.14.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2026 14:06:44 -0700 (PDT)
+From: Utkal Singh <singhutkal015@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	zhaoyifan28@huawei.com,
+	Utkal Singh <singhutkal015@gmail.com>
+Subject: [PATCH] erofs-utils: lib: fix error code loss in erofs_io_fallocate()
+Date: Sat, 14 Mar 2026 21:06:14 +0000
+Message-ID: <20260314210614.8994-1-singhutkal015@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -135,73 +93,100 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-2-bd63b656022d@avm.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -2.50
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [2607:f8b0:4864:20:0:0:0:430 listed in]
+	[list.dnswl.org]
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends in
+	*      digit
+	*      [singhutkal015(at)gmail.com]
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [singhutkal015(at)gmail.com]
+	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+	*      [117.203.246.41 listed in zen.spamhaus.org]
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [4.30 / 15.00];
+	SPAM_FLAG(5.00)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2687-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:phahn-oss@avm.de,m:amd-gfx@lists.freedesktop.org,m:apparmor@lists.ubuntu.com,m:bpf@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:cocci@inria.fr,m:dm-devel@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:gfs2@lists.linux.dev,m:intel-gfx@lists.freedesktop.org,m:intel-wired-lan@lists.osuosl.org,m:iommu@lists.linux.dev,m:kvm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-block@vger.kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mips@vger.kernel.org,m:linux-mm@kvack.org,m:linux-modules@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:linux-nfs@vger.kernel.org,m:linux-omap@vger.kerne
- l.org,m:linux-phy@lists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-scsi@vger.kernel.org,m:linux-sctp@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-trace-kernel@vger.kernel.org,m:linux-usb@vger.kernel.org,m:linux-wireless@vger.kernel.org,m:netdev@vger.kernel.org,m:ntfs3@lists.linux.dev,m:samba-technical@lists.samba.org,m:sched-ext@lists.linux.dev,m:target-devel@vger.kernel.org,m:tipc-discussion@lists.sourceforge.net,m:v9fs@lists.linux.dev,m:clm@fb.com,m:dsterba@suse.com,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[suse.cz];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[dsterba@suse.cz,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	HAS_REPLYTO(0.00)[dsterba@suse.cz];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dsterba@suse.cz,linux-erofs@lists.ozlabs.org];
+	GREYLIST(0.00)[pass,body];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-2688-lists,linux-erofs=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.alibaba.com,huawei.com,gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	NEURAL_HAM(-0.00)[-0.673];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[56];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,fb.com:email,twin.jikos.cz:mid,avm.de:email]
-X-Rspamd-Queue-Id: 368D5289344
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: E44F728EF6F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 10, 2026 at 12:48:28PM +0100, Philipp Hahn wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
-> 
-> IS_ERR_OR_NULL() already uses likely(!ptr) internally. checkpatch does
-> not like nesting it:
-> > WARNING: nested (un)?likely() calls, IS_ERR_OR_NULL already uses
-> > unlikely() internally
-> Remove the explicit use of likely().
-> 
-> Change generated with coccinelle.
-> 
-> To: Chris Mason <clm@fb.com>
-> To: David Sterba <dsterba@suse.com>
-> Cc: linux-btrfs@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+The final erofs_io_pwrite() call in erofs_io_fallocate() used a
+ternary expression that discarded the real return value. If
+erofs_io_pwrite() returned a negative error code such as -ENOSPC,
+the caller would receive -EIO instead, losing the original error
+information and making failures harder to diagnose.
 
-Added to for-next, we seem to be using IS_ERR_OR_NULL() already in a
-few other places so this is makes sense for consistency. Thanks.
+Fix this by storing the return value in ret and propagating the
+real error code directly, consistent with the loop above it.
+
+Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+---
+ lib/io.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lib/io.c b/lib/io.c
+index 0c5eb2c..12a9beb 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -191,7 +191,10 @@ int erofs_io_fallocate(struct erofs_vfile *vf, u64 offset,
+ 		len -= ret;
+ 		offset += ret;
+ 	}
+-	return erofs_io_pwrite(vf, erofs_zeroed, offset, len) == len ? 0 : -EIO;
++	ret = erofs_io_pwrite(vf, erofs_zeroed, offset, len);
++	if (ret != (ssize_t)len)
++		return ret < 0 ? (int)ret : -EIO;
++	return 0;
+ }
+ 
+ int erofs_io_ftruncate(struct erofs_vfile *vf, u64 length)
+-- 
+2.43.0
+
 
