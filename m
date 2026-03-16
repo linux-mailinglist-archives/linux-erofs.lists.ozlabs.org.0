@@ -1,95 +1,69 @@
-Return-Path: <linux-erofs+bounces-2714-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2715-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qEvlEl5wt2nnRAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2714-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Mar 2026 03:52:14 +0100
+	id CNygIBR+t2muRgEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2715-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Mar 2026 04:50:44 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35FE129442C
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Mar 2026 03:52:13 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04E00294792
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Mar 2026 04:50:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fZ04B48L3z2xpn;
-	Mon, 16 Mar 2026 13:52:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fZ1Mg2QXRz2xlP;
+	Mon, 16 Mar 2026 14:50:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::436" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773629530;
-	cv=pass; b=i1JMcG5+jqqGRVjT32iKQyxFAIGigm7Fo79fXZj8w9GjehGtNybxKDRPMP+y5TxMaZRAAjo+dQi1ylr4cTuMtxQnKTVrJFdJFcK1HRgbRC+6xWWoYsbDL4eYZGkau9KhdvrlPVRLtypaOC1oUozwWrz4fFdMjrJH1k1T71UG6xp0WhbCeWXEftw1lAUgQNKQo0nyG6awanCwRDY1t6U6kGaJPrIBJk0UWRa002p6Kc9zSsug1ZZx5PmgRQiglJMZBkLUjV8KPmZBkzDOIYggtSHG2JuYa5TyVE5boDm6Ebm01MVcgGgaQaTr5ecJG8GK6UIoe/EqK2wEAcquU5PMSQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773629530; c=relaxed/relaxed;
-	bh=lkLiHYp9tVKed1aa7twayLjV4Yp6OpEvVPruZ0ddqFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G6CTuZkqVOQEAsVQrOeqBB5jK+CwLPeJa6Wro8cgw9jKTNCFygccQLHoZvvFpRwrpOzJnGV1+pnEje6J+mFGBMEkXvQF485+wyjRrgpS8j37H3r/DpK3fOkP5chJ/oWz1ZIMX30AaF5v/Pd6oKcJU2jk1Fnigm0StfbT2580P2FT9WWmlQ13detoZxlr7deFwR6A5BfpYbLYliZzSSE6jA+o+TKAr3yGUt0hJyQwmpBeIS83it38+Vz6vkIxPEaQHmuNRKXyzBtP+qT19voPriJYHQN5vftulrH6Dxhib6Zsj9bv6a4QALE5byHh1RgL6OgPgV9hZfREJLLOX6b+9Q==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=QodnyKph; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::436; helo=mail-wr1-x436.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=162.62.58.211
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773631635;
+	cv=none; b=iLkQJ5oDEYYQ4CqzV/pkAbtGLnQ2V2ySytsou6l3cn+pwaKqqhNy5Z7LPg1qviHb6xYBxYaFpDfL3vXrHd7nTaBv3VXb+yrSfNcQCZEGzCb5MIsZ3lvo9a8UKo14KDhy9VlHdiqKzTAo+8Qw6H2XlIVQcj+O3OWReu1Em3y7N4pBVJb7V/1uokf3/QcSdkujW5C1GLbtGHtNkTZpwT+RsW0G4r0FCNx68qoRQV1UoBNyMoJbpHQC5PAHuRHcTgTsMmfvbD7xP0RY7unAHnS7p0sRm5gHwSgA98I6vrwnoUjOpSHI2KwcyVgo/vnkzwXSFB5injdphCs03RRfhGkZSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773631635; c=relaxed/relaxed;
+	bh=eOOmcvMV8q5x73xPyR44di4FD5fhaa55C3RW4AxZGqw=;
+	h=Message-ID:Content-Type:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=Ygnz1yIACLp+XcsurOS3dWnL7JL88CsqneHTKqwVU79k/7Tf5hTCj7Hz+D+8L+9LxIro3oJZ0JMX/ySfCf0tMmdXMlqarn4EDsFTCN9zFB7flhwrAd6hknblIxJjRXraX/OB77DanYni1unyFVzbhUB9mQXHuJvAkTKd1xLZnNKH9lRoqqM7hXcRFrUkRohFq6A0rVnGJruMwQ25SfNbIAXiyuRM3MwyD56V78lO32OLzvLrdKjorgAUj721UoN3JGTrDsuMZHZUdeJdgwEduqYQdKxg8Ssl/KbmSxr8txCxgHjvY+YGtH3nSmG7gsWnaZFera+XVnBFrZ5mOs/lRQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=GYaOQd19; dkim-atps=neutral; spf=pass (client-ip=162.62.58.211; helo=out162-62-58-211.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=QodnyKph;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=GYaOQd19;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::436; helo=mail-wr1-x436.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=162.62.58.211; helo=out162-62-58-211.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org)
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZ04923zDz2xS5
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Mar 2026 13:52:08 +1100 (AEDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-43b3cfc38edso1330765f8f.3
-        for <linux-erofs@lists.ozlabs.org>; Sun, 15 Mar 2026 19:52:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773629524; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ivklvM95ZZLPNYtspA5m0orz/msJ5AVWSwe0Fscd/psHcyyIeSONhBM6buorvOWUbm
-         n+A/0nnJl7iu+Sw8tmYWohu/cVgUgfRe5U2nRZTAI371efAikSFDmJLI5T+Aw0Wfv1dn
-         djVhynG3o6IPBCvMUeXsX1FI9Bkc0ytpnxVNDzzZ9CtylVJrTHKzqEuBFIJH3P37e+UC
-         06nnp4RUmcreggR9W7LAdObDakiZqVNrXub5kW9bMYsYdt22ZgfSz2BNv+uheBuxaaSP
-         HCpK4P1vn+FbzZHySSrdX8Il82/I+GieAsQPbt0x0Y86pdjvcA9yh757RT0/Cptk9hWd
-         KJZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=lkLiHYp9tVKed1aa7twayLjV4Yp6OpEvVPruZ0ddqFY=;
-        fh=RrsHr754WNOhbpINcYykH5z2BXa7uJ3DSBCxj++xbAI=;
-        b=ZJunosh3mSDEz1CDnpnW2eIQj4n1fIFIxnSiU4u3IaD8H1s19YWn7tMW3p6z1zQzpV
-         WHqCNoKNPJdizwEienIIWlFdjbLpXnsNsD7npOdr0JCkO2CtK38XN/AFfwWTfpB1QCW8
-         sh1gwz8dSrVc1i/yo4CEyxBBCql2APLHE27CnQpeU1Au+YEbjZDqIxp70gEEM8jcb7D/
-         juRdiH6gKmszgotQp8urWsa7796g8Z7Xxi7lizpkYTW+j57d6vn2KQwZYhq9o0Yt26Sb
-         j50+gxlWXokT688eFPz4n+vzYb7vZE+4oSqMdBXdQ6QnmlRXtY6qY7XibTf8Qd1cLTP2
-         nGIg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773629524; x=1774234324; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lkLiHYp9tVKed1aa7twayLjV4Yp6OpEvVPruZ0ddqFY=;
-        b=QodnyKphQHWYv2crpvLcI4sNcJH6qtpclKqcDZin58Zwm3/V7GKEAkAVuMmxrIxKjH
-         P34RiNdb/YTYzu+jboGCvk3pVw2kTVI5AZRLbQAcE4jLlTGfzjBzQxC2kx46a73UWugg
-         3qiHfHpWgNpQpgPzxJpJ6JNRgTYYnDRL9MBob/m3MxwZjyyV9AQieVYxlYLJHO/5NO8P
-         0t5ikZQgHZIasglxVP7g1y0kwGGM3PwTBb3eh5WWCh/eRVQ3qmMV3TV1nA4uQ7blRUub
-         YDMcgrgvXpl047dZLivxEmoLkqPmI8FsMo+UdWJEdtQsn3EEuLJaImgfZWHHVtIGmV7J
-         b7Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773629524; x=1774234324;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lkLiHYp9tVKed1aa7twayLjV4Yp6OpEvVPruZ0ddqFY=;
-        b=dvcEbslFIf+DAev58T+/QPbTgSDuWfSv6sBO74rm9nVDD57+2/CacYGiq8rGZYgJwb
-         opSwLaKXXGmpIrBGPocbaYcEh2cy3sPGRN56GSGQOmL37L+32Vj+y+xso0OGXtFX4BKg
-         vjcYOBF3fTVZAchvwBktiOyxgOx267IIgGcBRCTg+RwFMUCQyrjMZxeuVL7BH2FRDSXj
-         kl+mts84GBwN30hT5WTG6qI0HWnD4IUSBRahIne6BwnRlmIP0TPDP6y2z0PIOsCoJB/G
-         XbhSg+vIedoZ73+cvJmrxaG/pDVrNWwvtTgA6+sjUniQXPgrFpwuqrz0dAOjQRPQC3rL
-         83gA==
-X-Gm-Message-State: AOJu0YwbT2ragjUZ+MmcvU2oHhejVvz2FRL+ouGlyEiV5ED6MgNyc7Ha
-	sFw/6z3x0N0S5BChy6N57Zmg5+Y/D/0FKWIL/eC7RZ5+luZ8BiLeAUqts2/0CDTY0BrEHzyeNT2
-	+gnrVOLsQ0U6AQHaZS9Vvl4aPKuhYQAgJKGFmVXc=
-X-Gm-Gg: ATEYQzx0UM9oP0RmtPESfl2aMuxDrJoDeZlv/TPdMZBbMsceK23OgK+aYWvzpVsunq7
-	1uVFFmUI5tNEWE4mTIkjrI//QUhKjniOBv9wrzE4GbxsX4p+Z9rEDq8Z/8YmSPVfsauv2VRSK65
-	Jwmcs8vjEcEOX1eo2Cilhjuo46W+R8UmOIpZT4d9vHuVRaVj/0ZUUoqhCekHvO7nvVdYwacA6cY
-	7cqReBMhJnK5zOctekr7puYOFKJD1iyH6PdqdudFxbP9NQSfkxEeKMlBi7btX8AwIT0i3susSqK
-	XdL4UYr0XlWFEAtKEEQiNkxB8cVTzQADjooQYlTZJQ==
-X-Received: by 2002:a5d:5f85:0:b0:439:b858:1d28 with SMTP id
- ffacd0b85a97d-43a04d90460mr20957133f8f.26.1773629524341; Sun, 15 Mar 2026
- 19:52:04 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4fZ0rY4wrKz2xS6
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Mar 2026 14:27:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1773631623;
+	bh=eOOmcvMV8q5x73xPyR44di4FD5fhaa55C3RW4AxZGqw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GYaOQd19wjD18+98Q/G8Y75Ed/uakPOGDewRh6VUD9b0M+duZOkWVGDiOqN47WeyJ
+	 7fSJbAl0iJzhYmE8HmBQENwk5lZIkW5BjRT63He+UoPsgh+oc4z+q/OVN0fxF2Min5
+	 BLa8n2IhJM6C4HFLI+luRtDEXymvrvZXRN8honVc=
+Received: from [7.249.246.159] ([124.70.231.41])
+	by newxmesmtplogicsvrsza53-0.qq.com (NewEsmtp) with SMTP
+	id 2EB9DEFE; Mon, 16 Mar 2026 11:11:43 +0800
+X-QQ-mid: xmsmtpt1773630703ts7qv2pe6
+Message-ID: <tencent_36163BB497CDB8AD5A2D8BD11B3DFBB80E0A@qq.com>
+X-QQ-XMAILINFO: OVFdYp27KdlJ7hi3npMz4REqRQo9Qowqq3UaaGeKnM/fRzmaKfih/X4bJCRsrH
+	 LgHSV01hyYr0j/UOPQ8XLGjEhbjPKwzM4IMkgmxoJJxWk5UlaW9nMeDF+A9nljE9QyR1CTV2jPoT
+	 IG0HqQmGCS1vO/Br1byEYHIjXfH1bqO/+uXgePd6uGJXP7+ocJQ+gLHpZeh4twm1FYcfIXiynIoz
+	 DZR11PApGyF2VcsI3y9rRSuE4YMC3ObpobSpbmaR201xx+I4iWimdx1uvOc9i9f4Aqj0S/aodU+4
+	 gtrpqkgGE8BsuwfvJrIXP9qJtL/k+HeJtZOE4HXXej8M/HU1ZVKpUTgRUEfiIU9vAXzsElWt2sVj
+	 p9dgAuqxO+WEB3AR3dticlSee8bqFWfgjmeYnIUW8yNiTyGCG6jrh38skz9tslBY8KcMK4OMjHu4
+	 OjjLQa4pDJla51Y1PnDWCJU/i4gyUhPs/4Me9Vt2zeZ10Lt8VFmoMmBgXnqo3Z++se7KQefhfLvt
+	 hlAcji6+4RJz9aqa0leJQrei4HUAcXWFdH46OYwRSD688oHrwYzDixwmaZWNzbv1I5XIe0V1kobZ
+	 8Db8IXDbk7ACy7WjCOBQxmLSHyNBE4a8P1FCaaeUU1wX5YA/LzAxAym5c1/9fLVIYx2WYL7FaVik
+	 EOKPam2V/gPBdl0nHCoJLELmGCh+K2DCJq5QLBWQdRkGSxclKAMh4GLFKu3P76FqKj9Qdml/4KI4
+	 xJCnEuI2WHnAHmm689wGeWfOJJMSrK6srhuUjDJlrSH2NyTzZ/hkVIsLp3q0MZrcUyIGqfk5R6u6
+	 v7Vx1G+qoU4OrngAjfQachUzQkuvVEqre/H0z/diIXxol9zDMJhSHhPxl4JxO1D47H9UTDGuSjHi
+	 VIERTm+0IRLtBvnzYc6DQV41xbUR4y0hum6IbxvSFOhlUSOZtG8vK+hQhNnHZyhvCn6CxJ0tqDJp
+	 qttGfs1svmvWXSS3PhHG4WzJCMpRRaQBxavVJxnhKJBWyMzME3KOwT5UNsBlO+/5fpmBydwoSoBe
+	 Wc7TlZCvWOem2zsI52+VHY4MVQU39E7w4ow7kKLQ==
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+Content-Type: multipart/alternative;
+ boundary="------------8vNwlNTjGYs30NuKb3s2cP3A"
+X-OQ-MSGID: <f5a31318-79fb-4684-8e21-5a7746ce23f4@foxmail.com>
+Date: Mon, 16 Mar 2026 11:11:43 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,105 +75,317 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <CAMhhD9i6UbLKFQYv=bqGydUwtrdDU0zZ81tcRsxgSHhZEUN7UQ@mail.gmail.com>
-In-Reply-To: <CAMhhD9i6UbLKFQYv=bqGydUwtrdDU0zZ81tcRsxgSHhZEUN7UQ@mail.gmail.com>
-From: Ajay <newajay.11r@gmail.com>
-Date: Mon, 16 Mar 2026 08:21:51 +0530
-X-Gm-Features: AaiRm52WCb7GR7NFAJItM16WQiCz_rTw1vKQ-oZZRC1bwx2ZdeDD5ApgiLcd_GU
-Message-ID: <CAMhhD9gWW9EvNvHdVS6EUePehyQOaqTGSB_1xbehQPYQe_v3zA@mail.gmail.com>
-Subject: Re: GSoC ( Ajay Rajera ): Support generating filesystems from
- manifests with mkfs.erofs
-To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.8 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_GMAIL_RCVD,
-	FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs-utils: lib: validate algorithm for encoded
+ extents
+To: Utkal Singh <singhutkal015@gmail.com>, hsiangkao@linux.alibaba.com
+Cc: linux-erofs@lists.ozlabs.org
+References: <20260315072806.17504-1-singhutkal015@gmail.com>
+ <20260315142249.4333-1-singhutkal015@gmail.com>
+Content-Language: en-US
+From: Yifan Zhao <yifan.yfzhao@foxmail.com>
+In-Reply-To: <20260315142249.4333-1-singhutkal015@gmail.com>
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=5.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FORGED_MUA_MOZILLA,FREEMAIL_FROM,
+	HELO_DYNAMIC_IPADDR,HTML_MESSAGE,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+	RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [162.62.58.211 listed in list.dnswl.org]
+	*  0.0 RCVD_IN_MSPIKE_H3 RBL: Good reputation (+3)
+	*      [162.62.58.211 listed in wl.mailspike.net]
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.0 RCVD_IN_MSPIKE_WL Mailspike good senders
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [yifan.yfzhao(at)foxmail.com]
+	*  0.0 HTML_MESSAGE BODY: HTML included in message
+	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
+	*      dynamic-looking rDNS
+	*  3.2 HELO_DYNAMIC_IPADDR Relay HELO'd using suspicious hostname (IP addr
+	*      1)
+	*  1.6 FORGED_MUA_MOZILLA Forged mail pretending to be from Mozilla
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	INTRODUCTION(2.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+X-Spamd-Result: default: False [2.80 / 15.00];
+	SPAM_FLAG(5.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2714-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:singhutkal015@gmail.com,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,linux.alibaba.com];
 	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[yifan.yfzhao@foxmail.com,linux-erofs@lists.ozlabs.org];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2715-lists,linux-erofs=lfdr.de];
 	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yifan.yfzhao@foxmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_MUA_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 35FE129442C
+	NEURAL_SPAM(0.00)[0.981];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FREEMAIL_FROM(0.00)[foxmail.com];
+	DKIM_TRACE(0.00)[foxmail.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 04E00294792
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-I previously submitted my two contributions as GitHub Pull Requests,
-but I have now familiarized myself with the git send-email patch
-workflow and plan to submit all future patches directly to the mailing
-list.
+This is a multi-part message in MIME format.
+--------------8vNwlNTjGYs30NuKb3s2cP3A
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Mar 2026 at 08:12, Ajay <newajay.11r@gmail.com> wrote:
+Hi Utkal Singh,
+Thank you for your contributions and the recent fixes.
+To help us manage the review process more effectively and avoid 
+confusion with duplicate emails,
+could you please consolidate these random fixes into a *single patch 
+series with a cover letter*in the future?
+This allows us to track the entire set of changes in one thread.
+Additionally, please follow these conventions for follow-ups:
+
+ 1. *Versioning:*If you modify a patch based on review feedback, please
+    increment the version prefix (e.g., v2, v3) in the subject line.
+ 2. *Resends:*If you are simply resending a patch without changes (e.g.,
+    to bump it), please add a *RESEND*prefix to the subject line instead
+    of treating it as a new version.
+
+This will greatly help in tracking which patches need to be merged.
+Regarding backporting patches to the kernel, please refer to commit 
+ee2709 in the erofs-utils repository for the preferred commit message 
+format.
+Specifically, please use square brackets [] to describe any 
+modifications you made to the source kernel commit during the backport 
+process.
+[ Gao may follow up with additional workflow details if needed. ]
+Thanks again for your help.
+
+Yifan Zhao
+
+
+On 3/15/2026 10:22 PM, Utkal Singh wrote:
+> Encoded extents use fmt field as algorithm index without checking
+> available_compr_algs bitmask. The non-encoded path already has this
+> check but the encoded extent path in z_erofs_map_blocks_ext() was
+> missing equivalent validation.
 >
-> Hello EROFS Maintainers and Mentors,
+> Add available_compr_algs consistency check for encoded extents,
+> following kernel commit 131897c65e2b.
 >
-> My name is Ajay Rajera, and I am here to express my interest in
-> participating in Google Summer of Code with EROFS, specifically for
-> the project: "Support generating filesystems from manifests with
-> mkfs.erofs" mentored by Chengyu Zhu and Gao Xiang.
+> Signed-off-by: Utkal Singh<singhutkal015@gmail.com>
+> ---
+>   lib/zmap.c | 13 +++++++++++--
+>   1 file changed, 11 insertions(+), 2 deletions(-)
 >
-> Over the past few weeks, I have been actively exploring and
-> contributing to the EROFS ecosystem to familiarize myself with the
-> codebase. Some of my recent contributions include:
->
-> 1. Addressing the excessive default verbosity in mkfs.erofs by
-> suppressing per-file processing messages (Issue #14 in erofs-utils). I
-> actually did it but couldn't submit the pr as it is restricted there.
-> 2. Improving and updating documentation within erofs-utils to fix
-> grammatical errors and outdated information. (
-> https://github.com/erofs/docs/pull/25#issue-4078189227 )
-> 3. Implementing support for EROFS device tables in the go-erofs
-> library, which involved parsing device tables from the superblock and
-> mapping block addresses. (
-> https://github.com/erofs/go-erofs/pull/18#issue-4078327809 )
-> I am looking forward to contributing more and keep learning from it.
-> I am drawn to this GSoC project because I have experience with file
-> system concepts and C programming, and I recognize the limitations of
-> currently generating images strictly from source directories or
-> tarballs. Implementing support for manifest files (like
-> composefs-dump(5), modified unix proto files, or BSD mtree(5)) will be
-> a highly valuable addition, providing better metadata control,
-> ordering control, and better performance for large filesystem trees.
->
-> I have started drafting my proposal so I also have a few initial
-> questions regarding the project:
->
-> 1. As I detail my implementation timeline and architecture in the
-> proposal, are there any specific edge cases or phases of the project
-> you recommend I focus on the most?
-> 2. The project mentions supporting at least two common manifest
-> formats. Is there a preferred format (e.g., composefs-dump vs. BSD
-> mtree) that you would recommend I target first for the initial
-> prototype?
-> Thank you for your time and for maintaining such a great project. I
-> look forward to your guidance and the opportunity to contribute
-> further during GSoC.
->
-> Best regards,
-> Ajay Rajera
+> diff --git a/lib/zmap.c b/lib/zmap.c
+> index 0e7af4e..a8d1ca6 100644
+> --- a/lib/zmap.c
+> +++ b/lib/zmap.c
+> @@ -630,8 +630,17 @@ static int z_erofs_map_blocks_ext(struct erofs_inode *vi,
+>   			if (map->m_plen & Z_EROFS_EXTENT_PLEN_PARTIAL)
+>   				map->m_flags |= EROFS_MAP_PARTIAL_REF;
+>   			map->m_plen &= Z_EROFS_EXTENT_PLEN_MASK;
+> -			if (fmt)
+> -				map->m_algorithmformat = fmt - 1;
+> +			if (fmt) {
+> +				unsigned int afmt = fmt - 1;
+> +
+> +				if (afmt >= Z_EROFS_COMPRESSION_MAX ||
+> +				    !(sbi->available_compr_algs & (1 << afmt))) {
+> +					erofs_err("unknown algorithm %u for encoded extent, nid %llu",
+> +						  afmt, vi->nid | 0ULL);
+> +					return -EOPNOTSUPP;
+> +				}
+> +				map->m_algorithmformat = afmt;
+> +			}
+>   			else if (interlaced && !((map->m_pa | map->m_plen) & bmask))
+>   				map->m_algorithmformat =
+>   					Z_EROFS_COMPRESSION_INTERLACED;
+--------------8vNwlNTjGYs30NuKb3s2cP3A
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Hi Utkal Singh,</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">
+</span></div>
+    <div class="qwen-markdown-space"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Thank you for your contributions and the recent fixes.</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">
+</span></div>
+    <div class="qwen-markdown-space"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">To help us manage the review process more effectively and avoid confusion with duplicate emails,</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">could you please consolidate these random fixes into a </span><strong
+    class="qwen-markdown-strong"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); font-weight: 600;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">single patch series with a cover letter</span></strong><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);"> in the future?</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">This allows us to track the entire set of changes in one thread.</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">
+</span></div>
+    <div class="qwen-markdown-space"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Additionally, please follow these conventions for follow-ups:</span></div>
+    <ol class="qwen-markdown-list" start="1" dir="auto"
+style="margin: 1rem 0px; padding: 0px 0px 0px 1.625em; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><li
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); unicode-bidi: plaintext;"><strong
+    class="qwen-markdown-strong"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); font-weight: 600;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Versioning:</span></strong><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);"> If you modify a patch based on review feedback, please increment the version prefix (e.g., v2, v3) in the subject line.</span></li><li
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); unicode-bidi: plaintext;"><strong
+    class="qwen-markdown-strong"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); font-weight: 600;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Resends:</span></strong><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);"> If you are simply resending a patch without changes (e.g., to bump it), please add a </span><strong
+    class="qwen-markdown-strong"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); font-weight: 600;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">RESEND</span></strong><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);"> prefix to the subject line instead of treating it as a new version.</span></li></ol>
+    <div class="qwen-markdown-space"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">This will greatly help in tracking which patches need to be merged.</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">
+</span></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Regarding backporting patches to the kernel, please refer to commit ee2709 in the erofs-utils repository for the preferred commit message format.</div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Specifically, please use square brackets [] to describe any modifications you made to the source kernel commit during the backport process.</div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">[ Gao may follow up with additional workflow details if needed. ]</div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">
+</span></div>
+    <div class="qwen-markdown-space"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"></div>
+    <div class="qwen-markdown-paragraph"
+style="margin: 1rem 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span
+    class="qwen-markdown-text"
+style="margin: 0px; padding: 0px; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227);">Thanks again for your help.</span></div>
+    <p>Yifan Zhao</p>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 3/15/2026 10:22 PM, Utkal Singh
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20260315142249.4333-1-singhutkal015@gmail.com">
+      <pre wrap="" class="moz-quote-pre">Encoded extents use fmt field as algorithm index without checking
+available_compr_algs bitmask. The non-encoded path already has this
+check but the encoded extent path in z_erofs_map_blocks_ext() was
+missing equivalent validation.
+
+Add available_compr_algs consistency check for encoded extents,
+following kernel commit 131897c65e2b.
+
+Signed-off-by: Utkal Singh <a class="moz-txt-link-rfc2396E" href="mailto:singhutkal015@gmail.com">&lt;singhutkal015@gmail.com&gt;</a>
+---
+ lib/zmap.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 0e7af4e..a8d1ca6 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -630,8 +630,17 @@ static int z_erofs_map_blocks_ext(struct erofs_inode *vi,
+ 			if (map-&gt;m_plen &amp; Z_EROFS_EXTENT_PLEN_PARTIAL)
+ 				map-&gt;m_flags |= EROFS_MAP_PARTIAL_REF;
+ 			map-&gt;m_plen &amp;= Z_EROFS_EXTENT_PLEN_MASK;
+-			if (fmt)
+-				map-&gt;m_algorithmformat = fmt - 1;
++			if (fmt) {
++				unsigned int afmt = fmt - 1;
++
++				if (afmt &gt;= Z_EROFS_COMPRESSION_MAX ||
++				    !(sbi-&gt;available_compr_algs &amp; (1 &lt;&lt; afmt))) {
++					erofs_err("unknown algorithm %u for encoded extent, nid %llu",
++						  afmt, vi-&gt;nid | 0ULL);
++					return -EOPNOTSUPP;
++				}
++				map-&gt;m_algorithmformat = afmt;
++			}
+ 			else if (interlaced &amp;&amp; !((map-&gt;m_pa | map-&gt;m_plen) &amp; bmask))
+ 				map-&gt;m_algorithmformat =
+ 					Z_EROFS_COMPRESSION_INTERLACED;
+</pre>
+    </blockquote>
+  </body>
+</html>
+
+--------------8vNwlNTjGYs30NuKb3s2cP3A--
+
 
