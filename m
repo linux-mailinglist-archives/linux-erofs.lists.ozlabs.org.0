@@ -1,91 +1,95 @@
-Return-Path: <linux-erofs+bounces-2794-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2795-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qAt3NJE7uWmvwAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2794-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:31:29 +0100
+	id KGWtCz88uWkowQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2795-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:34:23 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0C952A8D09
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:31:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B8022A8E55
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:34:22 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fZqXt2S5Dz2yjm;
-	Tue, 17 Mar 2026 22:31:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fZqcC3yftz2yjN;
+	Tue, 17 Mar 2026 22:34:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::1033"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773747086;
-	cv=none; b=MFdIwV7nbufpfV2ZCnlvHH+6un4hyNxGd45RDuZOIdAVU8pVEI7NdspMrdnUIebiEk8Xb4Pvheba2JqpjzSusO5XyRLlVaR1Fiz8vmXQybeW23L4UNWI7Ftp+rj85owbDLudllNzcz4DUvlaL6ImlkqUCAlckCAlHlNQRLj5V/HsDFNEccKhV80qvKHR8uA26Ct2Xc6HuzIRWWK2X/AoSPUWwVFwJFDkShsuxJZjz40M8S0Rge9UeYhw43vwfOPQyjaZX1IOoMPCT+C5xFwJMkmMPVnEftXA/EB8FvqX368Ix2LcMIcjggpCBrtzZAFsKBfsveaG+F6A4/1a0irXwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773747086; c=relaxed/relaxed;
-	bh=xSy6sa0+9PbGciNrN1V6nLAo6fr6mLFfOa8lnmjZkWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UAwqrkRlImgY9A677UM/fMegl49eHK/HRcZxOjtJDmmTcRP9lhxcZYI1NjTQgRsF/+uFFCtku+qFKLGC6rxERiYAaz3l/uyClJkTeT141Xjw6Un8XrxtQmGLjHsrykClEwMVzwoBvJFYYRQJldSxcZwjZUK3AUngMk9k3VN1gmHgkpto8QG+yflLh61ArRZKS1c64bamiO6WAa+72NG7W3sQcF9Bb4MHzTwQt1MuVNtY98ledUHbBP+yW3Wo/az9hz60p3z5zfkYItJABhFU2sXLRIfQX4IoK8pbTgk2KmNa4DwZ9uq10sibHEjy3VSldCVuRdKNmAxW2+oqMu5zQA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Ww1v8Aor; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1033; helo=mail-pj1-x1033.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::f30" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773747259;
+	cv=pass; b=OUiVK0QmaDs/FYA9lFmD/LHxBTQ/PKH4EyJc6VwV8wZzzaK/bSzY9D5Kt7GiqWasLYO0Fkoe779t87v8LuKHbd2+W0s8tvhbfeAJvKGvY3SOsF6YdTGMIWkciP7waIAWWU6D8Ctxt4xFFCrJAi0iXCoOWc5cjSemnwh8BuFzwTnEb3mjp4dP0EzDGK4jFc35NLVRtZzRvssPKDoiB4NQzQHDFNI6PJJ0+p72ej/TRPwoRVmyl6NK0arupsra4WGoagQ3bBf4EwugD3Iva4x4ilqqvqObsiurrpL6FfP/ZiohlEnVYOU3S9Wzri5fWdoz0h+9Fy9a+kTJkNvG4rPPMg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773747259; c=relaxed/relaxed;
+	bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fvLSnbRAyRn/J7rXUyIGNH1r0FKRqXdkdhXsQvaaHi3vvVVB5U2jmCJI95unhFRD1NbvB+7AoTC4SX9YQ9s1LydSvvH2s8DywYWGnECrefSYbGnEDKzNmWChDgCA4D6UU+GQ4k1GLQAmdaOBzhWVBOczjx3d1Mxs9oislU81eRiZLOBJ/DBPZa+fUFUtnb530HM3SFhfYKnIBQD1fqmbjA3BG41uUveR03SLWanicDUE8rInBi9Z817+qfxKOTCh4LWwWXPLqfjvtvPWUwoWr6rzi7Ta3I0p0qe1+f8uMhC2b5/CZaZIVtRl2xwCnAPVJDwDGq2etz4VfQunENnruw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Sp5b03bA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::f30; helo=mail-qv1-xf30.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Ww1v8Aor;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Sp5b03bA;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1033; helo=mail-pj1-x1033.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f30; helo=mail-qv1-xf30.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZqXs3BYCz2yjN
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 22:31:25 +1100 (AEDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-3597822d6d8so352439a91.3
-        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 04:31:25 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZqcB4msYz2yj1
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 22:34:18 +1100 (AEDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-899f3cc8e4dso5287096d6.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 04:34:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773747256; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bEuciEZJmWqc5QDCr5m4/wDR20w7Yyf/SIyWE7U/KnNnRyuaEPa90vuj8n1MGq/r3g
+         DnwmzeENfxycFuuL2qFwryEM25/BppJhueaJ7tHueAY9OcXwwj2SlBjezX7whW2Hb3aV
+         i9vPAYPWamNFSYogpJPPr7E0G6ZujqHhwIFoQ1+EwHzn+sa6xkhVWiCckr+hecjh1smq
+         /0I8W+OfNqntRKmOSyRmVpStgMQcfsEaF7H42yWkIRt2ot1PtS8KzciY14XQr+Ld5PVi
+         D2HC4SnIECi8Lj+gSvQz+o/BSXLL+sR8GecSkshvNlQKY8nW8W/u6A05OxpZnB8YHCzk
+         Q7bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
+        fh=MbNNyKNJAT9O2DmogO2mgwrEz96kfBdMTN4QFZAjVhk=;
+        b=Sv2QIncYDT3ChjuHIlnHMo3xUgFr6a1E3JgRdPdeoAMionfNRW/OvY2+fSoZb5HqWd
+         MCrj9v1vbOxp9WXZ15UdUQbmF0TkTOEfLJJxLUYYcSUYwC15r6tMu24ybMvpWvkNdgLC
+         Gf53Uwdt8Tzgyp2x8vwiGxRPjqp+KrhN4cbxsOpfgW4U63slbCXA2hZlNezUP38P2mXv
+         rluYMBhrYfVh0RKKNWcV1pRgi1v6gRM48knNUsptBbE+bx0ai1B8qO2t9B0nrzfJn/bU
+         IqaMckyyvdXMyyUtyP4MSBR+4miyiVoW9LeqRvhc20ILeh+xudcoBa2gQ7t72gmcaAq7
+         QUQg==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773747083; x=1774351883; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xSy6sa0+9PbGciNrN1V6nLAo6fr6mLFfOa8lnmjZkWI=;
-        b=Ww1v8AorcOgIHbygb7uKFdaBFVGJ8kWUP7Gkx5wUWbkIoy33RTKiB1KsJdrnBtp+aV
-         Z6D4AVX9mjndkoiWz03QuDtr1m0SgHm579x99l9G8hO6b0elrEE1bDMXvyaZ6iRMnFIf
-         6U+aLJjrinvwVAeKwUy0sSixAtttJryxyOjk2IOPgwXDi5usN7JLRS99m9s5jGrtNHnw
-         uFK2GChJDVXu+oUMlyYQQJdFZXgeVmbhS90RkDgsIBLcejHap5sfd+na8y4wlpizUYoM
-         TXutNKqWKJcMkFmc8REkOpAgOK5Jgv3jTv2VGtWyIcg5Tb7F1Cfg6OAc2UfFx6T0bnqy
-         DOMw==
+        d=gmail.com; s=20230601; t=1773747256; x=1774352056; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
+        b=Sp5b03bA1p+x21sKlgF178PHVIB1ltq3q0zzvKyDR96o+fZ9lADP6Buc8dhXimp9ub
+         nDNICbHKS1MnWtsaEQszmt+sLIoGusArOI+KsohJy2ledxn0E00RRKpVU9R3kRbXUcno
+         zTF7DOzCwPxbVzd98dqb0ad3RZphjj2WGpq7eP1z7XmE1VOeGy/6BleMknfoJc0yzBBT
+         9ZJd18t3mXuMwj4oTawYseE3CCfHg+V0uSKuJ9jBL0+WqBu5uA8C/YcQo+2mWpdEWxji
+         Lx2Xg3fap3jfZ2DDyMkeTqr+y4O2fP3pPRjZcRfRu7+Xx3WJG65abGhkpD+TUlFPWTfd
+         clDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773747083; x=1774351883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xSy6sa0+9PbGciNrN1V6nLAo6fr6mLFfOa8lnmjZkWI=;
-        b=a7+8qxoG//f4vpD7GZj1sq2Ikl4iYk9hv/kiCXfdFtsjm4hXQv0KSHJM8+paqZJ/Oe
-         DbEgktcOlTL7xX7qaHxakcJ7fusJcofizzYE+NMVI0LVx6XjjeRwnBemnREyef+SgY6I
-         CSEvLFin092IhyEjxDFJ2SNK1+lh02TlJ07BZppfWNxdGNB9W688cQ6I+FeWIFg5k+Ei
-         TpBfzqzit78E2/MBfCqVidy8f5GJaDxOlqzJy+VGuQE7DrQ2Cp1T2LuUVbb6G0oPtH8u
-         Dg0xdxLWLfNf5SUBqlGUErIMOjFSCkOvzA42EhDEIvHkRXie/Uqu7jjoh5Y9fVLnpiTa
-         SDXw==
-X-Gm-Message-State: AOJu0Yx1ZItiwI8/QySrCO8zDx9Q9VurrCG3IHMA4T599FTEpU6YY7Rf
-	wjylrtHXVgDxS5x/072vlYpXzfFOGcO4xXaCvFvWUgcsRAlE3LKQR1PylTu/rl1J
-X-Gm-Gg: ATEYQzwa1MowwVXhCjUa52sw7tSszFzKMSWIDxny/z2A+ykI3UkBdCB8Aic4B2zPS8s
-	HM8o093vS4XJ+Pc9Ac1+Z4F3yFpsBZ2j9Ofuxu7IWI3IipN71fYR/9BkQs5I7LOuaTfhOAc9D/v
-	1drAnWG0t5TSTqJ+rCekzb5p39Qf2NxFCODw4gxIHH623HcbjtioOC3SNx7zKuPMEJS8nDC4gMu
-	AA+aTsHu0GFDBZKjMkolJL+bFCfxY5o1td5USpjgkI1uiB1fkjAbX/mwoWFwPEgSiV/FIwVy0+l
-	aBYPlxZW0V0G7enrb7cvslFwlclnr5WkeIqoqYL+KSv+hk7nHy6VUXdyAr8JBcqYOR5TBRA96cA
-	h/K0NBAFaW2XQs+heGgLNGE1yUS88dtRTDfMdoSYVEF1q/Mfo65vzEsL4dgN2PoyOPv4xOZIGNs
-	vyGbshZRRDKTT+dDai58HkHDvPXJlJlEm9Gll3O/PwKdshsPMbSFwPRtmEjwsHAJ5y3iT+szI7d
-	9O/XDtE9A9MhiCp9DegeB5+P0/vM7gYCHYYGGOhXEb1RFY7
-X-Received: by 2002:a17:903:f83:b0:297:f3a7:9305 with SMTP id d9443c01a7336-2aecaafcd01mr104979815ad.6.1773747082903;
-        Tue, 17 Mar 2026 04:31:22 -0700 (PDT)
-Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b048527a19sm97753385ad.7.2026.03.17.04.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 04:31:22 -0700 (PDT)
-From: Utkal Singh <singhutkal015@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	yifan.yfzhao@gmail.com,
-	Utkal Singh <singhutkal015@gmail.com>
-Subject: [PATCH v3] erofs-utils: lib: validate h_shared_count in erofs_init_inode_xattrs()
-Date: Tue, 17 Mar 2026 11:30:21 +0000
-Message-ID: <20260317113021.88187-1-singhutkal015@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <PASTE-MESSAGE-ID-HERE>
-References: <PASTE-MESSAGE-ID-HERE>
+        d=1e100.net; s=20251104; t=1773747256; x=1774352056;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
+        b=Z00fsFj+ttM6PoVbIpfX2GC4Zw4gZL7Sf9qyyWEN2AIlaGiJ1+WlK4cm7YE/jPc88Q
+         fbS8PIODlY0mrogfokIfBFmvaQ9UcXwglkMId0tj8554omxwRJW7/hlziK7WVJDgPtep
+         HPsyhQZ2787vMZr+tCYvcD9NgTLM76XCrtxkE962WXc++/aJJhBGz4CzWSE3ekYMUwup
+         yDDv67CUyH0p+lUymH4cyn6U9RNTi0VmMoImgYP+wbuxx1Bd3L2etAlAVObSSUOUnjxt
+         lLoRNbmZs9KE1kW9itXlbGnAFzoBWUFBvnBeWewNaPXmkxM+oN/2pCTor6zAMkd//YrT
+         zBMg==
+X-Gm-Message-State: AOJu0YyRTcw/u2QoVPtrcBwtF11+3GrWK6EO2U24+6usIo0TqfqE8KbX
+	jC9UWyd6pBX1Y22hn7z9aKpuwiPkJMcE2UF52/+H2isVVID6CEqlEv5Ccf0S33bnfhJjY71vj6J
+	F13OJ8WtE+HsKJwiKMahNzE5n2zGAJgw=
+X-Gm-Gg: ATEYQzxwLnGEbQyrbjV28H86goLNGhuaV+/TdMsOD7u8fQmDBnIoNg+MYfOj6TSqiGM
+	TLIOPXDnEpcskMXmUf07wvfZjYoNqHB93rjPDusSmPwlSZjMAzQecSPnsAP6YdlyMQOZ2VMWlSn
+	jAEAdSRbCNR1hhSSUuQJ+eIDSAKCW8ffDJCayQS91ESRv1ixvDaoaUMNw5Thh21czsJNawwCsfw
+	yWxmw/KzMA+crarHUaJucK0aUC3VBa0ELbqXL+6shwdUIxGNiAF9T3fwOh/ar2jiLdd+QV+l8N9
+	DTp9ZL3mlMYFRoqkDLvX4MnQTKUcVkrqPWXXqzDt+xL//TQZL6zlpl/zJkFgRECwpJV8jQ==
+X-Received: by 2002:a05:6214:4784:b0:89a:4b00:bf42 with SMTP id
+ 6a1803df08f44-89a81ec1657mr159540786d6.4.1773747256344; Tue, 17 Mar 2026
+ 04:34:16 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -97,116 +101,204 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Report: 
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [117.203.246.41 listed in zen.spamhaus.org]
-	* -0.0 SPF_PASS SPF: sender matches SPF record
-	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-	*      envelope-from domain
-	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-	*      valid
-	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
-	*       domain
-	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-	*  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends in
-	*      digit
-	*      [singhutkal015(at)gmail.com]
-	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
-	*      [singhutkal015(at)gmail.com]
-	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
-	*      trust
-	*      [2607:f8b0:4864:20:0:0:0:1033 listed in]
-	[list.dnswl.org]
-X-Spam-Level: ***
+References: <20260317111743.84988-1-singhutkal015@gmail.com> <e8729997-91ca-4bf0-bb52-78eec7fc7f2f@linux.alibaba.com>
+In-Reply-To: <e8729997-91ca-4bf0-bb52-78eec7fc7f2f@linux.alibaba.com>
+From: Utkal Singh <singhutkal015@gmail.com>
+Date: Tue, 17 Mar 2026 17:04:08 +0530
+X-Gm-Features: AaiRm508CYLt5rzCPWYi-qLhDKX5cDjCzZZuejoMwZOowlftoegSh0wz0Cm1dVQ
+Message-ID: <CAGSu4WMt34AGeESUqoqaVzNEfQBNtkJAwLY+dHAsd92AB5X2Fw@mail.gmail.com>
+Subject: Re: [PATCH] erofs-utils: lib: validate h_shared_count in erofs_init_inode_xattrs()
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, yifan.yfzhao@gmail.com
+Content-Type: multipart/alternative; boundary="00000000000022c4ae064d36b7fc"
+X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [5.80 / 15.00];
-	SPAM_FLAG(5.00)[];
+X-Spamd-Result: default: False [-0.70 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2795-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	GREYLIST(0.00)[pass,meta];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:yifan.yfzhao@gmail.com,m:yifanyfzhao@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
 	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2794-lists,linux-erofs=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-0.471];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: E0C952A8D09
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.368];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[lists.ozlabs.org,kernel.org,gmail.com];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 1B8022A8E55
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-h_shared_count is read from the on-disk xattr ibody header and used
-to size a heap allocation and drive a loop reading shared xattr IDs.
-If the value is corrupted to exceed the space available in xattr_isize,
-the loop reads past the ibody region and the malloc is oversized.
+--00000000000022c4ae064d36b7fc
+Content-Type: text/plain; charset="UTF-8"
 
-This does not affect system stability but results in silently
-processing garbage data from corrupted images across all library
-consumers (dump.erofs, erofsfuse, rebuild).
+Hi Gao Xiang,
 
-Validate h_shared_count against the available ibody space.
-Return -EFSCORRUPTED on failure.
+Thanks for the review. I just sent v3 which uses the multiplication form as
+you suggested.
 
-Reproducer:
-  mkdir testdir && echo hello > testdir/a.txt
-  setfattr -n user.test -v val testdir/a.txt
-  mkfs.erofs test.img testdir
-  # corrupt h_shared_count (offset = nid*32 + inode_size + 4) to 0xFF
-  # then: fsck.erofs --extract=/tmp/out --xattrs test_corrupted.img
-  # Without patch: silently processes invalid shared xattr IDs
-  # With patch: returns -EFSCORRUPTED
+Best regards, Utkal Singh
 
-Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
----
- lib/xattr.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Tue, 17 Mar 2026 at 17:00, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 565070a..9d52a18 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -1182,6 +1182,13 @@ static int erofs_init_inode_xattrs(struct erofs_inode *vi)
- 
- 	ih = it.kaddr;
- 	vi->xattr_shared_count = ih->h_shared_count;
-+	if (vi->xattr_shared_count * sizeof(__le32) >
-+	    vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)) {
-+		erofs_err("invalid h_shared_count %u in nid %llu",
-+			  vi->xattr_shared_count, vi->nid | 0ULL);
-+		erofs_put_metabuf(&it.buf);
-+		return -EFSCORRUPTED;
-+	}
- 	vi->xattr_shared_xattrs = malloc(vi->xattr_shared_count * sizeof(uint));
- 	if (!vi->xattr_shared_xattrs) {
- 		erofs_put_metabuf(&it.buf);
--- 
-2.43.0
+>
+>
+> On 2026/3/17 19:17, Utkal Singh wrote:
+> > erofs_init_inode_xattrs() reads h_shared_count from the on-disk xattr
+> > ibody header and uses it to size a malloc and drive a loop that reads
+> > shared xattr IDs.  If h_shared_count exceeds the space available
+> > within xattr_isize, the loop reads past the intended ibody region
+> > and the malloc is oversized.
+> >
+> > Validate that h_shared_count does not exceed the number of __le32
+> > entries that fit after the ibody header.  Return -EFSCORRUPTED with
+> > a diagnostic message on failure.
+> >
+> > Reproducer:
+> >    mkdir testdir && echo hello > testdir/a.txt
+> >    setfattr -n user.test -v val testdir/a.txt
+> >    mkfs.erofs test.img testdir
+> >    # corrupt h_shared_count (offset = nid*32 + inode_size + 4) to 0xFF
+> >    # then: fsck.erofs --extract=/tmp/out --xattrs test_corrupted.img
+> >    # Without patch: silently processes invalid shared xattr IDs
+> >    # With patch: returns -EFSCORRUPTED
+> >
+> > Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+> > ---
+> >   lib/xattr.c | 8 ++++++++
+> >   1 file changed, 8 insertions(+)
+> >
+> > diff --git a/lib/xattr.c b/lib/xattr.c
+> > index 565070a..5888602 100644
+> > --- a/lib/xattr.c
+> > +++ b/lib/xattr.c
+> > @@ -1182,6 +1182,14 @@ static int erofs_init_inode_xattrs(struct
+> erofs_inode *vi)
+> >
+> >       ih = it.kaddr;
+> >       vi->xattr_shared_count = ih->h_shared_count;
+> > +     if (vi->xattr_shared_count >
+> > +         (vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)) /
+> > +         sizeof(__le32)) {
+> > +             erofs_err("invalid h_shared_count %u in nid %llu",
+> > +                       vi->xattr_shared_count, vi->nid | 0ULL);
+> > +             erofs_put_metabuf(&it.buf);
+> > +             return -EFSCORRUPTED;
+> > +     }
+>
+> Again, why not `vi->xattr_shared_count * sizeof(__le32) >
+>         vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)`?
+>
+> Thanks,
+> Gao Xiang
+>
 
+--00000000000022c4ae064d36b7fc
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><p>Hi Gao Xiang,</p>
+<p>Thanks for the review. I just sent v3 which uses the multiplication form=
+ as you suggested.</p>
+<p>Best regards,
+Utkal Singh</p></div><br><div class=3D"gmail_quote gmail_quote_container"><=
+div dir=3D"ltr" class=3D"gmail_attr">On Tue, 17 Mar 2026 at 17:00, Gao Xian=
+g &lt;<a href=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.alibab=
+a.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex"><br>
+<br>
+On 2026/3/17 19:17, Utkal Singh wrote:<br>
+&gt; erofs_init_inode_xattrs() reads h_shared_count from the on-disk xattr<=
+br>
+&gt; ibody header and uses it to size a malloc and drive a loop that reads<=
+br>
+&gt; shared xattr IDs.=C2=A0 If h_shared_count exceeds the space available<=
+br>
+&gt; within xattr_isize, the loop reads past the intended ibody region<br>
+&gt; and the malloc is oversized.<br>
+&gt; <br>
+&gt; Validate that h_shared_count does not exceed the number of __le32<br>
+&gt; entries that fit after the ibody header.=C2=A0 Return -EFSCORRUPTED wi=
+th<br>
+&gt; a diagnostic message on failure.<br>
+&gt; <br>
+&gt; Reproducer:<br>
+&gt;=C2=A0 =C2=A0 mkdir testdir &amp;&amp; echo hello &gt; testdir/a.txt<br=
+>
+&gt;=C2=A0 =C2=A0 setfattr -n user.test -v val testdir/a.txt<br>
+&gt;=C2=A0 =C2=A0 mkfs.erofs test.img testdir<br>
+&gt;=C2=A0 =C2=A0 # corrupt h_shared_count (offset =3D nid*32 + inode_size =
++ 4) to 0xFF<br>
+&gt;=C2=A0 =C2=A0 # then: fsck.erofs --extract=3D/tmp/out --xattrs test_cor=
+rupted.img<br>
+&gt;=C2=A0 =C2=A0 # Without patch: silently processes invalid shared xattr =
+IDs<br>
+&gt;=C2=A0 =C2=A0 # With patch: returns -EFSCORRUPTED<br>
+&gt; <br>
+&gt; Signed-off-by: Utkal Singh &lt;<a href=3D"mailto:singhutkal015@gmail.c=
+om" target=3D"_blank">singhutkal015@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 =C2=A0lib/xattr.c | 8 ++++++++<br>
+&gt;=C2=A0 =C2=A01 file changed, 8 insertions(+)<br>
+&gt; <br>
+&gt; diff --git a/lib/xattr.c b/lib/xattr.c<br>
+&gt; index 565070a..5888602 100644<br>
+&gt; --- a/lib/xattr.c<br>
+&gt; +++ b/lib/xattr.c<br>
+&gt; @@ -1182,6 +1182,14 @@ static int erofs_init_inode_xattrs(struct erofs=
+_inode *vi)<br>
+&gt;=C2=A0 =C2=A0<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0ih =3D it.kaddr;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0vi-&gt;xattr_shared_count =3D ih-&gt;h_share=
+d_count;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (vi-&gt;xattr_shared_count &gt;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(vi-&gt;xattr_isize - sizeof(struct=
+ erofs_xattr_ibody_header)) /<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sizeof(__le32)) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0erofs_err(&quot;inval=
+id h_shared_count %u in nid %llu&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0vi-&gt;xattr_shared_count, vi-&gt;nid | 0ULL);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0erofs_put_metabuf(&am=
+p;it.buf);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EFSCORRUPTED;=
+<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+<br>
+Again, why not `vi-&gt;xattr_shared_count * sizeof(__le32) &gt;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 vi-&gt;xattr_isize - sizeof(struct erofs_xattr_=
+ibody_header)`?<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+</blockquote></div>
+
+--00000000000022c4ae064d36b7fc--
 
