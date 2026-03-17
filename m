@@ -1,87 +1,91 @@
-Return-Path: <linux-erofs+bounces-2780-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2781-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0AVxCdfeuGnDkgEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2780-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:51 +0100
+	id 8GWoKdjeuGnDkgEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2781-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:52 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 298B02A3D79
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D64722A3D80
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fZfmM1D79z2yVP;
-	Tue, 17 Mar 2026 15:55:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fZfmN5r3Zz2yh4;
+	Tue, 17 Mar 2026 15:55:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::1034"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773723347;
-	cv=none; b=U+hhVKWAdAX3XxLrhexpTpy8l7bYLYGXdOUhnBJI+f89k+XstJk7RQQzzUFv7s5uSeatkKF5qKTVe39YdCeyaN3XWj0wAOPYYvwdAU/JpXU1EAJ/O2R6q/aCxK/4EmcMgBUmbm4eAjbsJ6eDbqe7OO6ZnKm3BLBeTRcTo0Pfz7p0RbRQdDPfqj/eJC45CLNHRoLcqrYXz5dyNvhnVOTyK3CaD2lUMGVpMJmeu/r2XGQG8LqczI6U08bIeUo7HEsqZ4JkWxk8WKCajz8++nghsma4e9kW3T/G3wYUOO/3X1zb/TbxNV1KeBqkJ/842CA9UEV2jhPyPOKI7X2d7dw1PA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::102c"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773723348;
+	cv=none; b=YOOPnVIp1WeWZ5Hon0lyqnxeY3gOIrI0EpYXCYa1L6LKhwZd8klkWm3bUjYnA5lIdlfdY+i4vg0ASkfK/Z531DDFDQSPgOu80TmbNfw+qjUxTabiVFiEClRVj1Salniwu0jHdNM9XOHv9movR5BUq93uIn5iRLmAzb0A0ONRJJu8DNuiWn1zb1qvSSlPlN2GlGiyfi4ddFQNVtydKM+FzNQy1pBW4lLWEb6pPHh+sygoV/oZBAzjX5QO+6oVtHVhu6tAILlNLgdo1M6pbUkDDyOfE9f1/iYrz+XkfXQ/8jDeq87ojuU1X1j+B1kPCdrNUHlaS1sPlrF5YAFKBxFYCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773723347; c=relaxed/relaxed;
-	bh=yUxnPXR47J19jD+1eRZGEuHu918vxubZzAYwOrwyxf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QsmzoP/1snxaCbDVEJbzcya9hPwu8E+KUUTrVezQXAtc5uZtyCzOkvXsAE1lhhrJZY5JpcJ+UyyHM3iq7p3ZOQn0TBxHVIwTmtrUbhwaYyt2/wgfYzd0M/0WATFApS+CsBNaclfhDdgjy1KVpKhK+Jiso9QK8O09tQvP/Mjx1D9v6JR+Owusu6g+12+Gn6uazR9mthcVLbAI5hDEbTPlMo+8bKft3C/uwWd9vUCvQWt0IHycOtyjH8d+Ryv82XGdCTG5Bh49QOlJztKGyqwGWixaSKxm43K99EphjFH+cpkC9Ph3cABlbbVO+8VlK24Kq8TEVlQvlBEtnG964Nm2fw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mHDVfldB; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1773723348; c=relaxed/relaxed;
+	bh=VStVtsktwzKN2X8r5SzWBGVngBWShJt1PvkrFSc4YrI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jvaP4F407pSH0uX8dbg5UDumdt8RT0TbEQXB+TEyFRvpRQ7YJAHeXApvsMvF7+WwU0h83FaeHCaUaTyzpm9rUbn84w0xac43bXuQZP3+FrSyyEhi3uKWgZ7TnSN9Tc/GgwCmYueA5jVtOzXnoCahK813cSpFzQo0AH9IoysPnha5Sxf4Oc4IAyNA/mFUzte4h63Q8jYV8I9+G6CXwpsBQD8/691SjEQpOYPcvTARKYrcdsbaXb1NBaDcIF3A9+b07jyES4wHNYWa3ekjNVduZsrW8nH74lG3+hee53zd+yTlvU65EstomKOaS80QaLj2dzW1H5/rc+3aWMV/C6MOaA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=juz+Hh7c; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::102c; helo=mail-pj1-x102c.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mHDVfldB;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=juz+Hh7c;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102c; helo=mail-pj1-x102c.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZfmL2lPWz2xb3
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 15:55:45 +1100 (AEDT)
-Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-35a1275242bso340021a91.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Mar 2026 21:55:45 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZfmN07zXz2xb3
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 15:55:47 +1100 (AEDT)
+Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-35b982990aeso111168a91.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Mar 2026 21:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773723343; x=1774328143; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yUxnPXR47J19jD+1eRZGEuHu918vxubZzAYwOrwyxf0=;
-        b=mHDVfldBZbNR8xZB0TrQ1xPycui1RY37Zy2tXqhrvRpOFuByV3XsHBL/3sn8xeyZLi
-         V4OaFHsldw+jnTJYkr6pFss0yTLTn3L+HCETwkZji3A6cz/gJt3fu96uFPGlUzJjXdjW
-         NYxo3wPu2Q1E6t0G9SIBrFY5AsMTnZ/4j7krMk9GNMSyN16fbJtroxBRDCoSUfkPCu+l
-         AeL2STWGKSFn+NuALcgcdxUh4yV13452PEBymlxNkv/1NrtNqMYzf7DLe7WR9jtmg3Xv
-         4iWVzZfU0sWdPwvtWATFMSoT4gdjLWLJCjQp46baJ28LeOOGpCI+XYJaveTPy44LyrER
-         Y3hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773723343; x=1774328143;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773723345; x=1774328145; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yUxnPXR47J19jD+1eRZGEuHu918vxubZzAYwOrwyxf0=;
-        b=EyUor92+1OxO7uvWEWvE/X2Fx/AP1Ks4qw5v8D8Y5iOYgW0Y8a79kCECgJDhwB0pSS
-         olemfSnvFcMB3wKFAy0lljpCFoOtFbea7I2OwlKFhy+WKgYoSSUKXjTAHsxtLYDHP3q4
-         22hyzg0GsBr8mdzbDNf1y30RT1A7XYqOKJYYrBPqX+G2zROwC18OCJu0rHCoChUG4Qdv
-         hFvUEWe7txFo3dC5o4Bu/6OtaDdq86hLoPhAS1LG2N3URkEc/8g/cS8CrcT8Tr37aZHH
-         s4flB5X9S1XDz+8/RnYKiO/9wPc7SeqvvPzb8PDKuL2JmVl2aOsb+wYbIbLADvVGoA5w
-         rALA==
-X-Gm-Message-State: AOJu0YwhtrZy2cqdCYUAmV1f63fNIQcbtmga3qZlXA/9pk6hxGtqVY4H
-	9b1Es5mDZhLCYth8EFmvZm2Bi1cUKmW9IC8DW0lEJCIVu1mWhCidAgPp9RTCOVgn
-X-Gm-Gg: ATEYQzzJMwrS4dTgZEvyGsDy+E1RnS/+a3gjnr0SibXIDFg5xVdw+o1NRvetN54VFk3
-	ocDzv1fORuUCSnPBWziP2m8hwg52/+DCHlh14jgLtwmyqdWG7xUfp9famU2MEQZhHbU0UyIp+a0
-	9bFYEXCjchhaG8W0lzlb723x3/QOFYgfOCQ5oVOahrsHUn8GhQuEaauBjmNxtvvDmeyhgoRNu4P
-	By3nZnhuI8ru/PUGWapRyzruL2yFl5XevuKiox4sv4wCJnawCBDiQ+KnjLb5JqjY3fiicl/66fs
-	huQuXvhVyrZ4I63HIPPc+6/1VRJyH2c40D7dObzeMoanbinzqxMnzvYCdpnaBZR93P21/k528ig
-	XO3HOAQUlrYD+rjejW7PlK21HlUsN9K0BfO4FN+6KgqUpKEvMWLpWkHWehXQFBvemQ9KP2ichIR
-	r8l+Q1/Gjz54YaWW1QTj5P/L55X/gmGCcMHGBn029kJJQUVSlOQcHoj11logfXHK44pZ10ph+Xg
-	4U1qcE7g/J3csKciqDfVJ3VYoytK5ggr4TlMw==
-X-Received: by 2002:a17:90b:1e48:b0:359:3426:c603 with SMTP id 98e67ed59e1d1-35a220c95c2mr10013257a91.8.1773723343083;
-        Mon, 16 Mar 2026 21:55:43 -0700 (PDT)
+        bh=VStVtsktwzKN2X8r5SzWBGVngBWShJt1PvkrFSc4YrI=;
+        b=juz+Hh7c+LfUdIfVbGNdjU1L2CNZ+irTWpJkP6W1BL2ZYtd2ZHCmjL9av1wJEPGZcG
+         D4zEJWfojutUXIv2skB6RrXLecYjIeK0SVRNN6LSxbdTFLIVaj4Xy0LO9yCA3VSezqkT
+         EnFhqPWblB3Q7J5kF6VVYqVVrIOkvxYf/3XLV8cREmXlDz2mpKYtpVJA/7OiAPzuAY/9
+         4vjjT5bQs0Qk/8LeepZiOvyRFN5t7CFZzChXP7f1b0oWadXwkb93iPSYxz8ivhqxzNwV
+         QLhKhBkA5GlRWm8UogwpDwDFVst7ujzsGCc9UoykowBsYTu5N6Jrs/U04P5xnIcfZxKc
+         zpug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773723345; x=1774328145;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VStVtsktwzKN2X8r5SzWBGVngBWShJt1PvkrFSc4YrI=;
+        b=Pz+KqQjbv6Xfh/I11vGI7Kb0+EphZSWZ+PoVnzEKrCRZiQ5zPIr/Oyo6hQ1ct7Bga6
+         eoPvlmXZGout6VSW8U9KmLAhM32WrJ8E8WheyT0PDJNQ3oVZt6cDMWj1KxByeAnN2FQQ
+         6pP6IpDKQU/T3su7EjNiO/qemOEY/XzKWF/btbp0ZdU9zI8vmkrt/QUBDtZGHCFOK6Gk
+         FF4wpFI0HEVNLlpqu9ys3UAfZGv4niwLLm0PNr9MlcCXz/2O70Wgijk4ZG5FH+EuZwZK
+         IyxrB7kYBxkFLqm1F6t1XwtAuLBX3MGxp3NSRo6HS7VBp7I6KwTcahizwa/W8EABZhu/
+         RKEg==
+X-Gm-Message-State: AOJu0YyoVTOAp0+Y8BINAx9jZoLuxm1XRPK3hV7imdb1vNzdN/ExL4PA
+	plARhaBUV+ZKcRsvVakHDxmgoLoTYIXOTwfYxKa/HJfZXv7nckTErJhA+IMI1rSQ
+X-Gm-Gg: ATEYQzw3/sJg1AJPrzABqvrDV49cVlWNsFj7yaraLsjPvFJmM0cRfRJe9pUpns5Yc9g
+	iKzTSBLLJKfqKgo4npRtZTIb92ZBxQ5GFzBUyzt/FASN5spQXWeFxGiJ83VH8zZhMcW52QfMGpe
+	XnP2I7vm/aclj+uYdfNEp92ieGR2gMQKy1LiYsmzeKKxriDjgvFCV2//6MlnwlDE0VsUG71z62Q
+	TuZNFVUlSrt/XjJuMGEQsInO9Vb4tiL0x16pTGPNgEvO4yxCEHgXvknyE3MI6TkJqox3ONs88if
+	rFZYx6ZEdhD/NGJUb/wyAlP93Sm6wtCFLzA31WOotbFQQV0T0bItItgZ0Q+uVLodG4vcG5p+BcF
+	G3BexOD8NnfLo6JEDW+fMRzHicakY1hctz9RkQZVahR7u0P/Ir0GhvJcXUbL+Hc/WqPCZNWmtRa
+	FYqYtix2XlAmN5qBNwS8UkBahlVTiugEWaEbRyxbRu0cYKAZ/5noNrTWm4HPO2mTyb2wJpObsjM
+	KxD7CW98E9wA6Zv8JErIk5toe+C5h1ZVX/P2w==
+X-Received: by 2002:a17:90a:e710:b0:359:9a60:44ca with SMTP id 98e67ed59e1d1-35a22113a11mr9709095a91.8.1773723345434;
+        Mon, 16 Mar 2026 21:55:45 -0700 (PDT)
 Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bada43329sm1424602a91.6.2026.03.16.21.55.41
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bada43329sm1424602a91.6.2026.03.16.21.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 21:55:42 -0700 (PDT)
+        Mon, 16 Mar 2026 21:55:45 -0700 (PDT)
 From: Utkal Singh <singhutkal015@gmail.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: hsiangkao@linux.alibaba.com,
 	yifan.yfzhao@foxmail.com,
 	singhutkal015@gmail.com
-Subject: [PATCH v2 0/2] erofs-utils: lib: fix ZSTD decompression safety issues
-Date: Tue, 17 Mar 2026 04:55:35 +0000
-Message-ID: <20260317045537.9591-1-singhutkal015@gmail.com>
+Subject: [PATCH v2 1/2] erofs-utils: lib: validate ZSTD frame content size in decompression
+Date: Tue, 17 Mar 2026 04:55:36 +0000
+Message-ID: <20260317045537.9591-2-singhutkal015@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260317045537.9591-1-singhutkal015@gmail.com>
+References: <20260317045537.9591-1-singhutkal015@gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -100,6 +104,8 @@ X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Report: 
+	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+	*      [117.203.246.41 listed in zen.spamhaus.org]
 	* -0.0 SPF_PASS SPF: sender matches SPF record
 	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
 	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
@@ -116,10 +122,8 @@ X-Spam-Report:
 	*      [singhutkal015(at)gmail.com]
 	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
 	*      trust
-	*      [2607:f8b0:4864:20:0:0:0:1034 listed in]
+	*      [2607:f8b0:4864:20:0:0:0:102c listed in]
 	[list.dnswl.org]
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [117.203.246.41 listed in zen.spamhaus.org]
 X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [4.30 / 15.00];
@@ -136,7 +140,7 @@ X-Spamd-Result: default: False [4.30 / 15.00];
 	GREYLIST(0.00)[pass,meta];
 	FREEMAIL_CC(0.00)[linux.alibaba.com,foxmail.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2780-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2781-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -149,30 +153,66 @@ X-Spamd-Result: default: False [4.30 / 15.00];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-0.893];
+	NEURAL_HAM(-0.00)[-0.817];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 298B02A3D79
+X-Rspamd-Queue-Id: D64722A3D80
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Changes since v1:
-- Added reproducer per maintainer request
+ZSTD_getFrameContentSize() reads the content size from the ZSTD
+frame header in the compressed data. This is untrusted on-disk
+metadata, independent from the extent map that provides
+rq->decodedlength via z_erofs_map_blocks_iter().
 
-This series fixes two issues in z_erofs_decompress_zstd() that can
-be triggered by crafted EROFS filesystem images.
+A crafted EROFS image can set the extent map to claim a decoded
+length larger than the actual ZSTD frame content size. When this
+happens, a buffer of the (smaller) frame content size is allocated
+and decompressed into, but the subsequent memcpy copies
+rq->decodedlength bytes from it -- a potential out-of-bounds read.
 
-Patch 1/2 validates ZSTD frame content size against decodedlength.
-Patch 2/2 fixes a missing error return on decompression length mismatch.
+Additionally, the ZSTD_getDecompressedSize() legacy fallback
+returns 0 for frames without a content size field. This leads to
+malloc(0) followed by out-of-bounds access on the returned pointer.
 
-Utkal Singh (2):
-  erofs-utils: lib: validate ZSTD frame content size in decompression
-  erofs-utils: lib: return error on ZSTD decompression length mismatch
+Reject frames where the reported content size is zero or smaller
+than the expected decoded length.
 
- lib/decompress.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reproducer:
+  mkdir testdir
+  python3 -c "open('testdir/f','wb').write(b'A'*131072)"
+  mkfs.erofs -zzstd test.erofs testdir/
+  python3 -c "d=bytearray(open('test.erofs','rb').read());\
+    p=d.find(b'\x28\xb5\x2f\xfd');d[p+4]=0x20;d[p+5]=0x01;\
+    open('test.erofs','wb').write(d)"
+  fsck.erofs --extract=out test.erofs
+  # Expected: ZSTD frame content size 1 < decoded length 131072
 
+Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+---
+ lib/decompress.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/lib/decompress.c b/lib/decompress.c
+index 3e7a173..fb81039 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -48,7 +48,14 @@ static int z_erofs_decompress_zstd(struct z_erofs_decompress_req *rq)
+ #else
+ 	total = ZSTD_getDecompressedSize(src + inputmargin,
+ 					 rq->inputsize - inputmargin);
++	if (!total)
++		return -EFSCORRUPTED;
+ #endif
++	if (total < rq->decodedlength) {
++		erofs_err("ZSTD frame content size %llu < decoded length %u",
++			  total, rq->decodedlength);
++		return -EFSCORRUPTED;
++	}
+ 	if (rq->decodedskip || total != rq->decodedlength) {
+ 		buff = malloc(total);
+ 		if (!buff)
 -- 
 2.43.0
 
