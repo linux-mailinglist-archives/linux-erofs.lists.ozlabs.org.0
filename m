@@ -1,91 +1,97 @@
-Return-Path: <linux-erofs+bounces-2782-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2783-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cB9tOtreuGnDkgEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2782-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:54 +0100
+	id mD5vHh0CuWmJnAEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2783-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 08:26:21 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52AB72A3D87
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 05:55:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C4E42A4C2A
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 08:26:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fZfmQ4fyZz2yhY;
-	Tue, 17 Mar 2026 15:55:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fZk6067Ncz2yh4;
+	Tue, 17 Mar 2026 18:26:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::102d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773723350;
-	cv=none; b=jvSZwQMD3scamEsU+ukACTm5WFfThEvRLOycwC+vDDSzddxdFE6O0ae5zx9LTp/EFF8No8WDcAZ2Olkzvs6l7w9dCJWkJyKu2fi3eUdpnhFcId17gmlla1wdsrZtNOYOtPUmqsw59Aq7znQSWbWliemdRQ62nNaikVWNf9SX02v3DhJFXcJFPLYE+IkpYJDMQlpwME1GHhn1CzmJ+wtiJzJLxq4Dg6hMUCCApChc9n3RitcZawtfT4UN01ZgjqOPUjibKVZuFzl41cXW86T1C1MK5MueBdwY07dpHfRnJhNWn4abc5eBGhiYhImwqbHRlg1OeQE/CFwy+xyGHME+tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773723350; c=relaxed/relaxed;
-	bh=aQM2eBicAhXo6KwJOIN/BFJJY6gLG4XSDShB32qmhRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=euIEcB+LYy2U8nR1SxjxBTHd8pgAxbeWZeug8obayRSgll6PM2BJ+dP9lwwvHakRHki008Wr1cDwiS5ms3smW8AJahNQz46lmdrCEcS5WwO4EBGCMfly6xKy53l/riWbvsuyOb0Vj86ZrKLoxXquSlcCQuD8sVxx4GZ9fGuPyc0gnPWyC85ySuVzUxa1Coz68a/DPied7LMvu4tmetjtjDM7Qn8npfaTHNV301ZrZxIcXLjvKQh3Gex2HOVQ0MwZ3VJCcMCTbnfFP9XLsuqpgRDzMd+3zADyr6DFhBSMjCirRvG5Ie8dn1P/FIUG5pap2YPMYUKVQZbq58U35wW8YQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=IE/pXUxq; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::62d" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773732376;
+	cv=pass; b=GqsEqwQ/UajIBT0eatyZyb/E4C4TasGCMVlXbU3tpmggGs7EVQ6sZddIWFE7s9LS1Eg657wCj+uhB7vBJ/WrE+KKikiwIUKSBZRzwKk9kdAwBL25Z32QkQ8alz6kv+J5tJoHpeEzVHu3AP2F8JkzhNjxHUOjtwhuJvm5L14FAkX7Shlz8ozbo3sfpArbCL1CKHD3FcaAJVj2VD/43Muhe2S7td4ix84Tqv94Stl67sL6H7wl4yNQalZHgQNl5wgtrgeeBXP10S5xnya/tEsvpeJm0LEhT1QxAecT26eIJvOC1CXPauhet1qJO8y6qvPuEIYq+q1fBNVFtmTrUJbgsQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773732376; c=relaxed/relaxed;
+	bh=i3xav1WzJK9rzK57tlDdYAfYY5vgZYqApatQD+1lTTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Eqwy/cW1t6zjWQl2/OwvT9n4FykIoEtFcHAXG4h8l1qYePILVZtsQD/nljvgdEHuMDyscyFi1Ng8DZxqkQ8mWEPiWt8d7aXkDh/EkPdBt5KQu0kc2nUQmqN1ODLQc+doc+XTMe8KEvXW5HAA95emZg6rHfDKlzsvwwC+N9argUzAvVB/PZdHC7ZVU15cQkeNqeEhpuaet2Q17FG4m30mpMsdcQ5P+cLBY3UwJnmf4pkTwV6nmPbHi4dksgKHuq5c0goY/7Vqr0IkdzKfmjvfdVICNXkwTECqjO0JIkggadIo436wgNnMKLk45iIxJt/IRs71Bt0ZwpGFkISjuHKO/w==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=X0GfoNKO; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::62d; helo=mail-ej1-x62d.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=IE/pXUxq;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=X0GfoNKO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::62d; helo=mail-ej1-x62d.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZfmP6rVkz2xb3
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 15:55:49 +1100 (AEDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-35b982990aeso111174a91.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Mar 2026 21:55:49 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZk5z5XPYz2yfP
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 18:26:14 +1100 (AEDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-b9789425fc5so62962766b.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 00:26:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773732372; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Pmc25BSMSUpy2BvZj/soqWedBxM96ZBnobcfVTwAKZfn/R2GWhdjHSmLmdFa8WyQ3e
+         FIJV2DIfjYQT7z0TVqM3FhvoBdQuvOvCX0UdxryJqeUOA+yzpXcrT1Fb33FB1oMiW+yY
+         9SId8BXDJ7iDP6uwbdNYjfIl/1mFAC2CKDvZ1/YYz48sYLDhqV8lfPRRK5ka5Zmgrtar
+         xmNXch4eHVnO+ujL8BDWIj+2PpgTZDo9W5LAfWJGsvyvl2q0/NWZXcH7N0UvmscHWDnd
+         PdOEtDrWHqObFOwo9PCgreh56npxKil+i4OfVXWPvz0FxSsrbQ+hxd3nFGqALwznflYR
+         KABA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=i3xav1WzJK9rzK57tlDdYAfYY5vgZYqApatQD+1lTTc=;
+        fh=BuECZ1gVE0ToshHwBIL9alEMnV5AMbYbvZEzuOwdVCQ=;
+        b=SqK5e6W57YR3HPWaVvHBMDjUWk3x3ww9HVFNkr5MndQpZI/wJdCqvTWRhqfOt28Uwh
+         3g9Khrbe/dLru9XZOa8m27uuBseyEBP68szWeoD0h9RmYBCoLwum95Z7oQS76BUeqlBL
+         xVAfvcmUTZkzCljiTCfRU10QQm37PLj7NPIfy3BlXLUIBJtvH9d7wZY7fBulMJRUfRhR
+         XyG34Un7trfY3R55AbTdPJxxAqnZWa6cLUNjdnhtJG14UuPXDvSW7aJzg+CD3rZkzU9a
+         cN9UpYDb6O67irFw+WlfDUIJPYJDRpw/j2r9y4FXwYnZcUDycq5Cbs/sLMt3kYjGLfgY
+         PCHg==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773723348; x=1774328148; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773732372; x=1774337172; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aQM2eBicAhXo6KwJOIN/BFJJY6gLG4XSDShB32qmhRE=;
-        b=IE/pXUxq8y3JVEysGVYlE9g6w2Zk1oHQz3ER7InNUmAmidL4XK4NfGUc/xxiWwT1wz
-         UPQ89umc9Lu7/JW57tLaoUQKOBf3NeCaQEyJIGkiICoRqr7+QHlub9dugmFMrCMve7Dl
-         UxPddqxytw+yBRgaygKdhHbLpYGCpPSNL5SzYQNsp2VgFAvTnhkhiPx9jJA22+/lgHrv
-         D48a1Y+WrDiMd24Iio0CGKp0M2WcuCb7TB8sRWerPjzWgMJ60zOTaBbFmwRhQrU8UgQ/
-         3ZpZkdczrBs2wed6N4Re1duSIhCD/B4QSHR/LYzqjY56A8cBoBu9SnCCU101meZLdmRS
-         KX7A==
+        bh=i3xav1WzJK9rzK57tlDdYAfYY5vgZYqApatQD+1lTTc=;
+        b=X0GfoNKOaYPPyaz1bYLBNTGLJQZLICzgq4q6s3YzClyke+t3hgm72p37pdtC2sbM5a
+         yc+Cv4CyQ+NpHajKNv8FSJ5xkGwpK6ZqHixp9GZv8uVLUqDgTCpspDinOG//l0OfeLKf
+         +twueRirnHDn4peHn3Gxs2X39963FoXsKTb4NaHrMkMCxTFvSsExMy021Wb0Z5stMODF
+         yKJrqeZ/FX4xYnyzITqajY55j+ODfj+k236jj6kIipjLBJFTpynzQFHyLHbN8g6KIukJ
+         SBxxb0BgNVzx7SYQCxZ4gnnl/qcPgngBmgnWPm89rKOC34GmdhK/H+57cnxubGwU0wZt
+         UMXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773723348; x=1774328148;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1773732372; x=1774337172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=aQM2eBicAhXo6KwJOIN/BFJJY6gLG4XSDShB32qmhRE=;
-        b=iQdCxFqO7gIQTnm3RKsMVZUDASHzs9/etO+KEru3qcKvh6LLOMmeT8jMti7rIEkv6A
-         X90dW/E3LLnt5JxEYZY8sUARFUJE+hofG0rx2vHIa8As4aDAPWI6xPcv/d/6lkpvSdmm
-         x5IZWUDZFhvqBM0tbEH519ikVTsFYHJCx5SCqywjVERzspqGyg21ZqPe/NwD5pKdLLOb
-         PYCgfzMSU2pbpRa3OuwNCP6QYUO+B2TxLFoStMCg5U19FvwYwMKAWfdhBnBUoU7l6nhP
-         SMxzWgT84fMuTLSn2kc7NgxIb3/ONasJZsXG9KTlEEO/dTPkPzze53TVmexuyH8Uzyj7
-         96kA==
-X-Gm-Message-State: AOJu0YxlEzTxu9usGLJ1Ryi+n2NyTm7IBloD3RR+DUyh3a+ViI7Oq8Dz
-	N3ojDRq8LHIW8jfLVrP0D2oh6isgqLcPJ2YvH35VQS0yGMpsChq0cRHWKL+TPlMH
-X-Gm-Gg: ATEYQzztZ81AAYzHHAl4PQ/ljdPtXz73dpMXW9k98B4vMF4EZZnmPYyuKiHREsD0Pqz
-	UOxjcmX8KLk2H+itr68zZtYWI1DHNQfHO0EclUJkne99MWLhZabRJ8wBneMvkW1NqyaAvmwgJ99
-	o49QAIiRAKcvfKkrSRkfYbwk22j8G5Efd5ooBBx/KhUoa6CG1lZHZ4h9y8OBsYuhirljCIcV9Co
-	CEbX694rrGh4casrO8usUHAUrW39tFMzjvFk9LTp4/bE/SfGlR35BZ5rkedDln9TcF2jyEuC4ut
-	0carBZulFFGloikS8aCKelBsh8CACWNYfpJ8Q4qlgziAFi7T+Rl6J5pSCHskh7naPuj8VOSYC+V
-	mbRUgJ8SP1m0dRpF5ip7K7ouX8wk12nyq9VpCctwznQ6hxKCEthc2pkSX9VBhgLnIrf8WYgOKN2
-	x2iuejn2pbfeP0d9a/szVYoOywVEV4cw+e2Yh/C5LXfvMenKNG6VaubnUj9FHFBbcnwOUI+peh7
-	WMTOsZL0rLqwqDIoyCR9dbH9r7hD1XKUuaosA==
-X-Received: by 2002:a17:90a:e49:b0:35b:94db:fdaf with SMTP id 98e67ed59e1d1-35b94dc0539mr3722676a91.4.1773723347884;
-        Mon, 16 Mar 2026 21:55:47 -0700 (PDT)
-Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bada43329sm1424602a91.6.2026.03.16.21.55.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 21:55:47 -0700 (PDT)
-From: Utkal Singh <singhutkal015@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	yifan.yfzhao@foxmail.com,
-	singhutkal015@gmail.com
-Subject: [PATCH v2 2/2] erofs-utils: lib: return error on ZSTD decompression length mismatch
-Date: Tue, 17 Mar 2026 04:55:37 +0000
-Message-ID: <20260317045537.9591-3-singhutkal015@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260317045537.9591-1-singhutkal015@gmail.com>
-References: <20260317045537.9591-1-singhutkal015@gmail.com>
+        bh=i3xav1WzJK9rzK57tlDdYAfYY5vgZYqApatQD+1lTTc=;
+        b=sYp3CVDXl6mRGHRGFTOkmMejO2eiVUfYWXKl7tP5YMHCIjJxcHFCCwohLu0D3NyUGo
+         d5kBlhG4+z5vF+xFhPzSZyjGBG/hEWiog55KNNcnG/oeABGL83YaJ9EFLx1aE/3558Rn
+         S+yeeFR4AGTWQCcTj44e3iE/R+Jh5fDYgOQZML6gCg1pgdWyrPGThMNoLIljwH3xE76L
+         qh8TzeUux9rZIBPRKH8TxAQXiPu0nRQFYp34JFqP5N/4UPCvAQBa9J4AMoMAJUGxBvjJ
+         KghvASgjEIM69JaqRnxbl+p5YwlUZffq79ZZD5xMTc7yaQP3n9R4HrKV1joalRxmEE87
+         OdSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKzHX8ZHW1ST6qYwMO50lGUSicxd19osWEYoQ3UaDGohcIXj6l3HmpWB2+x92HCTQU7o387rKtzVtvFQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Yw9/8AlV+CRfwoTGaf9prwwhyWjQZRXQCDATudhybK63Q1RYSLV
+	S/D3LL3yaHUhLj8ozy3pO/rtVzq6gfaiJ9QR8/rIt0ONw90oKoInU96BUhVtjVYdHadpNY1JKUU
+	RtbxzCTeVYrsbUWHMvCq0o7mCWiu0AzQ=
+X-Gm-Gg: ATEYQzxo0XlpxZdF0ySuCmhgYJv38mMJW4wlWyE+JbFkEvXD1h6St3jMpRd7159lRUq
+	RdPDSoqjiCqsAduYXiTIr3fUUIHtPJroQ7TfvLfsa2BXw37K3qmbClNR5ZyuiNolhhEaLbAJc7o
+	n1I5Mmehom3i2Ab9gXRBU/IqTxRQRDQMhxKL9bK+avTZm8+GbkdWS0rozy8ouMOUoSx5xhxgQzy
+	d5DPOIPaVsXOm6EIgETIC199jvMmxPaur5id8boRLFTrCKIUFLP3PCJ7i9KbNRw/qda7VHiTOOs
+	88U17YcG/Ac05Spiyn06KqDMxbrqFSgIflnc9IE8
+X-Received: by 2002:a17:907:3d03:b0:b94:231f:26ca with SMTP id
+ a640c23a62f3a-b97d6d99d0fmr133734066b.20.1773732371166; Tue, 17 Mar 2026
+ 00:26:11 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -97,98 +103,186 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Report: 
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [117.203.246.41 listed in zen.spamhaus.org]
-	* -0.0 SPF_PASS SPF: sender matches SPF record
-	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-	*      envelope-from domain
-	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-	*      valid
-	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
-	*       domain
-	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-	*  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends in
-	*      digit
-	*      [singhutkal015(at)gmail.com]
-	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
-	*      [singhutkal015(at)gmail.com]
-	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
-	*      trust
-	*      [2607:f8b0:4864:20:0:0:0:102d listed in]
-	[list.dnswl.org]
-X-Spam-Level: ***
+References: <20260316213606.374109-5-paul@paul-moore.com> <CAHC9VhTEX-sRjyVi2p9j_jFjyWbzy54b=iteiTKGq-mnBaHkrg@mail.gmail.com>
+In-Reply-To: <CAHC9VhTEX-sRjyVi2p9j_jFjyWbzy54b=iteiTKGq-mnBaHkrg@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 17 Mar 2026 08:25:58 +0100
+X-Gm-Features: AaiRm50sF1v33VMxCQO8F4CAvv3PlKmjLZTCcf_1PYwrrTaEu5VQoATkjlrFBkw
+Message-ID: <CAOQ4uxi7+6Qt5K9s6Fq8deN-ep2gnxqJ6-wJy9pXJzszpfn-6A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Fix incorrect overlayfs mmap() and mprotect() LSM
+ access controls
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [4.30 / 15.00];
-	SPAM_FLAG(5.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	GREYLIST(0.00)[pass,meta];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,foxmail.com,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2782-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2783-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[amir73il@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:paul@paul-moore.com,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-0.827];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 52AB72A3D87
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 8C4E42A4C2A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When ZSTD_decompress() succeeds but produces a different number of
-bytes than expected, the code logs an error and jumps to cleanup.
-However, it does not set ret to an error code. Since ret still
-holds the positive ZSTD output size, the caller treats it as
-success via the 'if (ret < 0)' check in z_erofs_read_one_data(),
-causing silently corrupted data to be returned.
+On Mon, Mar 16, 2026 at 10:59=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+rote:
+>
+> On Mon, Mar 16, 2026 at 5:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> >
+> > The existing mmap() and mprotect() LSM access control points for the
+> > overlayfs filesystem are incomplete in that they do not cover both the
+> > user and backing files.  This patchset corrects this through the additi=
+on
+> > of a new backing file specific LSM hook, security_mmap_backing_file(),
+> > a new user path file associated with a backing file that can be used by
+> > LSMs in the security_file_mprotect() code path, and the associated
+> > SELinux code changes.
+> >
+> > The security_mmap_backing_file() hook is intended to allow LSMs to appl=
+y
+> > access controls on mmap() operations accessing a backing file, similar =
+to
+> > the security_mmap_file() for user files.  Due to the details around the
+> > accesses and the desire to distinguish between the two types of accesse=
+s,
+> > a new LSM hook was needed.  More information on this new hook can be
+> > found in the associated patch.
+> >
+> > The new user path file replaces the existing user path stored in the
+> > backing file.  This change was necessary to support LSM based access
+> > controls in the mprotect() code path where only one file is accessible
+> > via the vma->vm_file field.  Unfortunately, storing a reference to the
+> > user file inside the backing file does not work due to the cyclic
+> > ref counting so a stand-in was necessary, the new user O_PATH file.
+> > This new O_PATH file is intended to be representative of the original
+> > user file and can be used by LSMs to make access control decisions base=
+d
+> > on both the backing and user files.
+> >
+> > The SELinux changes in this patchset involve making use of the new
+> > security_mmap_backing_file() hook and updating the existing mprotect()
+> > access controls to take into account both the backing and user files.
+> > These changes preserve the existing SELinux approach of allowing access
+> > on overlayfs files if the current task has the necessary rights to the
+> > user file and the mounting process has the necessary rights to the
+> > underlying backing file.
+> >
+> > --
+> > Amir Goldstein (1):
+> >       backing_file: store user_path_file
+> >
+> > Paul Moore (2):
+> >       lsm: add the security_mmap_backing_file() hook
+> >       selinux: fix overlayfs mmap() and mprotect() access checks
+> >
+> >  fs/backing-file.c             |   28 +++++---
+> >  fs/erofs/ishare.c             |   12 ++-
+> >  fs/file_table.c               |   53 +++++++++++++---
+> >  fs/fuse/passthrough.c         |    3
+> >  fs/internal.h                 |    5 -
+> >  fs/overlayfs/dir.c            |    3
+> >  fs/overlayfs/file.c           |    1
+> >  include/linux/backing-file.h  |   29 ++++++++-
+> >  include/linux/file_ref.h      |   10 ---
+> >  include/linux/lsm_audit.h     |    2
+> >  include/linux/lsm_hook_defs.h |    2
+> >  include/linux/security.h      |   10 +++
+> >  security/security.c           |   25 +++++++
+> >  security/selinux/hooks.c      |  108 ++++++++++++++++++++++++++++-----=
+-
+> >  14 files changed, 231 insertions(+), 60 deletions(-)
+>
+> Due to the nature of the issue, I'm going to merge this into
+> lsm/stable-7.0 in a few moments so the changes can get some testing in
+> linux-next with the idea of sending this up to Linus' later in the
+> week.  If anyone has any concerns over this patchset, please let me
+> know as soon as possible.
+>
 
-Set ret to -EIO before jumping to cleanup, consistent with the
-ZSTD_isError() error handling path above.
+Since previous 4 revisions were not posted to public list,
+let me repeat my concern from v4:
 
-Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
----
- lib/decompress.c | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, Mar 6, 2026 at 5:24=E2=80=AFPM Paul Moore <paul@paul-moore.com> wro=
+te:
+>
+> On Fri, Mar 6, 2026 at 3:24=E2=80=AFAM Amir Goldstein <amir73il@gmail.com=
+> wrote:
+...
+> > My expectation is that the merge of this patch will be collaborated
+> > with Christian ...
+>
+> Of course, that is one reason he is on the To/CC line.  More on this
+> in my reply to your 0/4 comments.
+>
 
-diff --git a/lib/decompress.c b/lib/decompress.c
-index fb81039..a27881c 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -75,6 +75,7 @@ static int z_erofs_decompress_zstd(struct z_erofs_decompress_req *rq)
- 	if (ret != (int)total) {
- 		erofs_err("ZSTD decompress length mismatch %d, expected %d",
- 			  ret, total);
-+		ret = -EIO;
- 		goto out;
- 	}
- 	if (rq->decodedskip || total != rq->decodedlength)
--- 
-2.43.0
+I am sorry Paul. This must be a misunderstanding.
 
+My expectation for collaborating the merge of my patch with
+Christian was that an agreement would be reached regarding
+which way it would be routed to Linus.
+
+CC to Christian and sending the patch to Linus without getting any
+ACK from Christian was not the way I expected this to go.
+
+> > and that it will NOT be auto selected or rushed into stable.
+>
+> I haven't marked it with a 'Fixes:' tag or a stable Cc which in my
+> experience are the two quickest ways to get pulled into a stable tree.
+> I'm not sure what stable policy Al or Christian have for the VFS tree,
+> but LSM and SELinux commits are not pulled into the stable trees
+> unless explicitly marked with a stable Cc or requested by a dev after
+> the fact.
+>
+> > I don't mind if you want to route the security_mmap_backing_file() hook=
+s to
+> > stable to use it for some simpler bandaid for stable, but rushing this
+> > one to stable is not a good idea IMO.
+>
+> Once again, see my (upcoming) reply to your 0/4 comments.
+>
+
+TBH, I don't understand the logic of placing patches in lsm/stable-7.0
+without the intent of backporting them to stable.
+
+I perceive my patch as a risky patch for overlayfs and the vfs
+this is why I wanted Christian do be part of the decision if and when
+my patch is sent to Linus.
+
+Thanks,
+Amir.
 
