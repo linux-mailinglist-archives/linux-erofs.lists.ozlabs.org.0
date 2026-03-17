@@ -1,78 +1,97 @@
-Return-Path: <linux-erofs+bounces-2815-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2816-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ABeALB24uWnJMQIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2815-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 21:22:53 +0100
+	id CEI8LvDYuWlHOgIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2816-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 23:42:56 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C72072B2327
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 21:22:52 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB65F2B3279
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 23:42:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fb3L11BkZz2xS3;
-	Wed, 18 Mar 2026 07:22:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fb6Rd4HJ6z2ygK;
+	Wed, 18 Mar 2026 09:42:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773778969;
-	cv=none; b=Q44rcJsZUWTY14RMaJ6wqv/tVH+Mcg38n6FW5RB58E9o9PlmOrxTjxzVllExcC3BEWAjEaVStmt/9jTcudkhap2NsBSp0JQWLGOryDkuG2SrgTLjydLnn6cuRAg5Y7MKatJ9A4YAHDTmeXB72a0ko0vm+6oL6kQ4LEKCNF6nKCn6e5SQ0QibEx8lJ35KJ37QuJxfOayeq3yJvyzkq+oWtPH9WjzAyF3Wwg0OVRIoN5tIt6LnMuu48r6s+6hN+5uGGPFNthP5yla7ZulipLOFPNLrRGXnVAmc0oAc6JfyEpOpfqgzjH3MAt5F0Ha/m8P3pwXdX8qI4WWQ3QzdDxt/PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773778969; c=relaxed/relaxed;
-	bh=tBD0scVEBwlNfWS4d1Y3NlLCDZmtLJ2E6z5xY40UF3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=dRi5a2hJBs56tpa8REG6gy/y4UXKxm5hyVOMFabTUqzJjUK0zonhmXNwsqq30YN8E/5o7qBfiatRY2GGg4omHX9G7Z7WwYyP+8+0UoXIANXlu+t5CbiGQuLicyZ16gtYz/IYaPSFNNRbZYa2oRgi2/Lq7TNuaHnLxytKFJOybsr2Lz5sp5RTNh7WsW/dnGCgd0pZRRGTppzl4PMKAT1K3fIBdWdm7+plt4k5/jr+zvcD9w1IlkWWcNVmeRU1aNe1WCpHP2lg+mcXiVGJ+2BHI+urR/Ma+Ea0Jf6vim8hDMR7sOLKopo06iOtjoR8b4JcDMT+oDvrIx3rKb0IIWchaQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CnBgs+Rb; dkim-atps=neutral; spf=pass (client-ip=198.175.65.20; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::42e" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773787373;
+	cv=pass; b=Kq1UFS5Kh6ECBJj+GxM/G/MbIWmYdKNSj0logfrA1+u/O5rEIfqh7A5XsWKzCh52jIQxLrTPuSL4nRtn/hIeoSXu+6BXknLZyCry5l4OgpeIBnSU8SOZ5tHZ8uPknx0B+gfFQ7NjXWDHtmGBLQoen3YSCQlSHA5ALzXeDCs1Ld6a50vf5ZYjNyDrbYYv68ZPU6BwBfHtJUNPuHuu4imSvCo7+MAw0HPR0n6e+r8j6su0s0weVdNznpVRnjbRCiy0AiQ0RYjuH6/SSw5dMm04caPIeuWs3L+QkQErRBtljvya8Q282ZCjep9lGAT+CyFUUYrTa7fJsGs5gZo9eNIeWA==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773787373; c=relaxed/relaxed;
+	bh=B8weZ6sz5Sw0SJMaIbsh0p66JDKF/4Vt78zNnjgP+G0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hUQmNryUCnXPSnlDJk/rZaFotwWPDscvCOzk8m4jIYyvqKX0zKncBCVizG3c4icx68fTnOGRyFzBezvNFHVF6527C8KaMZYtznYpYfiSWW8ny2E/HlLMIUbsXArIkYn31ns4er7t7G0PoYGvUeYYPovxdUtHbLw4kLDIpeBghAanl3S3TQsEHhB2Yg8fFFtPbyE+w3TH6D4/c08G0I3rdG0LzNVD3fJtIgO2yz3O5La04ff5eApxv0d4uSXjbtE+Y08qlMazbSRjn4Y/K5/piAZds4gPNTl1DYJcs0CcWM7byHte9ma3WyC98IuRidXUrSyto+ilXYbdca9eQcGSWw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=QYZDF4RB; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42e; helo=mail-pf1-x42e.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org) smtp.mailfrom=paul-moore.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=CnBgs+Rb;
+	dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=QYZDF4RB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.20; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=paul-moore.com (client-ip=2607:f8b0:4864:20::42e; helo=mail-pf1-x42e.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fb3Kx3FWnz2xQr
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 07:22:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773778966; x=1805314966;
-  h=date:from:to:cc:subject:message-id;
-  bh=8oMTRWUkoxme4/+z7kMxNJrP5xcjEWcZEH/eO9FuVyM=;
-  b=CnBgs+RbL57wzAhbTJedLUNelJfWnjIhXTvbHZ4F1SrWoIpcZsiEHRys
-   LlDWdBf6NmKAg6a6PpmRRbJmkiwpp2ngfxYP30/zcge79R311fF8gLOLz
-   lt6qtxfzoK3hNuB8kT1Ut7/hsmf07XZtQjkrw9DoIyzxJ0P/h9zsdlnAz
-   /ZRwcFK5Y0Uj7wHeg1tbXHpkfW1yEVyCUieIjTZV5qYHDZVaEBeH0sPwg
-   bIvvyFxNzYqTAhDwifzffSeAE5lgE+Fi8xeU27Y6W3Vdy93rv1prrrMPO
-   RUnbH43cL6AE/dQFvs5NyUH0/evJTy22Js+83cCMZxBlE66fTATQcYn4C
-   A==;
-X-CSE-ConnectionGUID: EgPgzBbeScev7aQpktx6gg==
-X-CSE-MsgGUID: EkXYGl5yTxmD2Dega+p6zQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="74524162"
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="74524162"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 13:22:40 -0700
-X-CSE-ConnectionGUID: /2GbwkyeTXejPqABz2/9Hw==
-X-CSE-MsgGUID: PiQC5LgbScaHWccMgkoJoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="222354912"
-Received: from lkp-server01.sh.intel.com (HELO 63737dd503cb) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 17 Mar 2026 13:22:38 -0700
-Received: from kbuild by 63737dd503cb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w2avy-000000001w9-2WGo;
-	Tue, 17 Mar 2026 20:22:34 +0000
-Date: Wed, 18 Mar 2026 04:22:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:fixes] BUILD SUCCESS
- e2147eccab5524e6e5c41c48a01f69c94a30eef6
-Message-ID: <202603180401.r3nU3qCG-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fb6Rc2c6Tz2ygG
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 09:42:51 +1100 (AEDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-82a3d3235c9so2280214b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 15:42:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773787369; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VMjbWUsivvhak5tFLFlIHXlgF5coofpzKXAQU3dPUAY3H+SA7IFZCmKXDGSca6YDmD
+         065JzU6uXP+531UwudV1ibwgO1DDGEB2bAcDwgeWx7xpJAlTJGr9qdyZHCw/oZ/VdQxu
+         AfP5wnCajVJy6ihAPY9htVFTWlaoGJSsm+sPfuzbsBnM6cnl2ZY2dvLbWPQo5ifX1Ryp
+         nTm6LwIPI5Nd3ZWBYBgOLJdKBPt3dYw6WogPuKengumBRpT0trs8gskvgBIIYkcSdGTQ
+         ZAcnR+WY0IMG0zZQdAWdZP5JWuQDHKvjbSnnPTzpAM5xrF8Tny6sK12RGH5fv6o397oC
+         tOJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=B8weZ6sz5Sw0SJMaIbsh0p66JDKF/4Vt78zNnjgP+G0=;
+        fh=y1mz3lUfYcGr/eKuJCJiVIe9IbUMAuHBWURd3tnGV7w=;
+        b=EYI4Wx6XOorbqgDsrF/W/Yqmb09l300JyzWgtPyFFrbu+WCIcB3rDT0gRvqFTmxGua
+         Y1MXt0foXTs5EuD1jcc7K8GZjvRPhWPb1B6Tk3hX1QieidT6j8wGjdIJ2rXEOh5RdvsD
+         HLPL2RhZQ/Xj6PrFqGXj3PSWp04R1UMBNDeC1aR4Y2QvJ+aAtwGuGQSQK0VVQn09d3+b
+         rOAJ7rrpKcUNxg5zvYSlJ1n1XoEHCvsEOtWXl9M4JM2QBez4xJW4GxqM2sPnr2Eug5gb
+         2DyZW0Ki42p0S7aLbgNQPjSkbSiek7u/mLEQkeWbad+LJDxidBdwOQx50tI89uSHK3Oc
+         9aFw==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1773787369; x=1774392169; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B8weZ6sz5Sw0SJMaIbsh0p66JDKF/4Vt78zNnjgP+G0=;
+        b=QYZDF4RBGcGYoKItlf+iaL3EAuQUl/G9mXDqiVgikHTIEYqp5wEoBDWUBcALSmASdW
+         8zz0Bwl5zKABY1z2xgvVkOrt3oL0BhRDTo+SS7nf62MT967nNSkXatJkgw8TfbKi6DRW
+         hzjAMRtxMjvwK4uepLxKs43A4plfX3Fup8xFgUpBxm47IyxvIE+bzeyFTspHHD9iUqjm
+         hEV8yaxBpL8bSDkz/QvOlgo81hPNmwTKXm00ZXYW2Uba6GOJE+jR043liKwR13OF9avF
+         w5bw0vpCQ9B2SpFDQ4M1hkFeM6U8I0J4O6Mg+vxRaXXbjRZHwkFUok0ahIjeRXAxoNo8
+         gVPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773787369; x=1774392169;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=B8weZ6sz5Sw0SJMaIbsh0p66JDKF/4Vt78zNnjgP+G0=;
+        b=d7AqMasprmaRkJdjS7nSH0UImdiwVdrNDS9GDRhk33g3R/r6sBs50g5reU+danfWS8
+         25k2yw+49Qoc6pYZR0MvQbbr5jcl4J0yXplj0X3B4Hj4rTH2UeGr/dwsFsHEDjYDN8/0
+         bRnmxGfYlpqppp4LRIkFZM4gb9njXwYuUEH2AItfGSPLr+mExQG3vuWHFrGeBi6Rybk1
+         2sSJvmYX8HU1d2R9yUCNvwxhDlc9TfudLwrfT1udlKDISMNzHx8ADatJtpKQQLtCaKqN
+         tii4QAAm7+E+mr+8NHVhsS/vT+QuTuzrFAbWMRQpvbdPD28gC6dD6G8kSlfiB13ewBW8
+         n/PA==
+X-Forwarded-Encrypted: i=1; AJvYcCUObg1bKy+mwui9FygCZtStcYaachWhv/Abxt/qW04oIX3aVuyCuS+kzlcejwW/gmCYTBfKsdOQxiFlhg==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YwtyDawQGtkMZxDHRu83A2iuvvjW5tXjqsqj4j7gEUE2CSVW1PJ
+	IuOu8jQOufCHWnYFx7LsaW499yIQToJNq1E0AXABBPNqyA1tIudCD1PcSTqBGIFxzpnQkL/6UYu
+	qpazRL9kPL8pHI2w+s49cfqgGeVDfs7z+G+f94z+b
+X-Gm-Gg: ATEYQzyZQFjUG/xlcKUqY9XuF9rO+sOMBnvQnLlosVSeLFGHd/0PUjMDhChJ6YmOGMt
+	H18310j7SlDrSG5fa1B7Bdoe2iV078Oas0cbmi2D5vi4wAfDEzL+fsoDMROtV1oKxtW89x2MjrG
+	bG2KzwfxGPvqM0t7dkaLxWLVo7mC8UL+R5cxAcwLub76FkpE84OAadljDfPiNdNcNdWb3ZrCE5i
+	EQugUyJVMSfdXMiq1RSp6/21J5mj8HzXc7byn1c1Iw3IrEtL92rBgOuPYjHoKccEuZyHBsPL/Je
+	Sd7dpPhe6Rx95iHpTQ==
+X-Received: by 2002:a05:6a00:1816:b0:827:2ec9:e1bc with SMTP id
+ d2e1a72fcca58-82a6af3b680mr1004833b3a.61.1773787368885; Tue, 17 Mar 2026
+ 15:42:48 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -83,212 +102,127 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+MIME-Version: 1.0
+References: <20260316213606.374109-5-paul@paul-moore.com> <20260316213606.374109-7-paul@paul-moore.com>
+In-Reply-To: <20260316213606.374109-7-paul@paul-moore.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 17 Mar 2026 18:42:37 -0400
+X-Gm-Features: AaiRm51ktGDW1-usZMxMHsT1xbcaRYx3q6Ml_vERE0ki9AcWlEliFtDWBIy0vmI
+Message-ID: <CAHC9VhTiB73F9fB1o3K4NfJ-Fa50MsVA_=79kn6X34L62J_TwA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] lsm: add the security_mmap_backing_file() hook
+To: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org
+Cc: Amir Goldstein <amir73il@gmail.com>, Gao Xiang <xiang@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
+	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2815-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2816-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS(0.00)[m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:amir73il@gmail.com,m:xiang@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.998];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[paul-moore.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,intel.com:dkim,intel.com:mid]
-X-Rspamd-Queue-Id: C72072B2327
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: DB65F2B3279
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-branch HEAD: e2147eccab5524e6e5c41c48a01f69c94a30eef6  erofs: add GFP_NOIO in the bio completion if needed
+On Mon, Mar 16, 2026 at 5:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+>
+> Add the security_mmap_backing_file() hook to allow LSMs to properly
+> enforce access controls on mmap() operations on stacked filesystems
+> such as overlayfs.
+>
+> The existing security_mmap_file() hook exists as an access control point
+> for mmap() but on stacked filesystems it only provides a way to enforce
+> access controls on the user visible file.  In order to enforce access
+> controls on the underlying backing file, the new
+> security_mmap_backing_file() hook is needed.
+>
+> In addition the LSM hook additions, this patch also constifies the file
+> struct field in the LSM common_audit_data struct to better support LSMs
+> that will likely need to pass a const file struct pointer from the new
+> backing_file_user_path_file() API into the common LSM audit code.
+>
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Paul Moore <paul@paul-moore.com>
+> ---
+>  fs/backing-file.c             |  8 +++++++-
+>  fs/erofs/ishare.c             |  6 ++++++
+>  include/linux/lsm_audit.h     |  2 +-
+>  include/linux/lsm_hook_defs.h |  2 ++
+>  include/linux/security.h      | 10 ++++++++++
+>  security/security.c           | 25 +++++++++++++++++++++++++
+>  6 files changed, 51 insertions(+), 2 deletions(-)
 
-elapsed time: 829m
+...
 
-configs tested: 157
-configs skipped: 2
+> diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+> index 17a4941d4518..d66c3a935d83 100644
+> --- a/fs/erofs/ishare.c
+> +++ b/fs/erofs/ishare.c
+> @@ -150,8 +150,14 @@ static ssize_t erofs_ishare_file_read_iter(struct ki=
+ocb *iocb,
+>  static int erofs_ishare_mmap(struct file *file, struct vm_area_struct *v=
+ma)
+>  {
+>         struct file *realfile =3D file->private_data;
+> +       int err;
+>
+>         vma_set_file(vma, realfile);
+> +
+> +       err =3D security_mmap_backing_file(vma, realfile, file);
+> +       if (err)
+> +               return err;
+> +
+>         return generic_file_readonly_mmap(file, vma);
+>  }
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The kernel test robot helpfully pointed out that this patch was
+missing a security.h include for the newly added LSM hook.  The fixup
+below has been applied to the patch in lsm/stable-7.0.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-23
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260317    clang-23
-arc                   randconfig-002-20260317    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                                 defconfig    gcc-15.2.0
-arm                      jornada720_defconfig    clang-23
-arm                   randconfig-001-20260317    clang-23
-arm                   randconfig-002-20260317    clang-23
-arm                   randconfig-003-20260317    clang-23
-arm                   randconfig-004-20260317    clang-23
-arm64                            allmodconfig    clang-23
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260317    gcc-8.5.0
-hexagon               randconfig-002-20260317    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260317    clang-20
-i386        buildonly-randconfig-002-20260317    clang-20
-i386        buildonly-randconfig-003-20260317    clang-20
-i386        buildonly-randconfig-004-20260317    clang-20
-i386        buildonly-randconfig-005-20260317    clang-20
-i386        buildonly-randconfig-006-20260317    clang-20
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260317    gcc-14
-i386                  randconfig-002-20260317    gcc-14
-i386                  randconfig-003-20260317    gcc-14
-i386                  randconfig-004-20260317    gcc-14
-i386                  randconfig-005-20260317    gcc-14
-i386                  randconfig-006-20260317    gcc-14
-i386                  randconfig-007-20260317    gcc-14
-i386                  randconfig-011-20260317    clang-20
-i386                  randconfig-012-20260317    clang-20
-i386                  randconfig-013-20260317    clang-20
-i386                  randconfig-014-20260317    clang-20
-i386                  randconfig-015-20260317    clang-20
-i386                  randconfig-016-20260317    clang-20
-i386                  randconfig-017-20260317    clang-20
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260317    gcc-8.5.0
-loongarch             randconfig-002-20260317    gcc-8.5.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                                defconfig    clang-19
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                 decstation_r4k_defconfig    gcc-15.2.0
-nios2                            allmodconfig    clang-23
-nios2                             allnoconfig    clang-23
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20260317    gcc-8.5.0
-nios2                 randconfig-002-20260317    gcc-8.5.0
-openrisc                         allmodconfig    clang-23
-openrisc                          allnoconfig    clang-23
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-23
-parisc                           allyesconfig    clang-19
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260317    gcc-8.5.0
-parisc                randconfig-002-20260317    gcc-8.5.0
-parisc64                            defconfig    clang-19
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-23
-powerpc               randconfig-001-20260317    gcc-8.5.0
-powerpc               randconfig-002-20260317    gcc-8.5.0
-powerpc64             randconfig-001-20260317    gcc-8.5.0
-powerpc64             randconfig-002-20260317    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260317    gcc-10.5.0
-riscv                 randconfig-002-20260317    gcc-10.5.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260317    gcc-10.5.0
-s390                  randconfig-002-20260317    gcc-10.5.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-23
-sh                               allyesconfig    clang-19
-sh                                  defconfig    gcc-14
-sh                    randconfig-001-20260317    gcc-10.5.0
-sh                    randconfig-002-20260317    gcc-10.5.0
-sparc                             allnoconfig    clang-23
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260317    gcc-12.5.0
-sparc                 randconfig-002-20260317    gcc-12.5.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260317    gcc-12.5.0
-sparc64               randconfig-002-20260317    gcc-12.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260317    gcc-12.5.0
-um                    randconfig-002-20260317    gcc-12.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260317    clang-20
-x86_64                randconfig-002-20260317    clang-20
-x86_64                randconfig-003-20260317    clang-20
-x86_64                randconfig-004-20260317    clang-20
-x86_64                randconfig-005-20260317    clang-20
-x86_64                randconfig-006-20260317    clang-20
-x86_64                randconfig-011-20260317    clang-20
-x86_64                randconfig-012-20260317    clang-20
-x86_64                randconfig-013-20260317    clang-20
-x86_64                randconfig-014-20260317    clang-20
-x86_64                randconfig-015-20260317    clang-20
-x86_64                randconfig-016-20260317    clang-20
-x86_64                randconfig-071-20260317    clang-20
-x86_64                randconfig-072-20260317    clang-20
-x86_64                randconfig-073-20260317    clang-20
-x86_64                randconfig-074-20260317    clang-20
-x86_64                randconfig-075-20260317    clang-20
-x86_64                randconfig-076-20260317    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-23
-xtensa                           allyesconfig    clang-23
-xtensa                randconfig-001-20260317    gcc-12.5.0
-xtensa                randconfig-002-20260317    gcc-12.5.0
+diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+index d66c3a935d83..f80925b66599 100644
+--- a/fs/erofs/ishare.c
++++ b/fs/erofs/ishare.c
+@@ -4,6 +4,7 @@
+ */
+#include <linux/xxhash.h>
+#include <linux/mount.h>
++#include <linux/security.h>
+#include "internal.h"
+#include "xattr.h"
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+paul-moore.com
 
