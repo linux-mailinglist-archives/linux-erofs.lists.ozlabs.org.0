@@ -1,95 +1,49 @@
-Return-Path: <linux-erofs+bounces-2795-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2796-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KGWtCz88uWkowQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2795-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:34:23 +0100
+	id 0L0iGMFBuWnp9wEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2796-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:57:53 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B8022A8E55
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:34:22 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0263F2A95DD
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Mar 2026 12:57:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fZqcC3yftz2yjN;
-	Tue, 17 Mar 2026 22:34:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fZr7K0Qlnz2yfP;
+	Tue, 17 Mar 2026 22:57:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::f30" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773747259;
-	cv=pass; b=OUiVK0QmaDs/FYA9lFmD/LHxBTQ/PKH4EyJc6VwV8wZzzaK/bSzY9D5Kt7GiqWasLYO0Fkoe779t87v8LuKHbd2+W0s8tvhbfeAJvKGvY3SOsF6YdTGMIWkciP7waIAWWU6D8Ctxt4xFFCrJAi0iXCoOWc5cjSemnwh8BuFzwTnEb3mjp4dP0EzDGK4jFc35NLVRtZzRvssPKDoiB4NQzQHDFNI6PJJ0+p72ej/TRPwoRVmyl6NK0arupsra4WGoagQ3bBf4EwugD3Iva4x4ilqqvqObsiurrpL6FfP/ZiohlEnVYOU3S9Wzri5fWdoz0h+9Fy9a+kTJkNvG4rPPMg==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773747259; c=relaxed/relaxed;
-	bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fvLSnbRAyRn/J7rXUyIGNH1r0FKRqXdkdhXsQvaaHi3vvVVB5U2jmCJI95unhFRD1NbvB+7AoTC4SX9YQ9s1LydSvvH2s8DywYWGnECrefSYbGnEDKzNmWChDgCA4D6UU+GQ4k1GLQAmdaOBzhWVBOczjx3d1Mxs9oislU81eRiZLOBJ/DBPZa+fUFUtnb530HM3SFhfYKnIBQD1fqmbjA3BG41uUveR03SLWanicDUE8rInBi9Z817+qfxKOTCh4LWwWXPLqfjvtvPWUwoWr6rzi7Ta3I0p0qe1+f8uMhC2b5/CZaZIVtRl2xwCnAPVJDwDGq2etz4VfQunENnruw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Sp5b03bA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::f30; helo=mail-qv1-xf30.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773748668;
+	cv=none; b=I1aN+MxI3LNQkOhNBYtlWKsYE14j00l/45XxcUHb1ZUN7JgCk0DYtf/5hkFKtAhxx9zbcVnRmDg2sP3T0kOiwxhO0Sfg51u3SppuFD365M9nIJRNWeLtq2a+RGB/HSyWOyp2vm4eBsrfQ81fdaK1Lu7I2/zrDNXCdV9L5Cwj8HQ9W62Ll8swF7QV89CvM0SJc7zQNJXD3Vxe2ZvOHAYXnUUG4a1JOlvKiDvm+8fLBrN1H7vv5v/x/Y3ZEBB878RbZYjV9LgrGJ/grw5k63ijgKraOPiC/GaivtiAJCDnymgq6Ym7FCboeSyuFDvxA+FGqDCN6HMC1IKvGYXK7Jpj8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773748668; c=relaxed/relaxed;
+	bh=3BffAOUbcfKa/72hEWsCNqq+mJSj/ReN7Tx3Pt3phvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V9G4MdLAZ1TjWB9+OmWKhAVPWPYjt9/vwExXZWYBjOIe4My4s+5jT7u+OI/3gXVQxC8mA6tLJngokozhHbp0+g4GXSK8csZlrDe1bJ9Ag9sdzNnwCpilrqFboUKZdNjJ2BwrSI8igWrOtd8PWcJD9sZYYrSJL4Ngm9mRHOQhM0fhOmcB1wJK7Q93HBJGfzgOB+MjecX8kYe0z2EEjt8ItKf1O/RYTOQLWw7OtrvgwxRxmiWU3scgx0oDP5suwfdQSosojJ/aXJgVo+4zDdkes/qJcqGq0guW7tavPAKPIxK31Wc1iZz+cmAk9Fau1MyxlRl2Ia4w0PW8HaNDVnhyMA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NEmrGrPp; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Sp5b03bA;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NEmrGrPp;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f30; helo=mail-qv1-xf30.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZqcB4msYz2yj1
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 22:34:18 +1100 (AEDT)
-Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-899f3cc8e4dso5287096d6.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 04:34:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773747256; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bEuciEZJmWqc5QDCr5m4/wDR20w7Yyf/SIyWE7U/KnNnRyuaEPa90vuj8n1MGq/r3g
-         DnwmzeENfxycFuuL2qFwryEM25/BppJhueaJ7tHueAY9OcXwwj2SlBjezX7whW2Hb3aV
-         i9vPAYPWamNFSYogpJPPr7E0G6ZujqHhwIFoQ1+EwHzn+sa6xkhVWiCckr+hecjh1smq
-         /0I8W+OfNqntRKmOSyRmVpStgMQcfsEaF7H42yWkIRt2ot1PtS8KzciY14XQr+Ld5PVi
-         D2HC4SnIECi8Lj+gSvQz+o/BSXLL+sR8GecSkshvNlQKY8nW8W/u6A05OxpZnB8YHCzk
-         Q7bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
-        fh=MbNNyKNJAT9O2DmogO2mgwrEz96kfBdMTN4QFZAjVhk=;
-        b=Sv2QIncYDT3ChjuHIlnHMo3xUgFr6a1E3JgRdPdeoAMionfNRW/OvY2+fSoZb5HqWd
-         MCrj9v1vbOxp9WXZ15UdUQbmF0TkTOEfLJJxLUYYcSUYwC15r6tMu24ybMvpWvkNdgLC
-         Gf53Uwdt8Tzgyp2x8vwiGxRPjqp+KrhN4cbxsOpfgW4U63slbCXA2hZlNezUP38P2mXv
-         rluYMBhrYfVh0RKKNWcV1pRgi1v6gRM48knNUsptBbE+bx0ai1B8qO2t9B0nrzfJn/bU
-         IqaMckyyvdXMyyUtyP4MSBR+4miyiVoW9LeqRvhc20ILeh+xudcoBa2gQ7t72gmcaAq7
-         QUQg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773747256; x=1774352056; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
-        b=Sp5b03bA1p+x21sKlgF178PHVIB1ltq3q0zzvKyDR96o+fZ9lADP6Buc8dhXimp9ub
-         nDNICbHKS1MnWtsaEQszmt+sLIoGusArOI+KsohJy2ledxn0E00RRKpVU9R3kRbXUcno
-         zTF7DOzCwPxbVzd98dqb0ad3RZphjj2WGpq7eP1z7XmE1VOeGy/6BleMknfoJc0yzBBT
-         9ZJd18t3mXuMwj4oTawYseE3CCfHg+V0uSKuJ9jBL0+WqBu5uA8C/YcQo+2mWpdEWxji
-         Lx2Xg3fap3jfZ2DDyMkeTqr+y4O2fP3pPRjZcRfRu7+Xx3WJG65abGhkpD+TUlFPWTfd
-         clDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773747256; x=1774352056;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWf59g/f9dbyJaifN1LWNv4dt9SqeUiBuBEPLFTwS4k=;
-        b=Z00fsFj+ttM6PoVbIpfX2GC4Zw4gZL7Sf9qyyWEN2AIlaGiJ1+WlK4cm7YE/jPc88Q
-         fbS8PIODlY0mrogfokIfBFmvaQ9UcXwglkMId0tj8554omxwRJW7/hlziK7WVJDgPtep
-         HPsyhQZ2787vMZr+tCYvcD9NgTLM76XCrtxkE962WXc++/aJJhBGz4CzWSE3ekYMUwup
-         yDDv67CUyH0p+lUymH4cyn6U9RNTi0VmMoImgYP+wbuxx1Bd3L2etAlAVObSSUOUnjxt
-         lLoRNbmZs9KE1kW9itXlbGnAFzoBWUFBvnBeWewNaPXmkxM+oN/2pCTor6zAMkd//YrT
-         zBMg==
-X-Gm-Message-State: AOJu0YyRTcw/u2QoVPtrcBwtF11+3GrWK6EO2U24+6usIo0TqfqE8KbX
-	jC9UWyd6pBX1Y22hn7z9aKpuwiPkJMcE2UF52/+H2isVVID6CEqlEv5Ccf0S33bnfhJjY71vj6J
-	F13OJ8WtE+HsKJwiKMahNzE5n2zGAJgw=
-X-Gm-Gg: ATEYQzxwLnGEbQyrbjV28H86goLNGhuaV+/TdMsOD7u8fQmDBnIoNg+MYfOj6TSqiGM
-	TLIOPXDnEpcskMXmUf07wvfZjYoNqHB93rjPDusSmPwlSZjMAzQecSPnsAP6YdlyMQOZ2VMWlSn
-	jAEAdSRbCNR1hhSSUuQJ+eIDSAKCW8ffDJCayQS91ESRv1ixvDaoaUMNw5Thh21czsJNawwCsfw
-	yWxmw/KzMA+crarHUaJucK0aUC3VBa0ELbqXL+6shwdUIxGNiAF9T3fwOh/ar2jiLdd+QV+l8N9
-	DTp9ZL3mlMYFRoqkDLvX4MnQTKUcVkrqPWXXqzDt+xL//TQZL6zlpl/zJkFgRECwpJV8jQ==
-X-Received: by 2002:a05:6214:4784:b0:89a:4b00:bf42 with SMTP id
- 6a1803df08f44-89a81ec1657mr159540786d6.4.1773747256344; Tue, 17 Mar 2026
- 04:34:16 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fZr7F6bYlz2ySq
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 22:57:43 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1773748659; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=3BffAOUbcfKa/72hEWsCNqq+mJSj/ReN7Tx3Pt3phvk=;
+	b=NEmrGrPpAgLBCuS59p3SXjmDmaxwjGwI3DJcvkUmEpE5ygucrT0AA9KOoI+vNmnfh3XLVgsOISVb9wx5F0lgprAwL5EmiPKOtsm5g8RUrw2PpceFKExAQ430Plq1WOrLQpL+zQNv2pQdOyZBEfns2ZWNdIfo7Jhdg74VQP1bNLY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X.B.QUv_1773748657;
+Received: from 30.221.133.143(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.B.QUv_1773748657 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 17 Mar 2026 19:57:37 +0800
+Message-ID: <c4b2f0de-c3d3-44c9-992c-4a49c4b8b23e@linux.alibaba.com>
+Date: Tue, 17 Mar 2026 19:57:36 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,204 +55,140 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260317111743.84988-1-singhutkal015@gmail.com> <e8729997-91ca-4bf0-bb52-78eec7fc7f2f@linux.alibaba.com>
-In-Reply-To: <e8729997-91ca-4bf0-bb52-78eec7fc7f2f@linux.alibaba.com>
-From: Utkal Singh <singhutkal015@gmail.com>
-Date: Tue, 17 Mar 2026 17:04:08 +0530
-X-Gm-Features: AaiRm508CYLt5rzCPWYi-qLhDKX5cDjCzZZuejoMwZOowlftoegSh0wz0Cm1dVQ
-Message-ID: <CAGSu4WMt34AGeESUqoqaVzNEfQBNtkJAwLY+dHAsd92AB5X2Fw@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: lib: validate h_shared_count in erofs_init_inode_xattrs()
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, yifan.yfzhao@gmail.com
-Content-Type: multipart/alternative; boundary="00000000000022c4ae064d36b7fc"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] erofs-utils: lib: validate h_shared_count in
+ erofs_init_inode_xattrs()
+To: Utkal Singh <singhutkal015@gmail.com>, linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org, yifan.yfzhao@gmail.com
+References: <PASTE-MESSAGE-ID-HERE>
+ <20260317113021.88187-1-singhutkal015@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260317113021.88187-1-singhutkal015@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2795-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:yifan.yfzhao@gmail.com,m:yifanyfzhao@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:singhutkal015@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:yifan.yfzhao@gmail.com,m:yifanyfzhao@gmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2796-lists,linux-erofs=lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.368];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[lists.ozlabs.org,kernel.org,gmail.com];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 1B8022A8E55
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 0263F2A95DD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---00000000000022c4ae064d36b7fc
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Gao Xiang,
 
-Thanks for the review. I just sent v3 which uses the multiplication form as
-you suggested.
+On 2026/3/17 19:30, Utkal Singh wrote:
+> h_shared_count is read from the on-disk xattr ibody header and used
+> to size a heap allocation and drive a loop reading shared xattr IDs.
+> If the value is corrupted to exceed the space available in xattr_isize,
+> the loop reads past the ibody region and the malloc is oversized.
+> 
+> This does not affect system stability but results in silently
+> processing garbage data from corrupted images across all library
+> consumers (dump.erofs, erofsfuse, rebuild).
+> 
+> Validate h_shared_count against the available ibody space.
+> Return -EFSCORRUPTED on failure.
+> 
+> Reproducer:
+>    mkdir testdir && echo hello > testdir/a.txt
+>    setfattr -n user.test -v val testdir/a.txt
+>    mkfs.erofs test.img testdir
+>    # corrupt h_shared_count (offset = nid*32 + inode_size + 4) to 0xFF
+>    # then: fsck.erofs --extract=/tmp/out --xattrs test_corrupted.img
+>    # Without patch: silently processes invalid shared xattr IDs
+>    # With patch: returns -EFSCORRUPTED
 
-Best regards, Utkal Singh
+Let's try to rephrase the commit message a bit:
 
-On Tue, 17 Mar 2026 at 17:00, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+Subject: erofs-utils: lib: harden h_shared_count in erofs_init_inode_xattrs()
 
->
->
-> On 2026/3/17 19:17, Utkal Singh wrote:
-> > erofs_init_inode_xattrs() reads h_shared_count from the on-disk xattr
-> > ibody header and uses it to size a malloc and drive a loop that reads
-> > shared xattr IDs.  If h_shared_count exceeds the space available
-> > within xattr_isize, the loop reads past the intended ibody region
-> > and the malloc is oversized.
-> >
-> > Validate that h_shared_count does not exceed the number of __le32
-> > entries that fit after the ibody header.  Return -EFSCORRUPTED with
-> > a diagnostic message on failure.
-> >
-> > Reproducer:
-> >    mkdir testdir && echo hello > testdir/a.txt
-> >    setfattr -n user.test -v val testdir/a.txt
-> >    mkfs.erofs test.img testdir
-> >    # corrupt h_shared_count (offset = nid*32 + inode_size + 4) to 0xFF
-> >    # then: fsck.erofs --extract=/tmp/out --xattrs test_corrupted.img
-> >    # Without patch: silently processes invalid shared xattr IDs
-> >    # With patch: returns -EFSCORRUPTED
-> >
-> > Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
-> > ---
-> >   lib/xattr.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/lib/xattr.c b/lib/xattr.c
-> > index 565070a..5888602 100644
-> > --- a/lib/xattr.c
-> > +++ b/lib/xattr.c
-> > @@ -1182,6 +1182,14 @@ static int erofs_init_inode_xattrs(struct
-> erofs_inode *vi)
-> >
-> >       ih = it.kaddr;
-> >       vi->xattr_shared_count = ih->h_shared_count;
-> > +     if (vi->xattr_shared_count >
-> > +         (vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)) /
-> > +         sizeof(__le32)) {
-> > +             erofs_err("invalid h_shared_count %u in nid %llu",
-> > +                       vi->xattr_shared_count, vi->nid | 0ULL);
-> > +             erofs_put_metabuf(&it.buf);
-> > +             return -EFSCORRUPTED;
-> > +     }
->
-> Again, why not `vi->xattr_shared_count * sizeof(__le32) >
->         vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)`?
->
-> Thanks,
-> Gao Xiang
->
+`u8 h_shared_count` indicates the shared xattr count of an inode. It is
+read from the on-disk xattr ibody header, which should be corrupted if
+the size of the shared xattr array exceeds the space available in
+`xattr_isize`.
 
---00000000000022c4ae064d36b7fc
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It does not cause harmful consequence (e.g. crashes), since the image is
+already considered corrupted, it indeed results in the silent processing
+of garbage metadata.
 
-<div dir=3D"ltr"><p>Hi Gao Xiang,</p>
-<p>Thanks for the review. I just sent v3 which uses the multiplication form=
- as you suggested.</p>
-<p>Best regards,
-Utkal Singh</p></div><br><div class=3D"gmail_quote gmail_quote_container"><=
-div dir=3D"ltr" class=3D"gmail_attr">On Tue, 17 Mar 2026 at 17:00, Gao Xian=
-g &lt;<a href=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.alibab=
-a.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
-rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
-1ex"><br>
-<br>
-On 2026/3/17 19:17, Utkal Singh wrote:<br>
-&gt; erofs_init_inode_xattrs() reads h_shared_count from the on-disk xattr<=
-br>
-&gt; ibody header and uses it to size a malloc and drive a loop that reads<=
-br>
-&gt; shared xattr IDs.=C2=A0 If h_shared_count exceeds the space available<=
-br>
-&gt; within xattr_isize, the loop reads past the intended ibody region<br>
-&gt; and the malloc is oversized.<br>
-&gt; <br>
-&gt; Validate that h_shared_count does not exceed the number of __le32<br>
-&gt; entries that fit after the ibody header.=C2=A0 Return -EFSCORRUPTED wi=
-th<br>
-&gt; a diagnostic message on failure.<br>
-&gt; <br>
-&gt; Reproducer:<br>
-&gt;=C2=A0 =C2=A0 mkdir testdir &amp;&amp; echo hello &gt; testdir/a.txt<br=
->
-&gt;=C2=A0 =C2=A0 setfattr -n user.test -v val testdir/a.txt<br>
-&gt;=C2=A0 =C2=A0 mkfs.erofs test.img testdir<br>
-&gt;=C2=A0 =C2=A0 # corrupt h_shared_count (offset =3D nid*32 + inode_size =
-+ 4) to 0xFF<br>
-&gt;=C2=A0 =C2=A0 # then: fsck.erofs --extract=3D/tmp/out --xattrs test_cor=
-rupted.img<br>
-&gt;=C2=A0 =C2=A0 # Without patch: silently processes invalid shared xattr =
-IDs<br>
-&gt;=C2=A0 =C2=A0 # With patch: returns -EFSCORRUPTED<br>
-&gt; <br>
-&gt; Signed-off-by: Utkal Singh &lt;<a href=3D"mailto:singhutkal015@gmail.c=
-om" target=3D"_blank">singhutkal015@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 =C2=A0lib/xattr.c | 8 ++++++++<br>
-&gt;=C2=A0 =C2=A01 file changed, 8 insertions(+)<br>
-&gt; <br>
-&gt; diff --git a/lib/xattr.c b/lib/xattr.c<br>
-&gt; index 565070a..5888602 100644<br>
-&gt; --- a/lib/xattr.c<br>
-&gt; +++ b/lib/xattr.c<br>
-&gt; @@ -1182,6 +1182,14 @@ static int erofs_init_inode_xattrs(struct erofs=
-_inode *vi)<br>
-&gt;=C2=A0 =C2=A0<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0ih =3D it.kaddr;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0vi-&gt;xattr_shared_count =3D ih-&gt;h_share=
-d_count;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (vi-&gt;xattr_shared_count &gt;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(vi-&gt;xattr_isize - sizeof(struct=
- erofs_xattr_ibody_header)) /<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sizeof(__le32)) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0erofs_err(&quot;inval=
-id h_shared_count %u in nid %llu&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0vi-&gt;xattr_shared_count, vi-&gt;nid | 0ULL);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0erofs_put_metabuf(&am=
-p;it.buf);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EFSCORRUPTED;=
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-<br>
-Again, why not `vi-&gt;xattr_shared_count * sizeof(__le32) &gt;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 vi-&gt;xattr_isize - sizeof(struct erofs_xattr_=
-ibody_header)`?<br>
-<br>
-Thanks,<br>
-Gao Xiang<br>
-</blockquote></div>
+Let's harden it to report -EFSCORRUPTED earlier.
 
---00000000000022c4ae064d36b7fc--
+Reproducer:
+   mkdir testdir && echo hello > testdir/a.txt
+   setfattr -n user.test -v val testdir/a.txt
+   mkfs.erofs test.img testdir
+   # corrupt h_shared_count (offset = nid*32 + inode_size + 4) to 0xFF
+   # then: fsck.erofs --extract=/tmp/out --xattrs test_corrupted.img
+   # Without patch: silently processes invalid shared xattr IDs
+   # With patch: returns -EFSCORRUPTED
+
+Also are you interested in submitting a kernel patch as well? You need
+to get the latest erofs -fixes branch, and port this one into the kernel.
+
+If you don't have enough experience on this for now, I could help you
+submit one immediately, and I will Cc you as well.
+
+Thanks,
+Gao Xiang
+
+> 
+> Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+> ---
+>   lib/xattr.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/lib/xattr.c b/lib/xattr.c
+> index 565070a..9d52a18 100644
+> --- a/lib/xattr.c
+> +++ b/lib/xattr.c
+> @@ -1182,6 +1182,13 @@ static int erofs_init_inode_xattrs(struct erofs_inode *vi)
+>   
+>   	ih = it.kaddr;
+>   	vi->xattr_shared_count = ih->h_shared_count;
+> +	if (vi->xattr_shared_count * sizeof(__le32) >
+> +	    vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)) {
+> +		erofs_err("invalid h_shared_count %u in nid %llu",
+> +			  vi->xattr_shared_count, vi->nid | 0ULL);
+> +		erofs_put_metabuf(&it.buf);
+> +		return -EFSCORRUPTED;
+> +	}
+>   	vi->xattr_shared_xattrs = malloc(vi->xattr_shared_count * sizeof(uint));
+>   	if (!vi->xattr_shared_xattrs) {
+>   		erofs_put_metabuf(&it.buf);
+
 
