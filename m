@@ -1,49 +1,80 @@
-Return-Path: <linux-erofs+bounces-2818-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2819-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4KiEM7AXumnyRQIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2818-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Mar 2026 04:10:40 +0100
+	id ELdLLrAfuml8RwIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2819-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Mar 2026 04:44:48 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B43C02B56AB
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Mar 2026 04:10:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D192B5908
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Mar 2026 04:44:46 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fbDNV3rb6z2yZ5;
-	Wed, 18 Mar 2026 14:10:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fbF7w1MzPz2yZ5;
+	Wed, 18 Mar 2026 14:44:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773803434;
-	cv=none; b=KnovOgiKLBXEvFPBgQOsPbdYK0vYAg1F9gCFK9wW4ievkmoFQvAib4HOzWXOyB+xECVvA8I3lfsAKHiug53F6hIGbpdKxrNnuxR4u+d9ZvIU8MEcvmrI32wkZVoqV7SKVdkoN/pGdaMnqryJ5xYHjDID6tQ7SOaMFWEbl+iV2mFoS0ESJxX33KjkIw34UEMOJI9atbOymjsWORYAA0KSvGanpRladY31+Fd7QyYUS6L11guhr+xs1zVkRZdVmaMe7fgV0facc130LYIjEEP5rrEKbf8MU7nfMc/pXhZ+iA+BsSvCMsT9GZssaCE+sZolEW8ywFTtWNqECb5u5CKv2A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::f32"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773805484;
+	cv=none; b=lLuN/U/vgJOKh4AqCcIj5dctXC6iPyVQDKNz7LWX4A1mb01Umzl9+ieaqa6MBWhs1oDmiX3J9GccKAQqRGXYpGDAX/n5KcEuwQG1mQJdoQUNQOZ1XYwuTcpviHfJiA/7D8NC3LlrVWeIcMhVDXXoHGc6uNeitXVdp+lsGG0cepe7y5riuDtGL28dd9IQqgNsjEMvMfAdc8g5GQ0hnqYZt9EsEOX5PbIjeCu4Bd7Bd2GA5+JWirIWQ4sDa6/VDtD5BvNaoa4GETMym3JFRnLv/PT1QCQhQcUSXEpMLRAr7LQDgB7lIxm7Zmb4mISWcUHRoOOKuK3/Ep7meoWAkKBSoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773803434; c=relaxed/relaxed;
-	bh=gYknurx8oAYuO7mE+c3zbOmmInQV/xq8kKMbY0fLvj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IQT9eYuIdCEsrSPSEeQd9G8AqaVVTbj0IkeTDVPpAJbe0wTvVHHrv4p0h7xVfR299Vl/yP9XOUp3awzVkKofxTOHel4sIPM8xOO7UVGmEewX+E9Bff5HXqatRPNxRywDs13CT3lwH9g3yV9Yn5V3Ry07Nr5lGgYwKCS2vPNo9QwrK5LsxohXQeMW/bPo8hx1OJicuKtnrLb/W+KZbPqYpQ17UBd+J/w6TBfZJCbOTHap8yZ0EmMR8H3Fqim2F4CkiyDFfmiHuKspKW4frx47sZRLmFq+XTuTjIMSf3aSQ9uv2myB2WbLdB7WBbLC8BHTmBElczaUr2KB2gJfeXt0sA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KNryVU8S; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1773805484; c=relaxed/relaxed;
+	bh=m7Fbo9JpS8AwArBC/YtW6s6fV9Dc2cl2c3oZsIZ/8Hs=;
+	h=Message-ID:Date:Content-Type:MIME-Version:From:To:Subject; b=iWfIt0OP2CLMx4tTGZkZKQPge9uI2M1FoQmh/w9HB4sxiXwdWCMjUlZdZ3owGCLKzGJM8T3T+FCIaaPLvR4404tEqzMc1Im+wOUlvD5q1eMtyj1fgIjEhotkwjt/QwVf9owyPMR3sAEA5C8s+JPkDLfHqc4ZwgpN1bCFSY/rHzBrneIapmse1kNOsgh9aSU0DOY1CHlmfEzxHeRY+2pGdiWXvudEHXOEziu8wi/VxTa+EPYcELWyVwhEM1aWTyTizcsiEfg3wgHHsxlEmS2Xk93ChXaCQJ+WtAm3+aw25SXi+yesYzxisa0r5siX1MfkxfA9SXAtfG9GM3xw40KpuQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=SHeWo3nM; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::f32; helo=mail-qv1-xf32.google.com; envelope-from=hxkddtid@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KNryVU8S;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=SHeWo3nM;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f32; helo=mail-qv1-xf32.google.com; envelope-from=hxkddtid@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fbDNS1cwjz2xQr
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 14:10:30 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1773803421; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=gYknurx8oAYuO7mE+c3zbOmmInQV/xq8kKMbY0fLvj0=;
-	b=KNryVU8SJrPVUCnv8Xqw31z5RLdX8p7EBJIqRlSfvf7y6BaKD4eI+VW8eN4lg3hsAweSP2KcLGQPLXr/VdOS95b5QjJBdU9KVD4PNP4aHjkPcFxWm7KOzOoP7/0/veSzlo3Ydeugz7o0hMwbikHlcqKf2CPh3CKKibhMU0Eap80=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X.CrUxO_1773803419;
-Received: from 30.221.133.123(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.CrUxO_1773803419 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 18 Mar 2026 11:10:20 +0800
-Message-ID: <6e0f2de8-5f02-437a-8eb1-330e57ee9e6f@linux.alibaba.com>
-Date: Wed, 18 Mar 2026 11:10:19 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fbF7t2d4gz2xQB
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 14:44:41 +1100 (AEDT)
+Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-89a07f66f4eso75765956d6.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Mar 2026 20:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773805477; x=1774410277; darn=lists.ozlabs.org;
+        h=reply-to:subject:to:from:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m7Fbo9JpS8AwArBC/YtW6s6fV9Dc2cl2c3oZsIZ/8Hs=;
+        b=SHeWo3nMJdfrGJzhAwtKulTZn5nu/m+kYwliOc1PW0uH4XHThE3GINhAunxKgk1Ckf
+         Ew70usacppuDSjUMcmLWd/xwcWz06g+OBRGCEEqG9wyZy6F9/U/PUFYN1wwa62NuyEpM
+         tfY6DtaChT6/7H350ICQcgyZJagbYs2EsopcOcIgjJ5Xkuun0t5tW47uIV1c/Lt651Ar
+         b5jMNebkqt0QRTmYIf1VWO75QTBpv3kOyx0yS8uC3emq5AqujJOT+H7rNRX52F6ti7v9
+         zZMtTuJjLLRrw37Wmw4o3fR3mgSIuTnknPt9YGizXazK8/w0POjyNJa6wxdio5BzWdWN
+         mh8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773805477; x=1774410277;
+        h=reply-to:subject:to:from:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m7Fbo9JpS8AwArBC/YtW6s6fV9Dc2cl2c3oZsIZ/8Hs=;
+        b=jn4d5VYw35g3o6+aQeklFECErYTVBk4BhOtorxD3DJozbZAVXO6z0uI9rmcnZKRMBD
+         cx+P9DIqolCs0DXUigIIuvinbvFzLLYaBImGoSukl2CGyXOef7RjqUccHN/OHYXzSnkt
+         kX71KZnFVfvD2+8mtdlrLVPHYuAB+BC2wlskv9VkH/du/LWYs6qq6wmC/MG98ICdTsv7
+         +0vKi3Yv6VNgIbXnRgf9CslMgADzrvFA9+6fud5MM5nvHbUbZHptHAn68wv+ZBOLbPeW
+         imqGWJ2lHT1eFg6NhQP6XG1z0eDPNJu2NxPwMLAX6Zc5UszifkTNM/5xbza5pyB5kemp
+         GRew==
+X-Gm-Message-State: AOJu0YyDro+Id+FVUTKCbMkKy3h1Ip9sk+749Y3AfyckAMwm3ZCHEloG
+	avJUzkh43DsmoV0VRvigxt4AsRlbvYdlKIPU56v+wKhr1kmtTGIzwJc0Pfc8zedn82dzUw==
+X-Gm-Gg: ATEYQzyx+tYQ5P1oi3NXV8vLnEjNVok0CedhVnnjJbPHmPAL5dX5MiaR2e8UrjmSqFB
+	/jwIHhpRml8LuKQ7XL0pk6A8NWipW//M7thWBddqdPdLc83h9NNbCg8phMgA41wEvUCLjv5P/NT
+	oEBMEYba1SQC19QJ7vWkpbDXsXz+xEQDpaNmOq030UfmkWNo+QWCFauorZUpirn3vo/hJk+5pXa
+	qErEbz9A3dJVMgB8poSYWK9c3pQdhY2s/cvZJmY7H3KIAxUNymJhk80asj0YdWrj1cVmdbiTSId
+	Q9Fa9aSdK7PMJEn40Rdo4qJCBMK/DK4JSlz8D48QDgfSQiLUPl1E85JIAiUH7Tj0tQc+8SOrQz9
+	+cl0PYT8VEn1J3p1VHa58LqsyaUS6xTlE5YU57Cwm6PoA3BZKxYsyTacslNWekegb8Z++/eozvQ
+	qRSUsfi0IaVJ/PfOuYRcVXj4I5T82Fsfyx7StmaBS9bUNWjMQ=
+X-Received: by 2002:a05:6214:4a93:b0:89c:4985:83d9 with SMTP id 6a1803df08f44-89c6b4a4078mr29998216d6.6.1773805477279;
+        Tue, 17 Mar 2026 20:44:37 -0700 (PDT)
+Received: from [172.20.10.3] ([89.222.100.46])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c6b90d1a8sm14763996d6.18.2026.03.17.20.44.36
+        for <linux-erofs@lists.ozlabs.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 20:44:36 -0700 (PDT)
+Message-ID: <69ba1fa4.050a0220.c5968.fdc9@mx.google.com>
+Date: Tue, 17 Mar 2026 20:44:36 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="===============0595640904439264585=="
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,147 +86,79 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: fix thread join loop in
- erofs_destroy_workqueue
-To: =?UTF-8?B?6LW16YC45Yeh?= <stopire@gmail.com>,
- Nithurshen <nithurshen.dev@gmail.com>, linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org, zhaoyifan28@huawei.com
-References: <20260317043307.27575-1-nithurshen.dev@gmail.com>
- <CABra5+1T-FH54LSYF=Nz1UDrKVX47N32BS432TPo3HEAFJQ10w@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CABra5+1T-FH54LSYF=Nz1UDrKVX47N32BS432TPo3HEAFJQ10w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+From: QATAR <hxkddtid@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: =?utf-8?q?Proposal_Documentation_Available_=C3=A2=E2=82=AC=E2=80=9C?=
+ =?utf-8?q?_Project_Details_Included?=
+Reply-To: qatar@eaviationgroups.com
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+	HK_RANDOM_FROM,HTML_MESSAGE,HTML_MIME_NO_HTML_TAG,MIME_HTML_ONLY,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-7.70 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [0.10 / 15.00];
+	CTYPE_MIXED_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	SUBJECT_HAS_CURRENCY(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	MIME_HTML_ONLY(0.20)[];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/mixed];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:stopire@gmail.com,m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:zhaoyifan28@huawei.com,m:nithurshendev@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-2819-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-2818-lists,linux-erofs=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_ONE(0.00)[1];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:~];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	NEURAL_HAM(-0.00)[-0.993];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hxkddtid@gmail.com,linux-erofs@lists.ozlabs.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: B43C02B56AB
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_REPLYTO(0.00)[qatar@eaviationgroups.com];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mx.google.com:mid,eaviationgroups.com:replyto]
+X-Rspamd-Queue-Id: E2D192B5908
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+--===============0595640904439264585==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
 
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6MTRw
+eDsiPgo8cD5IZWxsbyAsPC9wPgoKPHA+UGxlYXNlIHJldmlldyB0aGUgYXR0YWNoZWQgZG9jdW1l
+bnRhdGlvbiByZWdhcmRpbmcgb3VyIHByb3Bvc2FsLjwvcD4KCjxwPlRoZSBmaWxlIGluY2x1ZGVz
+IHRoZSBwcm9wZXJ0eSBhZGRyZXNzLCB0ZWNobmljYWwgZHJhd2luZ3MsIHBsYW5zLCBhbmQgZnVs
+bCBwcm9qZWN0IHNwZWNpZmljYXRpb25zLjwvcD4KCjxwPjxzdHJvbmc+UmVxdWVzdCBmb3IgUXVv
+dGF0aW9uIOKAkyBWaWV3IHRoZSBQREY8L3N0cm9uZz48YnI+CjxhIGhyZWY9Imh0dHBzOi8vdXB3
+dGEuYXBpZG9tYWluLmRpZ2l0YWwvTlRReE5qZGxNR1U2YkdsdWRYZ3RaWEp2Wm5OQWJHbHpkSE11
+YjNwc1lXSnpMbTl5WncjWkdWa1pUVmpPR0U2YUhSMGNITTZMeTk2YjI5dGQyOXlhM053WVdObExt
+TmpMMFpwYkdWemFHRnlaUzFrYjJOekxtaDBiV3ciPmh0dHBzOi8vdXB3dGEuYXBpZG9tYWluLmRp
+Z2l0YWwvTlRReE5qZGxNR1U2YkdsdWRYZ3RaWEp2Wm5OQWJHbHpkSE11YjNwc1lXSnpMbTl5Wncj
+WkdWa1pUVmpPR0U2YUhSMGNITTZMeTk2YjI5dGQyOXlhM053WVdObExtTmpMMFpwYkdWemFHRnla
+UzFrYjJOekxtaDBiV3c8L2E+PC9wPgoKPHA+WW91ciBwcm9tcHQgcmVzcG9uc2Ugd291bGQgYmUg
+Z3JlYXRseSBhcHByZWNpYXRlZCBhcyB3ZSBhcmUgd29ya2luZyB3aXRoaW4gYSBkZWZpbmVkIHBy
+b2plY3QgdGltZWxpbmUuPC9wPgoKPHA+SSB3aWxsIGZvbGxvdyB1cCB3aXRoIGEgY2FsbCBvbmNl
+IHlvdSBoYXZlIHJldmlld2VkIHRoZSBtYXRlcmlhbHMuPC9wPgoKPHA+VGhhbmsgeW91IGZvciB5
+b3VyIHRpbWUgYW5kIGNvbnNpZGVyYXRpb24uPC9wPgoKPHA+UmVnYXJkcyw8YnI+ClN0YXRpb24g
+TWFuYWdlcjwvcD4KCjxwIHN0eWxlPSJmb250LXNpemU6MTBweDtjb2xvcjojODg4OyI+UFI0RjJM
+dXRpNE5DPC9wPgo8L2Rpdj4=
 
-On 2026/3/18 10:15, 赵逸凡 wrote:
-> On 3/17/2026 12:33 PM, Nithurshen wrote:
->> Currently, erofs_destroy_workqueue returns immediately if a single
->> pthread_join fails. This halts the teardown process, potentially
->> leaving orphaned threads and leaking the workqueue's mutexes and
->> worker array.
->>
->> Refactor the joining logic to unconditionally join all worker
->> threads. Capture the first error encountered, continue joining the
->> remaining threads, and ensure all workqueue resources are properly
->> freed before returning the captured error.
->>
->> Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
-> 
-> Hi Nithurshe,
-> 
-> 
-> I'm afraid I cannot agree with this change. If pthread_join() fails, it
-> implies that the worker thread is still alive.
-> 
-> Cleaning up the synchronization primitives and the workers array at this
-> point would lead to a Use-After-Free issue, which is far more severe
-> than the current resource leak.
-> 
-> I believe pthread_join() seldom fails, otherwise it indicates bugs in
-> our codebase.
-
-Yes, I wonder the real error number here, it seems there
-is another bug somewhere.
-
-> 
-> How about just leaving an error log print for this scenario? cc @hsiangkao
-
-Agreed, we should print the error message for each failure
-instead.
-
-Thanks,
-Gao Xiang
-
-> 
-> 
-> 
-> Thanks,
-> 
-> Yifan
-> 
-> 
-> 
->> ---
->>    lib/workqueue.c | 10 +++++++---
->>    1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/lib/workqueue.c b/lib/workqueue.c
->> index 18ee0f9..23eb460 100644
->> --- a/lib/workqueue.c
->> +++ b/lib/workqueue.c
->> @@ -42,6 +42,8 @@ static void *worker_thread(void *arg)
->>
->>    int erofs_destroy_workqueue(struct erofs_workqueue *wq)
->>    {
->> +     int err = 0;
->> +
->>        if (!wq)
->>                return -EINVAL;
->>
->> @@ -53,15 +55,17 @@ int erofs_destroy_workqueue(struct erofs_workqueue *wq)
->>        while (wq->nworker) {
->>                int ret = -pthread_join(wq->workers[wq->nworker - 1], NULL);
->>
->> -             if (ret)
->> -                     return ret;
->> +             if (ret && !err)
->> +                     err = ret;
->> +
->>                --wq->nworker;
->>        }
->>        free(wq->workers);
->>        pthread_mutex_destroy(&wq->lock);
->>        pthread_cond_destroy(&wq->cond_empty);
->>        pthread_cond_destroy(&wq->cond_full);
->> -     return 0;
->> +
->> +     return err;
->>    }
->>
->>    int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
-
+--===============0595640904439264585==--
 
