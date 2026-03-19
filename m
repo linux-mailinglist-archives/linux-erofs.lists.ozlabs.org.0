@@ -1,57 +1,97 @@
-Return-Path: <linux-erofs+bounces-2845-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2846-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yFUxJOfSu2k4owIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2845-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 11:41:43 +0100
+	id 8LVmFiXZu2k6pAIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2846-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 12:08:21 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40CD32C9A3F
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 11:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 65A6A2CA11A
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 12:08:20 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fc2LV3wspz2ykV;
-	Thu, 19 Mar 2026 21:41:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fc2xF4xFJz2ynW;
+	Thu, 19 Mar 2026 22:08:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773916898;
-	cv=none; b=LMMBOigXjLoRz5iNIrqMCQcQqATN1puAMYGVgb1s0ZctR9Fqdib/XHSKUiJrpRjdcGBYLi7b/C5lNRfLbBgWbPTAVjTM6ZoUuduWb8NsrljIGUolV59YdbLIpi5QhRgXxOEDUeyYT9vOyaZyUu14Qq2xZ8nhbR+w38QnUxEPw70ggm97meXeLMvnNHF0PWIl8gqSnSMyFpPgS2oeJFjv0vPykIa19FECxYQprSk556wW20giQgH+GpjYJfdPEfuWSt62uofaBSSivPJzYBicaL5/0SDL+JwAPYxah0MYMmQVB2S5A32wlxGOgfRbseDvaxPNZgTyqjuu8FrzBo4iQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773916898; c=relaxed/relaxed;
-	bh=r0AyTBeGWm6dnBfLL+n/RLoZEYxAVSCEkReQ0WAxwm0=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=DcJF8o1IhWoxmF9YNJvFw40/gcW8bLq35vjmzPkCJGdOAS+sVXHYKfDbQaRAhwkErjFbEjtwgIL8HjMBDhTAMf5mE64PdSXweoj4sOSr/wADew9O3iCLNvY2kMv7RN41eZHrygybcpD+h9vZCI3z5wUL+XxQ71JngkSPUiErOPmHsP+duhsxzIQNuLxvy2vR6jPBUKDbOsVfS7ltqUaP7ZNHg0Fj4FRuyeGRar0UBLOvxy9N0eorLXpcmcuhBj06hb5KGPcjcxlnVOqzAx04ixAiylFEJuMs1dCpFe5CDv2B5W6Pi0O5TtavAmT2Si7v8fnXhvbGs4plkl4i6C2gkw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=g3EQzgXC; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::f33" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773918497;
+	cv=pass; b=Te+qIiLwp1atyYJcuv7t9hi7ZarpUjP+TctW97YMkkcaG4EQwmUXUswQfNyT74LaO1SJDFZNH2I1vLuufE/+OMGf5mRWG9bNbNoEZzAS0nDjiE4VibBY+TJR2p6nvP7aVyT/ib+oFggpPgs+zqixxsyXSfnF+5Aftuftk+2116IEJxRJ0u5CY9uEvubEV3cLwSxg6GuaKLG7vdkB37WoF3N2ILVA7rVPVtc0N9oSfdevoMEJgRW7g02e/DYy8rUOttbU98dPpEy/mVbcazL7+2KAZwW66TjutD89xgY6qmIk6S/68riUKrp6uZp6gl5kNFmniNlcSsWGPJ3G7DAMEg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773918497; c=relaxed/relaxed;
+	bh=mgSSxNlilEyRbvJ/Dl1SRHIVHwdCoXHiogp/tKM1mPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QaIoKmdfN7PrAAhLo3RnMgckYClsXq82ZKbhPON33f8fALqfAYESS61r8D5jYPpmyE+PL1G13e/7zcX++W8opUnZNCnoyDMxg8aBIA4j53lXe4wD5evrHusQt9A45Ewi6K8lRLsG39MjmEKJO3L1FoVR42Hiz0p9YOhnlRqk2omJg6diFhg7EfG7KnDx9Pks5Y9z3X8Y+DH4gCiYmq02vX64dQ6w/1pEJ7eQlab6UBXx/hS/QHG/qf4SrXDfvr76HP5ttT8f+yKMoy6OP1xZ9SbY9UgEBOWnE3EP6Mg9Rlk/z5UieTsZmGIhLkQ+EldN9AZjomKKs6Lnij2mTsjbMA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=NzAfLg2Z; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::f33; helo=mail-qv1-xf33.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=g3EQzgXC;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=NzAfLg2Z;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f33; helo=mail-qv1-xf33.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc2LT1KhFz2xZK
-	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 21:41:36 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id EC13D43946;
-	Thu, 19 Mar 2026 10:41:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FF1C19424;
-	Thu, 19 Mar 2026 10:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1773916893;
-	bh=Crk/U+b27IGWj9k0ye8hbfMINeHbBOIaqKk8W0gOgfM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=g3EQzgXC5gDCQyoSEXrCsIo1TKv0qoMBYW501esXni33PMAvmkT7tS0yMXK0ilPJo
-	 7Jt4rxV2BBDOh9a4AO8PqIdcGm8vdYRC+EPyjXgrjs0ZhqtQufffgoJgHFD3LgTPDa
-	 uXVvPX1xexrEAe5VRD0C8R7bUkCX+MQS/A15/r/k=
-Subject: Patch "erofs: fix inline data read failure for ztailpacking pclusters" has been added to the 6.12-stable tree
-To: Hao_hao.Wang@unisoc.com,gregkh@linuxfoundation.org,hsiangkao@linux.alibaba.com,ke.wang@unisoc.com,linux-erofs@lists.ozlabs.org,niuzhiguo84@gmail.com,zhiguo.niu@unisoc.com
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Thu, 19 Mar 2026 11:41:17 +0100
-In-Reply-To: <1773216869-2760-1-git-send-email-zhiguo.niu@unisoc.com>
-Message-ID: <2026031917-drizzle-excursion-983f@gregkh>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc2xD4HWJz2ySj
+	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 22:08:15 +1100 (AEDT)
+Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-899f50ab3f2so1158296d6.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 04:08:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773918494; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MJp5EVVX4CN7vUTEtdOqCxUis/vrowGJdmV1VH+XCdzDtrslg3E2Rbrmt6fVgjWC0W
+         bMcVhMAaFcE3U7pJy8O75E7rU9lQ3oxZiq+mAXlET73xAw4v0cSaudYOEuVc9qYkr5TI
+         gEbx3jPshaKRp+uhO4i+yLjw6PtSwkTjkJA4amglIz5AZxTiDLss5g3crnuQ7hUdFY5f
+         /4/EZ3jiMTWLcDsxpiw2yrENPFMoDo95QsAID4Rrr/9jMlEcZHMIqOtEoyOlgisUuxZ5
+         dGIdztgy7G/Pg6FG8G01aNwoZvSsH/Jq88/5vNZyDffJV7gLzNo7P5qF/1ZbXkItm4GM
+         nlQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=mgSSxNlilEyRbvJ/Dl1SRHIVHwdCoXHiogp/tKM1mPU=;
+        fh=Ne6WJFA2cRGUVYndfjlYvfeWelWXaHazsfKSbXZs3FA=;
+        b=E6ycQdn2faNyoLZEjRkvAe0uksB9oNWP7aKvlV8EX8BK7jxiDDRUqnXtwM3QH4K3nW
+         qCrbjRFMH7y/18IRpl2XOf7vGstr2o6SV2p8wEPjywz3JTrblVG7Hb6zPxPr3jnUKIZe
+         BBK9O/535fL2XXJpxojzKpgD2lQ7ppmYjihtoMN4TAutiTerhObnaXmqb/nJl2JKVd4w
+         FAZmua41u2QbT7PZ+0vhZCLONMJW7ucR3MmPK0rHpSqSd6hKNLGKvVPAKADZx387IRbQ
+         ydrKg5bbDR50IipktX5CBRqQ3oCAcD83IaxuoyKZej1HvzZa9JqaKNjZpDYYp4FrInJ7
+         DXBA==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773918494; x=1774523294; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mgSSxNlilEyRbvJ/Dl1SRHIVHwdCoXHiogp/tKM1mPU=;
+        b=NzAfLg2ZJ914lpzgT7cNp+v1XruHyRx9vpxUZX7aU9IABYBWCUOyDs+QEhUNXcCtJ2
+         auG4DxGUyahLOfz/PIMly23TNEUfdaXmpvM6ON1lI0JEPpXBWtIf6KyON6q+47H99Mdl
+         LtHwDhIhoSNBEBSqx6kfNgJNCkmkxrbz0u64zydFKOGJ+gsQUQ5Z1FXAxFYmu4HMyPIm
+         p7cjkHp8WMm+o+w2g7GwCzE+FwMY0509YpIgUQK22GsiQS5pOxzuKrvDHJMELcQvNrnf
+         9NU4OaAbTQ3TwGpbwFyLfsun0NeaIAqWrJwCtIQrUom6hUmx9Dw1Ik1lOgTiK5bla0Pv
+         zg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773918494; x=1774523294;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mgSSxNlilEyRbvJ/Dl1SRHIVHwdCoXHiogp/tKM1mPU=;
+        b=hf1yONZfBTxyJEyTDNtTbmQFkZetRocUdUwbvXV5bCv9Cux/MSbcMKORqzY1gVsv1E
+         5EYHWQNxFYR959usSr+DSyB5yxt7V0iQv8n/F/jb0vXSU0CKjJtpdbU3XN7hqW50nRL/
+         pLLkr/KqX7yQkleGciSQq+lYvx/Sw9QGuYjL4MhkZ6wOhJWEHvHX8/qUkxRInFOIUc7H
+         lJSBBLRXmPE6azsHXTGY7ZYH59TmI1MXZNyEM2axt8TB0ODfsMubghfXUH4ckYpwV2JX
+         JvbaGZ9HBtRooXEL6aNIs96ej4uy9yJNeqfCcGIrPxxHrOF3S6o8GBO2rU1yS2dUH2iZ
+         rysg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrJA4+e2X5PZFdCKlMvz8Spc/7psbcYFOxnQgDPMww1yfwkX3T0hQAxOXa8jD7OwKpPf/geH0EeniXQQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyK01wlKjwT40sdNL47o1lGPVn3T7plirgl0xf72lMeQuJhm62Y
+	JUSseupXxgLbSF1E/BKEs1gqZCmwbLclBN22qeb3LHOASnVRBxFiLc8tM/o4tAW4zg5aIR3OzCf
+	Iq//ZhLL/rnqzTvyEFJaEHz1DsPQ6B9c=
+X-Gm-Gg: ATEYQzwPVfzbOHFgAoAI2Sx5MpnPtDl19bkNNawCfS5RNxMbZwyq9tN9YGDkqSD2+Uh
+	pfj7PBP/qGC8ib5AhAz0L58J5W1CI4WbYrw9z0R9LoI8tnzcHznLOt6sE30UEKL00DJ/Qcp6FG5
+	4oasVv4vR10Zcft590iIcN6m+zT6etYUD1n2Y0Hawtxl7HoGKSdoEl4aC7ptReY3VDTShAXn3jC
+	J1vSlQjzK+LM9n2SeZ6kqCE2DmjFtGtpIWV0IhidtA2Q90xle9wKQ4h5g0AoS9RoTOc9tA57vC9
+	X/8VGVPYTZ1yao4CtNFq0wUXQv3v05gkD299x2RuPmnvWhIT6OKpLX445q3z+PkH5NpRQG9ahVY
+	21iR+uVJg1w62fMDMgSP5cK0nZVE=
+X-Received: by 2002:a05:6214:acf:b0:89c:69f6:a1f4 with SMTP id
+ 6a1803df08f44-89c6b5f5232mr75422516d6.8.1773918493618; Thu, 19 Mar 2026
+ 04:08:13 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,192 +103,222 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+References: <CAGSu4WNAFw=yChmynVCYSfJiSJ3LbohTjV97JsJK5EBipwz38g@mail.gmail.com>
+ <0f4ece6c-c957-476d-8cc4-fa79bf459acc@linux.alibaba.com>
+In-Reply-To: <0f4ece6c-c957-476d-8cc4-fa79bf459acc@linux.alibaba.com>
+From: Utkal Singh <singhutkal015@gmail.com>
+Date: Thu, 19 Mar 2026 16:38:07 +0530
+X-Gm-Features: AaiRm50_h89HP4qPvNs119JNHpulChRHHMh8dg6dNwLpADSKKHQnAYVE8AZIsLg
+Message-ID: <CAGSu4WPcm1CQ8MzdKCrCvQyxhheC7OepaLVWxPFy4iDkEn04kQ@mail.gmail.com>
+Subject: Re: Incorrect Cc addresses in my recent emails
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000ac33b7064d5e957b"
+X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [2.30 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2845-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2846-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:Hao_hao.Wang@unisoc.com,m:gregkh@linuxfoundation.org,m:hsiangkao@linux.alibaba.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,m:niuzhiguo84@gmail.com,m:zhiguo.niu@unisoc.com,m:stable-commits@vger.kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[unisoc.com,linuxfoundation.org,linux.alibaba.com,lists.ozlabs.org,gmail.com];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linuxfoundation.org:+];
-	FROM_NO_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.997];
-	TO_DN_NONE(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.985];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:dkim,linuxfoundation.org:email,alibaba.com:email,unisoc.com:email,ozlabs.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 40CD32C9A3F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.dev:email]
+X-Rspamd-Queue-Id: 65A6A2CA11A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+--000000000000ac33b7064d5e957b
+Content-Type: text/plain; charset="UTF-8"
 
-This is a note to let you know that I've just added the patch titled
+Hi Gao Xiang,
 
-    erofs: fix inline data read failure for ztailpacking pclusters
+You are correct. I was careless in my previous email and apologized for a
+patch that was not mine. I will be more precise in the future.
 
-to the 6.12-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+Regarding AI: I hear your concerns. I commit that I will not use AI to
+write, generate, or suggest any patches or commit messages I submit. All
+future work will be my own code and my own analysis.
 
-The filename of the patch is:
-     erofs-fix-inline-data-read-failure-for-ztailpacking-pclusters.patch
-and it can be found in the queue-6.12 subdirectory.
+I will also ensure that I use scripts/get_maintainer.pl and git send-email
+correctly to avoid any further CC or formatting issues.
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
+Best regards, Utkal Singh
 
+On Thu, 19 Mar 2026 at 15:57, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-From stable+bounces-224650-greg=kroah.com@vger.kernel.org Wed Mar 11 09:17:27 2026
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Date: Wed, 11 Mar 2026 16:14:29 +0800
-Subject: erofs: fix inline data read failure for ztailpacking pclusters
-To: <stable@vger.kernel.org>, <gregkh@linuxfoundation.org>
-Cc: <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>, <Hao_hao.Wang@unisoc.com>, <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-Message-ID: <1773216869-2760-1-git-send-email-zhiguo.niu@unisoc.com>
+>
+>
+> On 2026/3/19 12:22, Utkal Singh wrote:
+> > Hi Gao Xiang,
+> >
+> > I owe you and the list an apology.
+> >
+> > The incorrect Cc addresses in my recent emails (gaoxiang25@kernel.org
+> and
+>
+> Why "gaoxiang25@kernel.org" was your fault?
+>
+> The patch with the incorrect "gaoxiang25@kernel.org" Cc
+> https://lore.kernel.org/r/20260316085300.19229-1-lasyaprathipati@gmail.com
+>
+> is not sent by you, correct?
+>
+> > yifan.yfzhao@linux.dev) were my fault. I used stale entries from Gmail
+> > autocomplete without verifying them against lore.kernel.org or the
+>
+> I don't think Gmail web UI can send patches directly.
+>
+> > MAINTAINERS file. That was careless, and I understand why it raised
+> > concerns.
+> >
+> > I have removed every stale address from my contacts. Going forward, I
+> will
+> > verify all recipients against get_maintainer.pl and the existing thread
+> > headers on lore before every send.
+> >
+> > I also recognize that the volume of my patches over the past two weeks
+> has
+> > made your review work harder, not easier. I will slow down, consolidate
+> > related fixes into proper series, and focus on quality over quantity.
+> >
+> > I appreciate the time you have spent reviewing my work, and I take your
+> > feedback seriously.
+>
+> Please claim here that you are not using and will not using
+> any AI to write patches in public, otherwise I will simply
+> ignore your following patches unless your contribution is
+> necessary to be fixed.
+>
+> Everyone can do vibe-coding (including me), I don't think
+> it's fair that everyone throws "raw" patches made by AI to
+> me and let me take my own time to review.
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Best regards,
+> > Utkal Singh
+> >
+>
+>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+--000000000000ac33b7064d5e957b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[ Upstream commit c134a40f86efb8d6b5a949ef70e06d5752209be5 ]
+<div dir=3D"ltr"><p>Hi Gao Xiang,</p><p>You are correct. I was careless in =
+my previous email and apologized for a patch that was not mine. I will be m=
+ore precise in the future.</p><p>Regarding AI: I hear your concerns. I comm=
+it that I will not use AI to write, generate, or suggest any patches or com=
+mit messages I submit. All future work will be my own code and my own analy=
+sis.</p><p>I will also ensure that I use <code>scripts/<a href=3D"http://ge=
+t_maintainer.pl">get_maintainer.pl</a></code> and <code>git send-email</cod=
+e> correctly to avoid any further CC or formatting issues.</p><p>Best regar=
+ds,
+Utkal Singh</p></div><br><div class=3D"gmail_quote gmail_quote_container"><=
+div dir=3D"ltr" class=3D"gmail_attr">On Thu, 19 Mar 2026 at 15:57, Gao Xian=
+g &lt;<a href=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.alibab=
+a.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=
+1ex"><br>
+<br>
+On 2026/3/19 12:22, Utkal Singh wrote:<br>
+&gt; Hi Gao Xiang,<br>
+&gt; <br>
+&gt; I owe you and the list an apology.<br>
+&gt; <br>
+&gt; The incorrect Cc addresses in my recent emails (<a href=3D"mailto:gaox=
+iang25@kernel.org" target=3D"_blank">gaoxiang25@kernel.org</a> and<br>
+<br>
+Why &quot;<a href=3D"mailto:gaoxiang25@kernel.org" target=3D"_blank">gaoxia=
+ng25@kernel.org</a>&quot; was your fault?<br>
+<br>
+The patch with the incorrect &quot;<a href=3D"mailto:gaoxiang25@kernel.org"=
+ target=3D"_blank">gaoxiang25@kernel.org</a>&quot; Cc<br>
+<a href=3D"https://lore.kernel.org/r/20260316085300.19229-1-lasyaprathipati=
+@gmail.com" rel=3D"noreferrer" target=3D"_blank">https://lore.kernel.org/r/=
+20260316085300.19229-1-lasyaprathipati@gmail.com</a><br>
+<br>
+is not sent by you, correct?<br>
+<br>
+&gt; <a href=3D"mailto:yifan.yfzhao@linux.dev" target=3D"_blank">yifan.yfzh=
+ao@linux.dev</a>) were my fault. I used stale entries from Gmail<br>
+&gt; autocomplete without verifying them against <a href=3D"http://lore.ker=
+nel.org" rel=3D"noreferrer" target=3D"_blank">lore.kernel.org</a> or the<br=
+>
+<br>
+I don&#39;t think Gmail web UI can send patches directly.<br>
+<br>
+&gt; MAINTAINERS file. That was careless, and I understand why it raised<br=
+>
+&gt; concerns.<br>
+&gt; <br>
+&gt; I have removed every stale address from my contacts. Going forward, I =
+will<br>
+&gt; verify all recipients against <a href=3D"http://get_maintainer.pl" rel=
+=3D"noreferrer" target=3D"_blank">get_maintainer.pl</a> and the existing th=
+read<br>
+&gt; headers on lore before every send.<br>
+&gt; <br>
+&gt; I also recognize that the volume of my patches over the past two weeks=
+ has<br>
+&gt; made your review work harder, not easier. I will slow down, consolidat=
+e<br>
+&gt; related fixes into proper series, and focus on quality over quantity.<=
+br>
+&gt; <br>
+&gt; I appreciate the time you have spent reviewing my work, and I take you=
+r<br>
+&gt; feedback seriously.<br>
+<br>
+Please claim here that you are not using and will not using<br>
+any AI to write patches in public, otherwise I will simply<br>
+ignore your following patches unless your contribution is<br>
+necessary to be fixed.<br>
+<br>
+Everyone can do vibe-coding (including me), I don&#39;t think<br>
+it&#39;s fair that everyone throws &quot;raw&quot; patches made by AI to<br=
+>
+me and let me take my own time to review.<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+<br>
+&gt; <br>
+&gt; Best regards,<br>
+&gt; Utkal Singh<br>
+&gt; <br>
+<br>
+</blockquote></div>
 
-Compressed folios for ztailpacking pclusters must be valid before adding
-these pclusters to I/O chains. Otherwise, z_erofs_decompress_pcluster()
-may assume they are already valid and then trigger a NULL pointer
-dereference.
-
-It is somewhat hard to reproduce because the inline data is in the same
-block as the tail of the compressed indexes, which are usually read just
-before. However, it may still happen if a fatal signal arrives while
-read_mapping_folio() is running, as shown below:
-
- erofs: (device dm-1): z_erofs_pcluster_begin: failed to get inline data -4
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-
- ...
-
- pc : z_erofs_decompress_queue+0x4c8/0xa14
- lr : z_erofs_decompress_queue+0x160/0xa14
- sp : ffffffc08b3eb3a0
- x29: ffffffc08b3eb570 x28: ffffffc08b3eb418 x27: 0000000000001000
- x26: ffffff8086ebdbb8 x25: ffffff8086ebdbb8 x24: 0000000000000001
- x23: 0000000000000008 x22: 00000000fffffffb x21: dead000000000700
- x20: 00000000000015e7 x19: ffffff808babb400 x18: ffffffc089edc098
- x17: 00000000c006287d x16: 00000000c006287d x15: 0000000000000004
- x14: ffffff80ba8f8000 x13: 0000000000000004 x12: 00000006589a77c9
- x11: 0000000000000015 x10: 0000000000000000 x9 : 0000000000000000
- x8 : 0000000000000000 x7 : 0000000000000000 x6 : 000000000000003f
- x5 : 0000000000000040 x4 : ffffffffffffffe0 x3 : 0000000000000020
- x2 : 0000000000000008 x1 : 0000000000000000 x0 : 0000000000000000
- Call trace:
-  z_erofs_decompress_queue+0x4c8/0xa14
-  z_erofs_runqueue+0x908/0x97c
-  z_erofs_read_folio+0x128/0x228
-  filemap_read_folio+0x68/0x128
-  filemap_get_pages+0x44c/0x8b4
-  filemap_read+0x12c/0x5b8
-  generic_file_read_iter+0x4c/0x15c
-  do_iter_readv_writev+0x188/0x1e0
-  vfs_iter_read+0xac/0x1a4
-  backing_file_read_iter+0x170/0x34c
-  ovl_read_iter+0xf0/0x140
-  vfs_read+0x28c/0x344
-  ksys_read+0x80/0xf0
-  __arm64_sys_read+0x24/0x34
-  invoke_syscall+0x60/0x114
-  el0_svc_common+0x88/0xe4
-  do_el0_svc+0x24/0x30
-  el0_svc+0x40/0xa8
-  el0t_64_sync_handler+0x70/0xbc
-  el0t_64_sync+0x1bc/0x1c0
-
-Fix this by reading the inline data before allocating and adding
-the pclusters to the I/O chains.
-
-Fixes: cecf864d3d76 ("erofs: support inline data decompression")
-Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Reviewed-and-tested-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/erofs/zdata.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -787,6 +787,7 @@ static int z_erofs_pcluster_begin(struct
- 	struct super_block *sb = fe->inode->i_sb;
- 	erofs_blk_t blknr = erofs_blknr(sb, map->m_pa);
- 	struct z_erofs_pcluster *pcl = NULL;
-+	void *ptr = NULL;
- 	int ret;
- 
- 	DBG_BUGON(fe->pcl);
-@@ -807,6 +808,14 @@ static int z_erofs_pcluster_begin(struct
- 	} else if ((map->m_pa & ~PAGE_MASK) + map->m_plen > PAGE_SIZE) {
- 		DBG_BUGON(1);
- 		return -EFSCORRUPTED;
-+	} else {
-+		ptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, EROFS_NO_KMAP);
-+		if (IS_ERR(ptr)) {
-+			erofs_err(sb, "failed to read inline data %pe @ pa %llu of nid %llu",
-+				  ptr, map->m_pa, EROFS_I(fe->inode)->nid);
-+			return PTR_ERR(ptr);
-+		}
-+		ptr = map->buf.page;
- 	}
- 
- 	if (pcl) {
-@@ -836,16 +845,8 @@ static int z_erofs_pcluster_begin(struct
- 		/* bind cache first when cached decompression is preferred */
- 		z_erofs_bind_cache(fe);
- 	} else {
--		void *mptr;
--
--		mptr = erofs_read_metabuf(&map->buf, sb, map->m_pa, EROFS_NO_KMAP);
--		if (IS_ERR(mptr)) {
--			ret = PTR_ERR(mptr);
--			erofs_err(sb, "failed to get inline data %d", ret);
--			return ret;
--		}
--		get_page(map->buf.page);
--		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page, map->buf.page);
-+		get_page((struct page *)ptr);
-+		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page, ptr);
- 		fe->pcl->pageofs_in = map->m_pa & ~PAGE_MASK;
- 		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
- 	}
-
-
-Patches currently in stable-queue which might be from zhiguo.niu@unisoc.com are
-
-queue-6.12/erofs-fix-inline-data-read-failure-for-ztailpacking-pclusters.patch
-queue-6.12/f2fs-compress-fix-uaf-of-f2fs_inode_info-in-f2fs_free_dic.patch
-queue-6.12/f2fs-compress-change-the-first-parameter-of-page_array_-alloc-free-to-sbi.patch
+--000000000000ac33b7064d5e957b--
 
