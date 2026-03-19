@@ -1,97 +1,92 @@
-Return-Path: <linux-erofs+bounces-2839-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2840-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yGGtD3Jru2mIjwIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2839-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 04:20:18 +0100
+	id IMpnHC96u2m2kgIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2840-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 05:23:11 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D6DA2C5601
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 04:20:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4403D2C5DF3
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 05:23:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fbrYB3KdNz2yZ5;
-	Thu, 19 Mar 2026 14:20:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fbsxb6t4Xz2yZ5;
+	Thu, 19 Mar 2026 15:22:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::b134" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773890414;
-	cv=pass; b=dYwXutf1Y/JZjn8SKXyeyIYlZi4FDPCVPj9ZcxetS2THh4VB2agWUC0VvqcjFyT6jOXyEJQuQcB40EM0/qh4V2qjpuMzGL0pRFYW2ITlWuYi25tgqu2phwUR1O9NJvwxhy/PuoHacgiPQ7mkxw6aAAEyZVRPiaGbZnjm7RNNorlb6tvZaqB7qP5Lrssy+77gQ7yM1RzXksoNvbw+qcRJ85RVBQ1eYtHIhLqNShRSglEjgZR3+ny2nelHAGGxRe/pQcL7MQWLZ4xVGXGXELjBDRcPmQBIrIEP8GyMEfjFjYs9hIr7etyMFe6Hp2vcwAouvYYQJLmjvQndHwi5ol7Csg==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::f32" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773894179;
+	cv=pass; b=QCPPcHpG+UdF4WQ61ogSZ56aw3ELR+/IEmjncxZD3k0lq0W9CwLtHufWWyoXJCRWDfHpObLZvOR1vh69RhBt4br38rX50Zog5YbnUEGJFPX+ydNsMlxSTb17Uw7gefcBshMBnOWDA9iK1x9K4XD8N82BhGjmxzyqFN30wjztIKNYAD8auQjXEIeW7oQts9avwlKGxLEROphaFMcf/cci1pN2lGNSOrHfpv+SDJG0IsADqgYvdvM/pyx9PMLPRd+UqCSNe1AcFwO3YQNhh8EJIKjl7aP2x6IsNuG1oz007GbQaaJUePfWHgZBzjcSKZci+vCpa/PmoMJ0VLP2QGd+3w==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773890414; c=relaxed/relaxed;
-	bh=hvabPCKY8wXL/QS2F9ihM2Q1dO0VjEYvEUGamirr79E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FyM3Eq14Zk/d87vQXGMkNgjTpu5WjPzz6uYCfVvVEnKIwNAbO7snNpE3B8s1t0ROCqKb4ZbhsN+WWMN/lPt10PZhjlBWfBH8ueiZd77BHx9fiW7qlXzyWKsvr4KPr+HZSrEZ6W3lawvTkGRGHQE1NwEruMPWv+gEoEAJsCnD/JkoJpp9T6LxLgjskjJrDWndnfeRn++CkaoHv14An/8KgBeUuOsV64WpGOZU4KYRWtIX7fg5hQG4Xg8DkYAxc0Wttm2geTMcQIT66F3TPUT7jnTiGqaehey3zi4JWJCgWzC++wshvXAbtMAqXgdUgZsYd0LmYCU8WMSVTz1B4mJY0g==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=amgNIWEJ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b134; helo=mail-yx1-xb134.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1773894179; c=relaxed/relaxed;
+	bh=mPJ9KrpSb7WAaQTDzN3z617vyFkow66xQB1AVDyLmA8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BYD0OQdab37IfF8G+gWMWk2PdaQ9Ayu1q51AuIYeCO4sB4pGjEf9eOLVNUK87cXoRVdJO74YfgDJJhhjWEzkeyNFkG1eF64mVPAheSF3e9iLqEAoeWAbXv0HcxqjY7Dtlcn0bCxe88PoDHGIiKdfZ63Pl51JpwirWBvT0JtLjX96vMttvHOxkGp+9/2MCVqSbYlEmLPBDrQQ6odKusg7u/ZEVB0v+doIyycYXMk3tnXPz9Z0S8eAF3N6tcR46KTtTz2ZnN+UJk2Rx/xmt771ZMsrXyoO9XODhdHKXllaMeNO/RULx84YzxdJTZcWMD9Iz7+yoFSima4poVsaVOuQQQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=WU1fMTkl; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::f32; helo=mail-qv1-xf32.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=amgNIWEJ;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=WU1fMTkl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::b134; helo=mail-yx1-xb134.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-yx1-xb134.google.com (mail-yx1-xb134.google.com [IPv6:2607:f8b0:4864:20::b134])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::f32; helo=mail-qv1-xf32.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fbrY934fVz2xVT
-	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 14:20:13 +1100 (AEDT)
-Received: by mail-yx1-xb134.google.com with SMTP id 956f58d0204a3-64ca2b32f46so508624d50.3
-        for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 20:20:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773890410; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fbsxZ5WRFz2xZK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 15:22:57 +1100 (AEDT)
+Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-89a59978711so619956d6.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 21:22:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773894174; cv=none;
         d=google.com; s=arc-20240605;
-        b=S1odtpgOPxsBHFkPSB7VVAHrT453QsWHKK24w1AdwVGE8NMAslxyjMHempBquSmOay
-         UJgW4+gmrC+MfFhnTDfRjy7tn6ddeQjlX/4fr040ctBk6D7Zk1Hv85nx+wXYSmMVvlRn
-         HF0ETndcYBRCZW0ShTe4zuKehGpxf25Tveflvj94BoSI6ceGrtFQZotq5wgTllWcy8oS
-         Yvlb1n+2J9U4V2ukI+vGoBMK/Qv0mqVqLfC599tDCmuRU1UJIy8lyiC0z3ziwqXyjyit
-         l8lQy0tSXYFu3MkqZgf2G5yC91bRcRMV5A+0JbZsp3ee+W8+ChAsQ1weJhZroJ9On10c
-         7Xtw==
+        b=RNXxzCiKcw+GcGiGR62n6C7SeJBcTvRMrq5LOUaKNn8ypsCc0Brtjw8lAFUfkIe8pE
+         ksNhTvJ0LVaro0f4TRQ9IpR4/cbzdP1zdkqAfKLWAjGJDUXnTFkashhmS2mq7e2y4tkn
+         nvi/h/nRycDrtv1V7XdmNuNZFZJ3QszVnU+3wzCcuGtq/rgIXBdmUrIdb7w/fMS8pncB
+         QX39vxz8TmKweorqnwgmRbMQ7QGgo3qqI/gGGvk+HxT5WUjl3lfna7pE4ibjEOyYcD4h
+         boY4F3kWh1589mR2uvU0UjwbS/G8iBTW4w9GIa7AyHiYP7qQgFiXWd/UTogp3wFXApxD
+         T5Ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=hvabPCKY8wXL/QS2F9ihM2Q1dO0VjEYvEUGamirr79E=;
-        fh=YNeGgKaLRiI9REgSs1kJQ9ee+IIo2N1DMX01qAD3/y8=;
-        b=EbD4gAnx/ppsOTqEmEsa+M3CIjN9s3PpKd72JFesM3CKiCFSjssjUfci9clqZ9pxGK
-         E+BDVKSS3cROYujgjzU5ppmp9L/siY7pjPgYl02dmVFNHb0D01HyMT5vOnxFm4K7wiOw
-         1BwOm9s1QSuonZvQR09OxV5RWi2rZLkCnAZn3iHzh9H7m8XwbIB0Z6+asQXzSY8EPgLr
-         YJW+hk/eurluZAjCmaZeT+IH7Vr3mmSAHWBu6M9b0oygjk3wSYitH9M7t0280+8Ct3Hh
-         qz+CTVXgoyCc06bL02laC5wRppaQhCY8WOmgmNvr+GzYdoN6o5sMeiwl6okMg/QsIDeV
-         9HfA==;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=mPJ9KrpSb7WAaQTDzN3z617vyFkow66xQB1AVDyLmA8=;
+        fh=HYxd2zVsIO1U7oEE0TukJgkImaunvwXKSuEoJqxUmtU=;
+        b=V2nV8goT0Iyouf9i2qykXzT50HIRpaIcgYh7jf3UUHYiV7uBeOPUU/k1jHkmgflsSg
+         ojJUw/GiRO4rRWjKE9CpbtmrfraVELKDSIF5pJ/9Hw+b9IDST62n/AdrGIofrlhP/99+
+         iRQaExjvcqfkSnqZC4wwPnGWSwAdmTtqp3e3BUh6gMgdmK4fRn+tOPHds2GBiZtr+ESN
+         TVIqVgeRTWhoE1PREPD2Q6YAiZsDrdouAseSjFrEzqf7LPgybaths1Z4AX180n/NXvsl
+         GVrtVC6cjmeuQs06pRWeGSNOB+e0JMcadiZa07fGiMeWPGZ60kmPobP5a8tIWDDxWrPt
+         5PXA==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773890410; x=1774495210; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hvabPCKY8wXL/QS2F9ihM2Q1dO0VjEYvEUGamirr79E=;
-        b=amgNIWEJhW+/bMr8w7MBgTC/1wQnmCMFZWIGyYOEX2bZZ/J0OjE15B4BojS/3PPJgQ
-         ASMAsvYIo/7ahf8ecMPOq1NsU5r5gSbBQfGfXZoQlZr/2Y9yTS9Z1i8kwt5HCPkxH5Qe
-         ffi+4c8WJ3mlyFtHtOGiUVpBeY7SGMMTU+p0pi0ZdWYQ4R7oHrPfLhHNf6hOef/aZ346
-         oH+HNgBC1vCwWdLquwlXDzxLbxqNcHpFj6dlBXsozUQg0medRTKGMyWn5x/RnlcIMiea
-         rnrt7ydzMcCVsy9GuU1p6qQF1z7nhzyZXrPYYvGCqLQeDHO4rajF5g8Q8z8ehSwK4pP1
-         7S0w==
+        d=gmail.com; s=20230601; t=1773894174; x=1774498974; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mPJ9KrpSb7WAaQTDzN3z617vyFkow66xQB1AVDyLmA8=;
+        b=WU1fMTklLdHE5DWq9nhbP8m8F9LNRvvJdbntlXKAERw8n5dfJHDRVKwCSJc8SzO9VA
+         AFmtW9XHFbwW0EQgjdlN8aMvE9hSKqic4wDFdmNOkesQUj90yOa6KQcZsCKPzd4MMdVw
+         twq0UrGbGytcPaH6DrcvAApLSYb8E1Qs6z1cxirtsSDVHgSKep1TV1wWv+zuDYFwNBGA
+         bmjgCZ5KKKbavMjzy0VufksrlepDeO84riQYy5GS75d0EH/J4OLkXKeVS0566N5GRWjt
+         /TD2GwFWw3S68W623Lm7aoatnAAwe/VEugLE0DdPlDujEqkEtL2E0+RcK+XtwLYOGAI0
+         f6uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773890410; x=1774495210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hvabPCKY8wXL/QS2F9ihM2Q1dO0VjEYvEUGamirr79E=;
-        b=qe0JS34aMH+NAiXfS4CMZDlNQXPcl6/ZuiSN79fVv669i4hXCtoBcIdC8MKifSc3di
-         lhNVk1tc8mKxnsDnUlPIZIivd9UgE2GE80sIWHAgm1qMj9zo3yk6fRrdbKXlRkEDGnAq
-         IbjmRjwDYQM9TmpPzRDMpjqgBGXJFjVlVb49t1dZR5HY05gnb9c72iI9REPgtBsEZo5w
-         JvL2/W1U4sRLgir6jvxsDU5ClwJeGVa/qlORNawgjt994steRf47FtXEjxhUZ+ro9mja
-         wuX+BYROaHQ1+SmMLnKRYDSsL3stUaPJJ+2tVvphDKp+gXMFGRCSxlPr/0+fp+ofOV7i
-         sjjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo57IjF8YnWR2UISEbnnXkGdRdrHiOgj845+oaOBhcXw7zmRtNKBMReNbDJG5FZfXAy8NkvTpYjFNjoQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxGzO0w7KrLgBgJS+bysaGHJiuLSk3fiRu2A+mC1bOd6ORC1Cc4
-	xXnrKiozwZIAybs64ohsLpmBqjfQgUw0Oo/XbMXWxK2L8mPbW1M3iJ5ojxx6ss1WMq40sTJB/Aw
-	TA1XT4nwhoMLWkH6mc8Ss6ZY2j1UVT+s=
-X-Gm-Gg: ATEYQzwjY0id2etj2+EgWuVjhVtaN0Uoi3YBJpO92X3GV4HPpejtnXVaeaZgrPxiJ27
-	sVRoyk/j5EX+vXH4V2aHxKOin8BIr/b47/8UANeBbd2xSzj7t7PfLcKEB3+N4TEUdt5qO+DGxeQ
-	5atT4IenI5ZMWSsrnQoYT2e9DDFo88XE5yjf+YiGeYZxDxFLo3f6lhfPkgBHsiwkclsCVt99LQ3
-	dcwmD/IW4376zhB93L7ykAWppt3FKbeB5WnUWzPaxlvwGCAIotz8OjHbB65R1/79F9S+/j/aOnP
-	D+t1xiE=
-X-Received: by 2002:a53:ccc9:0:b0:64c:c616:c356 with SMTP id
- 956f58d0204a3-64e91354a60mr4198881d50.35.1773890410434; Wed, 18 Mar 2026
- 20:20:10 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773894174; x=1774498974;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPJ9KrpSb7WAaQTDzN3z617vyFkow66xQB1AVDyLmA8=;
+        b=elvrBom7mtepv2LagAvwd1nWZzgWx0xHNyuR+T6nAXUeLo3J8w4eQM08MYEyD73+GJ
+         OwNQCl8rdUhNebFum5yRn3SuSjPCOIHVKwLNs5AEUNgwUeFp0iKuy8icUrlUgz342uEU
+         tchTgDRgNG2ka8GtYVQ0fkVT0i6I85m6A6XK8LGeHp8vqiVBuUq/y4TxZHlHr20pE/2A
+         JKrX1GBgl+oc3fNGDPQpu5WFtwggVF4iq4gW2li5nlcaaYCdp0pvIvWKkcQDAXJ8GcKq
+         ZQd1YwKk7PQcRBoZoMxRao/rw/FYPDQOhzKa5NXkXoh3A4PwwFRZfeRlVfwFuTk76F13
+         pK9w==
+X-Gm-Message-State: AOJu0Yw08Hx8+gr0GO+FN882ldsI84NKms7B81CdUmhhXHxpWnGfBkcp
+	SAuUg7az5V8m1oteAB2M0ALph13A3SEYOhSUiauE2xmJY/ITWc7AOhf1P+0oioy6G8vsmVO0T4j
+	0XIvbBfbvMAavM0NlK/XilvVFeTa+Ev0=
+X-Gm-Gg: ATEYQzw3nj39g/xWwwX3clkeFHgMpLfHSj9oomqOh8xk7Wphe122IoXUpZR/iu6wFLx
+	Sf1WUMJ81//R+eRna1vpQXw4F5B3uaqAWxnWvKcSyAqajxQcM3WcIUQOXxrmpFWLfTgtz9HVocj
+	wP1U7K7DChjqh4PYaN8y3UF+cIijLHQWJoY+4AN4FLFeGpa/BJTi4sRP0X73WQubAq7/viihI/6
+	PVitCgRj4zq8QFsexyP5wF4vKBRtgcVx0XUetwFOopOVfQrUWHnBe4JxfZVjgt47HGefJpoNax6
+	sU+Zfa373xz3nqBd7TUpPcGMcafK+q/OHQLgYywGfpvIquTXecknqIRmQpyJUI9v+hVI
+X-Received: by 2002:a05:6214:2a8f:b0:89a:732e:f805 with SMTP id
+ 6a1803df08f44-89c6b5f5b75mr66918636d6.7.1773894173906; Wed, 18 Mar 2026
+ 21:22:53 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,73 +98,103 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260307062810.19862-1-nithurshen.dev@gmail.com>
- <b9387ac5-e717-4e9c-910f-5b218d177e64@huawei.com> <CANRYsKgoA9pMsDnBRnLgpY7ydYcuq8FxEhs+NCw9_p2ABjsMnA@mail.gmail.com>
- <66946454-25ab-4550-84af-53bdecac839d@linux.alibaba.com>
-In-Reply-To: <66946454-25ab-4550-84af-53bdecac839d@linux.alibaba.com>
-From: Nithurshen Karthikeyan <nithurshen.dev@gmail.com>
-Date: Thu, 19 Mar 2026 08:49:59 +0530
-X-Gm-Features: AaiRm5214bFjr9HsjT8CfPrrrd1yoiDjB1NRjpGt273Pxjnk8Ue3MlmfebkMPAI
-Message-ID: <CANRYsKitVMo9hQdgHV0hHd4YsRS4KETs-hwnfHJe=nbUjgC4kA@mail.gmail.com>
-Subject: Re: [PATCH] mkfs: support block map for blob devices
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Cc: "zhaoyifan (H)" <zhaoyifan28@huawei.com>, xiang@kernel.org, 
-	Nithurshen Karthikeyan <nithurshen.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+From: Utkal Singh <singhutkal015@gmail.com>
+Date: Thu, 19 Mar 2026 09:52:47 +0530
+X-Gm-Features: AaiRm50ftGltMoOTJwSUkYUQrVJtL1BuHB1wUnfLNIchWZJQiDAUNuK7HtHGfu8
+Message-ID: <CAGSu4WNAFw=yChmynVCYSfJiSJ3LbohTjV97JsJK5EBipwz38g@mail.gmail.com>
+Subject: Re: Incorrect Cc addresses in my recent emails
+To: Gao Xiang <xiang@kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="0000000000001adb2e064d58eccb"
+X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.20 / 15.00];
+	FAKE_REPLY(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2839-lists,linux-erofs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:zhaoyifan28@huawei.com,m:xiang@kernel.org,m:nithurshen.dev@gmail.com,m:nithurshendev@gmail.com,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2840-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.813];
+	NEURAL_HAM(-0.00)[-0.986];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[huawei.com,kernel.org,gmail.com];
+	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 3D6DA2C5601
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,mail.gmail.com:mid,get_maintainer.pl:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 4403D2C5DF3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Xiang,
+--0000000000001adb2e064d58eccb
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 12, 2026 at 5:10=E2=80=AFPM Gao Xiang <hsiangkao@linux.alibaba.=
-com> wrote:
+Hi Gao Xiang,
 
-> Such test cases should be landed in experimental-tests
-> instead rather than integration tests (erofsnightly).
+I owe you and the list an apology.
 
-I have sent a patch for `experimental-tests` branch adding test-028.
+The incorrect Cc addresses in my recent emails (gaoxiang25@kernel.org and
+yifan.yfzhao@linux.dev) were my fault. I used stale entries from Gmail
+autocomplete without verifying them against lore.kernel.org or the
+MAINTAINERS file. That was careless, and I understand why it raised
+concerns.
 
-Thanks and Regards
-Nithurshen
+I have removed every stale address from my contacts. Going forward, I will
+verify all recipients against get_maintainer.pl and the existing thread
+headers on lore before every send.
+
+I also recognize that the volume of my patches over the past two weeks has
+made your review work harder, not easier. I will slow down, consolidate
+related fixes into proper series, and focus on quality over quantity.
+
+I appreciate the time you have spent reviewing my work, and I take your
+feedback seriously.
+
+Best regards,
+Utkal Singh
+
+--0000000000001adb2e064d58eccb
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Gao Xiang,<br><br>I owe you and the list an apology.<br=
+><br>The incorrect Cc addresses in my recent emails (<a href=3D"mailto:gaox=
+iang25@kernel.org">gaoxiang25@kernel.org</a> and <a href=3D"mailto:yifan.yf=
+zhao@linux.dev">yifan.yfzhao@linux.dev</a>) were my fault. I used stale ent=
+ries from Gmail autocomplete without verifying them against <a href=3D"http=
+://lore.kernel.org">lore.kernel.org</a> or the MAINTAINERS file. That was c=
+areless, and I understand why it raised concerns.<br><br>I have removed eve=
+ry stale address from my contacts. Going forward, I will verify all recipie=
+nts against <a href=3D"http://get_maintainer.pl">get_maintainer.pl</a> and =
+the existing thread headers on lore before every send.<br><br>I also recogn=
+ize that the volume of my patches over the past two weeks has made your rev=
+iew work harder, not easier. I will slow down, consolidate related fixes in=
+to proper series, and focus on quality over quantity.<br><br>I appreciate t=
+he time you have spent reviewing my work, and I take your feedback seriousl=
+y.<br><br>Best regards,<br>Utkal Singh</div>
+
+--0000000000001adb2e064d58eccb--
 
