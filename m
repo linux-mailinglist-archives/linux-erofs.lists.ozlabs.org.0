@@ -1,97 +1,87 @@
-Return-Path: <linux-erofs+bounces-2837-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2838-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mODeB4c5u2mJhAIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2837-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 00:47:19 +0100
+	id yCVWNLlqu2mIjwIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2838-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 04:17:13 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A10DA2C3E72
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 00:47:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEB8F2C55D3
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 04:17:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fblqJ56ydz2yYK;
-	Thu, 19 Mar 2026 10:47:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fbrTd0mW3z2yZ5;
+	Thu, 19 Mar 2026 14:17:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::62d" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773877628;
-	cv=pass; b=TwlNZ195iZUooE5jAbKvv6qjRcFxUtfJe7g8NsNOFRsOo8yitQztW2i6utixaNhbN80tR7uegIrSPX2GR73LyQ7B3debpSq/7T6tgE0E4T7xyFL6u59PgERx+I6eKW7Q8QlpxqaHRg3HKkpUFGhurcDz/hzMqFkTKoce0pOG3kWx4S5ML1Pw5BbuvLM1CVWeoJ6b/Ihh0pnmLHAbLhc1q9z/pDlVa6KeXQ4W+gvDT0UewsIfUe+DyHj3wEf8T8d6grb3q+rT6Z4UVHcl2TZpBmGyy/QhHzSiguGFcPF0cKuQ9K3TneYBb/hubmwi++u5SsrUbzM6cxeMvKPcwTYNmw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773877628; c=relaxed/relaxed;
-	bh=SKdeu+6dCkvAUwBQTZO2KRv3z1lv0eoszoXVMxx1Rl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QQ+tYuJrN47IDjVaAuykLzxfXUTYsXEknbNMgSSPunBO9WNixoOjW9uapgxXJnr5+pcMe8PaP4EduNFAogzbrE8/vmvJhsQGVM56oCbWHn76tkwJ4W4miLaDBes3U7/5uSzqcvvA7KGKDNVXpSz7a5FY5um0hthEpO5ioKqYkybP7c4HO34jC7lM8x03RfYzhJwWoqKgpukwrI7KFCHAashxi1GNbe4s5zuNCMxDGpvTrFjEkhQzTbzazM9ljcTS9ywwCyFERXDDJ/q0Kbt+r2ZfT8bTwh5Fh9qATWUz6UHS4GRRMmGGn9OJi3AjdF5Opdo37Vh4RjeNIC+ic70/xQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=BRh2ipJV; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62d; helo=mail-pl1-x62d.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org) smtp.mailfrom=paul-moore.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42d"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773890229;
+	cv=none; b=XWsTnnPCJZni+JoOcVJv575KdidKSpUfQ8On1Ht+WQr4fbZ8XtR2JNoE13VrYw4gXaOwkdSKQ7ibvg6gnWKnanlJrp0m+H35dcYuishey17YMGMftUAvGSxQ8y3Xx188zm3sDUFcJukO3SHcGGS/QvdrREyjXNMd13TjT7IJxlnNkL9r315mbV9qEHfBGgO+x6dj6WiCsUPhWWUl8nkj26pKWo3ixjbd3TzVmJtBfGBbd5CXQz6QsQvj5EgAX3yUtFEdYYx4q1ORPj9/qy7aQXORCya68ADa7Mf+4N//WDd9wt6TWVeJQ+jsADk9Qc4hIcOMXma7lOoX43Tg5Pa6Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773890229; c=relaxed/relaxed;
+	bh=5hzwjfu268N144a8b+DbgqeF4RF6f7QHSW7skjv76iE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GWZ1iJapvcPuN2xDCfuu/b0dq5blvIxUUbBrDGwPfVJTTXWVP+f8P8xQYkjSbEsJd1XD+hT+i7nnqreKM3JmzORGTEc6I6IRD2HQwjtXqnIJKTuamqXfeQg6fX7LbNbQvOllhS8aQ6ytXf2RJQ5a7gakp34d6fgNHjYbl8m9qBk1NgBEF5/3yJZcO3YRXkMWxrt5XGM6ugXM6ePsAStNA8P/c6NPOK+usjOTLeoGaEOGIe+0wN52DheRxEl691UorxNJhFQRS/XfdMmR7nYd3K3crfoUzFbjcjtHaP98QDGvmcDY1uy8AFXO+0Zvnz/6xxv4ez0NVqDROqLwZGu8KA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FANe8jD+; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=BRh2ipJV;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FANe8jD+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=paul-moore.com (client-ip=2607:f8b0:4864:20::62d; helo=mail-pl1-x62d.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fblqH1FwPz2xYk
-	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 10:47:05 +1100 (AEDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2ad9f316d68so1667635ad.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 16:47:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773877622; cv=none;
-        d=google.com; s=arc-20240605;
-        b=T4vjvAoTnSM4mkf+hFQ5DNfkM6L0bdCMoN0ajfFopFrsgUl8xWGvXH8bReiWU5c0bn
-         qLOEGxlqjb+W7P80NtvAk/PubAh/eAtI2g6khAfOJFLjtIKxmM+Tjih0hLNfjlSC747w
-         dJ9lS9awsJUts8ofHm73ZPMEmO1Lk/qxDp1KPRSXsmNybqS3RlVTwTGe9j3Q31JxGCGg
-         PC2AjXGWOF4Y1fbrEyHQOONineuLZ/C8bh3VplUUENGkCHFzMsVH6+JEcc+g4Sd2PV9B
-         98Gmz0QjUlUY7xdtrLGZk06RiHd+13phj2dkOAmbt+wQ6BHahE1FB/1VmLRjsEEGj+8D
-         FJPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=SKdeu+6dCkvAUwBQTZO2KRv3z1lv0eoszoXVMxx1Rl8=;
-        fh=qgEtXe38+sAoSo2KXa6/zOh6p2EgpRpdZGz1r+9TkMA=;
-        b=bgB/QQAcfv8pehAGWXp83Yz3mVnmC7ewNpT10IL+LjVm/OUAS4FsG5Xf++s3TxV1Xr
-         XDXuChmiscs3h+2VZHuNmYh8r4DSDH4T+2dV1se40x6P/AIxSs8h+LCu3yC6bKfcX9aT
-         N/5r9hoKhfKx+88WzHxvIRRsubnDsz8L3Zo53+cJpXt3QwfjtjiFEeCQ+8Y4+kUiEYuT
-         RjsHXDKJLR0l3Er4L2sy+6NSOw6MwoK1Frd8NCeJ41ev2/6ddum+OW1DYqnbf/cbPhPq
-         0fkx6KE1Aa0ZCXsJ+3DzJubfOjue6ysyGk5MLZjOfQS6WP3ymGdJnn8HsPzxZyGBDRhS
-         K67w==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fbrTb3BCXz2xVT
+	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 14:17:06 +1100 (AEDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-829759ca646so323188b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 18 Mar 2026 20:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1773877622; x=1774482422; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKdeu+6dCkvAUwBQTZO2KRv3z1lv0eoszoXVMxx1Rl8=;
-        b=BRh2ipJVPbKMXTL8/JpDghqlcJHlSU45IvCiIXPJwJ2eFH/wSFRDIst+pSHopkD555
-         LyYx7Ehywtonr58GoI4Dw/WuA1vQXZ0gVLr0cGtGsLKUGTo7tMxqoB2lT276/uday6sN
-         rD5MWQWQqwdMNagnm/z+UxJlG2JeMc0TdESFnTTiLKWkXDdKcHLf4jaxGu2e/mbXn84C
-         mE0t+Kn8Ym7XEHZT6+pgc2vMF5GnHlKwNiEoPUGTMZo0TAueStULBEtBE+tGIESomB/N
-         ofUU00ybswOn0igvBjzqmVgLtD6NrOfnl7ZSR77CoDIBWLYSjvhaVNQtVKcbrAZ+kVM7
-         1w/g==
+        d=gmail.com; s=20230601; t=1773890224; x=1774495024; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5hzwjfu268N144a8b+DbgqeF4RF6f7QHSW7skjv76iE=;
+        b=FANe8jD+jcCi+Iw31Bg85wDrssjPSaOcj+G8+eFf+8e1pykLKNJ0Rdjr6PB88Z0LCu
+         c0tBTBhaF2mQRQlqBb1+aDs9/HkPAJWEIINgB/yrk5pxR/qQUMeQG+LRpX+d/0IsmN8j
+         7tKV7eMvtZebbbu+fKJDK76T5hpIJ3xGXQ54L0lZh+ZsHmLtlpgvVuHUkyNMEsU49NTJ
+         wVIRZ/njUhaxFQtHIb7TuuGS3B9GZl6+27/7xLVKcmFWkyY9fQoRJQiWbOKg0iNnHJu1
+         X3yNoTT8ib0an/nYbwSe58bynFzQvxHuQYZWYdbIl2xYz2hiM49u5KIVyzmL3j4sZz2D
+         gYkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773877622; x=1774482422;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SKdeu+6dCkvAUwBQTZO2KRv3z1lv0eoszoXVMxx1Rl8=;
-        b=Gwk1UeoU19aOG2cteqVwDSyrmxQ9gGjoBICE5p8k/lGukxEa6+oZQNTlHz7VhLmInL
-         Jzxr8Fzdfr3HBRbXO+05uED3tb7p89+MkJHQSc7s+fVFmjuT2NUCacqh1e+ylKQMzPBz
-         UIPpCcwPAYrzIIfZczJAdscOhiBp/Wvj6ubQTHLQDryV2OZTMhIbwLbAz3DWoG8WOC1w
-         NejU70rBm3z9NnuB6gPbxLhX+FtHtmOdcPBxxZO8Nizaug7JadL+jFCqQJWh1CR//OG0
-         10uwrLUqx0yl05nAU74gDmTJFspPYjPm8l/V/jUkt0iON3k4RYirDNy0gPzhJvpI3OIM
-         BArA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjZh+5l8s2YJVt1LxhVjZjaoXOBPcetNVqCJwPz5eBk8VRwLA7lZGPc96YVNNRFj45zMk09ZT4jvVvpA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwselE1DHI6vEoA0bfee+cGKCAUd6GhSrwNG1DNOPcqKbLvlW4j
-	hjT8xZi5t/3eBe7JkgzHtuKlQuSM/p2YFQ2MZzwiid4rn52Q9pjvfBVsND7UB8e0mRSqua/ZjaE
-	q2N4eXEHI1dSsFSa9bhsogGWutkFQyIyJlbmF6p79
-X-Gm-Gg: ATEYQzxuiFeJf+Ol84blIRHqLpSwo9wdbUUlb+grVEKQpRgJwJ+cTRLDpyRmoppJ5ec
-	wVZJTtPohmcR1O5xNZnIePdkKb1qUyOTYoyIq0EI5rXpU6XDSqjo4NqGARx2MP4t2K1nMaA+68K
-	3Hj3M039THqb8frorRBUV6bA4ECT0iVvEs0M1tEKU/qfPlwbKzGsevDJUDCXjdVNDECukxy8GCm
-	enp1d6J3pQRF29pK0AAJ2DqSyoeY8O0M/1zSnbyAAeFlCV1qpVgrE2pgmBpSW9cmNGF9H69daHG
-	wzoYMmQ=
-X-Received: by 2002:a17:902:f547:b0:2b0:7177:d5e5 with SMTP id
- d9443c01a7336-2b07177dc04mr35425715ad.43.1773877622532; Wed, 18 Mar 2026
- 16:47:02 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773890224; x=1774495024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5hzwjfu268N144a8b+DbgqeF4RF6f7QHSW7skjv76iE=;
+        b=jXan3Uxd2izSWmOnPm0M3HisP0lllaU72PWVIsX1apXwhoo4kyQ5JHzOr28KU0Sx5R
+         +Rg1DtBdAJ+dbdZIS9tf4/+TwBR1junu6N4x1CnjyooEe04AQt6vSvRzJgD5d58UTbbg
+         /r+da1yAdtK1pp/Nuxe2XX9NesE6++6inheRi5oKVM+LLFAU5pvXL1LXHJy3sJVWOtyq
+         QSoUqNVL5CgNt5bGEDlLIolaZ27XfzCvMxORNDvJCBJMOOtJs42NL46UIwpCVsBbbQW9
+         k4R1M74g1eWMyAwbadgvbfcBvZRjciapZ3enbKQOzctZQ48qsMOFM8Hd+iHQWoU0i4l9
+         Z+Qw==
+X-Gm-Message-State: AOJu0YzBLFsLUEsqd3BWnZqsn8OWJZRoKbRSlvvVQ8YXWw2Q6iEnaX6p
+	+Zg5Rq1GzaEvafAiO65DfNvuhpl2YN4O16Co6VMhTSbfSzGp3KOElqa2YAZF2i9K
+X-Gm-Gg: ATEYQzwqtHpBXFO1p4GGnrB1fIMBtqIEfWYViAdbibzlslfpKHTQbnrHJ1wQci1Ypmw
+	ktdnQYdEDvxr9Ve+fcGCmUGqGcfQHae0WN1nofUt/ioJOLDwPQfF6bHXS52VhSYvlAHmhlWWIUO
+	C+x0DiU50/kgEDzV+qr6gOZWjSkaqsBDCX3VMMbrKgPztfDkXQ6a/b1AUGvApv45zbkXDrVyTte
+	peM64/gUqs84++Bsq24B/t6aZ/zI/FyMKDQ436fMcUb25DlysVVi4MbNBEbQ8zJQUJPlaJK+XwD
+	/cxS3pbyBl74VsbEszmBgZE583lacgdbXIIi0GJkm8e0r9tCL9EVzHAS/wKZMUTGViFX8BlNTRd
+	ATo1k4dVSq7dPFUusqr/2h04zNXg2o9RK/0K2NYZkgK222aC7YVNKHRWwlzTvr2mnjCOe87OxIU
+	AApCpkUrB0DHLFVTu7+r8LuHGeK3dUOBVqns82pZk4CL2WYZoHVZ9Tcrh/
+X-Received: by 2002:a05:6a00:2888:b0:81f:4a36:1c7c with SMTP id d2e1a72fcca58-82a6add18e1mr4950234b3a.23.1773890223696;
+        Wed, 18 Mar 2026 20:17:03 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.151.61])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a6b5308fcsm5091656b3a.9.2026.03.18.20.17.00
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 18 Mar 2026 20:17:03 -0700 (PDT)
+From: Nithurshen <nithurshen.dev@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	zhaoyifan28@huawei.com,
+	xiang@kernel.org,
+	Nithurshen <nithurshen.dev@gmail.com>
+Subject: [PATCH experimental-tests] erofs-utils: tests: add test for blobdev block map support
+Date: Thu, 19 Mar 2026 08:46:43 +0530
+Message-ID: <20260319031643.97106-1-nithurshen.dev@gmail.com>
+X-Mailer: git-send-email 2.52.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,107 +93,141 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260318131258.1457101-1-amir73il@gmail.com>
-In-Reply-To: <20260318131258.1457101-1-amir73il@gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 18 Mar 2026 19:46:51 -0400
-X-Gm-Features: AaiRm50UCF1CurPQjVXbzqdFj4rL7YmqoTti-AfxH9o9diMwAaN1iIjAFrpAzkY
-Message-ID: <CAHC9VhTKvOzMS2ZyawE=qBN-EpyucfxvwcHZYjXF5zugRhE2rw@mail.gmail.com>
-Subject: Re: [PATCH v6] backing_file: store user_path_file
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, Gao Xiang <xiang@kernel.org>, 
-	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
-	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-2838-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:brauner@kernel.org,m:miklos@szeredi.hu,m:xiang@kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2837-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.999];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[paul-moore.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid]
-X-Rspamd-Queue-Id: A10DA2C3E72
+	FREEMAIL_CC(0.00)[linux.alibaba.com,huawei.com,kernel.org,gmail.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.970];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: BEB8F2C55D3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 18, 2026 at 9:13=E2=80=AFAM Amir Goldstein <amir73il@gmail.com>=
- wrote:
->
-> Instead of storing the user_path, store an O_PATH file for the
-> user_path with the original user file creds and a security context.
->
-> The user_path_file is only exported as a const pointer and its refcnt
-> is initialized to FILE_REF_DEAD, because it is not a refcounted object.
->
-> The file_ref_init() helper was changed to accept the FILE_REF_ constant
-> instead of the fake +1 integer count.
->
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> ---
->
-> Christian,
->
-> My v5 patch was sent by Paul along with his LSM/selinux pataches [1].
-> Here are the changes you requested.
->
-> I removed the ACKs and Tested-by because of the changes.
->
-> Thanks,
-> Amir.
->
-> Changes since v5:
-> - Restore file_ref_init() helper without refcnt -1 offset
-> - Future proofing errors from backing_file_open_user_path()
->
-> [1] https://lore.kernel.org/r/20260316213606.374109-6-paul@paul-moore.com=
-/
->
->  fs/backing-file.c            | 26 ++++++++++--------
->  fs/erofs/ishare.c            | 13 +++++++--
->  fs/file_table.c              | 53 ++++++++++++++++++++++++++++--------
->  fs/fuse/passthrough.c        |  3 +-
->  fs/internal.h                |  5 ++--
->  fs/overlayfs/dir.c           |  3 +-
->  fs/overlayfs/file.c          |  1 +
->  include/linux/backing-file.h | 29 ++++++++++++++++++--
->  include/linux/file_ref.h     |  4 +--
->  9 files changed, 103 insertions(+), 34 deletions(-)
+Recent changes to mkfs.erofs enabled the use of the block map chunk
+format in conjunction with extra blob devices.
 
-Still works for me.  I'm going to update lsm/stable-7.0 with this
-patch so we can get some more linux-next testing.
+Add a test case to ensure this functionality works as expected and
+to prevent future regressions. The test creates a dummy source
+directory, formats it using `--blobdev` and `-E force-inode-blockmap`,
+extracts the resulting image using `fsck.erofs`, and performs a strict
+diff to verify that the data mapped to the external blob device is
+read correctly without corruption.
 
-Tested-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
+---
+ tests/Makefile.am   |  3 +++
+ tests/erofs/028     | 48 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/028.out |  2 ++
+ 3 files changed, 53 insertions(+)
+ create mode 100755 tests/erofs/028
+ create mode 100644 tests/erofs/028.out
 
---=20
-paul-moore.com
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index fe7fb47..03c6212 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -119,6 +119,9 @@ TESTS += erofs/026
+ # 027 - ensure that uncompressed filesystems should not have LZ4_0PADDING set
+ TESTS += erofs/027
+ 
++# 028 - test mkfs with block map for blob devices
++TESTS += erofs/028
++
+ EXTRA_DIST = common/rc erofs
+ 
+ clean-local: clean-local-check
+diff --git a/tests/erofs/028 b/tests/erofs/028
+new file mode 100755
+index 0000000..cfd1531
+--- /dev/null
++++ b/tests/erofs/028
+@@ -0,0 +1,48 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0+
++#
++# test mkfs with block map for blob devices
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
++
++# get standard environment, filters and checks
++. "${srcdir}/common/rc"
++
++cleanup()
++{
++	cd /
++	rm -rf $tmp.*
++}
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++# real QA test starts here
++echo "QA output created by $seq"
++
++if [ -z $SCRATCH_DEV ]; then
++	SCRATCH_DEV=$tmp/erofs_$seq.img
++	rm -f SCRATCH_DEV
++fi
++
++blob_dev=$tmp/erofs_blob_$seq.img
++rm -f $blob_dev
++
++localdir="$tmp/$seq"
++rm -rf $localdir
++mkdir -p $localdir/test-source
++
++dd if=/dev/urandom of=$localdir/test-source/large_file.bin bs=1M count=2 status=none
++echo "Hello EROFS Block Map" > $localdir/test-source/small_file.txt
++
++_scratch_mkfs $localdir/test-source -E force-inode-blockmap --chunksize=4096 --blobdev=$blob_dev >> $seqres.full 2>&1 || _fail "failed to mkfs"
++
++mkdir -p $localdir/extract-dir
++$FSCK_EROFS_PROG --extract=$localdir/extract-dir --device=$blob_dev $SCRATCH_DEV >> $seqres.full 2>&1 || _fail "failed to extract image"
++
++diff -r --no-dereference $localdir/test-source/ $localdir/extract-dir/ >> $seqres.full 2>&1 || _fail "content mismatch! Data read from blob device is corrupted."
++
++echo Silence is golden
++status=0
++exit 0
+\ No newline at end of file
+diff --git a/tests/erofs/028.out b/tests/erofs/028.out
+new file mode 100644
+index 0000000..2615f73
+--- /dev/null
++++ b/tests/erofs/028.out
+@@ -0,0 +1,2 @@
++QA output created by 028
++Silence is golden
+-- 
+2.43.0
+
 
