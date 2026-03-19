@@ -1,97 +1,97 @@
-Return-Path: <linux-erofs+bounces-2857-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2858-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOYmKGkcvGlEsQIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2857-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 16:55:21 +0100
+	id CFWLCMgcvGlEsQIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2858-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 16:56:56 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDFAA2CE157
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 16:55:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3684D2CE1CE
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 16:56:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fc9JN1fXWz2ypW;
-	Fri, 20 Mar 2026 02:55:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fc9LD6DlYz2ypW;
+	Fri, 20 Mar 2026 02:56:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1035" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773935716;
-	cv=pass; b=lVF4+1EGtKWOYXmhTpwlD/CXLGx0qCN25jXTg/2QzAN23wXja0Dej8wxyV/HRDFyJuk6re1MiejRCpb0kwVwolEV2hJZ7TFzLsOGpG7qgX8b+fzPeaAY8FGr9nOJkjow9w0MIMbjePNTRGEyVhCh3iQgQfZ3IZqScui1sHhYJ/+egx0jHVU8LYxBMEWJPISug88TgGJWwQlcWFfOFCx5iqFHfGvEUaVdGaPXU/0Afb3MkBhAyVcHc31OIluO/vh/jU2DR16ZEbiKnKI57iGJT45TKAbcd1d5QnUaNvPB7zy+J8DOeUZ52QWBhJV0AWBLSgnDRCr+3rCkCVsDmq24sg==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::62d" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773935812;
+	cv=pass; b=AVCYoUOaWQdmS8A3vFcP+lIpjijkEBfEfFioXR10u+wdEGD3vgpL0iXEKQptXO2ugFGo7m2D2wNFO2KO/+mNz6U2x5varYZgDkgBd1Tthj4M6Y0ddcr5aOb7XLvUkPlYOrVmlnrmq+g+z2hwSekBJcCjP2a09sGDCs0javHHdYvLSJql0jAnQGmL6R0ZwumRby/GpAqbOw9KJIXBIIoz6DsSCKxalieO69pX6M5rEfjGxxoa7xhu0ZKAkflSkwkGKklp2p8qo9zsb3C1V9OsMtAhUyUlR4IM8aBmxo3bsEbSid8SXdh6ok5BW2s6gKxoE6unQ1iyBqez6og+bcWBvw==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773935716; c=relaxed/relaxed;
-	bh=5dUObDXy8tyO/dqZjJVHNnud7OeR2yjgyzlwu5eskHg=;
+	t=1773935812; c=relaxed/relaxed;
+	bh=TpNQ4RrfxDr8OIdp6sqWlPi70JqpMY9icBlXfAIsbA8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FqeLrDwMgiO3ziv8FmmpZNLwzPR0EtvKf1L4cdFBtZG698v97mxXHWLvD3kC36YWmZCZ4xnP87kCeScdSLjbF2uhRCn4Z33U/wQUnezL8P9Ya6esQhZG7d2G+Dzvw1qVibbrafuRDJuUGivgk/s7lo2ctB0MF9fEwmUPsF3FfO4RdoCTawwROVTiEJ2ssiAjjAqcui+j3FpL86KZopkuNWxQC7fAhNfBZLvbvjX7PuVzNgzoUDAVPvOAW/3I+5FPNaOtpw5mxdjSkICm9aIOGvE64vNAn2CBtATKGGHKkW8Ku0wFgZETklFzR6jcwot5geGpt9xJlxhx9haF/nbp7g==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=V0JgzIyM; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1035; helo=mail-pj1-x1035.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org) smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=RWveZdEJkg+x4IFNlXpqLM2k2TiO+iWCRA21ddh3ln4JFn2lnSUYgG0yD6jknr0QLpQPfFNCRLlumHr5tSFyXgmmHB9bLphOD3SHU0jPHTo/BmU1r+CKc74nII7nr+h0+WbP/Vx6tYPSjucN5SWSkL1T8FfRKXwX/tiny8LxfSV7nWRlRAIrw/TDpacth5+2vfhEdN2zbrtw9GUEZAXvQdNRQRZ81Smvxo95BamvP6RfZpX/an34HSZzC46cR3ZRAlXb5ld6E33Lpzjf9ea0fkq0KlOZOxvLMFDp5BCwZxz3m9cm+MONmoSFpjR8F1yNva39MMDhyk+Q617Ylh4euw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=FK+/HmKL; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62d; helo=mail-pl1-x62d.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org) smtp.mailfrom=paul-moore.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=V0JgzIyM;
+	dkim=pass (2048-bit key; unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=FK+/HmKL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=paul-moore.com (client-ip=2607:f8b0:4864:20::1035; helo=mail-pj1-x1035.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=paul-moore.com (client-ip=2607:f8b0:4864:20::62d; helo=mail-pl1-x62d.google.com; envelope-from=paul@paul-moore.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc9JM1HX5z2ynv
-	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2026 02:55:13 +1100 (AEDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-35b95a7444bso777848a91.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 08:55:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773935711; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc9LD0nNnz2ynv
+	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2026 02:56:51 +1100 (AEDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2aecefc7503so6324275ad.1
+        for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 08:56:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773935810; cv=none;
         d=google.com; s=arc-20240605;
-        b=NswBWA+ubwdjZ8uQDVK8Qi29EH75ZYK09BG5Z0OUTme2qI1CtmiJZphC15JdAuSZWF
-         G3hZ8dWl6q3T9/FKu3I9GElcrM8W+laJRFIysp2iyRGQEU3LeSW8kTvxvkFE71+tXFSM
-         miXI5OaF4ypL/tKBdIzwWhyJXNFwlFBGP4N2dTm5kZpYMu89pyzo2sly++wxfe0QAaz6
-         SfjSG+LYGTEs/LXli54a08lKE7pDGO8SJnoehp44qfnBjnI2l1VFISNO0rbJCHantXrk
-         bWf/qsjpwdr25WDrcZIpRrKsUdEW9rSxBvO6LSOJWo4VsV1DyrymAhohKDrV2pqFD6nA
-         roqw==
+        b=KUzYNIsZGSweNkJCHyA0RScULsOlpVzU8r/t9vTsvK2RNyKRqwSk8myWmTZ3vlJ+Bz
+         bxbYULvNQ2BGE7G2ZNw5XQY2+BrQL3wXU5H92KnTETF2hofQK/7Mp3Udb2sg4b28KzeW
+         Lxwkxlz4ETBSYSCJZ+NONFChKYfU6z/MCQBWydMCu6A/wZedeFts4Iuda9HlRrwcFK8s
+         r4HETWd9E4XV3HFEJAaMEi5VIfjR+bScNIqdB1lDpcFUN3SM981e+WmhmbmNWmjtudt/
+         dYF/fNDb857dX2wpGKL8SNPU3sBwq8eE+Y4zPeVDBISGOzRvxWm1+IDYbkAPVylD8zAC
+         Is5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=5dUObDXy8tyO/dqZjJVHNnud7OeR2yjgyzlwu5eskHg=;
-        fh=aeIo/PjG3xJZetx4s5KZ4HOoFZqgPYD7rzUXe+Iog+w=;
-        b=WWwIktKxnsAmFqU34g/BGMrZhsaU7SIEExBTcasFcKE8J/oOZSpXpMr3r5CQ8+VweY
-         psvl1BPtV1kK+uu1dz+cb0KsjaxP095kOMpbV1vC0+/MiSI64H+dxqcXzmeAE6H3FiVS
-         pESl0XLWvpY24Db8iJQ8aUEMzReisrAMfeFqe7fDhTDnWciqVif6qvx3roTZkrbRSwAi
-         FQX0tZPyr9yUZLjQ+q6+T210PPmHbVmU/dWWyFjS3lqbkt+FN8UeUeLoTztsxiZcPajY
-         Ne0He9vQdKQlVq8AMVAZTwV7NfDyo2Q5666erGOE862p5RSc/WWFcjEP2SnQCiU6yUo2
-         nJFw==;
+        bh=TpNQ4RrfxDr8OIdp6sqWlPi70JqpMY9icBlXfAIsbA8=;
+        fh=yCPXORj1I5VfFMQrQboK1s8KJm9bv2QThwIjw9P0F30=;
+        b=lIzoIRpM+9mKEbRtEX0kBIgwTspprCYG6l0I54OkJh/S6yTFgx8i8UMWPcevAHQPax
+         VCm0Fs5k2wBSp31MDu7IcBOPbTM4qoaPI6ibiNryyhHf87WIcdnMSAV1RxPh/CBh9ZT+
+         69EKONu/7SJISiAY+8z3n6zva89RjbguzOw7K2gDOSku3Le2oC0dJMtLHwYjkruLTP/o
+         zQ0rdHPG5pCth/WiUQlGw22V/U2IrpxOKpDcoEmxLahKzDohZM4qpC2Rvf+MFh65T9lH
+         ddwGdUYLeBpqFMgJb4KQa4iHLRyW2bupUB9AvguA9sUhDjKowz7FsGo1qf7kRET+zZWe
+         xPUw==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1773935711; x=1774540511; darn=lists.ozlabs.org;
+        d=paul-moore.com; s=google; t=1773935810; x=1774540610; darn=lists.ozlabs.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5dUObDXy8tyO/dqZjJVHNnud7OeR2yjgyzlwu5eskHg=;
-        b=V0JgzIyMeQXUxTvFyC0bRAQpFwuaWMpgf5i3oxme+g4Y5u+3cAOjyXBNT1BPsQGVLx
-         MYhqhfz44fcsr8jxASwLOlTscLwCpiIoV1fC5yLXO1bCW++vNuI9uUUlKldUYew2VflR
-         fUHBowe47shlQ2oBOWS9tgtDcXIwyJF/M7FbwqNyvEmFXGj500a2DkJadF+cYUfXN6BK
-         n/t9bR+SyEeEkJSnpmi1CPI5kT0pIxsErCn3t9+SNR5FFW6rPzDEMG6A/7KuppRgiucs
-         Anq2MaUQUHPrE0+24edYFrHhmxZkrqHbY4Xr2u9UTrG/9G7gMmY3s8yMsMF2ZMw3jgjG
-         TSnQ==
+        bh=TpNQ4RrfxDr8OIdp6sqWlPi70JqpMY9icBlXfAIsbA8=;
+        b=FK+/HmKLovfoaN/oaxk3FgfFKEsX2dsDsNd+u20REna22qcjyPBwMLQARP8va6tvpZ
+         yO8dswpE4+55vXGLDHr12y5B+Q73tmq4PHoaCTjLXH5XJbEPGByCA2nkTmfFdOyGjiS1
+         TVkY9rkm9AP4/PjJB1kE1VeteCNj8Q/SDXI14B3P3IwRnqhqpxObt+htiGkDbLDznScy
+         cTbTytEvn1+LyKu1ZMXRZgl//bTOKVlxj9ARWUh2SF1lC3WRCUnakQgjFd4mKWGs+ZhE
+         LB1s8SNDyWRuZAhGyjBXgSTHncx6NGCSAFjb26JPEYv5bLIhD0AaJBvx6o3sj6W72tLo
+         objw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773935711; x=1774540511;
+        d=1e100.net; s=20251104; t=1773935810; x=1774540610;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5dUObDXy8tyO/dqZjJVHNnud7OeR2yjgyzlwu5eskHg=;
-        b=XYq1fdMymtPHG/xRtp97yUmRFtLKlDlOUkaRc7i9efWK4jHiYuHISiOdN0FqFNQl0n
-         rTq2jXtlpZKEjKaWwoAtLpy9lWEyEQNQ7Ni6/NpLASh8oHaoHWvwBBmpD0bJphWH1tFE
-         ydHw5P6fFhs6KQDpLq1YntIdxtYgn+BHZIZzQL9PcwDklcVmzNb9BIrQDvHD/fFLoPI6
-         prOlGBiUDtJyeRhFNWo7QrVa8k03ahV/xBYrqwTBoZG0XLs3m6IENXsFApb6HhE/6LVi
-         6gW1lw9dzgqaEDWDHdX07f0VKQKYXnqWJQFW324glweHxIN09JKl/kWFeXnPyFOWzG4U
-         qQ7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWIMMujEom4N82L/kpcOgS5CGtw1QsjGVuAZwAo9T+JjPE9ct9wjqnO9sQLnVoHfVM1Rm1tS9z4VcH0kg==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzVcGdpldvb25ggoSrsjQGKLpymN1A1r0JLev+6c6LKLgpTTDff
-	W7BLnqYC5DgSwJnN9j8A4V00NwSgDcZHi1aMYQX9sdC1iLnrkgvypLbmnE6BbYvTQazgse7eS/G
-	Bzp9T34htHavBfuEtRUz1E/RamoTRkMH+sY5HVeTR
-X-Gm-Gg: ATEYQzyW7UK9TL/lYE0RqkEd10EvKpR20GXPSO+fQAxybnfHc5XJE2R9JBCcDGJ0Roo
-	e2N8XFkmo5w/0hQ+BnGn7hrLIpiGUb5pzrF7nrM2ftEB1PB9dAhJvlWNE6cEy/iVx4N5yh6Rgg2
-	nq821/Jk4WcPYqXSUJuikxfakc/ARnv+q2XZ+1G9xrtFEQ2xq6jcoOcMdFU02/9yUt5BYApEByX
-	5qzh4oec7JiF9cqqwfuIMreRFNNNoPpasnEdtQ1Eeq6EqtP4NYFF994roJ8AV6bNQguaESM8Ikj
-	lR3rbkSMjpqFRlxxCw==
-X-Received: by 2002:a17:90a:dfcb:b0:359:8e5e:43de with SMTP id
- 98e67ed59e1d1-35bb9efae55mr5927149a91.22.1773935711512; Thu, 19 Mar 2026
- 08:55:11 -0700 (PDT)
+        bh=TpNQ4RrfxDr8OIdp6sqWlPi70JqpMY9icBlXfAIsbA8=;
+        b=SI1nSX0b1JaNpWm4cc1J4hPgmQOwLkXnw6RdiHe2iYBPjBioZRZHj6U2XlBUz5YaGk
+         /AR+1SArcFZFKBQ9Ao9cHn2JLK9Ve0snHiCI5/OfOEsYsbk830MkTy2/CaYvKZh6lc56
+         sJP5DnyvKl5S1MJK+LuwVoqY68kxVTDcbL0SJoiLJapJ02fiL6Q9No5sNuVjsiLSDTGu
+         3r6RJFcQSEFO8ApIRHB+9Q1WKfj+TEF+M9JpjwajkLUbiOEsctmgjYH5XCMDajsRsdOd
+         6hTxWSSjOsoEoT0SdxvKwltVvcPkVteWWWXz9YiekPNf0/YcwBOS+VUZUsSh9H1/9MSO
+         1Oew==
+X-Forwarded-Encrypted: i=1; AJvYcCXMrepuBeVf5kPltd59NcJg17E/DWuB7ELBH/CVLafu46kzWX8pIBiChz7ELjP33RmRkqyKseaNHU3f0g==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Yz0g5vwepEPtPjyofLt7JzIEQgpFOqzAcdxHrWtWociM0EO9g3X
+	Sr84N4oaiDZ0TRNR6n65i++CUxpO/FDNf8ELHDgwV0IzKRADY2eWSIJj7ac3A95x4iLxr5p2HVZ
+	OmzZ8RtNiQtNee3/i5wU6OgO7buZ4yduJ0w3yAunJ
+X-Gm-Gg: ATEYQzzOYfv8OJS/1+Sr52KHDpk/eaOoLDFwzTv1/GP2yzpd/HJoAWnDq1iTdpwixTl
+	3Ew32Kc6UhoSahToM6kwPPRROsanapQRmlsj6eT1c8BiqgGdqt1VhlZf09garhTISlnAw8nO6UF
+	K3j5W0LjjKnlPtEXDUJ7dFM05hqCSK9hgakmU1X4xkQtp6RBWGapN4Wt5SEz0kaM9DWsgUYbX58
+	9LuREmcm1e5oJSiVSlo/NhpNZ+RPAk+rm9AM640tfh5B2YSyIyqCrXQ2NgsmU/MuR8nbpSqpvMO
+	kknW25Q=
+X-Received: by 2002:a17:903:1c3:b0:2ae:478f:2ec with SMTP id
+ d9443c01a7336-2b06e3dd59emr76386305ad.29.1773935809817; Thu, 19 Mar 2026
+ 08:56:49 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,167 +103,131 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260319124616.1544415-1-amir73il@gmail.com> <20260319-unentbehrlich-reitturnier-f78d9fb01230@brauner>
- <CAOQ4uxiS1uM=mn4q6CQfganba1XcqyXYmXfQceWdfUVRFK_Pvg@mail.gmail.com>
-In-Reply-To: <CAOQ4uxiS1uM=mn4q6CQfganba1XcqyXYmXfQceWdfUVRFK_Pvg@mail.gmail.com>
+References: <20260318131258.1457101-1-amir73il@gmail.com> <CAHC9VhTKvOzMS2ZyawE=qBN-EpyucfxvwcHZYjXF5zugRhE2rw@mail.gmail.com>
+ <CAOQ4uxj8SZqaFbrVifw0uw7skbUvJP1_nLWj4PYCeZuaLy5t_A@mail.gmail.com>
+In-Reply-To: <CAOQ4uxj8SZqaFbrVifw0uw7skbUvJP1_nLWj4PYCeZuaLy5t_A@mail.gmail.com>
 From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 19 Mar 2026 11:54:58 -0400
-X-Gm-Features: AaiRm51qlPregfqoGDRQQu1uLckOXRqh7QNN-0XQFNPe0ZKCktL-8XDfXZ3JIYA
-Message-ID: <CAHC9VhQDXHh_=X-OKD9oN8fapVXBwLakNp4rEHLUL0cQ1RSteA@mail.gmail.com>
-Subject: Re: [PATCH] fs: allow vfs code to open an O_PATH file with negative dentry
+Date: Thu, 19 Mar 2026 11:56:37 -0400
+X-Gm-Features: AaiRm50nhjVBL81kDULwvCn8PsB2aebm_MIqZayk9nG17bPp4IlB5KlFJeWc6p4
+Message-ID: <CAHC9VhTXfiENo3MVSv+LZFx4VJGTDqErMBKx0wx+jKNOc=NjSQ@mail.gmail.com>
+Subject: Re: [PATCH v6] backing_file: store user_path_file
 To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Gao Xiang <xiang@kernel.org>, 
+Cc: Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, Gao Xiang <xiang@kernel.org>, 
 	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
 	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, 
-	syzbot+f34aab278bf5d664e2be@syzkaller.appspotmail.com
+	linux-unionfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[paul-moore.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	R_DKIM_ALLOW(-0.20)[paul-moore.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2857-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:brauner@kernel.org,m:miklos@szeredi.hu,m:xiang@kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:brauner@kernel.org,m:viro@zeniv.linux.org.uk,m:miklos@szeredi.hu,m:xiang@kernel.org,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:syzbot+f34aab278bf5d664e2be@syzkaller.appspotmail.com,m:syzbot@syzkaller.appspotmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2858-lists,linux-erofs=lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.996];
+	NEURAL_HAM(-0.00)[-0.992];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[paul@paul-moore.com,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[paul-moore.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs,f34aab278bf5d664e2be];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: EDFAA2CE157
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,paul-moore.com:dkim,paul-moore.com:email,paul-moore.com:url]
+X-Rspamd-Queue-Id: 3684D2CE1CE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 19, 2026 at 10:50=E2=80=AFAM Amir Goldstein <amir73il@gmail.com=
+On Thu, Mar 19, 2026 at 10:54=E2=80=AFAM Amir Goldstein <amir73il@gmail.com=
 > wrote:
-> On Thu, Mar 19, 2026 at 2:13=E2=80=AFPM Christian Brauner <brauner@kernel=
-.org> wrote:
-> > On Thu, Mar 19, 2026 at 01:46:16PM +0100, Amir Goldstein wrote:
-> > > The fields f_mapping, f_wb_err, f_sb_err are irrelevant for O_PATH fi=
-le.
-> > > Skip setting them for O_PATH file, so that the O_PATH file could be
-> > > opened with a negative dentry.
+> On Thu, Mar 19, 2026 at 12:47=E2=80=AFAM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> > On Wed, Mar 18, 2026 at 9:13=E2=80=AFAM Amir Goldstein <amir73il@gmail.=
+com> wrote:
 > > >
-> > > This is not something that a user should be able to do, but vfs code,
-> > > such as ovl_tmpfile() can use this to open a backing O_PATH tmpfile
-> > > before instantiating the dentry.
+> > > Instead of storing the user_path, store an O_PATH file for the
+> > > user_path with the original user file creds and a security context.
 > > >
-> > > Reported-by: syzbot+f34aab278bf5d664e2be@syzkaller.appspotmail.com
+> > > The user_path_file is only exported as a const pointer and its refcnt
+> > > is initialized to FILE_REF_DEAD, because it is not a refcounted objec=
+t.
+> > >
+> > > The file_ref_init() helper was changed to accept the FILE_REF_ consta=
+nt
+> > > instead of the fake +1 integer count.
+> > >
 > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 > > > ---
 > > >
 > > > Christian,
 > > >
-> > > This patch fixes the syzbot report [1] that the
-> > > backing_file_user_path_file() patch [2] introduces.
+> > > My v5 patch was sent by Paul along with his LSM/selinux pataches [1].
+> > > Here are the changes you requested.
 > > >
-> > > This is not the only possible fix, but it is the cleanest one IMO.
-> > > There is a small risk in introducing a state of an O_PATH file with
-> > > NULL f_inode, but I (and the bots that I asked) did not find any
-> > > obvious risk in this state.
-> > >
-> > > Note that specifically, the user path inode is accessed via d_inode()
-> > > and not via file_inode(), which makes this safe for file_user_inode()
-> > > callers.
-> > >
-> > > BTW, I missed this regression with the original patch because I
-> > > only ran the quick overlayfs sanity test.
-> > >
-> > > Now I ran a full quick fstest cycle and verified that the O_TMPFILE
-> > > test case is covered and that the bug is detected.
-> > >
-> > > WDYT?
+> > > I removed the ACKs and Tested-by because of the changes.
 > > >
 > > > Thanks,
 > > > Amir.
 > > >
-> > > [1] https://syzkaller.appspot.com/bug?extid=3Df34aab278bf5d664e2be
-> > > [2] https://lore.kernel.org/linux-fsdevel/20260318131258.1457101-1-am=
-ir73il@gmail.com/
+> > > Changes since v5:
+> > > - Restore file_ref_init() helper without refcnt -1 offset
+> > > - Future proofing errors from backing_file_open_user_path()
 > > >
-> > >  fs/open.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > [1] https://lore.kernel.org/r/20260316213606.374109-6-paul@paul-moore=
+.com/
 > > >
-> > > diff --git a/fs/open.c b/fs/open.c
-> > > index 91f1139591abe..2004a8c0d9c97 100644
-> > > --- a/fs/open.c
-> > > +++ b/fs/open.c
-> > > @@ -893,9 +893,6 @@ static int do_dentry_open(struct file *f,
-> > >
-> > >       path_get(&f->f_path);
-> > >       f->f_inode =3D inode;
-> > > -     f->f_mapping =3D inode->i_mapping;
-> > > -     f->f_wb_err =3D filemap_sample_wb_err(f->f_mapping);
-> > > -     f->f_sb_err =3D file_sample_sb_err(f);
-> > >
-> > >       if (unlikely(f->f_flags & O_PATH)) {
-> > >               f->f_mode =3D FMODE_PATH | FMODE_OPENED;
-> > > @@ -904,6 +901,10 @@ static int do_dentry_open(struct file *f,
-> > >               return 0;
-> > >       }
-> > >
-> > > +     f->f_mapping =3D inode->i_mapping;
-> > > +     f->f_wb_err =3D filemap_sample_wb_err(f->f_mapping);
-> > > +     f->f_sb_err =3D file_sample_sb_err(f);
-> > > +
-> > >       if ((f->f_mode & (FMODE_READ | FMODE_WRITE)) =3D=3D FMODE_READ)=
- {
-> > >               i_readcount_inc(inode);
-> > >       } else if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mo=
-de)) {
+> > >  fs/backing-file.c            | 26 ++++++++++--------
+> > >  fs/erofs/ishare.c            | 13 +++++++--
+> > >  fs/file_table.c              | 53 ++++++++++++++++++++++++++++------=
+--
+> > >  fs/fuse/passthrough.c        |  3 +-
+> > >  fs/internal.h                |  5 ++--
+> > >  fs/overlayfs/dir.c           |  3 +-
+> > >  fs/overlayfs/file.c          |  1 +
+> > >  include/linux/backing-file.h | 29 ++++++++++++++++++--
+> > >  include/linux/file_ref.h     |  4 +--
+> > >  9 files changed, 103 insertions(+), 34 deletions(-)
 > >
-> > I think this is really ugly and I'm really unhappy that we should adjus=
-t
-> > initialization of generic vfs code for this. My preference is to push
-> > the pain into the backing file stuff. And my ultimate preference is for
-> > this backing file stuff to be removed again for a simple struct path.
-> > We're working around some more fundamental cleanup here imho.
->
-> Fair enough, we can rip the entire thing from vfs if you don't like it.
-> The user path file can be opened and stored internally by selinux
-> without adding all the associated risks in vfs.
+> > Still works for me.  I'm going to update lsm/stable-7.0 with this
+> > patch so we can get some more linux-next testing.
+> >
+> > Tested-by: Paul Moore <paul@paul-moore.com>
+> >
 >
 > Paul,
 >
-> Please see compile tested code at:
+> As you saw, syzbot found a nasty bug in this patch and it is too hard
+> to fix it without introducing more hazards.
+>
+> Therefore, per Christian's request I am withdrawing this patch.
+>
+> Please see compile tested alternative solution for selinux without
+> intrusive vfs change at:
 > https://github.com/amir73il/linux/commits/user_path_file/
 
-No.  Definitely no.  Ignoring the fact that there is no reason we
-should pushing this into the LSM, doing it in this way means it is
-very likely that each LSM wanting to provide mmap/mprotect controls on
-overlayfs will have to create a new O_PATH file.  No.
-
-... and let me preemptively comment that this doesn't belong in the
-LSM framework either.
-
-As Christian already mentioned, this really needs to be addressed in
-the backing file code, please do it there.
+Let's let this thread die in favor of the other.  I'll already
+commented there, but the quick summary is that pushing the ugliness
+into an individual LSM, or the LSM framework itself, is not a
+solution.
 
 --=20
 paul-moore.com
