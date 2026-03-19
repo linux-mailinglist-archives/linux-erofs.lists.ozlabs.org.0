@@ -1,96 +1,49 @@
-Return-Path: <linux-erofs+bounces-2852-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2853-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ILAkGtv9u2mzqwIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2852-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 14:44:59 +0100
+	id eAx8Ivv9u2mzqwIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2853-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 14:45:31 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A17402CC21C
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 14:44:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E9152CC22B
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Mar 2026 14:45:30 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fc6Py0vBPz2ynW;
-	Fri, 20 Mar 2026 00:44:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fc6Qc2048z2ynW;
+	Fri, 20 Mar 2026 00:45:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::430" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773927894;
-	cv=pass; b=gYNL2SMnegamLLZBcBkzI1dD+Y04Cy4aBDq0VCb8WkZukaPCI5IHxsum+h5IvPZIuupdXvcJI1tjDzpj7m9gWqt6j3QLHQkFbF1ygwvbp0Yzj33l9vBsRBzalKEj9SlCdAuOk/CxEwdKitAhGQRIqirYJEGC4j2BnFfRIQM8UimetJk4EurftSNUv1bBDXzW1LJuicn/t1l/Cq2c4RbfV4Xsm4uO1F2p46u84XORt+H0hAxkWyfjE0prCNTXrLfIjd29LfRF02hRrATbqIR9b5SnUWGXkk/TClnk3z+fAVKBCpa0kr3IF43ly2s10egKjRquy/EQl/QKJCI8w/bShQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1773927894; c=relaxed/relaxed;
-	bh=v9R6nHOrcJhaC23UTQpNWE8SQ53vDX/e3FOov6oc2TY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X6eR7qOtHYQhhHS/hiAY3327ucTsnJY7scwePu4wAH+k+Dsh5H4vr0VjRtLTd18LDJbRm9nSRMaxjo5HYZVqyIuNr6rRooFSgKTknphArXBI3SxNt9vzieH4Uzfqoce2YpTkMd5AABhy0bKnVKdg7gjmZ3e8BZu11zwCtc7NQFra9MOXwbt39IOPomcgLg0fjiyl+aZUwl+6SwantUpdQynA6/xxpRviz1LupmdPjuq4d1JvDHo4qA0Yk5xXms+mRHB3iBvzs8QWw/q+ftMEftdvxDYnhdf/gqmHDPk7fBs0niVYHif+kv+gs05Zi64sm9/yoB3TIVDahKaQmEXLAQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LR6UL8SR; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::430; helo=mail-wr1-x430.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1773927928;
+	cv=none; b=BUcRG30p/nwTzR3lUpKCwWhTuR1Uhcncr0AGFxDuavkEyjc84H+MEWE1bV137ex5YQBOUvRIplm+GfxNpVAv3rSDuUoSkJxKdWm0Gnq13aTyNMr+EEoRXnJ0oDngVDcm542gHYwTcwYDQHt340wORTyGBJEnePiejbNMFlu2LBwo79FVNbYa/4BxzeaGZ7iPh0EkHXSIQ3eFyv7bk2OY0IvORoqBlpQplU4k9Pht1uklX7mNM8Ajx/xnWlRN7lnUVC8W5zYAQrPOVTJvYJFMCiHf0nKyxIMiUwn9LkcPFH9aI5z24cl6Ncgrg4IDRvEF60grx8JtMd0vwGQ+rszcXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1773927928; c=relaxed/relaxed;
+	bh=jmThYtX+Ywp2CN+A5kyfMHB3rQPwaRVveThOn3JepwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M60ykjmIFgEo2Y8PwPddSOwP79pav661uGZ+BnOMtN8FLWOysiq23UcTqS805V9C3VWnhb0Q3l+25U2gK78j8KQ67FZG2rH4Pi7Sd9gkkkeBcWm6LwtPrFlzlya6eWhdJlBNH0TWVjY5FZa7GJP3gy29hyCRZuAUoNTykalshzNyWMWESQMAOPRwOKUk4Wv/WvjoKgliYHenxv2bwJUy4H29E2BW78f1YGEH8WtNgk1DiwNRWMTANmMrLB+42QqDX/noZHPY4rKsmqMuJperkBA/rUdO0Q6lk0DdbcbQ6h+jnRMXla6wKt8eg7mi6Tt3O3BkZwr/CME9AqU6NcANDw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RU+xwlPu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LR6UL8SR;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RU+xwlPu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::430; helo=mail-wr1-x430.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc6Px1Brdz2yLG
-	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2026 00:44:52 +1100 (AEDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-43a03cb1df9so946378f8f.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 19 Mar 2026 06:44:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773927884; cv=none;
-        d=google.com; s=arc-20240605;
-        b=QvSR/sUquvZtzqDl4iQ909UQG/YRct22Kwrib9AuReCzTQNqjs1C7t3ro1YjVLbLyq
-         0+stoN30BqdUNx6klJXJfRN4GO3gSBm5qBrq/mTHbId+GZcGcF1bfs47To+O9MNPxTCo
-         Dcrl9lQbOixsBLPMadrdGKovhxorRO5JvdN7VY3xjiwpnZimadZRNr7imj3QXjmofdMV
-         gnynQVM5YqDpbDJU20jv7bHLsVcjA80HZPG+SS9QLEAWFRvHp7V7PsMrTRGrM6CrKy/h
-         RKCYUuKVtzZZKn8ENAlQc5uIAagQuy4lIkIncCQnETwiqLH6TBwb/8AjK68xCwb1pzvV
-         9cwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=v9R6nHOrcJhaC23UTQpNWE8SQ53vDX/e3FOov6oc2TY=;
-        fh=JcF7iGUjJsVSaM7oSS1RWcr27vz0aVsrVNsuXyQexrw=;
-        b=ZozDCkpHeHqMDWLFLinNIrvgVcVnym0Vowlldt0HwMCDSbTilaj1a5Li0pkzoqrEUw
-         OV3tYm/tsh2l4I4B2Nk74gSU7wkFOylHkJSSZn9Aa8NJ/Bp42/9+WWd9s3Y0+OCy7e0v
-         LJG0XTtckMmQly0iPiE61f/xifxdtjlOuW4brfQ2Np4DLK4NPgpxRMUHVdJeFZN/5TeJ
-         SFmNdwKaH4vk18F4E1d0LN6xakZE7kvdq4oJBpG2sALCwj7Zj0wjcb5IbxDwSJBKEmVi
-         nrod1ufqfPZO5UzH2AYDuVK0N4pvjjAO+kRy+Q/a/2u3SoaKFYgG4ItC7aNdYJqwD5ki
-         91Hg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773927884; x=1774532684; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v9R6nHOrcJhaC23UTQpNWE8SQ53vDX/e3FOov6oc2TY=;
-        b=LR6UL8SRxPaBlxO1QcOJ1Wmxk67Aw0iToRovz6PkgCyNOMzToKTNcWGLXrUTj3esCA
-         Zuqc3UTKDgsv13aaaNxE8ub4gkrUtm0IdZV30muegDmE1an4AV7shNr9H6qFPMBVkjTh
-         Il5HyLURcadZiiiIIWmfCoIh/sSDVmcqfT/i3DtrGq5QsXYS/7lvDWd/BxaKrfGMfg4n
-         fkug+ELOnSeEwIW9xfB7xgiQ5P553w3CI1Iyq0Y4UKfOcJSd1gtzrZ6sAmq704rlviSD
-         GgJZQFF3RC2xrDIb91eE6pSKaWy4s0yzjltQSFSqomFXcumsHObHT6Qkz5kZv5TYp0ao
-         6Y9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773927884; x=1774532684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=v9R6nHOrcJhaC23UTQpNWE8SQ53vDX/e3FOov6oc2TY=;
-        b=eY52PoXEc8IoJlH7BkqttcQxEOOJCy5rCH2Elglh9z0j9jf48Hx1TTBe9hxzV1t+X2
-         watNwwGwg1zeXVc5vwwESgo+NoFhFWNjP1Zl+07zv9JIxKGB+gy/zZlTSbMSKEGFNI5e
-         tRX7OfnPlhMd1X2N7DQErTbKHnC8T17TyliMafJ+jf2t1cUEzYWCvuoO1MDSJ0PpW0k2
-         p/dQKGK26L6ITsmrJXNsrT/yK8V9myFNUWkDxLZxoohXYXlA7DG7av9jR7/QldS+kVoP
-         Y1dHtbCRcC9iXoo9yOgZnX9hNznkGGI3tsfqOO2TxyaKCfhjT94YtE3e1n7aGY9hMAMy
-         g1sA==
-X-Gm-Message-State: AOJu0YzuEWpoflnhG2Okefwsayu2Y+XjYNGtOm8CZ6s9TAx5gnrqfZRP
-	JkT6Oc6EyNjS1Dymk37wqRB73VeeyPMDJR4OkKkf7GaBQ35cOfkkV5ICtBrJbQkU2lnXvvUcd7A
-	paL/HsgvDqUrWpFYZHLsjiiARH3ohszrONzRRpOM=
-X-Gm-Gg: ATEYQzwkzLAudC3CMLBBrdjlVpjtVF/8j+C27quOYITJ17VrPn6iZA46Ts5KBOENfHx
-	MmpSV8NzDqPBGE0bTUAOqY/QYqKuZitDzBy2NRO5Q7e6uP/hGMuJcDxhz+pln4fqLP7m6IrRRAF
-	w9OWAp0SxuuuPdyHl/LzO1ye97nrOLcKPzCfBRv+U87UNO6jvo4RKZDLL2V6pFIHItdCgVBaJWB
-	iIshVT9UuzSnztQ8FGdsYuFgyqa7HL5MWWX79+Z0MpedT5VIYK32FJ4IhPERz8dmGChHx/CMkle
-	7WeZdGK4IJCQS2VnD9F+3SMPMlfOvMk5uo1ltGcFbA==
-X-Received: by 2002:a05:6000:4011:b0:43b:4aba:8f4f with SMTP id
- ffacd0b85a97d-43b527c89eemr13067988f8f.45.1773927884290; Thu, 19 Mar 2026
- 06:44:44 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fc6Qb17T1z2yLG
+	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2026 00:45:25 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1773927921; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=jmThYtX+Ywp2CN+A5kyfMHB3rQPwaRVveThOn3JepwE=;
+	b=RU+xwlPuNYiGBqEmulxTstHlwTBg44WhYdJj+O8DUSzFsPe20C7hkZQr79ejUlGEptGGE/1nYEpFK0ALxyzTNbB37BwL6iYePBshARuZSOYymQes8rAqVnvv1ULWNKo0qicFVwIni4UOXTDgYLU/s04+IJlfRsd6iRgiYNhtIxA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X.Imu5c_1773927917;
+Received: from 30.170.14.2(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.Imu5c_1773927917 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 19 Mar 2026 21:45:18 +0800
+Message-ID: <dc88120d-eb36-46e7-a642-78e626c97ccf@linux.alibaba.com>
+Date: Thu, 19 Mar 2026 21:45:17 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -102,135 +55,97 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260319133948.396-1-newajay.11r@gmail.com>
-In-Reply-To: <20260319133948.396-1-newajay.11r@gmail.com>
-From: Ajay <newajay.11r@gmail.com>
-Date: Thu, 19 Mar 2026 19:14:32 +0530
-X-Gm-Features: AaiRm52SO1Fm2IRQwO_mGXfz5Flpl3gOHX08MYrsXIreX4DGjj2omXH2CynJAjI
-Message-ID: <CAMhhD9juE5tDzW3twCLQChUyLbQsJPvhJQSt-8BOdh_K_UgiCg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] erofs-utils: lib: replace bool locked with
- erofs_mutex_t for MT safety
-To: linux-erofs@lists.ozlabs.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] erofs-utils: lib: fix meta_blkaddr handling for
+ 48-bit layout
+To: Ajay Rajera <newajay.11r@gmail.com>, linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+References: <20260319133948.396-1-newajay.11r@gmail.com>
+ <20260319133948.396-2-newajay.11r@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260319133948.396-2-newajay.11r@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2852-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
+	TAGGED_FROM(0.00)[bounces-2853-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:newajay.11r@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:newajay11r@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.989];
+	RCPT_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: A17402CC21C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 9E9152CC22B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi, This is my first time submitting patches via git send-email to a
-mailing list, so I apologize if there are any formatting issues or
-mistakes in the submission process. Any feedback or suggestions for
-improvement are appreciated.
-Thanks, Ajay Rajera.
 
-On Thu, 19 Mar 2026 at 19:09, Ajay Rajera <newajay.11r@gmail.com> wrote:
->
-> Replace the bool locked field in erofs_diskbufstrm with erofs_mutex_t loc=
-k to provide proper mutual exclusion for multi-threaded disk buffer operati=
-ons. This addresses the TODO comment 'need a real lock for MT' by using the=
- erofs mutex API (erofs_mutex_lock/erofs_mutex_unlock/erofs_mutex_init) ins=
-tead of a simple boolean flag that provided no actual synchronization.
->
+
+On 2026/3/19 21:39, Ajay Rajera wrote:
+> Fix the FIXME in metabox.c by properly handling meta_blkaddr for 48-bit layouts. In erofs_writesb(), set meta_blkaddr to 0 on-disk when 48-bit layout is enabled since meta_blkaddr is encoded differently in that mode. Remove the now-resolved FIXME comment in metabox.c as the issue is addressed in super.c.
+> 
 > Signed-off-by: Ajay Rajera <newajay.11r@gmail.com>
 > ---
->  lib/diskbuf.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/lib/diskbuf.c b/lib/diskbuf.c
-> index 0bf42da..4218df8 100644
-> --- a/lib/diskbuf.c
-> +++ b/lib/diskbuf.c
-> @@ -3,6 +3,7 @@
->  #include "erofs/internal.h"
->  #include "erofs/print.h"
->  #include <stdio.h>
-> +#include "erofs/lock.h"
->  #include <errno.h>
->  #include <sys/stat.h>
->  #include <unistd.h>
-> @@ -14,7 +15,7 @@ static struct erofs_diskbufstrm {
->         u64 tailoffset, devpos;
->         int fd;
->         unsigned int alignsize;
-> -       bool locked;
-> +       erofs_mutex_t lock;
->  } *dbufstrm;
->
->  int erofs_diskbuf_getfd(struct erofs_diskbuf *db, u64 *fpos)
-> @@ -34,6 +35,7 @@ int erofs_diskbuf_reserve(struct erofs_diskbuf *db, int=
- sid, u64 *off)
->  {
->         struct erofs_diskbufstrm *strm =3D dbufstrm + sid;
->
-> +       erofs_mutex_lock(&strm->lock);
->         if (strm->tailoffset & (strm->alignsize - 1)) {
->                 strm->tailoffset =3D round_up(strm->tailoffset, strm->ali=
-gnsize);
->         }
-> @@ -42,7 +44,6 @@ int erofs_diskbuf_reserve(struct erofs_diskbuf *db, int=
- sid, u64 *off)
->                 *off =3D db->offset + strm->devpos;
->         db->sp =3D strm;
->         (void)erofs_atomic_inc_return(&strm->count);
-> -       strm->locked =3D true;    /* TODO: need a real lock for MT */
->         return strm->fd;
->  }
->
-> @@ -51,9 +52,9 @@ void erofs_diskbuf_commit(struct erofs_diskbuf *db, u64=
- len)
->         struct erofs_diskbufstrm *strm =3D db->sp;
->
->         DBG_BUGON(!strm);
-> -       DBG_BUGON(!strm->locked);
->         DBG_BUGON(strm->tailoffset !=3D db->offset);
->         strm->tailoffset +=3D len;
-> +       erofs_mutex_unlock(&strm->lock);
->  }
->
->  void erofs_diskbuf_close(struct erofs_diskbuf *db)
-> @@ -115,6 +116,7 @@ int erofs_diskbuf_init(unsigned int nstrms)
->  setupone:
->                 strm->tailoffset =3D 0;
->                 erofs_atomic_set(&strm->count, 1);
-> +               erofs_mutex_init(&strm->lock);
->                 if (fstat(strm->fd, &st))
->                         return -errno;
->                 strm->alignsize =3D max_t(u32, st.st_blksize, getpagesize=
-());
-> --
-> 2.51.0.windows.1
->
+>   lib/metabox.c | 1 -
+>   lib/super.c   | 2 +-
+>   2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/lib/metabox.c b/lib/metabox.c
+> index d6abd51..077f88b 100644
+> --- a/lib/metabox.c
+> +++ b/lib/metabox.c
+> @@ -62,7 +62,6 @@ int erofs_metadata_init(struct erofs_sb_info *sbi)
+>   		if (ret)
+>   			goto err_free;
+>   		sbi->m2gr = m2gr;
+> -		/* FIXME: sbi->meta_blkaddr should be 0 for 48-bit layouts */
+
+I don't think it's a valid patch, I need to find more clue why
+it was a FIXME.
+
+>   		sbi->meta_blkaddr = EROFS_META_NEW_ADDR;
+>   	}
+>   
+> diff --git a/lib/super.c b/lib/super.c
+> index 088c9a0..99d2a24 100644
+> --- a/lib/super.c
+> +++ b/lib/super.c
+> @@ -209,7 +209,7 @@ int erofs_writesb(struct erofs_sb_info *sbi)
+>   		.epoch     = cpu_to_le64(sbi->epoch),
+>   		.build_time = cpu_to_le64(sbi->build_time),
+>   		.fixed_nsec = cpu_to_le32(sbi->fixed_nsec),
+> -		.meta_blkaddr  = cpu_to_le32(sbi->meta_blkaddr),
+> +		.meta_blkaddr  = cpu_to_le32(erofs_sb_has_48bit(sbi) ? 0 : sbi->meta_blkaddr),
+>   		.xattr_blkaddr = cpu_to_le32(sbi->xattr_blkaddr),
+>   		.xattr_prefix_count = sbi->xattr_prefix_count,
+>   		.xattr_prefix_start = cpu_to_le32(sbi->xattr_prefix_start),
+
 
