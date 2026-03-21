@@ -1,63 +1,64 @@
-Return-Path: <linux-erofs+bounces-2909-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2908-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sGZVL02svmmlWQMAu9opvQ
-	(envelope-from <linux-erofs+bounces-2909-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:33:49 +0100
+	id wL92NjKrvmlqWAMAu9opvQ
+	(envelope-from <linux-erofs+bounces-2908-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:29:06 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCE662E5D1A
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:33:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 305DE2E5CEA
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:29:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fdMPQ0xPVz2ydq;
-	Sun, 22 Mar 2026 01:33:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fdMHx2mrxz2yZN;
+	Sun, 22 Mar 2026 01:29:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774103626;
-	cv=pass; b=XS3HO02ofdkqhVqJCWc1Hrq5Z+MsRptWnbWWHcfmEJ5jyBYeGa3LC6b2t7nYgxexVCK9n60tIslnvW6xcqx0EYC8Ix1esguaQ+0dSQMYMYBgYskc8x4/htqzLsc1FiXDo4G3NP6hUyorbykY8Wwr12t8NoIqSuak5N6ksAM9wlGtiFMuqVhkAiz31TovN9+ZCGgqOpwP4MD3jsMwx0a8Wdlnfcjy+0f7bHATSFldfmR4K0q/kYRAr4UwNqepVzv6lfBe5uU+gBG+PM810Yldda/JuecKlz2SouaThMeCPh0GxZle9RThtqZsxO9V50cBwxSqsug87250Alw+5HRtpw==
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774103341;
+	cv=pass; b=G+UvsK6TTbpO9zbMqfBqGu6WiRi1bOMq7P2bXghJaSX4tCZ/yN5PQQuY0hSfSwu9fUTKRGoFh4tuPNV0+2C4tNdQkGDBl9DtqnHKlSE2xQW0ZD6bUKsyMs+uY0NU/8LDVVEJQFC/JDngYg0U2UVbUQ1XE8B1wbJ7jH7NEf98I+J5UaqzIRVeeBF7FxQAlIRMNyd942QGyOykxiREjxdzUR7FkCGIQ46WzLStpAz7lvYoTxtMIOy1g7Dgp/XpLzZsqa0JQ5PltJ8lntyP+CD8zBZH81w8/PqzUUAecfu6FmtBD2vFXhYlomb9t93mFQkVY0GJcCKTJrTtFUtq+B64rg==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774103626; c=relaxed/relaxed;
-	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W5hWEG1HS6FRs4cM/lBr80a6681NNvbNe1tsv5mEqJOwuU8hVxizvuJaoZsid7AUXw3YaYb+pIqWDXkEyJTUEIRDQuTY+qX5o9R7T0pyGNGVD02LVKBDK+x5j45NjASyiJ8azXbxfVXOJsPb3WP/YSD5zhUpFtSi8lpZUgL93DKmMCQWcOcHZE0JQlyGvuDOy9+x+ssraaAZBKlhTUBMGma/42OOaWS6RPev1Rr/enDG2FIskmELcq8IWihXdkdAGNJlXJIFE7KyC6zxGsgjAKxySjJ/LO/jDa5ZsdXFc7UAqE3t0h/lfUKlSvZPMZNDvg18aKZpvnP7vx1rdtu4HA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=hm/rS6qd; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+	t=1774103341; c=relaxed/relaxed;
+	bh=bAhMwxmrPfFNnSuGIDwZAKQlVs1jrH+FERg6ecoZX5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=McNH9/k7ynQbqOUQUIp5J+aRpBKNAIEiZekYzawJ/529E/dxpNcePzz5+qCVM14weAfr5VqfdKJ3tGTLI9cWZRXa+92CJsOfgBesKUbs/WnW6xBJAyjX6Qg/xzkW97+ZaKYbnpUuy8X025W6gKXWbPpgkoTGG6FHJ0yKUQ3NHaHd0ZsUuzMuUX/GCDUwU/5yphyQcnkZQtGRiJY9j1MHpPWiVwy8VVC915QUzz+roBKTph+0Dt8E+hRu6fVyH60p2pWqeSiNEJQXl/bhB2ibYkFBcEUW69sJycvZ1G7BsZFOz/I6IGySx5O4InJSnksuLvXEVygvyWpBDhyvOYnOSg==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=VibRuWYN; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=hm/rS6qd;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=VibRuWYN;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+X-Greylist: delayed 620 seconds by postgrey-1.37 at boromir; Sun, 22 Mar 2026 01:28:59 AEDT
 Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fdMPN6sn0z2xWP
-	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Mar 2026 01:33:44 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774102714; cv=none; 
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fdMHv581Zz2yYq
+	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Mar 2026 01:28:59 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774103335; cv=none; 
 	d=zohomail.in; s=zohoarc; 
-	b=akTujlwhRswskzTQwqsBAa5vAm9aWQ1ugS7ne8oLGRoIaB+41bVnGY//nbFfUgZq3yn0uiVjL4S5bAbwH6OAamQeZIlVypqUK48f2WCOdtXHf1/bxwSBkI1YZcba0u+XkJ/bMcd1JVkPwWTFmgtAkR5M0R1cf4pPaIFL3l4H3O8=
+	b=Y+es6q+Xysz0LaIeGjiG06guqkdAax1QR7vahbzh5Bk7go6CRYPAyf6ZXDiD98u00dl48yWBrSRJ0IT97T9oq/knhUbhHmnFtum6ZayywEBpqMORIyvcqnykQ7nrOBjFSZDkdS4/n5COs3NdSQeEidSPEhe+9uDJ9q4TsiC2g+E=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1774102714; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=; 
-	b=LeKRUfV3ZQihsfshT+LTk7NZl/oIOeiwMrI3G318z4wmE8VUM6YJchrboPm//5vEgteQcQY5WTAg3ii3ol+ts0UsXsARInsd5k+9n5d9QpSmCjvgI6ctP6U5hEV3TLkOjS+cu+58qhckLCHGrB1+QAdMqtU8Dz53yMFlnEo/3lE=
+	t=1774103335; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=bAhMwxmrPfFNnSuGIDwZAKQlVs1jrH+FERg6ecoZX5M=; 
+	b=Kvxy9qT+MVfLRC/xJjP1oNi9yJL5SgC9z+kTzLM5kBl7KXZVainNRca0O4Z6grkU9y/KqQFC6z1AYYYEpfWLvSNRFQLyXWSeUBXh4+ljZNVM9MTikhdZYv7HCLqRLBBQx/rUq7MdWWo0+UQ66T3QKGPoyMYt/JEIcC7ALnNw2K0=
 ARC-Authentication-Results: i=1; mx.zohomail.in;
 	dkim=pass  header.i=vnsh.in;
 	spf=pass  smtp.mailfrom=ch@vnsh.in;
 	dmarc=pass header.from=<ch@vnsh.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774102714;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774103335;
 	s=zoho; d=vnsh.in; i=ch@vnsh.in;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=;
-	b=hm/rS6qd9gEYYiJLJc93RTwV5/3SFhV9KVCt7LU7q0fpspDp6KsJf+NcDP9CP5Vm
-	HrMLvHOJoue7P1N5prNBjr5QZ+nL0UtPOzNydPUlnvmySYFAJsFcm+acYpGH1HCvsIW
-	tN+isWIjkRIwYyyLwjISmpcgMuDLFH3D3rBE5I44=
-Received: by mx.zoho.in with SMTPS id 1774102711840565.086949488715;
-	Sat, 21 Mar 2026 19:48:31 +0530 (IST)
+	bh=bAhMwxmrPfFNnSuGIDwZAKQlVs1jrH+FERg6ecoZX5M=;
+	b=VibRuWYN4dNgEQuk3vpI7KOn78g0jH4vypwTylUy2JN9tX54XuLQFLzyZku1Mh/j
+	7e5qeVTOtoqoQtN/WUvdqHRO2YUksdiD+R85DJOjb16KmWPp68SANse/q7o4d+D0NNO
+	BPPECJgguGGEsi03Wjcvlsw+ZsDtiIZrW5HeqwCE=
+Received: by mx.zoho.in with SMTPS id 177410333319381.39648812963105;
+	Sat, 21 Mar 2026 19:58:53 +0530 (IST)
 From: Vansh Choudhary <ch@vnsh.in>
 To: linux-erofs@lists.ozlabs.org
 Cc: Vansh Choudhary <ch@vnsh.in>
-Subject: [PATCH] erofs-utils: man: fsck: document extraction options
-Date: Sat, 21 Mar 2026 19:48:30 +0530
-Message-ID: <20260321141830.32334-1-ch@vnsh.in>
+Subject: [PATCH] erofs-utils: fsck: fix directory loop tracking
+Date: Sat, 21 Mar 2026 19:58:52 +0530
+Message-ID: <20260321142852.35991-1-ch@vnsh.in>
 X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -80,7 +81,7 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -88,7 +89,7 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-2909-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2908-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DMARC_NA(0.00)[vnsh.in];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -101,74 +102,35 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,vnsh.in:dkim,vnsh.in:email,vnsh.in:mid]
-X-Rspamd-Queue-Id: DCE662E5D1A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vnsh.in:dkim,vnsh.in:email,vnsh.in:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 305DE2E5CEA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Document the existing fsck.erofs extraction-related options in the
-manpage, including --offset and the extraction-only force,
-overwrite, and preserve flags.
+Store the current directory nid in the recursion stack.
 
-Also normalize the option markup for --no-sbcrc and --[no-]xattrs to
-match the surrounding manpage style.
-
-This keeps the manpage in sync with the current CLI help output.
+The loop check compares inode.nid against the entries already on the
+stack, so pushing pnid there can miss self-referential directory loops
+and report the wrong failure later.
 
 Signed-off-by: Vansh Choudhary <ch@vnsh.in>
 ---
- man/fsck.erofs.1 | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ fsck/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
-index 0f698da..1659dea 100644
---- a/man/fsck.erofs.1
-+++ b/man/fsck.erofs.1
-@@ -34,7 +34,10 @@ take a long time depending on the image size.
- 
- Optionally extract contents of the \fIIMAGE\fR to \fIdirectory\fR.
- .TP
--.B "--no-sbcrc"
-+.BI "\-\-offset=" #
-+Skip # bytes at the beginning of IMAGE.
-+.TP
-+.B "\-\-no\-sbcrc"
- Bypass the on-disk superblock checksum verification.
- .TP
- .BI "\-\-nid=" #
-@@ -45,11 +48,31 @@ The default is the root inode.
- Specify the target inode by its path for checking or extraction. If both
- \fB\-\-nid\fR and \fB\-\-path\fR are specified, \fB\-\-path\fR takes precedence.
- .TP
--.BI "--[no-]xattrs"
-+.BI "\-\-[no\-]xattrs"
- Whether to dump extended attributes during extraction (default off).
- .TP
- \fB\-h\fR, \fB\-\-help\fR
- Display help string and exit.
-+.PP
-+The following options are only meaningful when used with \fB\-\-extract\fR=\fIX\fR:
-+.TP
-+.B \-\-force
-+Allow extracting to the root directory.
-+.TP
-+.B \-\-overwrite
-+Overwrite files that already exist.
-+.TP
-+.B "\-\-[no\-]preserve"
-+Same as \fB\-\-[no\-]preserve\-owner\fR \fB\-\-[no\-]preserve\-perms\fR.
-+.TP
-+.B "\-\-[no\-]preserve\-owner"
-+Whether to preserve the ownership from the filesystem (default for
-+superuser), or to extract as yourself (default for ordinary users).
-+.TP
-+.B "\-\-[no\-]preserve\-perms"
-+Whether to preserve the exact permissions from the filesystem without
-+applying umask (default for superuser), or to modify the permissions
-+by applying umask (default for ordinary users).
- .TP
- \fB\-a\fR, \fB\-A\fR, \fB-y\fR
- These options do nothing at all; they are provided only for compatibility with
+diff --git a/fsck/main.c b/fsck/main.c
+index 16a354f..3530707 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -1022,7 +1022,7 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 		for (i = 0; i < fsckcfg.dirstack.top; ++i)
+ 			if (inode.nid == fsckcfg.dirstack.dirs[i])
+ 				return -ELOOP;
+-		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = pnid;
++		fsckcfg.dirstack.dirs[fsckcfg.dirstack.top++] = inode.nid;
+ 		ret = erofs_iterate_dir(&ctx, true);
+ 		--fsckcfg.dirstack.top;
+ 	}
 -- 
 2.51.0
 
