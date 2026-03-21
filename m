@@ -1,95 +1,49 @@
-Return-Path: <linux-erofs+bounces-2899-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2900-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CAhpNnE7vmlUKAMAu9opvQ
-	(envelope-from <linux-erofs+bounces-2899-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 07:32:17 +0100
+	id OIVWMhk+vmk8KgMAu9opvQ
+	(envelope-from <linux-erofs+bounces-2900-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 07:43:37 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F992E3AB5
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 07:32:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 179892E3B79
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 07:43:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fd8jp2PPJz2yZN;
-	Sat, 21 Mar 2026 17:32:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fd8yc4y6wz2yhX;
+	Sat, 21 Mar 2026 17:43:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::434" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774074734;
-	cv=pass; b=RgNf8UwDmSo1lT3BaBJhrOKCMyZRgvU5KjDGqEGJoFyrh5zNKo2iq8G75/AsBvH3P2S+LSQLRV3+7N0cOqciOH5oYKfUi4Rf070PgdvTfnDwaU79roLF9I2kWgvte2v2QHnAResvyu7lvpuElg4QZMKXSwuN0M12Q4n89kXX+6qyUOPAY/Mtat6tex+HzhRbUN8RGHFQT2dUmBCiJbmzST1Tat6axzYOBT51nfIiyCE+5JQhb3VKbO91IF5pw7D8fECViwKMBX8jFKQFuyNMY8OQPNgLI5tcoL59qnHCFxSRGYbgWlnQVzHM5J7Yp4f1xA6sVArP3jXyJAJlNF1JRw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774074734; c=relaxed/relaxed;
-	bh=yAK16XeDesrg9n4ebMLCi0eamvk0VRC4holpWQxjOBI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F6rU7MMPLXmfeX1HU6TZrtiO+gbEoqULdT5xbaZKiJm4l55G8vjjBodI0jrUlnJyMmwEPawfCkZymardUnwH7iVLFlhbwKTr3IrQmEZ+tiJ+x5lA07QpSyMnU7G0lYI/QiiKLJk/VLPohsuJZX1lmBMODvG3c3ckSCZod88H+C6y8Xa6vtpt6CE/19s3RyhSsElWUcbPWjERaMTY0CnZL5W0/crC7sE2772DHY/7Ya/hp9oS5vleuOMXOd+3vCoaynnEKxAq1m9MpyzynjDOsqoLaeZNRZ7siw97CEpU9gFTbtPAZyxW0Jqh7W3XUIA5P2y06nd4AScanIfuY6yiMA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=fPDojgln; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::434; helo=mail-wr1-x434.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774075400;
+	cv=none; b=gB+dGYGUV/4enAZKfC6832E0W9pE97Nt1M7wSzncsbJ2jAlNXiPcqOCPjUNIaN8inxBFnlx5dos5V9w9uOdEWyRuqVTRW1FlgfHSf8/XQqnOwhoJTnLTsdQzh5Z4jErKTUMcSZ0MkqIjG8PI3lpVcgvk8w61LBBpHd4Zl0Tv4+fcVydnRkNbJyx7hfA2L7YhHtshuTJyuToHDOxexEMeQv3IOCXXW7/6q8gn7BBj6ozxUEPERl6HGixPfVwnSFCuAKv/WWcDUb0or75tXkXgAAiWO9yVbvUFVkUhotjUVbHeKLf68EPpYI6pVKFIt4U4SonFiAx5uY9B27J1X6lQQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774075400; c=relaxed/relaxed;
+	bh=isrk1msfz6ShTLvztV+QVeC/kPKRCTb5sRdDldjlYXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JmSOG6YRVxcmOgR4cuz+J0i9uYBpLUr7DntlK2GmehPgZYp21k7cRFEoAfFowg9BwmAz31wmAEcjyfBMdVt/pqf5mr4waE0fsKN1eudWurdg9zwDD9RPEIomvJ2ND1RD7/w6X7pNIZ5fKrI/ut4xK/RzhRCXyS7bN+m1Df0WnF9V2C85IF5OP+CD9+XRFYj4aUc0B3LlAmk5ZA22gq2IY2WJFOmiuFQ089Fjb5hsuAuU5nUO01lo0i+seHrgBDkUesmy+vSgAIBBwlcFxy4M7Lt54dMS52apY8Fk9ropIrfvC5hba5LPUX+YGIxj17YvpDZAr/pNnFfVaiRpo2cHIA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LSFXpERb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=fPDojgln;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LSFXpERb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::434; helo=mail-wr1-x434.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fd8jn142Bz2yYq
-	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Mar 2026 17:32:12 +1100 (AEDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-439cd6b09f8so1944784f8f.3
-        for <linux-erofs@lists.ozlabs.org>; Fri, 20 Mar 2026 23:32:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774074724; cv=none;
-        d=google.com; s=arc-20240605;
-        b=aUvrta4O0UYNL9F7B22pgee1wpf8sxF/eYouC4hz6NLLgQvgm9ZsjAcPujeYMvN2Tv
-         tCSoVgk+KHYg/hI7lwQ9P7rpf7ymaYpYn11IfFTpTElfdSgnXddG/jUSxNVeYCTaXPQ0
-         4am6yV1hPIr1uoq+aLmC1vD03PTh80tpkFbFPnXTCfapj5mIGMZ1zIoQ+dlE3TdO3trT
-         5+TxynfzgqMwdOqIby2eFNpPNWz6p5Drgr8Z1Vo8qQ7GIEjsFtdWGaMVf5SrXsM8nSCA
-         XygQQUBEkZZZ04t9reeUaT4IzZ25Bb4io8dCUDbNk78KttE97PVJuUpO3/J71DgTb15m
-         i8mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=yAK16XeDesrg9n4ebMLCi0eamvk0VRC4holpWQxjOBI=;
-        fh=dImzU/I8cAVUT6QAb13MEnLmVLjJaLsTYLGpjBlTJOY=;
-        b=GqRzkNftQqV9VpPK6DLXQxboYXD4TgcbpIve/gsdf0w/STJmVU4A0MNDUEORvG3CV/
-         /B60VD4WD13bPBkgjU0a+dFYvF3D5zbI+tN1qFZHBNeGm2uP6uqL0jpuo4UtiFmK7R/V
-         t31cY18QD2A+dBrH8RDBNImtuHTnio77/HrEVvBb6Q9LsP2yKYDiExX8eVIm9AZUkpFZ
-         FGQJjlDnU05sF6Wb+25LrI++YIw+lb0u+S1NVXgm27kKptlX+gL83u0OutQjcUuNecy7
-         l8BxuSuOJFx9cYgB11I3M56AayZPvxqizztAedyk50LfYOp1squnYSrnNi8OJde5/DYI
-         uDWQ==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774074724; x=1774679524; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAK16XeDesrg9n4ebMLCi0eamvk0VRC4holpWQxjOBI=;
-        b=fPDojglnLsH8thSQkEMGjcw5pi7A+GL1YR1cOgbiE9aEL/yHi2B7+huNu+o1jrs2qF
-         f3CYCrzMTCxSfBdGpkj0d27wQgGW7GhuCv1Lp1q0L9M4yYj2EWA6nuqSaTQe8g/Mi62B
-         9rxkp2qPPx1kZ2K/L74IQN4tCTFhwa6Ou0vgeWdO0YMnkJH9RhLLpcM2xcRzKPtm9LCV
-         uJNt6zbjDLKxm4LYOeLBDIU+trtZWiEWEBXJGDELJqEh5AyDjj6HkChcQl7QUnHFxUBv
-         /rhrAFB0n1npExNdivkpvksraK1p6vE10fdvUvQWNrAXy/qRvLxkwZk1X4U3AddLeFjc
-         oE2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774074724; x=1774679524;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yAK16XeDesrg9n4ebMLCi0eamvk0VRC4holpWQxjOBI=;
-        b=MVcg2NVesJlcneTsTdIyPvUeOMIMzptrOSAXT3iiNe8irpD4FYsaeJcEr9UdMPN1Qr
-         nFjA/osAzil5Vh2REwifg7/fTDGs5pCYL9WlWYuOtFEYIhsbSRARgNKPzaMhVxySNWkQ
-         bv+iGbk+g47Zul8Q3/l+sPshH+14lX6YoSspKEbTTVkl6DrKXQlT+5hg/UUmcplElvZL
-         zC6yjke02BSWxvcM69GugMG81Nd5ppDyvG0MIuXa1tqXe7Rv5yWFldL0Rfv8Rmqzr9FR
-         pkDQURQY7O1o8CaxXh3cisXbIQFYApNPvFqtPHGvDpXptA1iNmIOZZMN6iuLUo/ISJzk
-         ngcg==
-X-Gm-Message-State: AOJu0YwQT9hd/USS+ne7ExzwfFWbvVBBR7YVtWvphrUjw/QcFFs4xrG4
-	RDULVSPOBl0v663x4ari9WPqc6R74Hy/zJR4pQEQSaJk4at8M22mieJMLLZ4e7Dg8uW/1K/hFyo
-	Qe1GiiQWTfcOHk1nJPyVPg/YYtRTJrx8=
-X-Gm-Gg: ATEYQzwY2K+G1FGGPM3OnmwQxpzMKBXnWeW1WfKJZx6Iu8thh/JWkaq0Cf15z/o8qY6
-	8lqtqQw/tiRThSI7WM0UElqgZbu3GtArIaRgsYqkH+K3VMmn/bqPI2Jrq4URuHzXzV9uICRNheQ
-	7nXiBhDs/Ymarbx08gLgxVodQgMxTnYWEOK94ScKx5+ngWQPARfsu5V3bvwsZj7B0v5vKNW7lmk
-	kVG9foRZmkDVqbf0Nbk8+GIEqAoPR+PdFPH7bu/jjwnjJaYriI31AGESgBXJ5MCRxVAnuq0bBg4
-	2RKtGB8BbPgaQq3rNtdGXzIWcoCc5MUSZP+qU5g=
-X-Received: by 2002:a5d:584c:0:b0:43b:4136:1e6f with SMTP id
- ffacd0b85a97d-43b642817a6mr8522488f8f.38.1774074723720; Fri, 20 Mar 2026
- 23:32:03 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fd8yY5684z2yZN
+	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Mar 2026 17:43:17 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1774075392; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=isrk1msfz6ShTLvztV+QVeC/kPKRCTb5sRdDldjlYXM=;
+	b=LSFXpERb1cSqVGL8VlYYSLeGko9FaqwMX7oPlNYxFGuVfK02LiTHhsi0xGPSZ8JWPY9/JDrxSJRDeA/zn+RMAljTxw0bX1WQMOpgI6xFZ0QNm79K7e4GpWpoqh+apqLZHyja9c3y921sWCvciOpnb7gXmNeUFwaybJNQvWgg//g=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X.ODaKu_1774075390;
+Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.ODaKu_1774075390 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 21 Mar 2026 14:43:10 +0800
+Message-ID: <cb307f5e-bb07-4456-8bb9-7d4697171d14@linux.alibaba.com>
+Date: Sat, 21 Mar 2026 14:43:09 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,79 +55,94 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260320165200.1862-1-newajay.11r@gmail.com> <20260321050725.60268-1-nithurshen.dev@gmail.com>
-In-Reply-To: <20260321050725.60268-1-nithurshen.dev@gmail.com>
-From: Ajay Rajera <newajay.11r@gmail.com>
-Date: Sat, 21 Mar 2026 12:01:50 +0530
-X-Gm-Features: AaiRm52__cddTMRWmaiPxq3-OGTmLNQ4kGV41Cv7EqqgoU9D2USKqbrMciRCDJk
-Message-ID: <CAMhhD9iyzyY=ty0Ntf+j4oVW-oW5iZJ09EDdCdfEPHFXaf3LOQ@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: fix resource leaks and missing returns on
- error paths
-To: Nithurshen <nithurshen.dev@gmail.com>, xiang@kernel.org
-Cc: linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.8 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_GMAIL_RCVD,
-	FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] erofs-utils: fuse: add missing return on getattr
+ error
+To: Ajay Rajera <newajay.11r@gmail.com>, linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org
+References: <20260321062604.1905-1-newajay.11r@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260321062604.1905-1-newajay.11r@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2899-lists,linux-erofs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-2900-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	FORGED_SENDER(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:newajay.11r@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:newajay11r@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_THREE(0.00)[3];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid]
-X-Rspamd-Queue-Id: F3F992E3AB5
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 179892E3B79
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,Thanks for the review
-I have just sent out a v2 series that splits these into two separate patches.
 
-Best regards,
- Ajay Rajera.
 
-On Sat, 21 Mar 2026 at 10:37, Nithurshen <nithurshen.dev@gmail.com> wrote:
->
-> Hi Xiang,
->
-> Both the patches LGTM.
->
-> I tested the missing return by truncating an image to force an I/O
-> error, and the FUSE daemon now correctly aborts instead of hanging.
-> I also dynamically tested the memory leak fix using Valgrind with a
-> 10MB file and an injected Z_STREAM_ERROR, confirming 0 bytes lost.
->
-> The only note is that this should be sent as 2 separate patches in
-> the same thread.
->
-> Reviewed-by: Nithurshen <nithurshen.dev@gmail.com>
-> Tested-by: Nithurshen <nithurshen.dev@gmail.com>
+On 2026/3/21 14:26, Ajay Rajera wrote:
+> erofsfuse_getattr() calls fuse_reply_err() when erofs_read_inode_from_disk()
+> fails, but does not return afterwards. This causes the function to fall through
+> to erofsfuse_fill_stat() with uninitialized inode data and then call
+> fuse_reply_attr(), sending a second reply to the same FUSE request.
+> 
+> Sending two replies to a single FUSE request is undefined behavior in libfuse
+> and typically triggers an assertion failure or crash. The uninitialized inode
+> data may also expose garbage values to userspace.
+> 
+> Fix by adding the missing return after fuse_reply_err().
+
+Each line of the commit message should not exceed 72 chars.
+
+> 
+> Signed-off-by: Ajay Rajera <newajay.11r@gmail.com>
+> ---
+>   fuse/main.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fuse/main.c b/fuse/main.c
+> index 82aca8c..b634782 100644
+> --- a/fuse/main.c
+> +++ b/fuse/main.c
+> @@ -265,8 +265,10 @@ static void erofsfuse_getattr(fuse_req_t req, fuse_ino_t ino,
+>   	struct erofs_inode vi = { .sbi = &g_sbi, .nid = erofsfuse_to_nid(ino) };
+>   
+>   	ret = erofs_read_inode_from_disk(&vi);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>   		fuse_reply_err(req, -ret);
+> +		return;
+> +	}
+>   
+>   	erofsfuse_fill_stat(&vi, &stbuf);
+>   	stbuf.st_ino = ino;
+
 
