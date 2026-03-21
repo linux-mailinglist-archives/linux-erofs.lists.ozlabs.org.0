@@ -1,49 +1,64 @@
-Return-Path: <linux-erofs+bounces-2907-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2909-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iPHwOoqfvmnoUgMAu9opvQ
-	(envelope-from <linux-erofs+bounces-2907-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 14:39:22 +0100
+	id sGZVL02svmmlWQMAu9opvQ
+	(envelope-from <linux-erofs+bounces-2909-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:33:49 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 744C92E5916
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 14:39:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DCE662E5D1A
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Mar 2026 15:33:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fdLBZ61Hjz2yZN;
-	Sun, 22 Mar 2026 00:39:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fdMPQ0xPVz2ydq;
+	Sun, 22 Mar 2026 01:33:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774100358;
-	cv=none; b=RWNYUIJrKlrmL8iJSfhMWy4wO8pwuY/zp0Z9VbUIxu16Uqpw+iilXRGte0SVa4NKhOCMm4CBmzVht1PnKseWQg4JRm1XGq+hJSzWumeC5l2CDQ3y+WA+sWSxnqKgtCQieFc8SAQbe0FCZ8yMF5fjNHYiT0d8Zf9fG0H8nUKf6yO7dZNny5RHc5rarnZauyhcORI7Xexb2yNFjg4HaN1m8A1FozlXxf3auhUPghQtv5xgblmjaX9f6QT37XZgh4nO03MGgMh82qeniwuVJstoRiScFtWlqzi0evQgXEDKVXSXUBktO3Eaew7iRImgKcQoorJ25ge4Yx5hLTA72DKrhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774100358; c=relaxed/relaxed;
-	bh=O8nOpWvuwodnXSrZzbuKR4IwQ3cpjF/NiFwmG3l02L0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BIE/+Lbo61pD/Ww+Yfequm3dlsiaq8d90UaKDW5jN9zN89VfcteaFAkrW7JEKlNUeyIJFD1GWAPSsPT4Mk564uza0Tm+hfgYdeZzfRu0V0zfUTQmvx2HD7a3nLBysvigf7A0EVR7GjF8eezreFJ/FD46zOUWF9QyKUh239YsrkOH2kTaaZZ92jhkZTrKdxmiVC8p6CeB04DUTTFzZF0ttM4Jka4nNZNrG1Mq0QEYPCN92RrhfY0eImz2ZWTctmAMPoAMgbBIgXns5bykBM5f/vWtASnxISEQ8Jftd1/Z1M4LA23RbXb2XcO9B84wbboFDr/OREdmORmUFh5RrWeQjw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ntKuouRy; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774103626;
+	cv=pass; b=XS3HO02ofdkqhVqJCWc1Hrq5Z+MsRptWnbWWHcfmEJ5jyBYeGa3LC6b2t7nYgxexVCK9n60tIslnvW6xcqx0EYC8Ix1esguaQ+0dSQMYMYBgYskc8x4/htqzLsc1FiXDo4G3NP6hUyorbykY8Wwr12t8NoIqSuak5N6ksAM9wlGtiFMuqVhkAiz31TovN9+ZCGgqOpwP4MD3jsMwx0a8Wdlnfcjy+0f7bHATSFldfmR4K0q/kYRAr4UwNqepVzv6lfBe5uU+gBG+PM810Yldda/JuecKlz2SouaThMeCPh0GxZle9RThtqZsxO9V50cBwxSqsug87250Alw+5HRtpw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774103626; c=relaxed/relaxed;
+	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W5hWEG1HS6FRs4cM/lBr80a6681NNvbNe1tsv5mEqJOwuU8hVxizvuJaoZsid7AUXw3YaYb+pIqWDXkEyJTUEIRDQuTY+qX5o9R7T0pyGNGVD02LVKBDK+x5j45NjASyiJ8azXbxfVXOJsPb3WP/YSD5zhUpFtSi8lpZUgL93DKmMCQWcOcHZE0JQlyGvuDOy9+x+ssraaAZBKlhTUBMGma/42OOaWS6RPev1Rr/enDG2FIskmELcq8IWihXdkdAGNJlXJIFE7KyC6zxGsgjAKxySjJ/LO/jDa5ZsdXFc7UAqE3t0h/lfUKlSvZPMZNDvg18aKZpvnP7vx1rdtu4HA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=hm/rS6qd; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ntKuouRy;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=hm/rS6qd;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fdLBV513hz2yYq
-	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Mar 2026 00:39:10 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1774100342; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=O8nOpWvuwodnXSrZzbuKR4IwQ3cpjF/NiFwmG3l02L0=;
-	b=ntKuouRyW3dflUsOypNHgWWfT7grTTGSuvDl8opsGBYDMSQKxjQiq05s1a4vVSnfuFfepGILd4sGFZPanijRBfi3cX3QnaFwYMP7Odzx0l6KbZJuOi2ZKuu6QykY5o7t4FF+ymT/C3x5lcVl+2pFtwkACyoaEeSPnx/aZow6TsE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X.OvyzD_1774100341;
-Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.OvyzD_1774100341 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 21 Mar 2026 21:39:01 +0800
-Message-ID: <a2c19923-89fb-4225-a468-b1629cc07328@linux.alibaba.com>
-Date: Sat, 21 Mar 2026 21:39:01 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fdMPN6sn0z2xWP
+	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Mar 2026 01:33:44 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774102714; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=akTujlwhRswskzTQwqsBAa5vAm9aWQ1ugS7ne8oLGRoIaB+41bVnGY//nbFfUgZq3yn0uiVjL4S5bAbwH6OAamQeZIlVypqUK48f2WCOdtXHf1/bxwSBkI1YZcba0u+XkJ/bMcd1JVkPwWTFmgtAkR5M0R1cf4pPaIFL3l4H3O8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1774102714; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=; 
+	b=LeKRUfV3ZQihsfshT+LTk7NZl/oIOeiwMrI3G318z4wmE8VUM6YJchrboPm//5vEgteQcQY5WTAg3ii3ol+ts0UsXsARInsd5k+9n5d9QpSmCjvgI6ctP6U5hEV3TLkOjS+cu+58qhckLCHGrB1+QAdMqtU8Dz53yMFlnEo/3lE=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=vnsh.in;
+	spf=pass  smtp.mailfrom=ch@vnsh.in;
+	dmarc=pass header.from=<ch@vnsh.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774102714;
+	s=zoho; d=vnsh.in; i=ch@vnsh.in;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=7YNZtSTPPo/mVI/GslQF9w4oezfxMiMMgwGZpy2HgIs=;
+	b=hm/rS6qd9gEYYiJLJc93RTwV5/3SFhV9KVCt7LU7q0fpspDp6KsJf+NcDP9CP5Vm
+	HrMLvHOJoue7P1N5prNBjr5QZ+nL0UtPOzNydPUlnvmySYFAJsFcm+acYpGH1HCvsIW
+	tN+isWIjkRIwYyyLwjISmpcgMuDLFH3D3rBE5I44=
+Received: by mx.zoho.in with SMTPS id 1774102711840565.086949488715;
+	Sat, 21 Mar 2026 19:48:31 +0530 (IST)
+From: Vansh Choudhary <ch@vnsh.in>
+To: linux-erofs@lists.ozlabs.org
+Cc: Vansh Choudhary <ch@vnsh.in>
+Subject: [PATCH] erofs-utils: man: fsck: document extraction options
+Date: Sat, 21 Mar 2026 19:48:30 +0530
+Message-ID: <20260321141830.32334-1-ch@vnsh.in>
+X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,82 +70,106 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: fix resource leaks and missing returns on
- error paths
-To: Nithurshen <nithurshen.dev@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, newajay.11r@gmail.com, xiang@kernel.org
-References: <d8e7345e-a1cb-4234-b03f-a3089f7a1c27@linux.alibaba.com>
- <20260321071542.80503-1-nithurshen.dev@gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260321071542.80503-1-nithurshen.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-7.70 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:newajay.11r@gmail.com,m:xiang@kernel.org,m:nithurshendev@gmail.com,m:newajay11r@gmail.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-2907-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-2909-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	DMARC_NA(0.00)[vnsh.in];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[vnsh.in:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[lists.ozlabs.org,gmail.com,kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 744C92E5916
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,vnsh.in:dkim,vnsh.in:email,vnsh.in:mid]
+X-Rspamd-Queue-Id: DCE662E5D1A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Document the existing fsck.erofs extraction-related options in the
+manpage, including --offset and the extraction-only force,
+overwrite, and preserve flags.
 
+Also normalize the option markup for --no-sbcrc and --[no-]xattrs to
+match the surrounding manpage style.
 
-On 2026/3/21 15:15, Nithurshen wrote:
-> Hi Xiang,
-> 
-> Thanks for the suggestion.
-> 
-> I have started working on formalizing the truncated image
-> scenario into a test case for experimental-tests. I'll
-> implement it so that we can automate the image corruption
-> and verify the FUSE daemon's error-handling behavior in
-> future.
-> 
-> Since there is already a test-case I sent with code 028,
-> is it okay if I send this one with 029?
+This keeps the manpage in sync with the current CLI help output.
 
-Any number is fine, or just use 99 when submitting.
+Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+---
+ man/fsck.erofs.1 | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-> 
-> I will send the patch for the test case shortly.
-> 
-> Thanks and Regards,
-> Nithurshen
+diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
+index 0f698da..1659dea 100644
+--- a/man/fsck.erofs.1
++++ b/man/fsck.erofs.1
+@@ -34,7 +34,10 @@ take a long time depending on the image size.
+ 
+ Optionally extract contents of the \fIIMAGE\fR to \fIdirectory\fR.
+ .TP
+-.B "--no-sbcrc"
++.BI "\-\-offset=" #
++Skip # bytes at the beginning of IMAGE.
++.TP
++.B "\-\-no\-sbcrc"
+ Bypass the on-disk superblock checksum verification.
+ .TP
+ .BI "\-\-nid=" #
+@@ -45,11 +48,31 @@ The default is the root inode.
+ Specify the target inode by its path for checking or extraction. If both
+ \fB\-\-nid\fR and \fB\-\-path\fR are specified, \fB\-\-path\fR takes precedence.
+ .TP
+-.BI "--[no-]xattrs"
++.BI "\-\-[no\-]xattrs"
+ Whether to dump extended attributes during extraction (default off).
+ .TP
+ \fB\-h\fR, \fB\-\-help\fR
+ Display help string and exit.
++.PP
++The following options are only meaningful when used with \fB\-\-extract\fR=\fIX\fR:
++.TP
++.B \-\-force
++Allow extracting to the root directory.
++.TP
++.B \-\-overwrite
++Overwrite files that already exist.
++.TP
++.B "\-\-[no\-]preserve"
++Same as \fB\-\-[no\-]preserve\-owner\fR \fB\-\-[no\-]preserve\-perms\fR.
++.TP
++.B "\-\-[no\-]preserve\-owner"
++Whether to preserve the ownership from the filesystem (default for
++superuser), or to extract as yourself (default for ordinary users).
++.TP
++.B "\-\-[no\-]preserve\-perms"
++Whether to preserve the exact permissions from the filesystem without
++applying umask (default for superuser), or to modify the permissions
++by applying umask (default for ordinary users).
+ .TP
+ \fB\-a\fR, \fB\-A\fR, \fB-y\fR
+ These options do nothing at all; they are provided only for compatibility with
+-- 
+2.51.0
 
 
