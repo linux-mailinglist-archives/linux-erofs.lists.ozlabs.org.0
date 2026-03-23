@@ -1,49 +1,49 @@
-Return-Path: <linux-erofs+bounces-2944-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2945-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IBIlOprxwGkUOwQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2944-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:54:02 +0100
+	id CHx2APXxwGkUOwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2945-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:55:33 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 118912EDE30
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:54:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 160062EDE94
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:55:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ffQRC5lT8z2yds;
-	Mon, 23 Mar 2026 18:53:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ffQSx50ypz2yds;
+	Mon, 23 Mar 2026 18:55:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774252439;
-	cv=none; b=Kcmj5qRHFoCRLNkGzall6IdV71Ou4mzeXJ4mQOZwvN8dKIS7M0DcfI2Xw/rdvj5/esat70m5mSDAQgutgafVCKZYegosDEJ/eOlnQmCgyqTJLYe9mtuOILOGyLIaovHr3ccIHmklSue2M978tB6o+9GF5nq02r2ztxAByAzOksqLt9tCSsRuXyN5F0wDqui5QpCtvAW8HVEg53npHMMmsNsroITTH9zoUdeVE3KKblvJV6ItZRd3U47TgsTcPfhS7pl0E+E+ZtCfej9T2XSyxdj3E8uaYtTEiyUT+Rrx9QwoP6lk8AKi7AF28KjDq2qtH2QlJ5wXLucM0CKbR/bRJQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774252529;
+	cv=none; b=jQh5MTK2ZOn2fJfJvxV5tCvZOhN+9LeyQ5Df38YtckeufQkY1ep9NOOdkEtEqsdESvvNPkFmWlkqOKMJJEOFqoEcLoyBwfVAtTPNgpaNhToXkT6eDYeLEqg7nohiIfidtQlnpO0OSwChITVk7eVbb6PFJBJlkybISa3d00dRv+QhkTNGyHZgoNEzizlisIxW8bcFx3+zvN/oKndCFe/GPTbdR3GrWAlJXxuOqm9le0s/Dr0UquuJtJs3QEs6AWqMBIwGtFLeQ26F4vRDJ/Sq/bVxcG7ywdqkRf4Gwh/I1SOuw887PcEKgKIwDfMBc/KCppsjtQqP8BWvKoa6xICNZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774252439; c=relaxed/relaxed;
-	bh=wJD2ZsTg6dIpYoe1fEovOgNeGSCaqIxgGZVO3kFEUcA=;
+	t=1774252529; c=relaxed/relaxed;
+	bh=Ln27PU6iTQhPj8tFQuQHGkfOiUwIVWgP9XLp448zqaw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mvHgZEkkyDl0flkJ7t4cI1vGOO+5+WkUUBMtwAWPTAxek7GraE4dqbRhEIlI96FayrKo9ZpL2jtlGWt0vVBSzygNwil752JHjAwhjAKiH8PNY1ia0WMhDLiWncEzg5IyUO3DvP12G1hcyCKBz9BT9+ZZTAIZbMwVYkt237h3ajHeYoEoLv0AlWbeNGmJXHTl+4sO/voiFCaLmDMFTyQDn1Wnaqam3Y48ACB3YZiScKN98O/NU3uQ9ZoirtPC6SarAmoI/t484EKkdqDhgDo5YCEi8GPotf9p2HAKxYILPbXbCTh0ZtrLnQarwFU/U82lnpV7kNDobW7RHT+2KmgEgA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QEZvJypQ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=WbpuKP80Nv0CzTTrOdQXiZnUpEBWjR4LeIP6vfWd0xN5dj8YPOvNeQtnTaLDsuqIcsKF0Bws2zjz8ma+qt2VQx6S9egQITvkN+P6pdj+9w7hjXgxL2rcGmoOGLx4YxkfTz7Bcw9z6T8PEDEz8bt5wrZDpeXRuIR2uDgONoUIQnuYBsMslQl+pp7+DOa1Tah0oFALJer8CR8liZaj+73TvwOyQo0G3VvjyO885mnZW9gRgCofU1L+DoV6oBH15iu/i24qltHzd4BztrQcih6LWRfHfUOc/M94ShhpGsURODk7/Te/qKvFwZD6lScH4sgWbf/k35BnF5uZdqLbVCxchA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Z0guAxiK; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QEZvJypQ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Z0guAxiK;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffQR94CXWz2yYy
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 18:53:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffQSw3d4Cz2yYy
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 18:55:27 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1774252431; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=wJD2ZsTg6dIpYoe1fEovOgNeGSCaqIxgGZVO3kFEUcA=;
-	b=QEZvJypQFLKJDroHTf0UO4Jo1bU9whyciJcrbIQiQ6O7M51HWBjg5EWE8Piwkc6jUYohn/jdjtkxOwpGekPL0ptB8XTIOQwWkdWKTIHdxBSc0Ag3PKSpReKq99nEu8FLjvqlwrxCT3AAGCTS3NJidtpK8I986lvCTIP4cbFziW0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0X.UYuOz_1774252428;
-Received: from 30.221.131.200(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.UYuOz_1774252428 cluster:ay36)
+	t=1774252523; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ln27PU6iTQhPj8tFQuQHGkfOiUwIVWgP9XLp448zqaw=;
+	b=Z0guAxiKm/Xml7V/hUzsHtwVqZdIrcRfn5ZWGlriPfRcyX5pwUSeQnWp4JK9IYHMs4oJonShbQ2L60AfePKFv4MJ9UuxjDx69lXZOMK+0s0eeFqAXwaUXOMoYNU5gnJR/9ESy1KWKQH2NE1TcR+qHU6Wt+qTJ0tNplUyMfdoH3g=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0X.UhD8J_1774252520;
+Received: from 30.221.131.200(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.UhD8J_1774252520 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 23 Mar 2026 15:53:49 +0800
-Message-ID: <f9f2bd53-fc30-4606-bae3-4c8960e6c54d@linux.alibaba.com>
-Date: Mon, 23 Mar 2026 15:53:47 +0800
+          Mon, 23 Mar 2026 15:55:21 +0800
+Message-ID: <a53e8e57-c54e-4fdd-8738-7e423e6ca37b@linux.alibaba.com>
+Date: Mon, 23 Mar 2026 15:55:19 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,7 +56,8 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 1/1] erofs: enable large folios for iomap mode
+Subject: Re: [PATCH 6.1 0/1] erofs: Fix the slab-out-of-bounds in
+ drop_buffers()
 To: Denis Arefev <arefev@swemel.ru>, stable@vger.kernel.org,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
@@ -64,9 +65,8 @@ Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
  linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  lvc-project@linuxtesting.org
 References: <20260323074809.4542-1-arefev@swemel.ru>
- <20260323074809.4542-2-arefev@swemel.ru>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260323074809.4542-2-arefev@swemel.ru>
+In-Reply-To: <20260323074809.4542-1-arefev@swemel.ru>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [-9.20 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2944-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2945-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
@@ -104,45 +104,45 @@ X-Spamd-Result: default: False [-9.20 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,swemel.ru:email,alibaba.com:email]
-X-Rspamd-Queue-Id: 118912EDE30
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 160062EDE94
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Hi Denis,
 
 On 2026/3/23 15:48, Denis Arefev wrote:
-> From: Jingbo Xu <jefflexu@linux.alibaba.com>
+> Syzbot reported that a KASAN slab-out-of-bounds bug was discovered in the drop_buffers()
+> function [1].
 > 
-> commit ce529cc25b184e93397b94a8a322128fc0095cbb upstream.
+> The root cause is that erofs_raw_access_aops does not define .release_folio and
+> .invalidate_folio. When using iomap-based operations, folio->private may contain
+> iomap-specific data rather than buffer_heads. Without special handlers, the kernel
+> may fall back to generic functions (e.g., drop_buffers), which incorrectly treat
+> folio->private as a list of buffer_head structures, leading to incorrect memory
+> interpretation and out-of-bounds access.
 > 
-> Enable large folios for iomap mode.  Then the readahead routine will
-> pass down large folios containing multiple pages.
-> 
-> Let's enable this for non-compressed format for now, until the
-> compression part supports large folios later.
-> 
-> When large folios supported, the iomap routine will allocate iomap_page
-> for each large folio and thus we need iomap_release_folio() and
-> iomap_invalidate_folio() to free iomap_page when these folios get
-> reclaimed or invalidated.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Reviewed-by: Chao Yu <chao@kernel.org>
-> Link: https://lore.kernel.org/r/20221130060455.44532-1-jefflexu@linux.alibaba.com
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Denis Arefev <arefev@swemel.ru>
+> This can be fixed by explicitly setting .release_folio and .invalidate_folio to
+> iomap_release_folio and iomap_invalidate_folio, respectively, but there is a
+> commit ce529cc25b184e93397b94a8a322128fc0095cbb in upstream  that implicitly
+> fixes this bug.
 
-I think we have no plan to enable large folios for
-Linux 6.1 kernels, if the following part is what you
-need, how about just backporting the following snippet
-with the updated commit message for some explanation:
-
-> +	.release_folio = iomap_release_folio,
-> +	.invalidate_folio = iomap_invalidate_folio,
-
+See my previous reply to the patch.
 
 Thanks,
 Gao Xiang
+
+> 
+> Please commit it to the stable branch v6.1.y .
+> 
+> [1] https://syzkaller.appspot.com/bug?id=c6aeabd0c4ad2466f63a274faf2a123103f8fbf7
+> 
+> Jingbo Xu (1):
+>    erofs: enable large folios for iomap mode
+> 
+>   fs/erofs/data.c  | 2 ++
+>   fs/erofs/inode.c | 2 ++
+>   2 files changed, 4 insertions(+)
+> 
+
 
