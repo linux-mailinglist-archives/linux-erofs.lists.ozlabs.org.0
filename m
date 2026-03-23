@@ -1,62 +1,62 @@
-Return-Path: <linux-erofs+bounces-2958-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2959-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SEKwH3pDwWnpRwQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2958-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 14:43:22 +0100
+	id sNq/KHxDwWnpRwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2959-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 14:43:24 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E355B2F331A
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 14:43:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A3762F3322
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 14:43:24 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ffZBG4YlQz2ySb;
-	Tue, 24 Mar 2026 00:43:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ffZBH2KCpz2xHX;
+	Tue, 24 Mar 2026 00:43:19 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774273398;
-	cv=none; b=AUf9mu+Y5Qrq8pBpHvoy9g7bS0HeiD6WuFIsD3XNbCLPdFduyzqKhhqZDtdOGmwn048FV6j6WdPrCh1ZYpVUy2pUk7N8sqti9+kTwryr4WY1xfRTo2SdH84mTQOmBkf9KlCg/C1AYmd19276rcxXs6e2vZSW95HomT84azK2Ee2RgX+Ul3j9wrzwVgGiWXm4o1MGKhQVtyfziPuuQDG6f457eusnPwnMM5vh53+aQPWWcQST6wOyd/lpoC+3A/v2fhUu2neo+2trqq7bBsRbjYdIqOU23+QMBGsmB65STatcfYjZa9Nca8GBhRKteQjMY9dpPEG8CQD9QzAFnQe5Lg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774273399;
+	cv=none; b=fQgUnhPmTuqMV09WNdt11pRErsIXvGedsYdg4daD4i8JiVw0mPkNCNIZVPg8a8A9ScqGslV1m1eJh4Y/GBg2dfg2BqgMYfYIb9uJaSDAD4n6Ei3fRujg1+W7GjU0d7hzXkvqpP6hwTHygnc/bsYpDBL1pbZlVt/wmhgXblX/dnFL3LklQVJh/yQT/O1aLHE5awv4iBQGjrBGhzCKpHX7TJyAEMJdHZ2DqRsRcChdjzTP3OEtf0htZZL90eYr8gfIEMjUHfUCFlW39r9TWu4uClKux9+Nu0AffiFhpnqOJSsyEJQJBk5zw/h2EhbdGW7Nf3jmc5rbzUSOrXi3rA2ahg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774273398; c=relaxed/relaxed;
-	bh=J8rv5S3HJ9n7hKyfrpOjthQeFYGYmivvm0cHDYpF9ZQ=;
+	t=1774273399; c=relaxed/relaxed;
+	bh=qqq01aF0WRzDIVbQn/qohQ/4CC/XQZ5sW5ha6+M9wUs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S6J7RuqQPnkRdqo6ZWRh4a2hcTAIbv20wSDSrtHRuEA2hYrUCfyNEFs4T76NhkHgHkcpfsI+BwuB1/OHm6IAilnVGe8jiQAOchRyHMr0Dy1kMyfXMl0ahEJHbvrQdgD957Sz9iNJLugChaunmBVopYulO4Z5b5sS+Jj6G2cXiDyr22i77Pkm4HwJ+4Cxc11N/uUSk5jhiLBVXfLeJjga2pQXhoyJ4OJWI/hwt0J+svbqh2uVoIO1BDv+o9iqcY3JeG5WZOlgysAgkEsHuGZM7UmIwoc29PcbaIyGclKx5RlLXWPvOsH8NOsnqbKFVVQoQTz5ZbY05/no0Q/VTYveqw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=D1/as+cv; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=mwalle@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 MIME-Version; b=TTrPsmQGrjzK5rIFJKEc02T5YSnqq2te+BkP85ki3IgGixi+G1bQzvyzAkiRObdhSZXMuweZR0evqYE2wBpTJLlT+/v9Y+gVOyGFNR0NiBnBvDX9x0PVywi55eUEL54JiTSaIKXh7GBmgfxW3kSIOwdSprPlCvnFtGbqsusd2yEOMB77BhK/lPNDqHJzUhvMXMMsQ4mW8SRD8qMMTsVn7nGj02M38HGQ/R8haymz9QZ8SD96jBwbQRZexwDVDYpifPviLs9IkQTELi8t1UBZH6noUse6tYqb9Vz2zBLQPxZtTyGnjD8tFJqUT5giVH7PEwfWaYe1XXj/0PJwbbMzQA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VoDsbN09; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=mwalle@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=D1/as+cv;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VoDsbN09;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=mwalle@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=mwalle@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffZBF5m3Sz2xHX
-	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Mar 2026 00:43:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffZBG40FNz2xs4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Mar 2026 00:43:18 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 66320600C4;
+	by sea.source.kernel.org (Postfix) with ESMTP id CE9E340ABC;
+	Mon, 23 Mar 2026 13:43:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8476FC4CEF7;
 	Mon, 23 Mar 2026 13:43:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E61AEC4CEF7;
-	Mon, 23 Mar 2026 13:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774273395;
-	bh=/cdDqnkmARcCVtIycTF2CQXXTceu5AYWx37gMowF26w=;
+	s=k20201202; t=1774273396;
+	bh=E/d0Y9rfYY0+dgC04Nx9nfu7GqYdQ08cupS06mN5wu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D1/as+cvbEKNAInYdfsixz72l9Ql5aP4b+VRp7qoiKEK7LqB4MzEkvNfP0FQ+z74Q
-	 JhIPH5vizYBKO7jPNAAoIKNWW79ODAWNbiIM7ad6iGYFZZSJMrx7/T4b1qk67MIrZm
-	 KxZa5g8ISLzfwdZe0Wc7YqDi5TYn4sWFRrkdAyM+t8fktoSvE3MsMbqIJrWWg0yity
-	 FM2U/B7Ug7nX/GobEK4rAZnpEPVvAQ+mwg4O2ydHEtJKSwf1c4+KOw7WTaeAmK15HW
-	 HZJQsted2nlIUt2fdPYfDjl3VCjifBbQZEfTIyLYzhqHavkDbhvmsaSngQCuA+ZASY
-	 wJ3CdEKTnU8sg==
+	b=VoDsbN09sMXwtmEjBznr/DjH+5NZXB03rYwqJF94l0TN7M5DXvEE9lkeQnJIWnIg0
+	 P2Bksc3DTc9nT7gUcmlv7OBwV4ORT4yTyyq+IxYso2dHaRpUMhUQSUCQ+iYW9EB0HJ
+	 mOF+tmHgmC9jM5pkfmBwGiTIxGJN/eaam1OgV1COVzaSaq4Vb0zw0NZX12De6iCkjw
+	 GhTXQpuF0/sCRTcw1XasCMdfJMDjl3sEbOETocuZ6vQvWv6xVbxXZje5kSDuo4GcyK
+	 GC/c1CMOHPk6hkzrs2cvKz5Fdf0MUD/ARawstrLR1ddHyZzJOqai9JQDXvmfZxOTNB
+	 wwmNFX4tmS6yg==
 From: Michael Walle <mwalle@kernel.org>
 To: Huang Jianan <jnhuang95@gmail.com>,
 	Tom Rini <trini@konsulko.com>
 Cc: linux-erofs@lists.ozlabs.org,
 	u-boot@lists.denx.de,
 	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH 3/4] fs/erofs: allocate data buffers on heap with alignment (2/3)
-Date: Mon, 23 Mar 2026 14:42:19 +0100
-Message-ID: <20260323134305.2675822-4-mwalle@kernel.org>
+Subject: [PATCH 4/4] fs/erofs: allocate data buffers on heap with alignment (3/3)
+Date: Mon, 23 Mar 2026 14:42:20 +0100
+Message-ID: <20260323134305.2675822-5-mwalle@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260323134305.2675822-1-mwalle@kernel.org>
 References: <20260323134305.2675822-1-mwalle@kernel.org>
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2958-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2959-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER(0.00)[mwalle@kernel.org,linux-erofs@lists.ozlabs.org];
 	TO_DN_SOME(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -109,7 +109,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: E355B2F331A
+X-Rspamd-Queue-Id: 0A3762F3322
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -121,83 +121,285 @@ stack (at a random address alignment).
 This will also have the benefit, that large data (4k) isn't eating up
 the stack.
 
-The actual change is split across multiple patches. This one allocates
-the inode buffer on the heap. Before, if there was an extended inode,
-the buffer was read incrementally. Now, as we need to have an aligned
-buffer, the first part is just read again to keep the original buffer
-address.
+The actual change is split across multiple patches. This one handles the
+"struct erofs_map_blocks" which itself contains a data buffer. Add some
+helpers to alloc and free the struct because the data buffer will now be
+malloc'ed separately.
 
 Signed-off-by: Michael Walle <mwalle@kernel.org>
 ---
- fs/erofs/namei.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ fs/erofs/data.c     | 103 +++++++++++++++++++++++++++++---------------
+ fs/erofs/internal.h |   4 +-
+ fs/erofs/zmap.c     |  29 ++++++++++---
+ 3 files changed, 94 insertions(+), 42 deletions(-)
 
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index b493ef97a09..7ce62955540 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -13,14 +13,20 @@ static dev_t erofs_new_decode_dev(u32 dev)
- int erofs_read_inode_from_disk(struct erofs_inode *vi)
- {
- 	int ret, ifmt;
--	char buf[sizeof(struct erofs_inode_extended)];
-+	char *buf;
- 	struct erofs_inode_compact *dic;
- 	struct erofs_inode_extended *die;
- 	const erofs_off_t inode_loc = iloc(vi->nid);
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 2fe345d80ee..d10c00fe9f3 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -174,32 +174,60 @@ int erofs_read_one_data(struct erofs_map_blocks *map, char *buffer, u64 offset,
+ 	return 0;
+ }
  
-+	buf = malloc_cache_aligned(sizeof(struct erofs_inode_extended));
-+	if (!buf)
++struct erofs_map_blocks *erofs_alloc_map_blocks(void)
++{
++	struct erofs_map_blocks *map;
++
++	map = malloc(sizeof(struct erofs_map_blocks));
++	if (!map)
++		return NULL;
++
++	memset(map, 0, sizeof(struct erofs_map_blocks));
++	map->index = UINT_MAX;
++
++	map->mpage = malloc_cache_aligned(EROFS_MAX_BLOCK_SIZE);
++	if (!map->mpage) {
++		free(map);
++		return NULL;
++	}
++
++	return map;
++}
++
++void erofs_free_map_blocks(struct erofs_map_blocks *map)
++{
++	free(map->mpage);
++	free(map);
++}
++
+ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+ 			       erofs_off_t size, erofs_off_t offset)
+ {
+-	struct erofs_map_blocks map = {
+-		.index = UINT_MAX,
+-	};
++	struct erofs_map_blocks *map;
+ 	int ret;
+ 	erofs_off_t ptr = offset;
+ 
++	map = erofs_alloc_map_blocks();
++	if (!map)
 +		return -ENOMEM;
 +
- 	ret = erofs_dev_read(0, buf, inode_loc, sizeof(*dic));
--	if (ret < 0)
-+	if (ret < 0) {
-+		free(buf);
- 		return -EIO;
-+	}
+ 	while (ptr < offset + size) {
+ 		char *const estart = buffer + ptr - offset;
+ 		erofs_off_t eend, moff = 0;
  
- 	dic = (struct erofs_inode_compact *)buf;
- 	ifmt = le16_to_cpu(dic->i_format);
-@@ -29,17 +35,18 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 	if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
- 		erofs_err("unsupported datalayout %u of nid %llu",
- 			  vi->datalayout, vi->nid | 0ULL);
-+		free(buf);
- 		return -EOPNOTSUPP;
+-		map.m_la = ptr;
+-		ret = erofs_map_blocks(inode, &map, 0);
++		map->m_la = ptr;
++		ret = erofs_map_blocks(inode, map, 0);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 
+-		DBG_BUGON(map.m_plen != map.m_llen);
++		DBG_BUGON(map->m_plen != map->m_llen);
+ 
+ 		/* trim extent */
+-		eend = min(offset + size, map.m_la + map.m_llen);
+-		DBG_BUGON(ptr < map.m_la);
++		eend = min(offset + size, map->m_la + map->m_llen);
++		DBG_BUGON(ptr < map->m_la);
+ 
+-		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+-			if (!map.m_llen) {
++		if (!(map->m_flags & EROFS_MAP_MAPPED)) {
++			if (!map->m_llen) {
+ 				/* reached EOF */
+ 				memset(estart, 0, offset + size - ptr);
+ 				ptr = offset + size;
+@@ -210,17 +238,21 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
+ 			continue;
+ 		}
+ 
+-		if (ptr > map.m_la) {
+-			moff = ptr - map.m_la;
+-			map.m_la = ptr;
++		if (ptr > map->m_la) {
++			moff = ptr - map->m_la;
++			map->m_la = ptr;
+ 		}
+ 
+-		ret = erofs_read_one_data(&map, estart, moff, eend - map.m_la);
++		ret = erofs_read_one_data(map, estart, moff, eend - map->m_la);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 		ptr = eend;
  	}
- 	switch (erofs_inode_version(ifmt)) {
- 	case EROFS_INODE_LAYOUT_EXTENDED:
- 		vi->inode_isize = sizeof(struct erofs_inode_extended);
+-	return 0;
++
++	ret = 0;
++out:
++	erofs_free_map_blocks(map);
++	return ret;
+ }
  
--		ret = erofs_dev_read(0, buf + sizeof(*dic),
--				     inode_loc + sizeof(*dic),
--				     sizeof(*die) - sizeof(*dic));
--		if (ret < 0)
-+		ret = erofs_dev_read(0, buf, inode_loc, sizeof(*die));
-+		if (ret < 0) {
-+			free(buf);
- 			return -EIO;
+ int z_erofs_read_one_data(struct erofs_inode *inode,
+@@ -282,19 +314,21 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 			     erofs_off_t size, erofs_off_t offset)
+ {
+ 	erofs_off_t end, length, skip;
+-	struct erofs_map_blocks map = {
+-		.index = UINT_MAX,
+-	};
++	struct erofs_map_blocks *map;
+ 	bool trimmed;
+ 	unsigned int bufsize = 0;
+ 	char *raw = NULL;
+ 	int ret = 0;
+ 
++	map = erofs_alloc_map_blocks();
++	if (!map)
++		return -ENOMEM;
++
+ 	end = offset + size;
+ 	while (end > offset) {
+-		map.m_la = end - 1;
++		map->m_la = end - 1;
+ 
+-		ret = z_erofs_map_blocks_iter(inode, &map, 0);
++		ret = z_erofs_map_blocks_iter(inode, map, 0);
+ 		if (ret)
+ 			break;
+ 
+@@ -302,31 +336,31 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 		 * trim to the needed size if the returned extent is quite
+ 		 * larger than requested, and set up partial flag as well.
+ 		 */
+-		if (end < map.m_la + map.m_llen) {
+-			length = end - map.m_la;
++		if (end < map->m_la + map->m_llen) {
++			length = end - map->m_la;
+ 			trimmed = true;
+ 		} else {
+-			DBG_BUGON(end != map.m_la + map.m_llen);
+-			length = map.m_llen;
++			DBG_BUGON(end != map->m_la + map->m_llen);
++			length = map->m_llen;
+ 			trimmed = false;
+ 		}
+ 
+-		if (map.m_la < offset) {
+-			skip = offset - map.m_la;
++		if (map->m_la < offset) {
++			skip = offset - map->m_la;
+ 			end = offset;
+ 		} else {
+ 			skip = 0;
+-			end = map.m_la;
++			end = map->m_la;
+ 		}
+ 
+-		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
++		if (!(map->m_flags & EROFS_MAP_MAPPED)) {
+ 			memset(buffer + end - offset, 0, length - skip);
+-			end = map.m_la;
++			end = map->m_la;
+ 			continue;
+ 		}
+ 
+-		if (map.m_plen > bufsize) {
+-			bufsize = map.m_plen;
++		if (map->m_plen > bufsize) {
++			bufsize = map->m_plen;
+ 			free(raw);
+ 			raw = malloc_cache_aligned(bufsize);
+ 			if (!raw) {
+@@ -335,13 +369,14 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
+ 			}
+ 		}
+ 
+-		ret = z_erofs_read_one_data(inode, &map, raw,
++		ret = z_erofs_read_one_data(inode, map, raw,
+ 					    buffer + end - offset, skip, length,
+ 					    trimmed);
+ 		if (ret < 0)
+ 			break;
+ 	}
+ 	free(raw);
++	erofs_free_map_blocks(map);
+ 	return ret < 0 ? ret : 0;
+ }
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 13c862325a6..2e471d66c7d 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -291,7 +291,7 @@ enum {
+ #define EROFS_MAP_PARTIAL_REF	(1 << BH_Partialref)
+ 
+ struct erofs_map_blocks {
+-	char mpage[EROFS_MAX_BLOCK_SIZE];
++	char *mpage;
+ 
+ 	erofs_off_t m_pa, m_la;
+ 	u64 m_plen, m_llen;
+@@ -367,6 +367,8 @@ static inline int erofs_get_occupied_size(const struct erofs_inode *inode,
+ }
+ 
+ /* data.c */
++struct erofs_map_blocks *erofs_alloc_map_blocks(void);
++void erofs_free_map_blocks(struct erofs_map_blocks *map);
+ int erofs_getxattr(struct erofs_inode *vi, const char *name, char *buffer,
+ 		   size_t buffer_size);
+ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size);
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 1ded934a5d7..3060b2e9ec6 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -75,28 +75,43 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+ 	}
+ 
+ 	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
+-		struct erofs_map_blocks map = { .index = UINT_MAX };
++		struct erofs_map_blocks *map;
++
++		map = erofs_alloc_map_blocks();
++		if (!map) {
++			ret = -ENOMEM;
++			goto err_out;
 +		}
  
- 		die = (struct erofs_inode_extended *)buf;
- 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
-@@ -113,6 +120,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 	default:
- 		erofs_err("unsupported on-disk inode version %u of nid %llu",
- 			  erofs_inode_version(ifmt), vi->nid | 0ULL);
-+		free(buf);
- 		return -EOPNOTSUPP;
- 	}
- 
-@@ -121,6 +129,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		if (vi->u.chunkformat & ~EROFS_CHUNK_FORMAT_ALL) {
- 			erofs_err("unsupported chunk format %x of nid %llu",
- 				  vi->u.chunkformat, vi->nid | 0ULL);
-+			free(buf);
- 			return -EOPNOTSUPP;
+ 		vi->idata_size = le16_to_cpu(h->h_idata_size);
+-		ret = z_erofs_do_map_blocks(vi, &map,
++		ret = z_erofs_do_map_blocks(vi, map,
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
+-		if (!map.m_plen ||
+-		    erofs_blkoff(map.m_pa) + map.m_plen > erofs_blksiz()) {
++		if (!map->m_plen ||
++		    erofs_blkoff(map->m_pa) + map->m_plen > erofs_blksiz()) {
+ 			erofs_err("invalid tail-packing pclustersize %llu",
+-				  map.m_plen | 0ULL);
++				  map->m_plen | 0ULL);
+ 			ret = -EFSCORRUPTED;
++			erofs_free_map_blocks(map);
+ 			goto err_out;
  		}
- 		vi->u.chunkbits = sbi.blkszbits +
++		erofs_free_map_blocks(map);
+ 		if (ret < 0)
+ 			goto err_out;
+ 	}
+ 	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
+ 	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
+-		struct erofs_map_blocks map = { .index = UINT_MAX };
++		struct erofs_map_blocks *map;
++
++		map = erofs_alloc_map_blocks();
++		if (!map) {
++			ret = -ENOMEM;
++			goto err_out;
++		}
+ 
+ 		vi->fragmentoff = le32_to_cpu(h->h_fragmentoff);
+-		ret = z_erofs_do_map_blocks(vi, &map,
++		ret = z_erofs_do_map_blocks(vi, map,
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
++		erofs_free_map_blocks(map);
+ 		if (ret < 0)
+ 			goto err_out;
+ 	}
 -- 
 2.47.3
 
