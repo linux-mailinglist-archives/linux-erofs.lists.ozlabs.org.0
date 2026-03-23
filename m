@@ -1,49 +1,64 @@
-Return-Path: <linux-erofs+bounces-2964-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2965-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WC1tF19dwWlZSgQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2964-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 16:33:51 +0100
+	id OLHBGH5qwWnVSwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2965-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 17:29:50 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF3D82F6796
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 16:33:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDEE72F82C7
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 17:29:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ffcdk6LNkz2ySB;
-	Tue, 24 Mar 2026 02:33:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ffdtK0nCtz2yFb;
+	Tue, 24 Mar 2026 03:29:45 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774280026;
-	cv=none; b=NMemrQufxQAhY6MP6WxUk3a17roKOMD/ICGw4C2pYp7oKOovVc1NSPgC8/tl3QXuEXf0NRrYM5IvC2bvCP2oyRjG3ljvpaPhy54zG45Mh4cNIFR3JM6mkRGcEXbM50wOKfbu1v9f6yteMbftvJlZyiiMEFAjkQ7cKkJ/FG+4XVPf67SQT2lqX/cSSH9f9ku86S/A1naiHWQR8H5RezsYxXW8AadycONXmq2ArjeB/Sqb/8AYjyOHaNCYBceuI0U7psjUQbz+TfGB81McYP9xhuOa9/rCCNTOOQc8EKt0LTaZE2CsObnKKO9m/1t6fQXwAw2Yfd5L2rR1kqvhwh8keQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774280026; c=relaxed/relaxed;
-	bh=I+H+YlI+LknciL4hOZJVIzyvex8+jcTijTmQB74DYko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElBTWHQfRnQkCaYrTDrbpIjjPimM1PTbuqhMJC/ccHybaxB9Ue63ujWDSNo1is4VttU0Vk7eamSSgky9QPbWg928Jq0gJmQAlMvX6VjYqW8OXo7iT8JPNr13703ixgBt8EIT6bnz5M36w8suFw9utpdI6viBUGyKhKRKkN0OBeiHt6RNCNn5dwFylegQ86lGtRJM7lwzGBAqXZmjM1U67YqiFE/uCyiRiG9Y7YB4pm3Czpn+PfRF2yotZnqnSaaTCUKDlPTzjuJLXcv1TuEnonoYRM1/9m5flo8A8N+WWddLXzTm+XYLFereLTvidS83DocEFEDf6hPNRQRzZlzlYA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MCs9wD1y; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774283385;
+	cv=pass; b=ZoL4nV6CA+m6pArQYsXNb0sILaqXTb0VG3l8noNOsubzoPdjK330ccyD0dNqp/N49YpkJYNEDwTcQ1NTkk3etDO8n0o13M2hFwYiIt2KRLaAzVCrdQc1HrgjYvqLeQVrtbBYcKU2o89wmqlVp1LPaynPEFBjZ34B7THZ7i/3r4b5ntYamacEoj3/8Luyc9bLtlnfof2e2vPFxnWAiSZnd6cm54fMdD7kHLbf1pbzYmCgnw0upxv1UgHP43r7RRtbvNRZ9q/FC+xsUZs8IUbsg7eXkLxDQk/3/mJOXwv444NDOBY0qbD4gW0Jk4ifF4PLWO6PvpNmbFga4ayaagG0pg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774283385; c=relaxed/relaxed;
+	bh=5ksqxqVRWn9KE5cEGBoeY1aIvXK2j62daRaLiIZPN6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L4GWP/Az/Y+ApC7fZqe+1CIrGCCUz6W2UBKuI3rHEK7vl6qRqyHw+MUitjLy57ra49zZGryre00VuBm5VCMxBJlhM2QDhKBnvopA/ts2e83bRz44KE7TGIfkeVys2AwwfKpvgE93V0Qswwl+HJEZJ4hwzc3TPQgX/ZQGQtwQSNLZaHJgX/LXtgFnE0ICiBhBSeDNGEDLhTlTjFqORUNlyoMeF4Rb/q7vOidSte1TJMuBX2hU0ImIckd2XDT4J4y/Zp1V3dh+Bb3MnlznikpMq7UjVy9w6Lo5XBydzU5zSy+lQ1IeltWYIm9+Bpx1UPSK7BAI9ylmr7ioqhf08sK+gw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=o9z/0H8p; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MCs9wD1y;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=o9z/0H8p;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffcdh0lr3z2xN5
-	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Mar 2026 02:33:39 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1774280015; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=I+H+YlI+LknciL4hOZJVIzyvex8+jcTijTmQB74DYko=;
-	b=MCs9wD1yeO2F+jCvQetsiMayLZdJ/P+vNuHwltZW7gKez3RaXfUslKPaXYSuqLAtM6Y4+Oxqwvaq/7iSdIiNsbFckJXPZ+jvGNyL0HfGaaZO17d/EqLbX3zkVqtiUlZ3XrSX2B4RsCyyrlLDkOJYvUuR87hZcHOHnHUgaoRgoUk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X.ZDcaT_1774280014;
-Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.ZDcaT_1774280014 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 23 Mar 2026 23:33:34 +0800
-Message-ID: <0a4bd05f-9a3d-4cf9-b36e-f49f729f0430@linux.alibaba.com>
-Date: Mon, 23 Mar 2026 23:33:33 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffdtH4xtpz2xs4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Mar 2026 03:29:42 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774283377; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=NpMAfhoC9kEELcETSlT+b2c0LMsxnPmsc0pwEmDe/yUeu80gIqRa4iwPG0t/OdUswCGeuKTMIBYIObDxuUTqNofwis81ijPkSDtNujVZ0+M899m9BJCu+7WRfNP7C5kwre+KnSIvcdaDP0lkoPVYXpyf4R49neCurj1BLYoPxho=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1774283377; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5ksqxqVRWn9KE5cEGBoeY1aIvXK2j62daRaLiIZPN6U=; 
+	b=C3DsxXXUTJr8uBUVbC/Qv+lvgqgsJ4VV2nN3xkDLjtWtkefVy1OA+S5PJ0Z4y3jwe5gBXezgtsLoUq9E1CDRJLftelhYeW1RaFAdePXUoMcmDtbuGNF+GuL4DAsh5D0cjl8fbULUesEZ/0X9gara7j8AaXfFNwP4cEcet6H9cDM=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=vnsh.in;
+	spf=pass  smtp.mailfrom=ch@vnsh.in;
+	dmarc=pass header.from=<ch@vnsh.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774283377;
+	s=zoho; d=vnsh.in; i=ch@vnsh.in;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=5ksqxqVRWn9KE5cEGBoeY1aIvXK2j62daRaLiIZPN6U=;
+	b=o9z/0H8p/FqBeWLU9RLRALoduB9kWrgzqNlLPQMLoJGB09vsfy7/iZ0mY4wrZNPW
+	XU4KWWUWptl2VH4hkjETlCk38/tQSW8qWZCUWFE5VxakacGkjYnaFt6aLHwaxDqkRhn
+	/E1hY0uT3/SANA13dA4TsDfA7ImapU9+/NsANOv0=
+Received: by mx.zoho.in with SMTPS id 1774283375484914.6398791807734;
+	Mon, 23 Mar 2026 21:59:35 +0530 (IST)
+From: Vansh Choudhary <ch@vnsh.in>
+To: linux-erofs@lists.ozlabs.org
+Cc: Vansh Choudhary <ch@vnsh.in>
+Subject: [PATCH] erofs-utils: tar: validate tar entry sizes
+Date: Mon, 23 Mar 2026 16:29:34 +0000
+Message-ID: <20260323162934.42547-1-ch@vnsh.in>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,109 +70,113 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: update the Kconfig description
-To: Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20260323094857.2187994-1-hsiangkao@linux.alibaba.com>
- <927c52ee-24b5-4b8f-98ee-3a18f13fa8b5@kernel.org>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <927c52ee-24b5-4b8f-98ee-3a18f13fa8b5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2964-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:chao@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-2965-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[vnsh.in];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[vnsh.in:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: AF3D82F6796
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vnsh.in:dkim,vnsh.in:email,vnsh.in:mid]
+X-Rspamd-Queue-Id: BDEE72F82C7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Chao,
+Reject negative PAX and header sizes before they are used to advance tar\noffsets or populate inode sizes.\n\nAlso bound GNU long name and long link records before allocation and\nfail cleanly on ENOMEM.\n\nThis avoids malformed tar inputs from driving bogus allocations or\nwrapping tar offsets.\n\nFixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
 
-On 2026/3/23 17:59, Chao Yu wrote:
-> On 3/23/26 17:48, Gao Xiang wrote:
->> Refine the description to better highlight its features and use cases.
->>
->> In addition, add instructions for building it as a module and clarify
->> the compression option.
->>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/Kconfig | 45 ++++++++++++++++++++++++++++++---------------
->>   1 file changed, 30 insertions(+), 15 deletions(-)
->>
->> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
->> index a9f645f57bb2..9489ed8ad95b 100644
->> --- a/fs/erofs/Kconfig
->> +++ b/fs/erofs/Kconfig
->> @@ -16,22 +16,36 @@ config EROFS_FS
->>   	select ZLIB_INFLATE if EROFS_FS_ZIP_DEFLATE
->>   	select ZSTD_DECOMPRESS if EROFS_FS_ZIP_ZSTD
->>   	help
->> -	  EROFS (Enhanced Read-Only File System) is a lightweight read-only
->> -	  file system with modern designs (e.g. no buffer heads, inline
->> -	  xattrs/data, chunk-based deduplication, multiple devices, etc.) for
->> -	  scenarios which need high-performance read-only solutions, e.g.
->> -	  smartphones with Android OS, LiveCDs and high-density hosts with
->> -	  numerous containers;
->> -
->> -	  It also provides transparent compression and deduplication support to
->> -	  improve storage density and maintain relatively high compression
->> -	  ratios, and it implements in-place decompression to temporarily reuse
->> -	  page cache for compressed data using proper strategies, which is
->> -	  quite useful for ensuring guaranteed end-to-end runtime decompression
->> +	  EROFS (Enhanced Read-Only File System) is a modern, lightweight,
->> +	  secure read-only filesystem for various use cases, such as immutable
->> +	  system images, container images, application sandboxes, and datasets.
->> +
->> +	  EROFS uses a flexible, hierarchical on-disk design so that features
->> +	  can be enabled on demand: the core on-disk format is block-aligned in
->> +	  order to perform optimally on all kinds of devices, including block
->> +	  and memory-backed devices; the format is easy to parse and has zero
->> +	  metadata redundancy, unlike generic filesystems, making it ideal for
->> +	  for filesytem auditing and remote access; inline data, random-access
-> 
-> duplicated 'for'? otherwise, looks good to me.
+Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+---
+ lib/tar.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-Fixed and thanks for the review!
+diff --git a/lib/tar.c b/lib/tar.c
+index 26461f8..cb77f39 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -540,7 +540,7 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
+ 			} else if (!strncmp(kv, "size=",
+ 					sizeof("size=") - 1)) {
+ 				ret = sscanf(value, "%lld %n", &lln, &n);
+-				if(ret < 1 || value[n] != '\0') {
++				if(ret < 1 || value[n] != '\0' || lln < 0) {
+ 					ret = -EIO;
+ 					goto out;
+ 				}
+@@ -811,9 +811,11 @@ out_eot:
+ 		st.st_size = eh.st.st_size;
+ 	} else {
+ 		st.st_size = tarerofs_parsenum(th->size, sizeof(th->size));
+-		if (errno)
++		if (errno || st.st_size < 0)
+ 			goto invalid_tar;
+ 	}
++	if ((u64)st.st_size > (u64)-1 - tar->offset)
++		goto invalid_tar;
+ 
+ 	if (th->typeflag <= '7' && !eh.path) {
+ 		eh.path = path;
+@@ -888,17 +890,25 @@ out_eot:
+ 		goto restart;
+ 	case 'L':
+ 		free(eh.path);
++		if (st.st_size > PATH_MAX)
++			goto invalid_tar;
+ 		eh.path = malloc(st.st_size + 1);
++		if (!eh.path)
++			goto nomem;
+ 		if (st.st_size != erofs_iostream_bread(&tar->ios, eh.path,
+-						       st.st_size))
++						      st.st_size))
+ 			goto invalid_tar;
+ 		eh.path[st.st_size] = '\0';
+ 		goto restart;
+ 	case 'K':
+ 		free(eh.link);
++		if (st.st_size > PATH_MAX)
++			goto invalid_tar;
+ 		eh.link = malloc(st.st_size + 1);
+-		if (st.st_size > PATH_MAX || st.st_size !=
+-		    erofs_iostream_bread(&tar->ios, eh.link, st.st_size))
++		if (!eh.link)
++			goto nomem;
++		if (st.st_size != erofs_iostream_bread(&tar->ios, eh.link,
++						      st.st_size))
+ 			goto invalid_tar;
+ 		eh.link[st.st_size] = '\0';
+ 		goto restart;
+@@ -1149,4 +1159,7 @@ invalid_tar:
+ 	erofs_err("invalid tar @ %llu", tar_offset);
+ 	ret = -EIO;
+ 	goto out;
++nomem:
++	ret = -ENOMEM;
++	goto out;
+ }
+-- 
+2.43.0
 
-> 
-> Reviewed-by: Chao Yu <chao@kernel.org>
-> 
-> Thanks,
-
-Thanks,
-Gao Xiang
 
