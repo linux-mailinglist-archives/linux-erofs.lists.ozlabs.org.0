@@ -1,48 +1,49 @@
-Return-Path: <linux-erofs+bounces-2947-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2946-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ANjmJwvywGnxOwQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2947-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	id WJRGLAvywGkUOwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2946-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
 	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:55:55 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA6A52EDED0
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBE742EDED1
 	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 08:55:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ffQTN1tgKz2ygD;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ffQTN1t61z2yfs;
 	Mon, 23 Mar 2026 18:55:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=95.143.211.150
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774252552;
-	cv=none; b=FH+WJO8co4zVnh+Lp7smTUFcwGRj6ADX/2FrcqLN/MlD2HenjkPHE3g8RMwOnY/IUWjvENrws5Hmz3NJHS8RV7JetnqpoV9iHhu08JEJ/UiCnLRJdNc0VpY9I705G1PqpbPcPv4raHxmqxDKBS31O75ZqyQrM/O93egZQfCQEQPxoNSigAi9MMQ9iF8w4rCT/HhlYFCbuahOlN8vLPy7bEI+u7Fzks74W2WFKJOM3ihGOPJuWYOqVxnT1OyECgHrvgzu7pqb2lcBnLlmhX/Nttm0ljsPnQuoYoio/Qz63fpwagY19LhXPMzwO0OOPIuuR7vPpJNMFBHrVnIg07V68A==
+	cv=none; b=HoS2mNUSK0Zm3RwAPk3poAIgT422JogwmSbSfmuifUla1hKAI0EEhbv7rgTsJaz+94FU7gEMvXW4nea44bviW3qpG+473nybIFFiH5saaDJwp4g9lZKzvtJ/L+OBRgnLelwmHY7JQT9woj7f1kw1HGVP3N0R14+Dd6EOWkeOIl00elTDuLmPgd6gTFsxSTr6t3t4R2zoJfqtkLWxjaiPhqsxSLT2YLg4b/M0OEB0X9ipE9GPpjoasFx6mai+xcJTX5t3xSD3XOeiv6sT1Wz5aAMfOJ2KHyO/KtV0JaW+6ZgLwSVfRSy3yg2GmyeR9ff6vNOv9qplHEhmWif+PM18SQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1774252552; c=relaxed/relaxed;
-	bh=mtIn7DP71PXd+663izgnCvu3LmpJDtlv1yNdOZnKHqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vrp16nO5QG6pv6nhanMpX2gDi5DvKe6ZWiwaidiC9ZFnPYXzDvCoeuaTyMTaxXE+QgM2EPABW8Dw+9wFij6ei/FMk8L0O5OhelGJhSh4g2OZvTT90WMVmC2YPwvGD8jtuJysQ/RrzhQkNi7izZ2Z9I7zd6tj7brpgJnwgaP4vsYNz62Lq7dxnJ+4ETsDW3Arqn/nB/1uFboKhg/XZCZ4YeimpU2u5+c6APkZAZiRLJXJ6a0+b/zgZbXMWHcI+f5897kpaqaAAQxINWnA/ayvqS7GxmqlaApVkmp3w20MhF/it2ZG4Q5dKGtKAEIZHbpTDSWxWzL/RwmwtwAUAMRsKQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; dkim=pass (1024-bit key; unprotected) header.d=swemel.ru header.i=@swemel.ru header.a=rsa-sha256 header.s=mail header.b=ahs+/kMn; dkim-atps=neutral; spf=pass (client-ip=95.143.211.150; helo=mx.swemel.ru; envelope-from=arefev@swemel.ru; receiver=lists.ozlabs.org) smtp.mailfrom=swemel.ru
+	bh=MFw/vB8P7VLJD61eJATtRx37nqbkMe0J8+xFPuYrJvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qai0L5UqWoudRNeL8DqOOnF0EENtI1hn3q8vM5/ldlReUQV8Eakqc4eurwUN/OVXihaaAiROARFNq180H9mX14Ys0fsKQAo8F2bCar4OeBbMSQLNnXy8GiR/hsN9aYs4JYm4c80ARwBei+EEJxGMPr3OfSCPEyW0UYOlu6p65ibNaxD9t+eEmBbssvORfcSEll24jUGb49Im885tvW/z9xUXvwASxjGOXd7BFKEkuEJmVhx5cHR7F41fbRLmooJ1RrTVJrlfJZI14zTYLaOs8v1Ms927o5wlhi6bLK1vaz1FVRbJMWTlI52Kg81KO1qESYhOfXNkKwfXasyLE1f3GQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; dkim=pass (1024-bit key; unprotected) header.d=swemel.ru header.i=@swemel.ru header.a=rsa-sha256 header.s=mail header.b=L4lneEn1; dkim-atps=neutral; spf=pass (client-ip=95.143.211.150; helo=mx.swemel.ru; envelope-from=arefev@swemel.ru; receiver=lists.ozlabs.org) smtp.mailfrom=swemel.ru
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=swemel.ru header.i=@swemel.ru header.a=rsa-sha256 header.s=mail header.b=ahs+/kMn;
+	dkim=pass (1024-bit key; unprotected) header.d=swemel.ru header.i=@swemel.ru header.a=rsa-sha256 header.s=mail header.b=L4lneEn1;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=swemel.ru (client-ip=95.143.211.150; helo=mx.swemel.ru; envelope-from=arefev@swemel.ru; receiver=lists.ozlabs.org)
-X-Greylist: delayed 452 seconds by postgrey-1.37 at boromir; Mon, 23 Mar 2026 18:55:49 AEDT
 Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffQTK0YCkz2yYy
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 18:55:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffQTK1Rgjz2yfl
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 18:55:49 +1100 (AEDT)
 From: Denis Arefev <arefev@swemel.ru>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1774252089;
+	t=1774252090;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mtIn7DP71PXd+663izgnCvu3LmpJDtlv1yNdOZnKHqg=;
-	b=ahs+/kMnjPt9fEYJjQbd+5OH32ue4Jh+F8UcVlQYnqJ7psQEbCmyF8Ww5aPhMfRzh+6wQB
-	JvxNkrS7kZvKERejGbtlIjsEVZjv8XYzkOTy1RBntBmRv8NS9JGINNP36JxiMuiHZnY2Ks
-	XkcB7aqOY9NIYBZ0YmAgxNqndpvXQB0=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MFw/vB8P7VLJD61eJATtRx37nqbkMe0J8+xFPuYrJvQ=;
+	b=L4lneEn13a7wHcip66v1l2hXTXW+pN7j2AWRig9HY9F1A4XZFDV00ILPxqBos9TTRsjb5d
+	Ewo2TErc7WIdziEvQjCh1J0iSjL/TAPavhBkMCc0WAP4XUQKd5tYAOjiQKjnWak3F+2ZTd
+	BwHm4SA2zeeBMAy5NvK7tcN2DtRqkuQ=
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Gao Xiang <xiang@kernel.org>,
@@ -51,10 +52,13 @@ Cc: Gao Xiang <xiang@kernel.org>,
 	Jeffle Xu <jefflexu@linux.alibaba.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 6.1 0/1] erofs: Fix the slab-out-of-bounds in drop_buffers()
-Date: Mon, 23 Mar 2026 10:48:05 +0300
-Message-ID: <20260323074809.4542-1-arefev@swemel.ru>
+	lvc-project@linuxtesting.org,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6.1 1/1] erofs: enable large folios for iomap mode
+Date: Mon, 23 Mar 2026 10:48:06 +0300
+Message-ID: <20260323074809.4542-2-arefev@swemel.ru>
+In-Reply-To: <20260323074809.4542-1-arefev@swemel.ru>
+References: <20260323074809.4542-1-arefev@swemel.ru>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -76,7 +80,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[swemel.ru,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[swemel.ru:s=mail];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -84,13 +88,13 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:gregkh@linuxfoundation.org,m:xiang@kernel.org,m:chao@kernel.org,m:huyue2@coolpad.com,m:jefflexu@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:lvc-project@linuxtesting.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:gregkh@linuxfoundation.org,m:xiang@kernel.org,m:chao@kernel.org,m:huyue2@coolpad.com,m:jefflexu@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:lvc-project@linuxtesting.org,m:hsiangkao@linux.alibaba.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[arefev@swemel.ru,linux-erofs@lists.ozlabs.org];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2947-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2946-lists,linux-erofs=lfdr.de];
 	DKIM_TRACE(0.00)[swemel.ru:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -101,38 +105,66 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[swemel.ru:dkim,swemel.ru:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,syzkaller.appspot.com:url]
-X-Rspamd-Queue-Id: CA6A52EDED0
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,syzkaller.appspot.com:url,swemel.ru:dkim,swemel.ru:email,swemel.ru:mid]
+X-Rspamd-Queue-Id: CBE742EDED1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Syzbot reported that a KASAN slab-out-of-bounds bug was discovered in the drop_buffers()
-function [1].
+From: Jingbo Xu <jefflexu@linux.alibaba.com>                                                                               
 
-The root cause is that erofs_raw_access_aops does not define .release_folio and
-.invalidate_folio. When using iomap-based operations, folio->private may contain
-iomap-specific data rather than buffer_heads. Without special handlers, the kernel
-may fall back to generic functions (e.g., drop_buffers), which incorrectly treat
-folio->private as a list of buffer_head structures, leading to incorrect memory
-interpretation and out-of-bounds access.
+commit ce529cc25b184e93397b94a8a322128fc0095cbb upstream. 
 
-This can be fixed by explicitly setting .release_folio and .invalidate_folio to 
-iomap_release_folio and iomap_invalidate_folio, respectively, but there is a 
-commit ce529cc25b184e93397b94a8a322128fc0095cbb in upstream  that implicitly 
-fixes this bug.
+Enable large folios for iomap mode.  Then the readahead routine will
+pass down large folios containing multiple pages.
 
-Please commit it to the stable branch v6.1.y .
+Let's enable this for non-compressed format for now, until the
+compression part supports large folios later.
 
-[1] https://syzkaller.appspot.com/bug?id=c6aeabd0c4ad2466f63a274faf2a123103f8fbf7
+When large folios supported, the iomap routine will allocate iomap_page
+for each large folio and thus we need iomap_release_folio() and
+iomap_invalidate_folio() to free iomap_page when these folios get
+reclaimed or invalidated.
 
-Jingbo Xu (1):
-  erofs: enable large folios for iomap mode
-
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20221130060455.44532-1-jefflexu@linux.alibaba.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Denis Arefev <arefev@swemel.ru>
+---
+Link: https://syzkaller.appspot.com/bug?id=c6aeabd0c4ad2466f63a274faf2a123103f8fbf7
+---
  fs/erofs/data.c  | 2 ++
  fs/erofs/inode.c | 2 ++
  2 files changed, 4 insertions(+)
 
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index fe8ac0e163f7..c9526c627dda 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -403,6 +403,8 @@ const struct address_space_operations erofs_raw_access_aops = {
+ 	.readahead = erofs_readahead,
+ 	.bmap = erofs_bmap,
+ 	.direct_IO = noop_direct_IO,
++	.release_folio = iomap_release_folio,
++	.invalidate_folio = iomap_invalidate_folio,
+ };
+ 
+ #ifdef CONFIG_FS_DAX
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index ad2a82f2eb4c..e457b8a59ee7 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -295,6 +295,8 @@ static int erofs_fill_inode(struct inode *inode)
+ 		goto out_unlock;
+ 	}
+ 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
++	if (!erofs_is_fscache_mode(inode->i_sb))
++		mapping_set_large_folios(inode->i_mapping);
+ #ifdef CONFIG_EROFS_FS_ONDEMAND
+ 	if (erofs_is_fscache_mode(inode->i_sb))
+ 		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
 -- 
 2.43.0
 
