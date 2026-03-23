@@ -1,97 +1,57 @@
-Return-Path: <linux-erofs+bounces-2936-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2937-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iPPBJqEXwGmlDgQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2936-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 22 Mar 2026 17:24:01 +0100
+	id aAKdNMWdwGnrJAQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2937-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 02:56:21 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD6702E9FCD
-	for <lists+linux-erofs@lfdr.de>; Sun, 22 Mar 2026 17:24:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7029F2EBAF4
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Mar 2026 02:56:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ff1p56bNQz2ySb;
-	Mon, 23 Mar 2026 03:23:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ffGVS5WZgz2ySB;
+	Mon, 23 Mar 2026 12:56:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::833" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774196637;
-	cv=pass; b=Qx0wIFNoCELkzVw10KY561UjseglfV39CKJhFUpfJaZx+JlVD5o+h55H1MuKyHVfwGL9GXmI6w7EZXROIsBxLD0WDwS/RcNvzUlkVxoZVlB9vtTYW7gl0Wzf342Pj5LQ9HN29CtJmPe6sZLjiYse2b1Xh8wogMThWAhvxYmxZTWim1TXUc+WT7C0fZEW0VR0aiKwoQVCzbKIGiN6EoLNkBmW9Kag/EH7JdVkHIHhbwb/Tl6gaI/bCrcGwnukKHbsqtDQPTuUgejO/GADwxveuqByV6AdfSEqoV/zh1Dfn8m9WZec/mrK8CKkwrfm8fLOtU3IxqlAqEnuQxXKjbeP3A==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774196637; c=relaxed/relaxed;
-	bh=Zbdn4vPN5cgK7FPa6pqazAFG/fMOYydVq2qVkP841Do=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZYmLO2j9xCUUApabPj9dVfj4jj7cEyUh6/mJ12yV98K7sjNlx1GgTH1DumfOTDBeRcKpqyN4AunpZc9J8PovrzXm+ejWdNqAsh94HLpd8HUONd9Pd9M2MPb3zOf7UXcCwlNjilDT8wEQJ2Iefi4N27JNj1TlLuIlf15pIJWbCzK2CrT/1UU7YkOysrM/WwYx4IvdKlcYr28hrTnPH/DNRDn6by9yjbLzI8b/766EUBw6gEiZJRW/HgUwhJO9Lyt6hY+06lKChi3p1xeS0sqyzE648A4IiMKFg4ZAXShRVx3UDzy9GxTlLTa1va3F3hU0k7Roj/AARyEj+l+RtRPciw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gl3U/DTA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::833; helo=mail-qt1-x833.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774230976;
+	cv=none; b=jFp1hHvYd465o3qz1GUmLKUJacU5wzYCXJMDUj68i8hYcQ7mnZgitSdL9mLA8AMtt+VLAQDGO9Dgx2YbekXhjGtCR8zkoIfC86X9ajE2VWb9F+8XZpYpZakDgWV7sAbufzBsgL//L3UihH0xLnTdWdZesc86oMB8rh2O+L417VrxThUDo2dPLYNS6/kiRMViKQ/c6mQikGFwlpzrhoYwi1IiQH0KKiFBT2a2KheRPSU4CvkJ8ZgxCAzDomEbeEwW8hTcokQ45m/MPSqsyqAQ2nO2UkVB79P8rBgzdTpUdzPOiPFnR/k1L4HwITtFhLbhUu0iXuo8MRAtYvdVftUy4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774230976; c=relaxed/relaxed;
+	bh=XUnduESIxWJcGfnoZERY/yeuRuBL3HcCGrCx1vhu3Mk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DWoMIZm6w9BB3oqduRsLpZPR1UAgz/3MRJ6KMRhQayhTrtGPK/xJ1GrxXLvm+OwnrG47Rr0bnUdCKVa0ihT+xztLvyMqN9kyC8XfC4YW4+0S3H/3jHtd3J709ByOPq1O8BCic4pxOzGLJ4rZA5T+WPSFZUwCYPSlQbfBdF127Z7fCziXrJhevTEMw6665XUe1AQXbEVaSgrWt4i5jT9m60GqHD89CP6/Azn5cDaB94y32WEm+R0yhLrDpln297CWK1QP5FQCNvudY2LWkcHXSf/LZc9sgSwQQhiFLfCYBh/AS5ZXRK9To986obLlRyCBRK3B2a2EEn26jXX0GvHjjA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=OXcD3TcP; dkim-atps=neutral; spf=pass (client-ip=113.46.200.217; helo=canpmsgout02.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gl3U/DTA;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=OXcD3TcP;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::833; helo=mail-qt1-x833.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.217; helo=canpmsgout02.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ff1p45gM0z2xMQ
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 03:23:55 +1100 (AEDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-5093ca242f1so4091341cf.1
-        for <linux-erofs@lists.ozlabs.org>; Sun, 22 Mar 2026 09:23:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774196633; cv=none;
-        d=google.com; s=arc-20240605;
-        b=L5A7BHI0SA0GMT7Jmk7A2/4qqY1TK0swCRdiFTSVMwO4zonbUM9/mKpiQtrRc6VWRs
-         0bmjqXtPG25PY0ielPCNsBSYVjoW9/PHkMBSiLsGrKnLcWWjSFdzA5Cw+hyCkludMDf6
-         4WI9ZkPBXvS8bshFn0nCc3myHEisC4mbwiqNEvnbPzyPghsx/GGjo+BqvYVzwF46udmq
-         tpZANBQGvxkR3CTnnjmofutzoCR5LY3CVKl3JNt9/lygzkByleHZYusAQY9/S9vx6PNo
-         0J6b0RKs+TtqpQyneYONQJ0UPMxjyqn5ufnG7wzTk94Mk6ObdpJRs0UKTUxXrcbHRmxr
-         g1zA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Zbdn4vPN5cgK7FPa6pqazAFG/fMOYydVq2qVkP841Do=;
-        fh=1uMYvvbY1J66B2sOWCOWtaf9rn2ud2yw/eKj4SM7GHQ=;
-        b=GEds38VM4n49LcIu4Es/gBPdFPUUihB61rxhJYIMYgNx3je1k4I7Zw34AvbQOZOFgQ
-         AqOOA0tKDLEw9uLdVUpB9pLEP2ok4+Si3hjYv/Um46oiXFAuF6eA0D8xbR98UuILVELO
-         BCxY5+TnBosKH6172amLRT1Eqi7HMWgLfGtQDNjB/5AkLnWuUinZcvFvjWs6tEw5UkG4
-         IsTK89MaE2b5E6T1kaVeT7BBW4GWjobLjPMylG+GcNIoXu7UoXl+To5VNcJouCsYJCBh
-         BUZ8Dbtz1v/dfOyzFLGNrfmxg8QkdqWbo/FzjYkGKE8qijwqYWrObSfxKHEi+KzhNqbA
-         xy/g==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774196633; x=1774801433; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zbdn4vPN5cgK7FPa6pqazAFG/fMOYydVq2qVkP841Do=;
-        b=gl3U/DTArKpbv0yrGHpRlDeiEv2Tx4X+YXfHDxdxdvXvQ0d5xbPFIca1xNcd1tVKkx
-         UKhGaSRvEBXoF80bCW6RB9o0yJxQetRph0jIRDe1HKY+GA7VLTcTsqMVpDJJiH5Q4XLd
-         pJdhOrKgYD9lvB980AWvule7nxGhSoJN5rqxeBwGYn9wLp/KuAtR5PDAQ94CdtbA4lXh
-         4o/l/XJObmsWFYDW3zzGOEw52Go8YlrwRmUPfbQdyYurkwWp6yJqCuuslqa+v4ITMLpQ
-         n0fbQrFWYgtTXbv/w0AFd58I9zF+MZQK7IWTvW49ZV3dUQbbUSx8bpzTux4G7JTbjEqp
-         Xd6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774196633; x=1774801433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Zbdn4vPN5cgK7FPa6pqazAFG/fMOYydVq2qVkP841Do=;
-        b=XgPAZjQW5+4FdernSuoUjvlwqaTethd4JdzioBsJaCML8VmfygcQucSD5ybYAh3yhU
-         x/P6JlOBl05NwcLewu3EW7uVXZRqGMZFQ1PwaPhgLboSQbHEXu3IgL1ZeEEBAVMyVxs8
-         VYnlVPnBmYtx+szOxtqPPxMvJ7JHoWRQAgxa8ZHPgxUcA88A4sPf9aW8VL4j4Is9Kw02
-         7Mt9WHtgIwUW5WjRvXLQwcltoEg/CZD8nWSHfAOo7TA13gva/dXY+C+rowNMKhCCW2nQ
-         RAkbKM7gTM5KWXeMDJYgCU8XxDdVfUz5aK9NSIkNnXEqJZCxx21ZowSYCKvWVFen380o
-         7I7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWpizkSYEaoE+J0q1uVMcFcVVuevyo9sCPHkz/sToe2ygN8ThEyzhV1lYA5EbUo6nEUj7QefAG/KBaQzg==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yy2Rfde15dY5K7ufL470xjEzQIzceUgta2k1ScjrG1Nl7O/uFv3
-	9x/CGJ6MM+PFbI/J582Cdf3DURhPB6KMnwwqqWIwapmVWc6uJ5WsYg5sKv4SLB7SPCMMovJqKVB
-	ECUs0K5wAjTaFK3/NtfF8Seow0NXnNUNhGbN+X1s=
-X-Gm-Gg: ATEYQzxc9H7ZH11SUCdLTO2kfpTeqlde8lmTbUONLHrEZI+w2OAGIFYIdmDDExBywne
-	CENgHWtdaL66p7mDS0/9jAeO5D0txvvkSg+YDal4zn7xLJjZcZpiwIHY9oP9eIWubZ+zz+Yv6AY
-	NPOKJJmw4Ov5hQN982EROtOywV/lX+lVrTxxrhrKyGN3Nti0sbDvP3qm90obs6Fj5ZM7WZ7CGjq
-	QLXyW3CvoWuc0/qnjZQ0jGBCQGGPkK0ygqIJccFfWjEO9glT8b6iolauLcjo2X4h8YV+gx2iQPz
-	Ne73gAYleOYhn1eFei75W7cJToqST8ByoOVVooT8+iy4Rnc1YMsbPqoYMbdIa+lRQEK4cg==
-X-Received: by 2002:a05:6214:194b:b0:89a:7d14:66cb with SMTP id
- 6a1803df08f44-89c85a9e4b0mr113926856d6.5.1774196632728; Sun, 22 Mar 2026
- 09:23:52 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ffGVQ4l2Xz2xQ1
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Mar 2026 12:56:13 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=XUnduESIxWJcGfnoZERY/yeuRuBL3HcCGrCx1vhu3Mk=;
+	b=OXcD3TcPdEHIowmb9zx9D45R3q4OUigwZHfvcux0HP8um0PXAuPEgzfoL9vy9CstOLwCyqi3e
+	yOyQciN9ZZm1c5hvw+CSzMK9Ls/zIIjhRm2HJ4oShiEF+ZPKvCmsyv6Wim1PA63qMBijpbncMxq
+	rMf/fD6oBVNOmnofRpSqk9k=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4ffGMc5QTQzcbTv;
+	Mon, 23 Mar 2026 09:50:20 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 60CD440363;
+	Mon, 23 Mar 2026 09:56:08 +0800 (CST)
+Received: from [100.103.109.96] (100.103.109.96) by
+ kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Mon, 23 Mar 2026 09:56:07 +0800
+Message-ID: <8e70b1d0-7a4f-4a51-9bbc-0e4c4e01069d@huawei.com>
+Date: Mon, 23 Mar 2026 09:56:01 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,119 +63,102 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260322083620.19933-1-nithurshen.dev@gmail.com>
- <20260322085729.24511-1-nithurshen.dev@gmail.com> <CAGSu4WPJ2nvYRUHT-JiPx00RLAmwZS-AzPfzWxn4oiAqLb3zHg@mail.gmail.com>
- <aff41e7b-dc81-4d2d-9298-c44bfb487936@linux.alibaba.com>
-In-Reply-To: <aff41e7b-dc81-4d2d-9298-c44bfb487936@linux.alibaba.com>
-From: Utkal Singh <singhutkal015@gmail.com>
-Date: Sun, 22 Mar 2026 21:53:44 +0530
-X-Gm-Features: AQROBzASM3D6fS4q5s1GnsugN4MU8BFoUfdbim_GXaJFS27tO1gpkuN989GH5UI
-Message-ID: <CAGSu4WOM8GevEVU9NNF=YuwgYYPKhMR_ySvAVFPZCsiz_X47Ng@mail.gmail.com>
-Subject: Re: [PATCH] fsck: add --workers option to configure worker threads
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Nithurshen <nithurshen.dev@gmail.com>, linux-erofs@lists.ozlabs.org, 
-	xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs-utils: mkfs: bound-check s3 passwd_file credentials
+To: Vansh Choudhary <ch@vnsh.in>, <linux-erofs@lists.ozlabs.org>
+References: <20260321180239.36249-1-ch@vnsh.in>
+From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
+In-Reply-To: <20260321180239.36249-1-ch@vnsh.in>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [100.103.109.96]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2936-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-2937-lists,linux-erofs=lfdr.de];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	FORGED_RECIPIENTS(0.00)[m:ch@vnsh.in,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[gmail.com,lists.ozlabs.org,kernel.org];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,alibaba.com:email]
-X-Rspamd-Queue-Id: AD6702E9FCD
+	HAS_XOIP(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 7029F2EBAF4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Understood. I'll drop this patch and fold the --workers
-option into the full MT implementation once the design
-is settled. Thanks for the feedback.
+Reviewed-by: Yifan Zhao <zhaoyifan28@huawei.com>
 
-Utkal
-
-On Sun, 22 Mar 2026 at 15:18, Gao Xiang <hsiangkao@linux.alibaba.com> wrote=
-:
+On 2026/3/22 2:02, Vansh Choudhary wrote:
+> mkfs_parse_s3_cfg_passwd() only checked the total passwd_file size,
+> which left two issues in the parser:
 >
+> - a file exactly as large as the temporary buffer left no room for the
+>    trailing NUL byte;
+> - either credential could still exceed its destination buffer after the
+>    string is split at ':'.
 >
+> Use sizeof(buf) for the temporary buffer check and reject overlong
+> access key or secret key fields before copying them out.
 >
-> On 2026/3/22 17:31, Utkal Singh wrote:
-> > Hi Nithurshen,
-> >
-> > Thanks for testing the patch and for the detailed feedback.
-> >
-> > You're right about the strtoul() wrap-around on 32-bit systems =E2=80=
-=94 I'll
-> > switch to strtol() and add explicit error reporting in v2.
-> >
-> > Regarding the design concern: I agree that landing just the CLI
-> > portion without wiring it to the workqueue may be premature. I'll
-> > hold off on v2 until we hear from Gao Xiang on whether this should
-> > wait for the broader multi-threaded fsck design.
+> This keeps the existing parsing flow intact while making the bounds
+> checks match the actual destination sizes.
 >
-> This patch is simply not needed as an individual patch.
+> Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+> ---
+>   mkfs/main.c | 8 +++++++-
+>   1 file changed, 7 insertions(+), 1 deletion(-)
 >
-> >
-> > Thanks,
-> > Utkal
-> >
-> > On Sun, 22 Mar 2026 at 14:27, Nithurshen <nithurshen.dev@gmail.com> wro=
-te:
-> >
-> >> As you know, currently decompression process in fsck.erofs is currentl=
-y
-> >> strictly single threaded. In fsck/main.c, erofs_verify_inode_data
-> >> still processes blocks synchronously via a standard while loop.
-> >> Without wiring this flag to the workqueue engine in lib/workqueue.c,
-> >> the option doesn't currently change the tool's behavior.
-> >>
-> >> And as you know "Multi-threaded Decompression Support in fsck.erofs"
-> >> is actually an official GSoC 2026 project idea and the project will
-> >> likely involve a comprehensive design of the parallelized
-> >> architecture, landing just the --workers CLI portion now might be
-> >> premature or conflict with the eventual design chosen by the GSoC
-> >> contributor.
-> >>
-> >> I'd suggest reaching out to the mentors on the list to see if they
-> >> want to hold off on this patch until the GSoC project kicks off.
-> >> Also, if you do send a v2, switching to strtol() would be safer to
-> >> avoid potential -1 wrap-around issues on 32-bit systems.
-> >>
-> >> Best,
-> >> Nithurshen
-> >>
-> >
->
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index 58c18f9..eb13aba 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -663,7 +663,7 @@ static int mkfs_parse_s3_cfg_passwd(const char *filepath, char *ak, char *sk)
+>   		erofs_warn("passwd_file %s should not be accessible by group or others",
+>   			   filepath);
+>   
+> -	if (st.st_size > S3_ACCESS_KEY_LEN + S3_SECRET_KEY_LEN + 3) {
+> +	if (st.st_size >= sizeof(buf)) {
+>   		erofs_err("passwd_file %s is too large (size: %llu)", filepath,
+>   			  st.st_size | 0ULL);
+>   		ret = -EINVAL;
+> @@ -687,6 +687,12 @@ static int mkfs_parse_s3_cfg_passwd(const char *filepath, char *ak, char *sk)
+>   	}
+>   	*colon = '\0';
+>   
+> +	if (strlen(buf) > S3_ACCESS_KEY_LEN ||
+> +	    strlen(colon + 1) > S3_SECRET_KEY_LEN) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+>   	strcpy(ak, buf);
+>   	strcpy(sk, colon + 1);
+>   
 
