@@ -1,64 +1,95 @@
-Return-Path: <linux-erofs+bounces-2974-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2975-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kLybA9W4wmlilAQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2974-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Mar 2026 17:16:21 +0100
+	id +DMwF8rHwmmIlgQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2975-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Mar 2026 18:20:10 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A41B318D1C
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Mar 2026 17:16:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D236E319E8B
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Mar 2026 18:20:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fgFXK2yqdz2ynP;
-	Wed, 25 Mar 2026 03:16:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fgGxy0KSZz2yng;
+	Wed, 25 Mar 2026 04:20:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774368977;
-	cv=pass; b=aQjVWAgEOBAcj/j6djqOLdjMZqVvQXnQ74RxosRTWf9a1oQfdSjljqozu4Nuh7r9jbAfth2wDGIH7ZIHSLvCsCLGLK30u9gz6mDwFlNPnhAUOBGrBYxZKwD+UmBo9zOXJNsSTSIh8mQ7TdNagU3SSnLlp/jjY+BV9+e7+jrP5J0qiTwlIXm34cJ251AJZvUqkIYrMpwBviDrXOXzAZ0xS7vZi6GkfPhxaie2mIJ5WVR7AiOr7ewsvfhdhLHejLVVhGCXq8QtmWXemhE1KVBtUWxn6hpJESCw9MP/zsUlgE6AfpENH6h4lKG5w57C8ZFgcISTTWvO+qniUZgKa5/Ykw==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::b12b" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774372805;
+	cv=pass; b=oH7TqvU5Dj75g+q51R8IaZVVwDQ3EXfSkuDsCR2Qovh/6gIsF/VJySE0Lrnqv7jqmmpzksHU+Ex8vnheoSXiwRnLr0QsTXIcRj0aAVxLrnDOlm2qLpsO9zxSHLK/lO1NoUnmi2WGGU8jnyzcu8xeclftwDz8oMQaPf5S2bzB25NEcsQ0GtKqZsJsOAHhsixrGv6c2s648oU6Fem0Vkhqb+ddLM98tavrcW0SAHsZFcizQUKkYthG4YDOE2DMM9CgUK1XkfsuFmVXERqfZhCT82WrD5j1x+aEvepIDAaVtl2ohY01mfUwntcZ5FATL8mNt5/RjNzbG0eBmSilVhiCow==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774368977; c=relaxed/relaxed;
-	bh=+WI++kOTqi7mz8D8lTRYTMhI62tW/HNeXU3Z/361cpg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eM9LxnYfHvtvV5/VQHZxFR0l1GOgPxkMhPiduFAs2Z4jCysl2YDiAFnoxQHmxrIx3NdP07FgACY25N67IBzyeZgiLF4L/s0OLjYPZR6sLpChe9O6nKdkJxo/fX/rTavY/Oagw45rkmNosWnGrkufYCuiQOzSsF1yuFJR3dduqKc10VU/ipF+eTcyJ0ASBdaS23ujtaFz/p2mis8shoA9qRmwxdiafsN4T1McM2VdAJfZQNdPWg1T9veRZu76srfd/Ygcr2aPKpB20sO22jdUleB31iheBl/SaM9T5UTZFkq8QwdSUquxR7a0t6MFIb2ZDj9T2weQJfMExl7oKLAnKw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=WyOycYPI; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
+	t=1774372805; c=relaxed/relaxed;
+	bh=jKnXwt7VyzGcsptJPWmm4sHDDeI6yXx+S5JhNdA9WZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=fyXM+cJJW0CvqJSmPXBNH8YG89IBbtyNMI7Yd/yrRPpMpGkA2ZZ6NcITa6glkv2G/oCaMN1njadmGEdHY/4TmBF3hajAGm7WcSFWRqiCngxsyvo2Bob8OcJwMhnHUtbv2k7BtinWD+8/RkER/oTIzwZ3yuHMk2eizSfg8+UHe3rPt8jT1BmzNK5MCbYywAEsj4xoV2rAXolyNygTbfsPN0RvF8ejjKmTyi7qlXfNcuB88ZSqlxIx5tTZE2sHgH6RriPiEfEB9bZnrSio16LtbI0kn53pRck406uMkzpxYGuYgsDvfBJD/V7sjxEf2YvwsfY1FtNBTeiasM2C1wNSbA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZcNJN5ps; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b12b; helo=mail-yx1-xb12b.google.com; envelope-from=udishanarayan646@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=WyOycYPI;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ZcNJN5ps;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
-Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::b12b; helo=mail-yx1-xb12b.google.com; envelope-from=udishanarayan646@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-yx1-xb12b.google.com (mail-yx1-xb12b.google.com [IPv6:2607:f8b0:4864:20::b12b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fgFXH66wHz2ygf
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Mar 2026 03:16:15 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774368969; cv=none; 
-	d=zohomail.in; s=zohoarc; 
-	b=IsLKoe4i8YWxXTBrN5QesO6qlSreLWmGOWGy7L4GJyvQompv/PDInLjStZ7eSHVOtvEplJfj72RM+lslk4LQDlDRa90boSq7x7TYvYgx0ECBjPqydi0LVtpwJc4IXbP3I4gQgAAmuQaiSipjUqUb56aJ7CvV3Y54gNWWaybyZXo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1774368969; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+WI++kOTqi7mz8D8lTRYTMhI62tW/HNeXU3Z/361cpg=; 
-	b=IzZOHsdZR+Om5LLJjt35POk2iXimGguAIJdCzsgXExaPiDWfVR/Uj430kpHTHCC09NNuQuEn9QM/9gFdUed481ELJE6RhBWzv5rk2jwH6ilgLNm1KWdQAvoaPyWbAzNxmflo8RK8e+JqYQE2X2EZEakjFJDk9Ad/3vedYrkgKZI=
-ARC-Authentication-Results: i=1; mx.zohomail.in;
-	dkim=pass  header.i=vnsh.in;
-	spf=pass  smtp.mailfrom=ch@vnsh.in;
-	dmarc=pass header.from=<ch@vnsh.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774368969;
-	s=zoho; d=vnsh.in; i=ch@vnsh.in;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=+WI++kOTqi7mz8D8lTRYTMhI62tW/HNeXU3Z/361cpg=;
-	b=WyOycYPI6UNb+7yg10tgZa+1DjNu4tWnFPNJ+6Hr87PJjqoRwZhyAGBqICAvRyWj
-	wCybBt3nvB2jFjqQKGQN1d2nT44vTUPV1JTzGElmX09T9cWnTkqbhRwzx+gls09dYHV
-	vv7ffpjCIk2Px6pZY2NiLepSxe/SNZUGT4MDt7lw=
-Received: by mx.zoho.in with SMTPS id 1774368968793779.5420310647254;
-	Tue, 24 Mar 2026 21:46:08 +0530 (IST)
-From: Vansh Choudhary <ch@vnsh.in>
-To: linux-erofs@lists.ozlabs.org
-Cc: Vansh Choudhary <ch@vnsh.in>
-Subject: [PATCH] erofs-utils: tar: bound-check PAX header parsing
-Date: Tue, 24 Mar 2026 16:16:08 +0000
-Message-ID: <20260324161608.36697-1-ch@vnsh.in>
-X-Mailer: git-send-email 2.43.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fgGxw3HxCz2yhZ
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Mar 2026 04:20:04 +1100 (AEDT)
+Received: by mail-yx1-xb12b.google.com with SMTP id 956f58d0204a3-64e8cdafeffso173458d50.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Mar 2026 10:20:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774372801; cv=none;
+        d=google.com; s=arc-20240605;
+        b=R5K5l7IofO3Q6mwPVA7SJmSV4dDdiAVe9O8dxMwZkP8/TkalyJwWpTiFuu8STjDeDU
+         uxSuRtE1iOl/d3fjO+OLC4tQxo57I7FtBmHA5L6inCnaylm0NR+EVhJityEuOkuer/Zq
+         XMF5/wap7mQz9TUpbvS2/2N/uocr7zmLL4LjA/W1SHLUeH99aJxlTyHrnFSpksAYs5Uk
+         iIedKAdoNDD0Zk+5ceWFHwSiopdcSYcA1pV6QpXcp4FZZjPP0hlLWCtja7WA7RvFBZY/
+         I0wcxTYDh3ZEddRG8FNJ/afQAkcS7t7EVKmzACi8fSrMIA22D0sG7x735dDyALQToM1o
+         eFew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=jKnXwt7VyzGcsptJPWmm4sHDDeI6yXx+S5JhNdA9WZw=;
+        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
+        b=VWa2WLjdhZB56n8sgHMTIub9bE6U9DdiObypLK7BWSyk50qINtUSRstoO1BOUPNrrk
+         U7bAPSnHRcXMZwTU7ANuoPLxmyyh02IQf6jl5KWhQUp4Ry6x1Ilbyh1/JH3GasbioLtT
+         TO3Niw+/YWf3smX9caCB9QzCiBDGJ2EffXqgFvHaOLzKZ1lT2KDiE3arX5Yfj71y8g04
+         01YSPT7TOWOtrotbnBRKBXgRZkTdYg4ZSDQLTpqv7raeWb4AL1uUoXRjOUeolM6glaeB
+         tDmjxg+vhmvEBrG9XMKyBnZYiRIES69dqrzyKn9auzxEm/Chv9CFZGZn+uqCSnmqbTO4
+         1gvQ==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774372801; x=1774977601; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jKnXwt7VyzGcsptJPWmm4sHDDeI6yXx+S5JhNdA9WZw=;
+        b=ZcNJN5psrN2j9HDKGxRm2re+gClzs2cJCrl8juanOD6nK/Mxtq2Sl4GngCaroSR1y7
+         ZT3hi/jvIFBEklG9k9KlSn83qTBtwOnBlp7FMHQb68to3IHJSEHAngMnu7gSNcIx2TF2
+         9Uej9lP2+t+jGvlDAcBm+tk1JFDtBBU3QzNFB0DSs7k31F3YHQiIMeNRRWdpQg42DlN2
+         k+rFzOxXJxoEjjQ0xCQsQYPbCTDtLVBJ9wo+hrKA8M0K/r4swbX8rs3K0r4G2bE9Q1zZ
+         oYmhPYON30MqkBgK2P/JcDeKhrK0h6ZOD1E+BO/m8wjQ0gIMe9vcOyRwHAJ6ayLjAwQR
+         sNDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774372801; x=1774977601;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jKnXwt7VyzGcsptJPWmm4sHDDeI6yXx+S5JhNdA9WZw=;
+        b=X7z2kefdPSLgj+1G/zIOXGZHUD7MKyxT7woRyHMbnxnEn0wISHVWMznczoLkvXKTMo
+         dKzdnC7FZSz5iAEkDJh2NZBiSVB6qXrT7badWs4BET6mDA3BJEJl2MhsT+G3jT09YQAQ
+         LIxvOj3+JyoL4na12YY3LeRb0ghoViM7KC/3/m8Im5bruDYLf8Je5/MV8FZiomeszYsf
+         O2b1XrF2nvbrSv/BFCV/wUdpIgPUbRTEqZvdRiDGs6qXBcDCKQr2hek1voNfKrowzpAG
+         ZXXhHACsQ4NWfvJFpsfz9cBrUbKLoo+D+hEQeKVAGYLo7uTcCI1b0ac3migtIZsxegPl
+         kueg==
+X-Gm-Message-State: AOJu0YwbKnxvvk6kGx4d9PbJfrFR3NOoUh9flpyXfBroSsrY2Th72uLM
+	upHyM5BsV/U0HmQqJPq6dPlJy8+knJJY2oOzVXqfAqUQCPzoMzFZ3aEPTWzRE+9CQGQoSBYqSQH
+	492eWQmtG2FBfcq29lA2wCWUz9P3Y295xcG2/
+X-Gm-Gg: ATEYQzyuWcznEtvA1bZXlD2TbRMfqUenkW1qrDXAsT99wGzwyaYSlFCdyg/tN1csKqY
+	/hXQ3xcomXnCWLcBbqEHukXsNanktlI/WJiyzdTLo42nXDNEgtkvnSxmQnFbm6h1iXOh4DkWkBe
+	74T+0YNoTBxbXGz4Z20b6vaPd1bvC4qDTb9bdgvsUO6OgxaHt5Rklf8Uq8BEzJwPQ2mqCmH9KHl
+	+i2qhAatkpLUgOzu/bkh/+AKYrMzZHqKlDTG8xRXITcjOVI+Cuf5P526iGVuGwfZuCVN1zLO/AI
+	bJFKCLgvNA1Rb9WF
+X-Received: by 2002:a53:accb:0:10b0:64e:cb0d:23b5 with SMTP id
+ 956f58d0204a3-64ed784deb3mr3166427d50.17.1774372800599; Tue, 24 Mar 2026
+ 10:20:00 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -70,94 +101,131 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+References: <CADVXez_zfMSTL4S6O0M6oKj448S+ZH5fEDCd1PeB5=fFuRvVxA@mail.gmail.com>
+In-Reply-To: <CADVXez_zfMSTL4S6O0M6oKj448S+ZH5fEDCd1PeB5=fFuRvVxA@mail.gmail.com>
+From: Udisha Narayan <udishanarayan646@gmail.com>
+Date: Tue, 24 Mar 2026 22:49:48 +0530
+X-Gm-Features: AQROBzAG9S5d1Rw9jEahdbjhPe8PwqpU050SHn7cpuco7KEH9rhHE9xQS2hcxhg
+Message-ID: <CADVXez-ieBc-qex+hKnjZYwTR6vC1EX6DRpi3esVHKzqKLRFMQ@mail.gmail.com>
+Subject: Re: GSoC 2026 Inquiry: Interested in EROFS-utils and File System
+ Optimization - Udisha Narayan
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="0000000000007a9bf5064dc85cdd"
+X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-2974-lists,linux-erofs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[vnsh.in];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[vnsh.in:+];
+	TAGGED_FROM(0.00)[bounces-2975-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCPT_COUNT_ONE(0.00)[1];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	MISSING_XM_UA(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[udishanarayan646@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vnsh.in:dkim,vnsh.in:email,vnsh.in:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 0A41B318D1C
+	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: D236E319E8B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-NUL-terminate PAX header buffers before parsing them with sscanf().
+--0000000000007a9bf5064dc85cdd
+Content-Type: text/plain; charset="UTF-8"
 
-Also reject PAX header lengths larger than UINT_MAX.
+  I'm working on a proposal for multi-threaded decompression. Can you
+suggest the same point I should focus on?
 
-Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
-Signed-off-by: Vansh Choudhary <ch@vnsh.in>
----
- lib/tar.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+On Tue, 24 Mar 2026 at 20:36, Udisha Narayan <udishanarayan646@gmail.com>
+wrote:
 
-diff --git a/lib/tar.c b/lib/tar.c
-index cb77f39..70bf091 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -471,7 +471,9 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
- 	char *buf, *p;
- 	int ret;
- 
--	buf = malloc(size);
-+	if (size == UINT_MAX)
-+		return -EIO;
-+	buf = malloc((size_t)size + 1);
- 	if (!buf)
- 		return -ENOMEM;
- 	p = buf;
-@@ -479,6 +481,7 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
- 	ret = erofs_iostream_bread(ios, buf, size);
- 	if (ret != size)
- 		goto out;
-+	buf[size] = '\0';
- 
- 	while (p < buf + size) {
- 		char *kv, *key, *value;
-@@ -870,6 +873,8 @@ out_eot:
- 		st.st_mode = S_IFIFO;
- 		break;
- 	case 'g':
-+		if ((u64)st.st_size > UINT_MAX)
-+			goto invalid_tar;
- 		ret = tarerofs_parse_pax_header(&tar->ios, &tar->global,
- 						st.st_size);
- 		if (ret)
-@@ -884,6 +889,8 @@ out_eot:
- 		}
- 		goto restart;
- 	case 'x':
-+		if ((u64)st.st_size > UINT_MAX)
-+			goto invalid_tar;
- 		ret = tarerofs_parse_pax_header(&tar->ios, &eh, st.st_size);
- 		if (ret)
- 			goto out;
--- 
-2.43.0
+> *Dear EROFS Team / Gao Xiang,*
+>
+> I am writing to express my strong interest in contributing to *EROFS
+> (Enhanced Read-Only File System)* for GSoC 2026. I am a Computer Science
+> student with a deep fascination for *Systems Programming* and *Linux
+> Kernel internals*.
+>
+> *Why I am a strong fit for EROFS:*
+>
+>    -
+>
+>    *C Programming & Memory Management:* I am comfortable with low-level C
+>    and understanding memory layouts (Pointers, Structs).
+>    -
+>
+>    *Mathematical Foundation:* My background in *Discrete Mathematics*
+>    helps me visualize complex data structures like B-Trees and Bitmaps, which
+>    are crucial for efficient file system metadata management.
+>    -
+>
+>    *Optimization Logic:* I have experience analyzing code for performance
+>    bottlenecks (C/C++), and I am eager to apply this to *EROFS-utils* for
+>    better compression or faster read-only access.
+>
+> *My Goal:* I have already explored the erofs-utils repository and I am
+> currently setting up my environment to build and test the tools. I would
+> appreciate it if you could point me toward a *"Good First Issue"* or a
+> specific area in the 2026 ideas list where I can contribute a small patch
+> to demonstrate my skills.
+>
+> I am ready to dedicate *40-50 hours/week* to ensure a high-quality
+> contribution.
+>
+> *Best regards,* Udisha Narayan [GitHub Link] | [LinkedIn Link]
+>
 
+--0000000000007a9bf5064dc85cdd
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">=C2=A0=C2=A0I&#39;m working on a proposal for multi-thread=
+ed decompression. Can you suggest the same point I should focus on?</div><b=
+r><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Tue, 24 Mar 2026 at 20:36, Udisha Narayan &lt;<a href=3D=
+"mailto:udishanarayan646@gmail.com">udishanarayan646@gmail.com</a>&gt; wrot=
+e:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
+.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"l=
+tr"><p><b>Dear EROFS Team / Gao Xiang,</b></p><p>I am writing to express my=
+ strong interest in contributing to <b>EROFS (Enhanced Read-Only File Syste=
+m)</b> for GSoC 2026. I am a Computer Science student with a deep fascinati=
+on for <b>Systems Programming</b> and <b>Linux Kernel internals</b>.</p><p>=
+<b>Why I am a strong fit for EROFS:</b></p><ul><li><p><b>C Programming &amp=
+; Memory Management:</b> I am comfortable with low-level C and understandin=
+g memory layouts (Pointers, Structs).</p></li><li><p><b>Mathematical Founda=
+tion:</b> My background in <b>Discrete Mathematics</b> helps me visualize c=
+omplex data structures like B-Trees and Bitmaps, which are crucial for effi=
+cient file system metadata management.</p></li><li><p><b>Optimization Logic=
+:</b> I have experience analyzing code for performance bottlenecks (C/C++),=
+ and I am eager to apply this to <b>EROFS-utils</b> for better compression =
+or faster read-only access.</p></li></ul><p><b>My Goal:</b>
+I have already explored the <code>erofs-utils</code> repository and I am cu=
+rrently setting up my environment to build and test the tools. I would appr=
+eciate it if you could point me toward a <b>&quot;Good First Issue&quot;</b=
+> or a specific area in the 2026 ideas list where I can contribute a small =
+patch to demonstrate my skills.</p><p>I am ready to dedicate <b>40-50 hours=
+/week</b> to ensure a high-quality contribution.</p><p><b>Best regards,</b>
+Udisha Narayan
+[GitHub Link] | [LinkedIn Link]</p></div>
+</blockquote></div>
+
+--0000000000007a9bf5064dc85cdd--
 
