@@ -1,92 +1,93 @@
-Return-Path: <linux-erofs+bounces-2996-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2997-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uGORFkf3w2nPvAQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2996-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 15:55:03 +0100
+	id qB43Ed73w2nPvAQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2997-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 15:57:34 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 773C53273D8
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 15:55:02 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60C71327481
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 15:57:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fgqh40pMfz2xcB;
-	Thu, 26 Mar 2026 01:55:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fgqkz0R2sz2xcB;
+	Thu, 26 Mar 2026 01:57:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774450500;
-	cv=none; b=VQLDKjwnbhBxhw5ax36uys4kO3ywlIytMEScaxlcW2WWKeXRDESb0Tvon4VAv/BX6VM4Gad7QWFJxUR6g+TZyduPhB8VKryITM9yGS9cHRzg9ctetdslO+a1QFpEGo28AavTwrqC0DvcM3QHgI2628Rlw5Whc3cjPbL7gemoxiHsv71jAuEF6A4KNV5U8qRiCp40spJ9FIRfVt3YVQt1y6AVKPskCkAg+U63B8wXKWCA+AoxfeySd/bV5zo7XvXLiK+3yB/OVjDMX6npsukZnUmLcZxewwdgIusqqQrTc8dHqiB6G9kiM1j5ngWWlagwW9kC7eozOarQCnvX4cmHfw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a07:de40:b251:101:10:150:64:1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774450651;
+	cv=none; b=Fdu32Wke5j90ZX8NDbsoz8fqy+bCUfeEatHIi5BNHAO9GHbdOmtKEZlcObLOO19FsqPrvzQLCLhjAbF6vOgC8TCm3bmxPu2Fd1OuBMFkY+1roxNc/oAxM3JKJTrR2YJ2rwqG7d8yM7q69sh6d7yZzh63nlRlw3HOdqybDqTO2iP/P6WPIaDv4FK6vZ0KA5Xr6OfSGHe6wLYNZrtuf8vNKUIdvGxQtWPqzdUabHjF8KOp7KgPbmpelik4+EiWYhi6M+bsH0SwuvFuShpHVybbkizSykvVeV4U22WN1KNslMNkZk/2yUEU5GXjOHvzTFJTNQJsA6mjAVuSaPzeOVfBWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774450500; c=relaxed/relaxed;
-	bh=D/wXjEuEJQTN4k0jag/OQOqiBqUpftxguZi3Bfxxazc=;
+	t=1774450651; c=relaxed/relaxed;
+	bh=TDThzbfm4z51swQNpP/Sz73BBVvad0AbQ7d+bdgHlTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GgW79IywqJyuCVZdE/QvtCjOX9Di5ZX74L2VC/oHTuoPKl5oM67vyo8kPta/K5yXHE3TwA/IQ1GdObtM1U15eJmBCGGn3bpSBVCcUZ8V5mqzIxzMOschvz2DkIUjlhQnVMch/fEV2Z1fNbsl+OCFUnjAA/PSFXLhIzPF9jGUtUNTbY50utxM9iDXA2ix1H9eM6+wk8sVmOMNvpeS1YTg1un0wdOLKk1xiExg+Boc9pOeSaEQRf4W/15nuYT7ATzW1ZsXUwWoGjfieP2FrDsuPOp4QlpL+JxhaKUNXNDm4sszZB81F7ntG5CVp3wu6st5MVPnm9clzbfloMA2VmIZeA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=kfjBhpkW; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=KxKmaq0G; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=eslfnx7h; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=bOKSc2s0; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHzstkKp2xXXgOu+Q5IfjRXlbEIKnVYrxaWyHq8J4A2cMtz0WwtZIJPcuPF54/uuxnqpPwwZ+m/dyL95OiULPC7y+BKfn3/LXGnZdv07CmKek9PDssU89ytFqYcIX6IGgsXIgG1hrfmL7ZmH9JVwUc0uEvMzHIXSYeKvei6jFGJ/pFUtNjFxqWJM9KlS5mt7zhdPor/0c0F48M+D8nCNvPDb/TyhDr/+uc16vduIC3ADkILNVy/5uzNXgL1RjhAthX1q+JLupUHRz07mxgahPj1d8XCZdeBsU5i+VHHjWJiVgsXDiShV9mOA2Jq9haENWQSbBW+zvNsJkD+dPkMoQA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Z0X0CLof; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=GXLtH7DF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Z0X0CLof; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=GXLtH7DF; dkim-atps=neutral; spf=pass (client-ip=2a07:de40:b251:101:10:150:64:1; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=kfjBhpkW;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=KxKmaq0G;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=eslfnx7h;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=bOKSc2s0;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Z0X0CLof;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=GXLtH7DF;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=Z0X0CLof;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=GXLtH7DF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=2a07:de40:b251:101:10:150:64:1; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org)
+X-Greylist: delayed 373 seconds by postgrey-1.37 at boromir; Thu, 26 Mar 2026 01:57:30 AEDT
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fgqh30CScz2xS3
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2026 01:54:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fgqky2R84z2xS3
+	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2026 01:57:30 +1100 (AEDT)
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E2A964D244;
-	Wed, 25 Mar 2026 14:54:54 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 69CF44D247;
+	Wed, 25 Mar 2026 14:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1774450495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1774450647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/wXjEuEJQTN4k0jag/OQOqiBqUpftxguZi3Bfxxazc=;
-	b=kfjBhpkWS16JY8q2qhzrpMm8Qqcs2ZrtKS4zlJEvRrcKzCGUHSYFoBdcLJsmKv4hjTURyd
-	yd4A/VFS1ynIvUXSdfbN+WxSwj3zLyvx02En3KZUx/jYp4phNK6LAOI8yTXuWVz/Nltv20
-	hyTn2mpZxIoIAv6/6Rvb3UfWqNm23fM=
+	bh=TDThzbfm4z51swQNpP/Sz73BBVvad0AbQ7d+bdgHlTI=;
+	b=Z0X0CLofVTVeW9Uy5z61QcbE0hv2Mx0SSfcQwg9dLcSDgPk6W38Ah0+h7hQEKiH6UB3Bxo
+	3U+NJQF5wTPtYdvt3cLUCXKd0DXwvdMqOcKT1bbuavgUJED1ONu3jhMVCi4DbuhTiapmeG
+	QB4/WKUudqPIpKmXBpExPhD5Amfd5IQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1774450495;
+	s=susede2_ed25519; t=1774450647;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/wXjEuEJQTN4k0jag/OQOqiBqUpftxguZi3Bfxxazc=;
-	b=KxKmaq0GZ6SbmxU5yVYvT3J98IVPybrqCzJYC2RmzYb9aKP+qaSl9V6BjPBkq9CVdvc8UG
-	MmoaFM8Fl1XcZvBQ==
+	bh=TDThzbfm4z51swQNpP/Sz73BBVvad0AbQ7d+bdgHlTI=;
+	b=GXLtH7DFDEli9jy70jmcgm6qgJltNATHWPDFjxipYjbSjh1gVBm0R2nEyXGIdoaeZj6f41
+	l/pqruwQ3HZvRIDA==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1774450494; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1774450647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/wXjEuEJQTN4k0jag/OQOqiBqUpftxguZi3Bfxxazc=;
-	b=eslfnx7hQIz+CqBMaKTHFfI4A5TaGYs6A9oOjOoC6EAoJqhv9gkRua4SGXrrlzy3kuKdzT
-	bzw+G48vIqIIz5lkBfsEk+Dd6ymbTjzXBQMGW1sbCTIV5CxReOHAtNecLZSpjk1qvgUfR9
-	nmZyWiv2dQf45miza5KfPMuQPZOpR3w=
+	bh=TDThzbfm4z51swQNpP/Sz73BBVvad0AbQ7d+bdgHlTI=;
+	b=Z0X0CLofVTVeW9Uy5z61QcbE0hv2Mx0SSfcQwg9dLcSDgPk6W38Ah0+h7hQEKiH6UB3Bxo
+	3U+NJQF5wTPtYdvt3cLUCXKd0DXwvdMqOcKT1bbuavgUJED1ONu3jhMVCi4DbuhTiapmeG
+	QB4/WKUudqPIpKmXBpExPhD5Amfd5IQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1774450494;
+	s=susede2_ed25519; t=1774450647;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/wXjEuEJQTN4k0jag/OQOqiBqUpftxguZi3Bfxxazc=;
-	b=bOKSc2s03svO8ZobkiDMrnkLqmSYPCdv3zFSNzJ05OB0u9gYR0s9JtEEpIiTbIKzp6ATVb
-	nBCfqs3dIyX5voCg==
+	bh=TDThzbfm4z51swQNpP/Sz73BBVvad0AbQ7d+bdgHlTI=;
+	b=GXLtH7DFDEli9jy70jmcgm6qgJltNATHWPDFjxipYjbSjh1gVBm0R2nEyXGIdoaeZj6f41
+	l/pqruwQ3HZvRIDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F61244462;
-	Wed, 25 Mar 2026 14:54:52 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B409E44464;
+	Wed, 25 Mar 2026 14:57:24 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tAkWDDz3w2lQYwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 25 Mar 2026 14:54:52 +0000
-Date: Wed, 25 Mar 2026 14:54:50 +0000
+	id 3imQKNT3w2lcZQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 25 Mar 2026 14:57:24 +0000
+Date: Wed, 25 Mar 2026 14:57:22 +0000
 From: Pedro Falcato <pfalcato@suse.de>
 To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -109,11 +110,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
 	linux-erofs@lists.ozlabs.org, linux-mm@kvack.org, ntfs3@lists.linux.dev, 
 	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 3/6] mm: always inline __mk_vma_flags() and invoked
- functions
-Message-ID: <ndtnvnobevdymu5a5tdxdbi4tcsqshs3d6x2vnfgnuclxvgwok@bhbqkzilsets>
+Subject: Re: [PATCH 4/6] mm: reintroduce vma_flags_test() as a singular flag
+ test
+Message-ID: <palfy4jm7iifa44hjkku4ljlwy6mkvyoq5q2v7a2dilb7fpzui@v54cr4xnd443>
 References: <cover.1772704455.git.ljs@kernel.org>
- <241f49c52074d436edbb9c6a6662a8dc142a8f43.1772704455.git.ljs@kernel.org>
+ <f33f8d7f16c3f3d286a1dc2cba12c23683073134.1772704455.git.ljs@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -127,24 +128,24 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <241f49c52074d436edbb9c6a6662a8dc142a8f43.1772704455.git.ljs@kernel.org>
+In-Reply-To: <f33f8d7f16c3f3d286a1dc2cba12c23683073134.1772704455.git.ljs@kernel.org>
 X-Spam-Score: -3.80
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2996-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2997-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER(0.00)[pfalcato@suse.de,linux-erofs@lists.ozlabs.org];
 	FREEMAIL_CC(0.00)[linux-foundation.org,arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
 	RCPT_COUNT_TWELVE(0.00)[44];
@@ -165,40 +166,37 @@ X-Spamd-Result: default: False [-1.70 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,suse.de:dkim,suse.de:email]
-X-Rspamd-Queue-Id: 773C53273D8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 60C71327481
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 05, 2026 at 10:50:16AM +0000, Lorenzo Stoakes (Oracle) wrote:
-> Be explicit about __mk_vma_flags() (which is used by the mk_vma_flags()
-> macro) always being inline, as we rely on the compiler converting this
-> function into meaningful.
-		meaningful what?
-
+On Thu, Mar 05, 2026 at 10:50:17AM +0000, Lorenzo Stoakes (Oracle) wrote:
+> Since we've now renamed vma_flags_test() to vma_flags_test_any() to be very
+> clear as to what we are in fact testing, we now have the opportunity to
+> bring vma_flags_test() back, but for explicitly testing a single VMA flag.
 > 
-> Also update all of the functions __mk_vma_flags() ultimately invokes to be
-> always inline too.
+> This is useful, as often flag tests are against a single flag, and
+> vma_flags_test_any(flags, VMA_READ_BIT) reads oddly and potentially causes
+> confusion.
 > 
-> Note that test_bitmap_const_eval() asserts that the relevant bitmap
-> functions result in build time constant values.
+> We use sparse to enforce that users won't accidentally pass vm_flags_t to
+> this function without it being flagged so this should make it harder to get
+> this wrong.
 > 
-> Additionally, vma_flag_set() operates on a vma_flags_t type, so it is
-> inconsistently named versus other VMA flags functions.
+> Of course, passing vma_flags_t to the function is impossible, as it is a
+> struct.
 > 
-> We only use vma_flag_set() in __mk_vma_flags() so we don't need to worry
-> about its new name being rather cumbersome, so rename it to
-> vma_flags_set_flag() to disambiguate it from vma_flags_set().
-> 
-> Also update the VMA test headers to reflect the changes.
+> Also update the VMA tests to reflect this change.
 > 
 > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-Is there an actual difference in codegen here? On -O2.
+This is a lot nicer, though I am wondering if there is any difference in
+codegen as well...
 
 -- 
 Pedro
