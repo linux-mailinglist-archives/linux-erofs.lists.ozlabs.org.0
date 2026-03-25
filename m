@@ -1,55 +1,55 @@
-Return-Path: <linux-erofs+bounces-2985-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2986-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GK4/Nomjw2lssQQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2985-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 09:57:45 +0100
+	id QJlnI+Ojw2lssQQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2986-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 09:59:15 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03460321BC6
-	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 09:57:44 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5A23321C5A
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Mar 2026 09:59:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fgglp4C0xz2xPL;
-	Wed, 25 Mar 2026 19:57:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fggnX1jYjz2xcB;
+	Wed, 25 Mar 2026 19:59:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774429062;
-	cv=none; b=GQHECUZDxO84+1R6w+UWncEg8bgBg18bfv9e0MnNE9rZs9hxRDwhfxwjyJpDJ3/q+//r19VmEnR06enEWDNR+J2HXClTKhLLzLJv/Q4gSzVUNiaoQ+d//ez2Vdz/BMrsYEs20DGjv4uhJeBXveIvBDidPZLpe8kJxbREKAdJXX2VoHhdamsPPnniqbxJwhmQgp/0hkqIt0hKTicAZyw7VoVb83vbQQnFXZaivS2qGIQIj53NXYph/j1jazn2vaz3tdSJLPvNec1JJHJghpNx6bexzqdQKxsUlTfKWIHlRcWPq8aD6spcVu/1c0QLyZggpqEsG0N4pPvbB8aqTjuLfw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774429152;
+	cv=none; b=B0X+F1xi2IWpImEwT9COoGppJVLwkApZsr54iFd6QnMub5peef9Z3yR4y64VzxM5rTraMT+5ZMhQAzEE3+SFarnviTp1u9yH55FXTw98BnH1JpIlUtpfy59lktEHvvJzed7QDmJ417JJzTm293/6Ezx5Mcxf4WHmu9aF8qJwV+B9bHlMlrCNeTAF6cvDcC3q+xe+6gaKRISi2viZxQEMMLnHQHvvevmR1/j1LtOPzlwHfRBswKn9AC472gnSrD25HX0H6TBRWjHeq3UZLHPvkhn4p+LXoIofxQg4KPT5Nn9zySqsRIlCKLdmSsz3EtcvNIrFKm3J2orclmmnYsYs4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774429062; c=relaxed/relaxed;
-	bh=t+i4QtjsZduZvrgtOyI0JoJhbcx6QDc5DtE1CkJjHOM=;
+	t=1774429152; c=relaxed/relaxed;
+	bh=YKPAoXysMVsdVB4QWCj3imwXrWnlYrYuey5ddRMMwF4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wq2qTV0zCTqW9e3EhvN4PcKhJlmIhHGVb5liNgeDTJz/21gI/l1dJU2bPuJ7Zkr28Dr/DL5VWlwdD2KeBujXEQDMG59sN9tuCURyzAdAt14/xsVFJhJn6g3bjVxZeAD21YhZ1ZagJJdISAj+zAotLHcTk/cHRAxeaIFijOq8t6v6A8VuDpHhLOriNPDrfTaZq+wDIVzSXM/yKxg1eT3Swy4RVCtOSisGz5LVDfafcvkVlSnK45xpVAmP2OQ3vJhE/yfOeUnFrgtvmi0FFAHk5HCj8G+Ckhm3i7qGFpAowqshva9qwlkrc+CkbPBNac+DEhDrmj2zNLyrP3Ee87goxw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Up7LdXhy; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=UmeMGJT6PsLv2x9yJ/jMT1KrCaVSatiTgefdWMuZtotRQM+5ewWoBzDDm14n4gnsOzdKR6dZVbUZYCFEa1hewEwS1wOmv3XquH2HOzt1TJGkwiVGFh4VQVoj/NJpTRvMVxtSzzD1O1Mv/R6/J8YLLbfGSs47Kc4eToGUzypXKT5gO738ItDY6sA45HYFdB2oMKO+ovmIvM35RQ4A5wrahvzC7PiUEvFN/tanRWyLwc7qmB5TadS4KolfIirej8c8/i35prD7TQ+Cab9Vzw9CNBeIzxyrwitny1og4uK+VF6yU7U07vwQFZpEYyJgwTJ54M7D245xQJrbZ++hXMKAQw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iERiDiLf; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Up7LdXhy;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iERiDiLf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fggln6JrCz2xLv
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Mar 2026 19:57:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fggnW3Ms0z2xPL
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Mar 2026 19:59:11 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5640543F0A;
-	Wed, 25 Mar 2026 08:57:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96DC5C4CEF7;
-	Wed, 25 Mar 2026 08:57:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 2F78660103;
+	Wed, 25 Mar 2026 08:59:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D434C4CEF7;
+	Wed, 25 Mar 2026 08:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774429060;
-	bh=yfxv6pHELzGlv2oobJT9AbDKLWNfM0JfoxxEIEleLqA=;
+	s=k20201202; t=1774429148;
+	bh=Pv7urIhMMBL2ocxusGwdyHEj1oFC8nFHlp57cSBJ93M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Up7LdXhyLQj2Uj4oDFLXhdmGHMqOhUL+XCximoI0LCeWAmcG3+n1T/b0ZgRc3kE6q
-	 ArPo1EXE8R48KzNNzdt6yCvT3aHF4RG0z3VvQbnoHiFVXdrgbo9MhBRZhI4FPnsRku
-	 /zg6d1YEF1wixxP/JXLmHLwqxgyAgv0uzitxifSQ3oqC+uwSrLDrw/RyAfC6ZHrGNN
-	 luLMjjt5tY0jRuCvI/ag8QknNU1ijC43qm99tCMQJk5dcuNpU6TjWoR/ivA7ZmC0jZ
-	 ljzRuVTNrLdAiaO4ulQYeyXnhbsFrb5Y62VZv4fNhVIuO0auUors/U5COdlDV8Z+mQ
-	 7wvdDEhmQ57Dw==
-Message-ID: <e5bd51ae-8937-4cca-94bb-b705b1e8aa26@kernel.org>
-Date: Wed, 25 Mar 2026 09:57:26 +0100
+	b=iERiDiLf++5bl/FDoLs/I4SrbVtH64RIeByQPlcqcwrGq9EcOzuexH5tWl1gGtFQj
+	 FC8h5uxpzmBNLtL6bH6tsxJbwuClunaNI0YiMtJkxq9gw3V7fNNnQMKOv+wsvotj+N
+	 45xdhriy71Y9rawAiZZuQQpO6JNmKQIwWeSZ01trFFXQdJG4NdJL0y8w/PXn8CCabi
+	 lc+fVFDMSIdw+6D3b4ukWEiUMlgyyRJGKsiBc5ChcvFYF3RYKOKiMB7LiyMQu6MBu4
+	 dnwNQyOOPhhy+xWI/iyjRaycgJFkZ54yh6GfFODyWneHxdajE+9VBP3pqSd3/yoEqy
+	 FNQdbf9x0yvyQ==
+Message-ID: <9203050e-eda6-49a1-97b6-a134da2da313@kernel.org>
+Date: Wed, 25 Mar 2026 09:58:53 +0100
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,10 +62,11 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] tools/testing/vma: add test for vma_flags_test(),
- vma_desc_test()
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+Subject: Re: [PATCH 2/6] mm: add vma_desc_test_all() and use it
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Dan Williams <dan.j.williams@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
@@ -81,18 +82,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
  Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>,
  Johannes Thumshirn <jth@kernel.org>, Matthew Wilcox <willy@infradead.org>,
  Jan Kara <jack@suse.cz>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Jann Horn <jannh@google.com>,
  Pedro Falcato <pfalcato@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>,
  linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
  linux-cxl@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
  ntfs3@lists.linux.dev, linux-fsdevel@vger.kernel.org
 References: <cover.1772704455.git.ljs@kernel.org>
- <376a39eb9e134d2c8ab10e32720dd292970b080a.1772704455.git.ljs@kernel.org>
- <f11ec383-d688-4512-a9ea-700cc2d42f3a@kernel.org>
- <f6f396d2-1ba2-426f-b756-d8cc5985cc7c@lucifer.local>
+ <568c8f8d6a84ff64014f997517cba7a629f7eed6.1772704455.git.ljs@kernel.org>
+ <d0111a86-7fc9-4e2f-b652-9ecbb894ada5@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -139,7 +138,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <f6f396d2-1ba2-426f-b756-d8cc5985cc7c@lucifer.local>
+In-Reply-To: <d0111a86-7fc9-4e2f-b652-9ecbb894ada5@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -149,18 +148,18 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2985-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2986-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[david@kernel.org,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[linux-foundation.org,arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
+	FREEMAIL_CC(0.00)[arndb.de,linuxfoundation.org,intel.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,linux.dev,suse.de,paragon-software.com,arm.com,amd.com,wdc.com,infradead.org,suse.cz,oracle.com,suse.com,ziepe.ca,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	FORGED_RECIPIENTS(0.00)[m:ljs@kernel.org,m:akpm@linux-foundation.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@li
+	FORGED_RECIPIENTS(0.00)[m:vbabka@kernel.org,m:ljs@kernel.org,m:akpm@linux-foundation.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:almaz.alexandrovich@paragon-software.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:jack@suse.cz,m:Liam.Howlett@oracle.com,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:jannh@google.com,m:pfalcato@suse.de,m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-mm@kvack.org,m:ntfs3@li
  sts.linux.dev,m:linux-fsdevel@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -176,61 +175,34 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 03460321BC6
+X-Rspamd-Queue-Id: A5A23321C5A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/5/26 16:01, Lorenzo Stoakes (Oracle) wrote:
-> On Thu, Mar 05, 2026 at 02:52:20PM +0100, David Hildenbrand (Arm) wrote:
->> On 3/5/26 11:50, Lorenzo Stoakes (Oracle) wrote:
->>> Now we have helpers which test singular VMA flags - vma_flags_test() and
->>> vma_desc_test() - add a test to explicitly assert that these behave as
->>> expected.
->>>
->>> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
->>> ---
->>>  tools/testing/vma/tests/vma.c | 36 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 36 insertions(+)
->>>
->>> diff --git a/tools/testing/vma/tests/vma.c b/tools/testing/vma/tests/vma.c
->>> index f031e6dfb474..1aa94dd7e74a 100644
->>> --- a/tools/testing/vma/tests/vma.c
->>> +++ b/tools/testing/vma/tests/vma.c
->>> @@ -159,6 +159,41 @@ static bool test_vma_flags_word(void)
->>>  	return true;
->>>  }
->>>
->>> +/* Ensure that vma_flags_test() and friends works correctly. */
->>> +static bool test_vma_flags_test(void)
->>> +{
->>> +	const vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
->>> +					       VMA_EXEC_BIT, 64, 65);
+On 3/25/26 08:31, Vlastimil Babka (SUSE) wrote:
+> On 3/5/26 11:50, Lorenzo Stoakes (Oracle) wrote:
+>> erofs and zonefs are using vma_desc_test_any() twice to check whether all
+>> of VMA_SHARED_BIT and VMA_MAYWRITE_BIT are set, this is silly, so add
+>> vma_desc_test_all() to test all flags and update erofs and zonefs to use
+>> it.
 >>
->> When already using numbers, I was wondering whether you'd want to stick
->> to numbers only here.
+>> While we're here, update the helper function comments to be more
+>> consistent.
+>>
+>> Also add the same to the VMA test headers.
+>>
+>> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 > 
-> Numbers are for flags > 64 bits, we currently don't define any, it's to make
-> sure everything works at higher bitmap sizes, the tests currently set the bitmap
-> size to 128 bits.
-> 
->>
->>> +	struct vm_area_desc desc;
->>
->>
->> struct vm_area_desc desc = {
->> 	.vma_flags = flags,
->> };
->>
->> ?
-> 
-> Ack can do, fix-patch for Andrew below :)
+> I thought I saw David review all of the series and so focused on other
+> stuff, didn't notice he skipped this one :)
 
-Not sure if I provided a tag, but here it comes
+I think I skipped it because it looked too mechanical when scanning and
+I was like "ofc I trust Lorenzo on that one blindly". So I missed to reply.
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Tag provided now if it helps.
 
 -- 
 Cheers,
