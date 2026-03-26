@@ -1,75 +1,75 @@
-Return-Path: <linux-erofs+bounces-3018-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3019-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wPsfLqoOxWkI6AQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3018-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 11:47:06 +0100
+	id +GACE7EOxWkI6AQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3019-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 11:47:13 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1878B333B6D
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 11:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D376333B74
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 11:47:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fhL7W45BKz2yd7;
-	Thu, 26 Mar 2026 21:47:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fhL7f0lp2z2yhG;
+	Thu, 26 Mar 2026 21:47:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774522023;
-	cv=none; b=lwXZNBkTOvLO6tXGcSXV9D55YtNg9IMeakhE4VypNR3C4EloIsAosH57V3sXvpqtQczvSOQKjADa1n7syFNSgQNyBSB9WPBanynoFAPedeANAYcC2R8RUhlw8ukQN75E1nUQmfmlrvn+gV9LFFfwIpdTWuV2/Ji86MOD4MaGViNTDpl9Dtfx8zHMgCbvtuq3DV/OVhOkQSniD1q2Hb4Zr/s0ZkPwl+M6+VKrF/bGk6TwYQzDeASBd0qX/zi8B8AIHUEoYkhl9qFBcXHnLLuGAsz0YGvLFER4tS2hTxgmUrwd+/OZh8B2amTtc9Ows9H6YG75z9iOEcYmdYgG3U49nA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774522030;
+	cv=none; b=PByty1hMA+n5wr6QV5pLkkXeDLrzkyQIOq33EuXlQEXJEbyXb5VuRAC5DN1rCQKJ4ut0b95I18LqtTMNzDSeOl/AJ0Z2QMjBtCqc20WTdc725GnUqtuI75Xn4+m7MwwzB1m/kYkvOeipKYoj8pTn6mtci9jJS7V+cLqFDE7w059XXMafe8Z048kMjrC4EQuKsTd7E/bEFr+GY0UNdi9wSXFrb823U/crTbUJPSihANGZLm7yHecGbfLsWPRD1oy99J13Iip+ocv4mMlZYPTrNUqcF0aZdnpvAHaULY/d9soDF6NtQXiQEtD2/QDc8E8vDtT7a48dNKRN0lGvhbNHoA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774522023; c=relaxed/relaxed;
-	bh=9JBhkshmo9wp53/7HssoafiGynGAcR+6aULQINPD5UQ=;
+	t=1774522030; c=relaxed/relaxed;
+	bh=/tdvGHLBae6cwxkiV/xURdgZGIZUXmsfYZzZeOFw5ZU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=ITRftCrknRbzg3cVccJnXp5yWRN6m3mvhKzqWja69luiX5ZrGcPOWDCh2omHbozAHK2X2msu9GExEVeJC6vFNDtHj3uRb7FFEQwpeLnafLlmz5NhCKyM0H8dD+uadAsgiRW5C+f2VlDSQopcsXOh/nNFUqP0SUuJol5hjZO/mMR6eXTruybxAtHPj8SeqlyjLDahwmxEoIW0KGPSfLrHxCz84SSDo0JJMopqPpRTZmE/mrTTwoasY3M6qgmrCxbJY1nSnxYMvGkgpWf5BULAoTpBvW1Gx6aDk2zcJNMcWnyf7/rcyUIB6d2tUfZEaPqcxtgFhx3vsFiZTEp7idiKUQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=DloiwA8l; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=DloiwA8l; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:content-type; b=WFmy1Oig0dok8sbgeBhSmM2cSVDcOPPlogM6u/vN1LmgvnV9jv7HPUGFy2RhPKt1IyutzoIoZUjN6gPCEnZ2u0giFui0B8nPF44WVRNi8cSC69vgfzi0FNKGFY4nafTCoeFYcEOVSkOSVYDr67m043JiiPChMbASTPWer0YnJ7SxVrf3Gk7gjLwqQsqJtcn01WhwB6NJF7Kdq13jIHz5iYj+RMmLJf+tNr/aOt5y3+lb+5Wj0DcOamGnm2yTNZ1MuWXWmtlAEw1BsMklZ7rxDj3SdXZ6TAV6viLV1J2GnQ4aNh9RGrdaFb2MpjitamSLUDyRvqAR6o0sIEXCYW7sVQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z6BnXDkJ; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z6BnXDkJ; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=DloiwA8l;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=DloiwA8l;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z6BnXDkJ;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z6BnXDkJ;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhL7V5QxQz2yVB
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2026 21:47:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhL7d1dWnz2yVB
+	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2026 21:47:09 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774522019;
+	s=mimecast20190719; t=1774522026;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9JBhkshmo9wp53/7HssoafiGynGAcR+6aULQINPD5UQ=;
-	b=DloiwA8lAUtURUf6jK8oCCxluyiSInkEvirjdnbYYiIgsbGau3AHoi9hdABOKwSHbCtzDp
-	kS6tyAIEPH0H2VxJaWFMYnXrnA/x4Qn1UDBAzu+xSX5AUGpAXSdFrdmZLq8fZpqihFsarJ
-	CH0QeKVZ5hSzLbLGIvqYQ//DzDCBlYc=
+	bh=/tdvGHLBae6cwxkiV/xURdgZGIZUXmsfYZzZeOFw5ZU=;
+	b=Z6BnXDkJhQZTzwuc6PzR54+W6O4Zhhx7uDpw7mMlcS87CNDRuHmjyS2WTnhbx1lbF7ZbkV
+	gMwBGYbGoZMiRU0T7HDDp3BKR/8No5nBPkA7S7KLSMr/JqWiqUtoMq9G8SVqK2GJiB7XEY
+	/xoBvVFyxNta4KQTxDrWJvL76T8jsjQ=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774522019;
+	s=mimecast20190719; t=1774522026;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9JBhkshmo9wp53/7HssoafiGynGAcR+6aULQINPD5UQ=;
-	b=DloiwA8lAUtURUf6jK8oCCxluyiSInkEvirjdnbYYiIgsbGau3AHoi9hdABOKwSHbCtzDp
-	kS6tyAIEPH0H2VxJaWFMYnXrnA/x4Qn1UDBAzu+xSX5AUGpAXSdFrdmZLq8fZpqihFsarJ
-	CH0QeKVZ5hSzLbLGIvqYQ//DzDCBlYc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=/tdvGHLBae6cwxkiV/xURdgZGIZUXmsfYZzZeOFw5ZU=;
+	b=Z6BnXDkJhQZTzwuc6PzR54+W6O4Zhhx7uDpw7mMlcS87CNDRuHmjyS2WTnhbx1lbF7ZbkV
+	gMwBGYbGoZMiRU0T7HDDp3BKR/8No5nBPkA7S7KLSMr/JqWiqUtoMq9G8SVqK2GJiB7XEY
+	/xoBvVFyxNta4KQTxDrWJvL76T8jsjQ=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-lIkaQfXkP4W9euIGMAGh9A-1; Thu,
- 26 Mar 2026 06:46:54 -0400
-X-MC-Unique: lIkaQfXkP4W9euIGMAGh9A-1
-X-Mimecast-MFC-AGG-ID: lIkaQfXkP4W9euIGMAGh9A_1774522012
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-6Q1OkKBWMNewwDpzF46dXQ-1; Thu,
+ 26 Mar 2026 06:47:02 -0400
+X-MC-Unique: 6Q1OkKBWMNewwDpzF46dXQ-1
+X-Mimecast-MFC-AGG-ID: 6Q1OkKBWMNewwDpzF46dXQ_1774522020
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88EF519560A2;
-	Thu, 26 Mar 2026 10:46:51 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F1A2819560B4;
+	Thu, 26 Mar 2026 10:46:59 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.33.121])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B082C1955D84;
-	Thu, 26 Mar 2026 10:46:44 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 42F741800673;
+	Thu, 26 Mar 2026 10:46:53 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -95,9 +95,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Paulo Alcantara <pc@manguebit.org>
-Subject: [PATCH 05/26] netfs: Fix read abandonment during retry
-Date: Thu, 26 Mar 2026 10:45:20 +0000
-Message-ID: <20260326104544.509518-6-dhowells@redhat.com>
+Subject: [PATCH 06/26] netfs: Fix the handling of stream->front by removing it
+Date: Thu, 26 Mar 2026 10:45:21 +0000
+Message-ID: <20260326104544.509518-7-dhowells@redhat.com>
 In-Reply-To: <20260326104544.509518-1-dhowells@redhat.com>
 References: <20260326104544.509518-1-dhowells@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
@@ -111,8 +111,8 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: DjEwBVNOExpvoPph0E21bSd9nXs1zqrlyiDyFJssz4o_1774522012
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: Z2G7enY475whsThX_6d6ARXOtqjyr328LZ8vPVZjKTQ_1774522020
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -130,7 +130,7 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3018-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3019-lists,linux-erofs=lfdr.de];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.com,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,manguebit.org];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[dhowells@redhat.com,linux-erofs@lists.ozlabs.org];
@@ -153,56 +153,189 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[manguebit.org:email,linux.dev:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 1878B333B6D
+X-Rspamd-Queue-Id: 6D376333B74
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Under certain circumstances, all the remaining subrequests from a read
-request will get abandoned during retry.  The abandonment process expects
-the 'subreq' variable to be set to the place to start abandonment from, but
-it doesn't always have a useful value (it will be uninitialised on the
-first pass through the loop and it may point to a deleted subrequest on
-later passes).
+The netfs_io_stream::front member is meant to point to the subrequest
+currently being collected on a stream, but it isn't actually used this way
+by direct write (which mostly ignores it).  However, there's a tracepoint
+which looks at it.  Further, stream->front is actually redundant with
+stream->subrequests.next.
 
-Fix the first jump to "abandon:" to set subreq to the start of the first
-subrequest expected to need retry (which, in this abandonment case, turned
-out unexpectedly to no longer have NEED_RETRY set).
+Fix the potential problem in the direct code by just removing the member
+and using stream->subrequests.next instead, thereby also simplifying the
+code.
 
-Also clear the subreq pointer after discarding superfluous retryable
-subrequests to cause an oops if we do try to access it.
-
+Fixes: a0b4c7a49137 ("netfs: Fix unbuffered/DIO writes to dispatch subrequests in strict sequence")
+Reported-by: Paulo Alcantara <pc@manguebit.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Paulo Alcantara <pc@manguebit.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
 ---
- fs/netfs/read_retry.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/netfs/buffered_read.c     | 3 +--
+ fs/netfs/direct_read.c       | 3 +--
+ fs/netfs/direct_write.c      | 1 -
+ fs/netfs/read_collect.c      | 4 ++--
+ fs/netfs/read_single.c       | 1 -
+ fs/netfs/write_collect.c     | 4 ++--
+ fs/netfs/write_issue.c       | 3 +--
+ include/linux/netfs.h        | 1 -
+ include/trace/events/netfs.h | 8 ++++----
+ 9 files changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
-index 71a0c7ed163a..68fc869513ef 100644
---- a/fs/netfs/read_retry.c
-+++ b/fs/netfs/read_retry.c
-@@ -93,8 +93,10 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 		       from->start, from->transferred, from->len);
- 
- 		if (test_bit(NETFS_SREQ_FAILED, &from->flags) ||
--		    !test_bit(NETFS_SREQ_NEED_RETRY, &from->flags))
-+		    !test_bit(NETFS_SREQ_NEED_RETRY, &from->flags)) {
-+			subreq = from;
- 			goto abandon;
-+		}
- 
- 		list_for_each_continue(next, &stream->subrequests) {
- 			subreq = list_entry(next, struct netfs_io_subrequest, rreq_link);
-@@ -178,6 +180,7 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 				if (subreq == to)
- 					break;
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index 88a0d801525f..a8c0d86118c5 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -171,9 +171,8 @@ static void netfs_queue_read(struct netfs_io_request *rreq,
+ 	spin_lock(&rreq->lock);
+ 	list_add_tail(&subreq->rreq_link, &stream->subrequests);
+ 	if (list_is_first(&subreq->rreq_link, &stream->subrequests)) {
+-		stream->front = subreq;
+ 		if (!stream->active) {
+-			stream->collected_to = stream->front->start;
++			stream->collected_to = subreq->start;
+ 			/* Store list pointers before active flag */
+ 			smp_store_release(&stream->active, true);
+ 		}
+diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
+index a498ee8d6674..f72e6da88cca 100644
+--- a/fs/netfs/direct_read.c
++++ b/fs/netfs/direct_read.c
+@@ -71,9 +71,8 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
+ 		spin_lock(&rreq->lock);
+ 		list_add_tail(&subreq->rreq_link, &stream->subrequests);
+ 		if (list_is_first(&subreq->rreq_link, &stream->subrequests)) {
+-			stream->front = subreq;
+ 			if (!stream->active) {
+-				stream->collected_to = stream->front->start;
++				stream->collected_to = subreq->start;
+ 				/* Store list pointers before active flag */
+ 				smp_store_release(&stream->active, true);
  			}
-+			subreq = NULL;
- 			continue;
+diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
+index 4d9760e36c11..f9ab69de3e29 100644
+--- a/fs/netfs/direct_write.c
++++ b/fs/netfs/direct_write.c
+@@ -111,7 +111,6 @@ static int netfs_unbuffered_write(struct netfs_io_request *wreq)
+ 			netfs_prepare_write(wreq, stream, wreq->start + wreq->transferred);
+ 			subreq = stream->construct;
+ 			stream->construct = NULL;
+-			stream->front = NULL;
  		}
  
+ 		/* Check if (re-)preparation failed. */
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index 137f0e28a44c..e5f6665b3341 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -205,7 +205,8 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
+ 	 * in progress.  The issuer thread may be adding stuff to the tail
+ 	 * whilst we're doing this.
+ 	 */
+-	front = READ_ONCE(stream->front);
++	front = list_first_entry_or_null(&stream->subrequests,
++					 struct netfs_io_subrequest, rreq_link);
+ 	while (front) {
+ 		size_t transferred;
+ 
+@@ -301,7 +302,6 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
+ 		list_del_init(&front->rreq_link);
+ 		front = list_first_entry_or_null(&stream->subrequests,
+ 						 struct netfs_io_subrequest, rreq_link);
+-		stream->front = front;
+ 		spin_unlock(&rreq->lock);
+ 		netfs_put_subrequest(remove,
+ 				     notes & ABANDON_SREQ ?
+diff --git a/fs/netfs/read_single.c b/fs/netfs/read_single.c
+index 8e6264f62a8f..d0e23bc42445 100644
+--- a/fs/netfs/read_single.c
++++ b/fs/netfs/read_single.c
+@@ -107,7 +107,6 @@ static int netfs_single_dispatch_read(struct netfs_io_request *rreq)
+ 	spin_lock(&rreq->lock);
+ 	list_add_tail(&subreq->rreq_link, &stream->subrequests);
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_added);
+-	stream->front = subreq;
+ 	/* Store list pointers before active flag */
+ 	smp_store_release(&stream->active, true);
+ 	spin_unlock(&rreq->lock);
+diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
+index 83eb3dc1adf8..b194447f4b11 100644
+--- a/fs/netfs/write_collect.c
++++ b/fs/netfs/write_collect.c
+@@ -228,7 +228,8 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+ 		if (!smp_load_acquire(&stream->active))
+ 			continue;
+ 
+-		front = stream->front;
++		front = list_first_entry_or_null(&stream->subrequests,
++						 struct netfs_io_subrequest, rreq_link);
+ 		while (front) {
+ 			trace_netfs_collect_sreq(wreq, front);
+ 			//_debug("sreq [%x] %llx %zx/%zx",
+@@ -279,7 +280,6 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+ 			list_del_init(&front->rreq_link);
+ 			front = list_first_entry_or_null(&stream->subrequests,
+ 							 struct netfs_io_subrequest, rreq_link);
+-			stream->front = front;
+ 			spin_unlock(&wreq->lock);
+ 			netfs_put_subrequest(remove,
+ 					     notes & SAW_FAILURE ?
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 437268f65640..2db688f94125 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -206,9 +206,8 @@ void netfs_prepare_write(struct netfs_io_request *wreq,
+ 	spin_lock(&wreq->lock);
+ 	list_add_tail(&subreq->rreq_link, &stream->subrequests);
+ 	if (list_is_first(&subreq->rreq_link, &stream->subrequests)) {
+-		stream->front = subreq;
+ 		if (!stream->active) {
+-			stream->collected_to = stream->front->start;
++			stream->collected_to = subreq->start;
+ 			/* Write list pointers before active flag */
+ 			smp_store_release(&stream->active, true);
+ 		}
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 72ee7d210a74..ba17ac5bf356 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -140,7 +140,6 @@ struct netfs_io_stream {
+ 	void (*issue_write)(struct netfs_io_subrequest *subreq);
+ 	/* Collection tracking */
+ 	struct list_head	subrequests;	/* Contributory I/O operations */
+-	struct netfs_io_subrequest *front;	/* Op being collected */
+ 	unsigned long long	collected_to;	/* Position we've collected results to */
+ 	size_t			transferred;	/* The amount transferred from this stream */
+ 	unsigned short		error;		/* Aggregate error for the stream */
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 2d366be46a1c..cbe28211106c 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -740,19 +740,19 @@ TRACE_EVENT(netfs_collect_stream,
+ 		    __field(unsigned int,	wreq)
+ 		    __field(unsigned char,	stream)
+ 		    __field(unsigned long long,	collected_to)
+-		    __field(unsigned long long,	front)
++		    __field(unsigned long long,	issued_to)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+ 		    __entry->wreq	= wreq->debug_id;
+ 		    __entry->stream	= stream->stream_nr;
+ 		    __entry->collected_to = stream->collected_to;
+-		    __entry->front	= stream->front ? stream->front->start : UINT_MAX;
++		    __entry->issued_to	= atomic64_read(&wreq->issued_to);
+ 			   ),
+ 
+-	    TP_printk("R=%08x[%x:] cto=%llx frn=%llx",
++	    TP_printk("R=%08x[%x:] cto=%llx ito=%llx",
+ 		      __entry->wreq, __entry->stream,
+-		      __entry->collected_to, __entry->front)
++		      __entry->collected_to, __entry->issued_to)
+ 	    );
+ 
+ TRACE_EVENT(netfs_folioq,
 
 
