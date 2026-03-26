@@ -1,64 +1,63 @@
-Return-Path: <linux-erofs+bounces-3042-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3043-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCu7A3osxWnb7gQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3042-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 13:54:18 +0100
+	id KOSBNVA/xWkU8wQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3043-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 15:14:40 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A5C23358A8
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 13:54:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06802336A51
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Mar 2026 15:14:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fhNyF52P1z2yd7;
-	Thu, 26 Mar 2026 23:54:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fhQkz0Dnfz2xlM;
+	Fri, 27 Mar 2026 01:14:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774529653;
-	cv=pass; b=ZB0d1jPaqEkkW7eVaV8yKVedEgwtp4fhM2PKmcWT8v2i9RgIP1Raw83002Dmsw+c+hS4/pr8XYAFQnG1dqAu4idt2LsHvl7h91eUOw1DcSdxmK0WUzlzXlw0UB3O6Piu8PUk1dZdH9aJra+CSvy4Fk8Xrm2RStE6ziyfydubaG6hILNy87KpT8ckctbFgzOixDX0C3/TSrHKhb9zFMNM0+RIMX/ja77omYvX8kRiVZh4pRdifWg7NpvHA+WRsDTB/7gcntpfZWv33FzNevAM8mrOY5evtwQPX9VktRMneK8RIOQIuWGocReDt6PhYqqfSC787IqLwU5/bGVslnJUyQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774529653; c=relaxed/relaxed;
-	bh=R26Jz05ItG1ubmhs27gagP1HK7qzlrsqSQavHEFxFYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FfTt47egLXsRxt+f9pRacfvV/viH3EsGrak4w88i0nVru+I/gv0sfidU/LXlXI5zYP86Ja/heCAYM0quezSzTljXhkcWExNaJSk1laPxqyeGTichl652Akp8j+ZwB/Pv7eClrHDy2iBXcxiJnPWTneq7RhtOi5Iufe9gtPEX1vEJBXpStZtEpYmK6726X7pUXicsoi1Jnh5NKaSMMaz5Syth8bGJEnpdsLMO7UMfUFl+c/KvHrOBktsa22GvuO/zHJmZlNqxEUldbxQLKZG/M1NLx/ua4cTI/iuZhDJo3SDmishe44gStixVaD3KCEsff4p5KLPenTLXLH3/6+Og8w==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=eqdklICL; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774534474;
+	cv=none; b=F32j9/gZGpTjZeLYjN0TUlhRLXejVzRmXCSFzdXkJ9kU466jbbURoQY4mvJhVf/h1LdPombr1xwOS51mJMYEmFkSele3iDaAV4u/HucXN9Uu6fOcs0oGiIxhVr0usq+Fw1Hl4hCQOWc8ENKjbb4nBvMndsDwoEjnC+8RMknCSYPXK30sHPFB1vcoMHql8pQXn5ODQhgMWpfKu9wGWw81yYqpMWVZqorFH1qMS3D0i9Ji2NAlze62tDHi7vz4puGqthlctEbP8j+lSy4ySVT9/qTz1CI0yVrb56LD3rIg2ZRBIqhv2lct0qQzslPULgUTDD++sJ/KOEAwjd7wEDHXRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774534474; c=relaxed/relaxed;
+	bh=FZooCPQPySD2tslSmg9lFUIcLfIfFCj93VaAbqTuJFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mWx6i0pt0lnfX04bc5/7nXDH/jl9maDsKSRij5+GzFPB5Vb8uPnzKVnjhpJsoD8D2UWxzR9Sdlx39GC0ldA+Y8np8M1Qd+YsQUXhs3H+eU9czr0PjWfzheVfbcEDwjMPCDHLbZSN7lN7nR7snMGYwd4V1r+2+I3BEQgApf7w6pe1c41PIghKy4pfqB00/OAcqXp/nTzGL9oGxd8WKe8I8EhBlTDgdLSy1DmjARNFu1HWvJkMGSPiHHQznd1/mZd29/fq5bvBNuuZWvhDZViAhE6XmdedWfc+dfPBL/pvG5h7N9Q4lA+gIH0sxRRHdrdk/FjcofgEO3UtEyKjqqiDUQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cU6Z0CDK; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=eqdklICL;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cU6Z0CDK;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
-Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhNyD2rQtz2yS4
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Mar 2026 23:54:12 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774529647; cv=none; 
-	d=zohomail.in; s=zohoarc; 
-	b=cC/CAMjIqK1MLQdNB/RkrRNluWBoRGatAacbgXnCXk3QJR8ttk0QfNSl6AV/jwS9cReDN4rTlSnvG8MphkLdeh1smL2KUGm8pNXrlsDst/lR6MWaNOovgRiGEcYFfuDJ7ekFaLzoEhChiDgPa4/QE5jGPVnNFECwKFEcmPcRkgQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1774529647; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=R26Jz05ItG1ubmhs27gagP1HK7qzlrsqSQavHEFxFYU=; 
-	b=VDRc64hCYeX0BvQkHVkIOAo3UKG0D9nWm+dWmjky6batSeyL6fVYBKvCpCQ/m5aoawbKsiqFC8xu9Vr6UJR3s5pGPILKolr2rIU67i+zNwyDPmxkNQi3N07rA2mGOzi1Tr2QZcXzlZ31+OfvZFO0GtiokScpq+oiu1M4BT02ptg=
-ARC-Authentication-Results: i=1; mx.zohomail.in;
-	dkim=pass  header.i=vnsh.in;
-	spf=pass  smtp.mailfrom=ch@vnsh.in;
-	dmarc=pass header.from=<ch@vnsh.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774529647;
-	s=zoho; d=vnsh.in; i=ch@vnsh.in;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=R26Jz05ItG1ubmhs27gagP1HK7qzlrsqSQavHEFxFYU=;
-	b=eqdklICLfGw8wJSDspmRXDjh+BeOtld7+QQZJ0YMkaxWxq1oWP2DlvNQjeQ2CFtI
-	rPdpCBHtoehMXZiUtl0fpw024YoxAmxwzVWavIeXK8RTS5475sHPLfrJycLMf+NSij3
-	PUx7UL3iG51P5N0qEM4tKduFnNdDaxiCmAR9J1ak=
-Received: by mx.zoho.in with SMTPS id 1774529646445211.9969267172828;
-	Thu, 26 Mar 2026 18:24:06 +0530 (IST)
-From: Vansh Choudhary <ch@vnsh.in>
-To: linux-erofs@lists.ozlabs.org
-Cc: Vansh Choudhary <ch@vnsh.in>
-Subject: [PATCH] erofs-utils: tar: guard empty PAX path trimming
-Date: Thu, 26 Mar 2026 12:54:06 +0000
-Message-ID: <20260326125406.61001-1-ch@vnsh.in>
-X-Mailer: git-send-email 2.43.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhQkx5jCjz2xS5
+	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Mar 2026 01:14:33 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 2594A44478;
+	Thu, 26 Mar 2026 14:14:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F086EC116C6;
+	Thu, 26 Mar 2026 14:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774534466;
+	bh=9/Mc8wqWTo8FPFWf+YyPCWyvxNDgMHkuBpBcOLX21aE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cU6Z0CDKLvPywdcWRaVckLWCGFMQ9BFlM0IEu+M554IZykD8OMttZxM4vFECn2de6
+	 ljdVm+SE1Y90FqE/VgCURofZNyRt9oI6AQy/20XN3PiiBzTgrHnRt3bU3BSdQXS8QZ
+	 oPKMegFXcX7QdSNJdkkklUOF6HVdAyxoVsaK6kt94bavqoexspxGFRrGuaKDXleUNA
+	 7GCmlhztB8Wkb+qSttaCbKQX+vWak9Qin5x5NJ+HINkXo/DHgCSKMV2r301dRSdvx/
+	 NU3VvJfrdunBQ9tV5NvKzAAALXy5VdZLNcaSLBJloG3/atVngBKzhRho/7YnFWZqJv
+	 5qFkISDTdKr+A==
+Date: Thu, 26 Mar 2026 15:14:21 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
+	Amir Goldstein <amir73il@gmail.com>, Gao Xiang <xiang@kernel.org>
+Subject: Re: [RFC PATCH v2 1/2] lsm: add backing_file LSM hooks
+Message-ID: <20260326-wildwasser-notorisch-7271180258ef@brauner>
+References: <20260323042510.3331778-4-paul@paul-moore.com>
+ <20260323042510.3331778-5-paul@paul-moore.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -70,67 +69,92 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260323042510.3331778-5-paul@paul-moore.com>
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
+X-Spamd-Result: default: False [2.30 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3043-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:paul@paul-moore.com,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:amir73il@gmail.com,m:xiang@kernel.org,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.ozlabs.org,gmail.com,kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-3042-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[vnsh.in];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[vnsh.in:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.998];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 6A5C23358A8
+X-Rspamd-Queue-Id: 06802336A51
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Avoid reading eh->path[j - 1] when a PAX path record carries an
-empty value.
+On Mon, Mar 23, 2026 at 12:24:18AM -0400, Paul Moore wrote:
+> Stacked filesystems such as overlayfs do not currently provide the
+> necessary mechanisms for LSMs to properly enforce access controls on the
+> mmap() and mprotect() operations.  In order to resolve this gap, a LSM
+> security blob is being added to the backing_file struct and the following
+> new LSM hooks are being created:
+> 
+>  security_backing_file_alloc()
+>  security_backing_file_free()
+>  security_mmap_backing_file()
+> 
+> The first two hooks are to manage the lifecycle of the LSM security blob
+> in the backing_file struct, while the third provides a new mmap() access
+> control point for the underlying backing file.  It is also expected that
+> LSMs will likely want to update their security_file_mprotect() callback
+> to address issues with their mprotect() controls, but that does not
+> require a change to the security_file_mprotect() LSM hook.
+> 
+> There are a two other small changes to support these new LSM hooks.  We
+> pass the user file associated with a backing file down to
+> alloc_empty_backing_file() so it can be included in the
+> security_backing_file_alloc() hook, and we constify the file struct field
+> in the LSM common_audit_data struct to better support LSMs that need to
+> pass a const file struct pointer into the common LSM audit code.
+> 
+> Thanks to Arnd Bergmann for identifying the missing EXPORT_SYMBOL_GPL()
+> and supplying a fixup.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paul Moore <paul@paul-moore.com>
+> ---
+>  fs/backing-file.c             |  18 ++++--
+>  fs/erofs/ishare.c             |  10 +++-
+>  fs/file_table.c               |  21 ++++++-
+>  fs/fuse/passthrough.c         |   2 +-
+>  fs/internal.h                 |   3 +-
+>  fs/overlayfs/dir.c            |   2 +-
+>  fs/overlayfs/file.c           |   2 +-
+>  include/linux/backing-file.h  |   4 +-
+>  include/linux/fs.h            |   1 +
 
-Check that j is non-zero before trimming trailing slashes from the
-duplicated path buffer.
-
-Signed-off-by: Vansh Choudhary <ch@vnsh.in>
----
- lib/tar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/tar.c b/lib/tar.c
-index 77754fd..24e0413 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -517,7 +517,7 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
- 				int j = p - 1 - value;
- 				free(eh->path);
- 				eh->path = strdup(value);
--				while (eh->path[j - 1] == '/')
-+				while (j && eh->path[j - 1] == '/')
- 					eh->path[--j] = '\0';
- 			} else if (!strncmp(kv, "linkpath=",
- 					sizeof("linkpath=") - 1)) {
--- 
-2.43.0
-
+Thanks, this looks much better.
+Acked-by: Christian Brauner <brauner@kernel.org>
 
