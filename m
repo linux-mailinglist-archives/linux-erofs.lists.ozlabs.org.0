@@ -1,59 +1,61 @@
-Return-Path: <linux-erofs+bounces-3049-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3050-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2Ar4BpwIxmkZFgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3049-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2026 05:33:32 +0100
+	id SILINcYIxmkZFgUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3050-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2026 05:34:14 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9B5433F1E0
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2026 05:33:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F8AD33F1FF
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Mar 2026 05:34:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fhnnz72J8z2xR4;
-	Fri, 27 Mar 2026 15:33:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fhnpl4sRRz2xmX;
+	Fri, 27 Mar 2026 15:34:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774586007;
-	cv=none; b=TN/WxVFKmGhd0WHFIDpYVj5jwi3/F5uN+J1VTGmvEM5T7d5UBoH2c9IR7Dq0oLZyFAK9mmh5irAaNRp0yODO29MQzwBsA4jyaxbYBY2HqEVlqGLhVNB9JZxu7Sar7NUG1dMEkE4KUXg5otiQWcI1ji/skqLddiZyMmfDmLUVoFpCaqxj/6Vay3C6B9CdXfkHKwBbTTS8aJF3cNi4PFZ/XQhZhSGLHqDzCrHiV4xbdtkVWcKyFhxB/sIZ0dnnOk+2w1THu6jMKPMoLhQRSfJYGZvP+pb16ibNJ4Y6ABm0SVLg6yeJeieDKZ87jVAPfKvBb2soO83gkHaBKogaAA1muA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774586047;
+	cv=none; b=Csu/Q+nyzoH5noVYZm+CIuVo1mxqzR1WxMtSpo2D0LAbQa9533a/DytRneNuyEE8Y5OAt7K0UtqtBTbOTscO2PCs5hrOyfg4+h2059cK5sYDhFqSmhlc8k0xp2zs/LSNpJ6NLiEKvSov+PYOtqKdZvFkeeyHCvv/BQlgAq2cM3aUmn6QZ3EEV+sOeusl8cSyVUU/Ra2KWHrSw2PJ6zvGFO1u9wViYh3N3yo6pouL5kFUDWb4kqRu415Dlva6GcPfg7PepwIu9ovaTueFan+0uVO/AQi6WmCSJ3eiwDTOIBbKMw+WjK2TKsUU75mt5G0NkJk/agUBjbJV8M/UKnWncg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774586007; c=relaxed/relaxed;
-	bh=qD5WGzY9SirQ9xlNJVoQqH4Rcm41JAwbu6EYRLwDR08=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bYUo6DhIEpxpYZhSsBTcZO1/r5bac4v7QavGQlADytdGKWf0CMz3hSNYZwmO3jSdwH/6PRpCrDdkawLlzFEeHWaRDUfsJKrDLVE0CkHiwgmswxjy3aWwbR+DTpneXEDBNDCN0xQ+DVd2xGSLtrS6U1yJAvbZseiEg1xuCIADuQ1zY58cBICK35GgyLat9ldPEWImjWiSxXpHr+HvOfrl5Q1PahVGzXSvjG5NNz7kurTcm+rkTTNbJ1PLcPt8Hgtl+6kYl712Fcx4RIHHq+cSzeOsd1wtv282lbSJci1SFkcI2cpeSeFtMx1QboaWineiSogmX4rWajSOSYRmeaucHg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=o8FlPOUh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1774586047; c=relaxed/relaxed;
+	bh=vKvfbIED4Ic/7/VKTaCX+Ke32ydNec+/Tqe9KVUrd4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PVbb4gz0tzrqncftm6paUocP8vwE1jPXJalau/rys826BK/plkq2x20M7R/oC/+gZsB1f2+NTJeC4egLVg1Fgu9EOkRv3RBxJDmMLscZb7utDf6sWHERjfUw9ihW0gVnmmYUZdk+sfWzgUXR5zTIBt0CfbIz5PoWTCIhMvFeCdWG5dmghe98fbFJfLT4QJO3NhapxGcSHqLPasA2x5n7e7LKAXZMzO0zz9bI7pwYPY6k4sv+k5wY+Gb0zwDEiSsfE8mhxLnR26M6MsQacGctjqNCOf2urn81myGc4F08UI9lz1IhN1xb+kYM2rw1gzjIl2YygDaxHWNOHfIwaMelTA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y6UutZTL; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=o8FlPOUh;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y6UutZTL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhnnx5BFVz2xHX
-	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Mar 2026 15:33:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fhnpk5f1yz2xR4
+	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Mar 2026 15:34:06 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1774586000; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=qD5WGzY9SirQ9xlNJVoQqH4Rcm41JAwbu6EYRLwDR08=;
-	b=o8FlPOUhj1/J9r/C/F9EyLyGWACp4S7LeQWVXu/RndYcVzPzmt3Ay2vmpbprLP3qq2uX/PtOAdORwkPtDztDRrzzXHSp3Lqzmxrqdod068sXl07fZYVSg9p+Z4GzHWLy5Ij+lxuBiQbz0cUrSj1qtk/34HutMEmVyrQNHJIWLOM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0X.mwfTV_1774585993;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.mwfTV_1774585993 cluster:ay36)
+	t=1774586042; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=vKvfbIED4Ic/7/VKTaCX+Ke32ydNec+/Tqe9KVUrd4A=;
+	b=Y6UutZTL0zAb7JOY/r4ICPLfgqnW7tgDJ5Jg8AiAT9BGx/ssQjTACJxDieZB9oewv8e1tp2JZ87er/eRsNmVYrYodF7o9bHdWh+bMB5QWvWXTwi2qMlaaC1rLXQI+fY97G6lBnjvLCBFWu+0/127aIo2k69dtCMfspMdPsKOFTo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X.n3CJL_1774586041;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.n3CJL_1774586041 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 27 Mar 2026 12:33:18 +0800
+          Fri, 27 Mar 2026 12:34:01 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-erofs@lists.ozlabs.org,
 	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com,
-	syzbot+de04e06b28cfecf2281c@syzkaller.appspotmail.com,
-	syzbot+c8c8238b394be4a1087d@syzkaller.appspotmail.com,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Chao Yu <chao@kernel.org>,
 	Alexey Panov <apanov@astralinux.ru>
-Subject: [PATCH 6.1.y 1/2] erofs: handle overlapped pclusters out of crafted images properly
-Date: Fri, 27 Mar 2026 12:33:12 +0800
-Message-ID: <20260327043312.1118901-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6.1.y 2/2] erofs: fix PSI memstall accounting
+Date: Fri, 27 Mar 2026 12:33:59 +0800
+Message-ID: <20260327043359.1121251-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20260327043312.1118901-1-hsiangkao@linux.alibaba.com>
+References: <20260327043312.1118901-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -71,26 +73,25 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-6.20 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3049-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3050-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:gregkh@linuxfoundation.org,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,m:syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com,m:syzbot+de04e06b28cfecf2281c@syzkaller.appspotmail.com,m:syzbot+c8c8238b394be4a1087d@syzkaller.appspotmail.com,m:apanov@astralinux.ru,m:syzbot@syzkaller.appspotmail.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:gregkh@linuxfoundation.org,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,m:max.kellermann@ionos.com,m:chao@kernel.org,m:apanov@astralinux.ru,s:lists@lfdr.de];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -99,177 +100,58 @@ X-Spamd-Result: default: False [-6.20 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs,4fc98ed414ae63d1ada2,de04e06b28cfecf2281c,c8c8238b394be4a1087d];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: C9B5433F1E0
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid,alibaba.com:email,ionos.com:email]
+X-Rspamd-Queue-Id: 1F8AD33F1FF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-commit 9e2f9d34dd12e6e5b244ec488bcebd0c2d566c50 upstream.
+commit 1a2180f6859c73c674809f9f82e36c94084682ba upstream.
 
-syzbot reported a task hang issue due to a deadlock case where it is
-waiting for the folio lock of a cached folio that will be used for
-cache I/Os.
+Max Kellermann recently reported psi_group_cpu.tasks[NR_MEMSTALL] is
+incorrect in the 6.11.9 kernel.
 
-After looking into the crafted fuzzed image, I found it's formed with
-several overlapped big pclusters as below:
+The root cause appears to be that, since the problematic commit, bio
+can be NULL, causing psi_memstall_leave() to be skipped in
+z_erofs_submit_queue().
 
- Ext:   logical offset   |  length :     physical offset    |  length
-   0:        0..   16384 |   16384 :     151552..    167936 |   16384
-   1:    16384..   32768 |   16384 :     155648..    172032 |   16384
-   2:    32768..   49152 |   16384 :  537223168.. 537239552 |   16384
-...
-
-Here, extent 0/1 are physically overlapped although it's entirely
-_impossible_ for normal filesystem images generated by mkfs.
-
-First, managed folios containing compressed data will be marked as
-up-to-date and then unlocked immediately (unlike in-place folios) when
-compressed I/Os are complete.  If physical blocks are not submitted in
-the incremental order, there should be separate BIOs to avoid dependency
-issues.  However, the current code mis-arranges z_erofs_fill_bio_vec()
-and BIO submission which causes unexpected BIO waits.
-
-Second, managed folios will be connected to their own pclusters for
-efficient inter-queries.  However, this is somewhat hard to implement
-easily if overlapped big pclusters exist.  Again, these only appear in
-fuzzed images so let's simply fall back to temporary short-lived pages
-for correctness.
-
-Additionally, it justifies that referenced managed folios cannot be
-truncated for now and reverts part of commit 2080ca1ed3e4 ("erofs: tidy
-up `struct z_erofs_bvec`") for simplicity although it shouldn't be any
-difference.
-
-[Alexey: This patch follows linux 6.6.y conflict resolution changes of
-struct folio -> struct page]
-
-Reported-by: syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com
-Reported-by: syzbot+de04e06b28cfecf2281c@syzkaller.appspotmail.com
-Reported-by: syzbot+c8c8238b394be4a1087d@syzkaller.appspotmail.com
-Tested-by: syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/r/0000000000002fda01061e334873@google.com
-Fixes: 8e6c8fa9f2e9 ("erofs: enable big pcluster feature")
-Link: https://lore.kernel.org/r/20240910070847.3356592-1-hsiangkao@linux.alibaba.com
+Reported-by: Max Kellermann <max.kellermann@ionos.com>
+Closes: https://lore.kernel.org/r/CAKPOu+8tvSowiJADW2RuKyofL_CSkm_SuyZA7ME5vMLWmL6pqw@mail.gmail.com
+Fixes: 9e2f9d34dd12 ("erofs: handle overlapped pclusters out of crafted images properly")
+Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20241127085236.3538334-1-hsiangkao@linux.alibaba.com
 Signed-off-by: Alexey Panov <apanov@astralinux.ru>
-Link: https://lore.kernel.org/r/20250304110558.8315-2-apanov@astralinux.ru
+Link: https://lore.kernel.org/r/20250304110558.8315-3-apanov@astralinux.ru
 Link: https://lore.kernel.org/r/20250304110558.8315-1-apanov@astralinux.ru
 [ Gao Xiang: re-address the previous Alexey's backport. ]
 CVE: CVE-2024-47736
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 60 ++++++++++++++++++++++++++----------------------
- 1 file changed, 32 insertions(+), 28 deletions(-)
+ fs/erofs/zdata.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5e6580217318..aa311aed0dd8 100644
+index aa311aed0dd8..04d4491e0073 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -1328,14 +1328,14 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
- 		goto out;
+@@ -1571,11 +1571,10 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
+ 			move_to_bypass_jobqueue(pcl, qtail, owned_head);
+ 	} while (owned_head != Z_EROFS_PCLUSTER_TAIL);
  
- 	lock_page(page);
--
--	/* only true if page reclaim goes wrong, should never happen */
--	DBG_BUGON(justfound && PagePrivate(page));
--
--	/* the page is still in manage cache */
--	if (page->mapping == mc) {
-+	if (likely(page->mapping == mc)) {
- 		WRITE_ONCE(pcl->compressed_bvecs[nr].page, page);
-+		oldpage = page;
+-	if (bio) {
++	if (bio)
+ 		submit_bio(bio);
+-		if (memstall)
+-			psi_memstall_leave(&pflags);
+-	}
++	if (memstall)
++		psi_memstall_leave(&pflags);
  
-+		/*
-+		 * The cached folio is still in managed cache but without
-+		 * a valid `->private` pcluster hint.  Let's reconnect them.
-+		 */
- 		if (!PagePrivate(page)) {
- 			/*
- 			 * impossible to be !PagePrivate(page) for
-@@ -1349,22 +1349,24 @@ static struct page *pickup_page_for_submission(struct z_erofs_pcluster *pcl,
- 			SetPagePrivate(page);
- 		}
- 
--		/* no need to submit io if it is already up-to-date */
--		if (PageUptodate(page)) {
--			unlock_page(page);
--			page = NULL;
-+		if (likely(page->private == (unsigned long)pcl)) {
-+			/* don't submit cache I/Os again if already uptodate */
-+			if (PageUptodate(page)) {
-+				unlock_page(page);
-+				page = NULL;
-+
-+			}
-+			goto out;
- 		}
--		goto out;
-+		/*
-+		 * Already linked with another pcluster, which only appears in
-+		 * crafted images by fuzzers for now.  But handle this anyway.
-+		 */
-+		tocache = false;	/* use temporary short-lived pages */
-+	} else {
-+		DBG_BUGON(1); /* referenced managed folios can't be truncated */
-+		tocache = true;
- 	}
--
--	/*
--	 * the managed page has been truncated, it's unsafe to
--	 * reuse this one, let's allocate a new cache-managed page.
--	 */
--	DBG_BUGON(page->mapping);
--	DBG_BUGON(!justfound);
--
--	tocache = true;
- 	unlock_page(page);
- 	put_page(page);
- out_allocpage:
-@@ -1517,16 +1519,11 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 		end = cur + pcl->pclusterpages;
- 
- 		do {
--			struct page *page;
--
--			page = pickup_page_for_submission(pcl, i++,
--					&f->pagepool, mc);
--			if (!page)
--				continue;
-+			struct page *page = NULL;
- 
- 			if (bio && (cur != last_index + 1 ||
- 				    last_bdev != mdev.m_bdev)) {
--submit_bio_retry:
-+drain_io:
- 				submit_bio(bio);
- 				if (memstall) {
- 					psi_memstall_leave(&pflags);
-@@ -1535,6 +1532,13 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 				bio = NULL;
- 			}
- 
-+			if (!page) {
-+				page = pickup_page_for_submission(pcl, i++,
-+						&f->pagepool, mc);
-+				if (!page)
-+					continue;
-+			}
-+
- 			if (unlikely(PageWorkingset(page)) && !memstall) {
- 				psi_memstall_enter(&pflags);
- 				memstall = 1;
-@@ -1555,7 +1559,7 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 			}
- 
- 			if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
--				goto submit_bio_retry;
-+				goto drain_io;
- 
- 			last_index = cur;
- 			bypass = false;
+ 	/*
+ 	 * although background is preferred, no one is pending for submission.
 -- 
 2.43.5
 
