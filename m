@@ -1,92 +1,87 @@
-Return-Path: <linux-erofs+bounces-3077-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3078-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wDZEFU0myWm/vAUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3077-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:17:01 +0200
+	id qLrDH1AryWknvgUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3078-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:38:24 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88EDA352246
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:16:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3289035244C
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:38:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkFK36rWJz2yYs;
-	Mon, 30 Mar 2026 00:16:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkFT85tryz2yYs;
+	Mon, 30 Mar 2026 00:23:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1235" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774790215;
-	cv=pass; b=fxM6C3/9M1JprkBE8OXwL7EP463LXgXAbIKpiTXtfwCNYscuLg2ZXOKrEv8o8157/Vsm6c69eqBVjCCceGVp+qOyGenFaNfYoBfFYZEoDUxl+qDcWy8vvdfCYigxkBFoJ/fToVgTe8ewuAkD7VX6BrggiIKRL6hAjDqcqU4HxWBcvvdd2p/mwo5hG5tEDyG7rFnZnqyOablAomgdcIE/FQCBv9JGX3PXqwi+eOHkZLI/V2MjShDKfhYCTKH3Q9YtHiDtwdfr+zd8PZB07LOUXAephu2Je7SD15ZoC2o/LMcy4nGnJTC53Mb6CtvsQpBIiyq9aCP60EV9KsYWnp4Vqw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774790215; c=relaxed/relaxed;
-	bh=1umTYBm1Ns6EWRiwwCodC1z6JM6H4tY6pujQsMsG+l8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=i2r0h5o9puRChhV5izGP+aTCxjkuGDqIdBTj/Sl3kyVp0tB7j79EWuU6KvWvnmoZoxT00LCb2wS3YFUie12GvSFcA1xEedruoX4WaMZp+MvR3bxsAW9PBDDf4flsSqI53w4SkpcDFOree6QXG+c/d7QaDP3fXYgg/e0QqFNNzU1/EYpo0ookkOVTNSw6IVXk1fAqv+PRhFU7IKWuajLqay6BTkxC8vF+xVWFRp0dpp97g/FRS5EowAXPl25Q9CN0QAAr9csmCETM7DxxQ+3G3JN4SBp0x2pJf+AgQxwaxAi9mShAgcGlrM2G9ijR8BOydUgXJN6sz8/aEaRmH0Upog==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bFM05mcM; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1235; helo=mail-dl1-x1235.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::635"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774790636;
+	cv=none; b=LTqAr9KOB3/KiQ2m9+o0/LtrG2qouS8uJ3dE5OWszOWwAUZyRhhpoatR6MrKc8cYAH8L0ePuDRWxrbc1gMnUwUhEFiLx6vaqWyHXgJAHtIJg/iTp16/q7DBC7SCzVp53poYFWiYWS/jDE9hkNCX+QEXzh4RKofqkBHSQaW030ZeT3VMOw7gRuCuud0z4Bz5kDrgYCzaET05Oi/mPH+lCUN35x3Y/9kMF/UJS8bxJ+glCR2QHBTXba+gkz9nz8ka6dV+QJXOq8Ss71AmFWVfqdg/pJ7ty2BcRrsyInuQA2/HHSY5KmJeHLxYQPQeEFukAAHXxufYqgntQnjjLTFuHOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774790636; c=relaxed/relaxed;
+	bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zw9BJ9j92vJtcsvHFbf9r/IFBoUAF3BL4gkwWknofFtnaRV2Rr34joxbxiZ4GsPOu2vNu6r8b8yA79EFTK3d/8JbQBU8xtbkyz8fk3fKR97rxRDhJJKWGmFEnV5q1rUkqJySIKwFEn+V6JxePFQHLHQ+bZXh72g2XdACZr3MWndwxBMBu7xFtNNHu5YnNf5RVvXoSGb5NMRfSMst0c8xO7T3L4rQDPQHX7xkm71XoAz/1kBoolB1h62onLmQybE5hD93dFffmC5rh+utWOovn1eIdG12+DfgHcNbPxGMTKpVypVT6baeMXBABxx1Tiu+U6+8W+KGXLRadTgyJGMiZA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y0zu7jLe; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::635; helo=mail-pl1-x635.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bFM05mcM;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y0zu7jLe;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1235; helo=mail-dl1-x1235.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-dl1-x1235.google.com (mail-dl1-x1235.google.com [IPv6:2607:f8b0:4864:20::1235])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::635; helo=mail-pl1-x635.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkFK264Sqz2xlK
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 00:16:54 +1100 (AEDT)
-Received: by mail-dl1-x1235.google.com with SMTP id a92af1059eb24-12a71ade78cso4111079c88.0
-        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 06:16:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774790212; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hCq9oXL5x8tK7zYZ20J4bKUFZqtkAVwZXfImuopnbi0yHfgCgU6EX3P3RB8QG0BB0A
-         JTmkVjdUl/JtIVteomWSj71tSNlT+qtSfaiDszmcwQNJ5pT2zig/R0FsqhamnRaZJYCy
-         rXU72iF3hplyHgY7vv7G9wz7xPPdHRfH9wl86ngSgLWYIoKsyh7efkhvDhmIrNtPP+CC
-         HD/sPf2/psoWAmu0BKY5QEUsGTk57D0z85OGebI3XZ9PtEQTqOEvImJyRJx0Ln8iyI/i
-         5qNuBV4FA4UYnobru9N5GotayUacDMJXnBAWKBI1/reqgNA7M8o/I1WNaFd68zrr1xX3
-         vmIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=1umTYBm1Ns6EWRiwwCodC1z6JM6H4tY6pujQsMsG+l8=;
-        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
-        b=TRgDZnZv+3xFyuK8ypCp4EHS/IhBKuQzDEmAm/MST38bUZUh4atupTKCCSucrX5I96
-         EFqRgiyLwiKA5K/4lMY6rXXOM7/6/QIDwQlyLYT4BLKfomToIHeMr/OvFfCyG3nCa0Zu
-         jiCedQvIQoFNiWEK2YPtVUqelGE8QwMWekD1LntbMUIOLdVjoS7uWjQVNISBR/edKj8M
-         3hQ/U/WpUp6DOXGS21zCgV9BE5tiOuut3xMiRFFau95/WkX519kCsgD1tvRGtGKsmNVY
-         GHVzaFictemCPqQJfbzKdjG+1vev5RhHPxRo5q/K65MMzyshAHocKG9QYcFCkLix2Z1S
-         CVmg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkFT76Qsdz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 00:23:55 +1100 (AEDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2ab1c8fdc40so4530485ad.1
+        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 06:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774790212; x=1775395012; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1umTYBm1Ns6EWRiwwCodC1z6JM6H4tY6pujQsMsG+l8=;
-        b=bFM05mcMSiEs3aGdJcHwLemRGYixgOyUKzwErwu3nZImbDGw9w8vuijTN4USk8evkC
-         O1EWQKBEpEGRvENHbBVq+OIP5baHhCmm6tzKqjq6sAgmfTybpJf0V0LIKsHNk8pNav7h
-         1IyQ2U7Gg4aZW3D+Y3tdt+8mHOfa1EnS0T1DaX5sG8uoExEXHCoEoX70cazAukrqmTI9
-         Fa9jQvTKflSY/9Z9u6WXSYQbSoG24VgmYRW89yhuSoGFjx1n0bqb8ytY07EW5gEbW4aV
-         u7ZbquE2Lh9bC3E2y6s7cSe/Hf42+cmNQU6+I2H3q88V4APhqvJAIkdfNEEI7bapibHo
-         ajeg==
+        d=gmail.com; s=20251104; t=1774790633; x=1775395433; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
+        b=Y0zu7jLeq3OsTnHaJ28wsbocmdC0lvJnaEwIBHHexHEq1BiuiFarJWhZBoWmTYTz4l
+         s6UtuGEcPs9p/VWXB2sD9CNT9dwP8qOrENU+UT3dqkWlJBPlZ+KbHUdwNCejGa3uP/h1
+         t5iAmzClD0WLdAUZ58iKzj9wUN+bJOCJfzo1U09IImf7xlKd3sofLTYM8kf47nT3BCNo
+         leQ4e+mEykCQKVVO4q8wwplLQyCuf1XUtSeipb3/xYgAlJ/LIwy9ncj3hdC/il7BLT/w
+         C4JyTkEnVRbX4Nt6he5TZeEf0whXsNAKurQ3+7sPrAuxcNXga5wbvXUj2iRa1ZHOJl4w
+         Nz9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774790212; x=1775395012;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1umTYBm1Ns6EWRiwwCodC1z6JM6H4tY6pujQsMsG+l8=;
-        b=s0Wp62N0xmnTsensYXKp8Adw7AhVy3n+zjuwL27Jjn8T29xXRPovS5ZZiqgCsP74zX
-         WRWru1topIZ28yhzIUQVtYtdXhrPcTmY93302aYFGF8ILzTEz3xDQuRk5bEsftQ7Jqlx
-         BpJW47kI3TS8bxDuX1MZj4s2vbK8/XiM9+a2wSmKsYyLWgyKbTNntwd4rRmlL96iG25j
-         1Sg1uQ2u4cJvRig5+41YBhOjgmO10GcO6e5vrWF8aByzE2mc6hrNxRkCFajcjHO6sE4T
-         9dZ7qg9BuBysC/wYgzjBWFEQ0zpJwe+d+rt5cHX5YdMFtNmS2mr9ThhSmw7mHK4F/m/5
-         trWA==
-X-Gm-Message-State: AOJu0YyYusUwKtG4gVpM2rGlfyMgm6KwD74PSSkUEFAzaYZs+jsVdKda
-	fv3uTpD1ky8w+XFlbyjf/NlLUmq59RvaopvyC2no/myE77LzvQQRX3jyCcynzVR4euOv/O0G/nv
-	xGrjH6ljSxXhkQ41PZazGhUFq0kMprGKSXEtK
-X-Gm-Gg: ATEYQzznP0niI7khG1FeQB/Th4fMWCmQePEGITTyesZ2+tsAW3v7qw+XwU/K23fl3Bi
-	axOPLqu2I7Lo4ne+IK7Y2JXikd1CFu4H6yYFLySXCtCtdJnbQAKS96qPRET4INl9+v95QM4sR4g
-	81LpuUOzB2aPTXKWjN8N7NiQ+qeHHjGdDEYTSWBir1dl+hL8sTEkuI++cjx4/gH8ejHUsewPBDv
-	EBgrTwfhj5Wr6fDiuM6Se1CUXAkFFz6E9ylpW92LoxzA2UTuMYMhUUYlfJx/DUmzXBPDN2rpbeO
-	SY9tZuho
-X-Received: by 2002:a05:7022:4183:b0:128:e6d0:d7c3 with SMTP id
- a92af1059eb24-12ab28dc3dbmr4147385c88.20.1774790211719; Sun, 29 Mar 2026
- 06:16:51 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774790633; x=1775395433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
+        b=HFswvW0OY0wctvdZ+skSaz7gQyK6JpY2sPdabl/AFvCvS+1fSXd8jfonq4yaUZUSwf
+         QuPhIM0ERn9WdcpThS6YH0V3nvldI6KcAbiNqv/be7BXBz0LPELBkj9W7Kymrwsv84XW
+         hDUIYgyCMqHa1wUawaWULOkqjdFXYXPg7n7QwHQcWP+97j9E59FACAwhv8xqwhY9sEkx
+         TqeeEad+V63bihBWSy9aepoJtcFyaVOjLoAXCHU2pdGT4pS/1qOUgGDopDwOubmiAK7m
+         Ye/qVVLTemAN5BRzD3JCTqaO/m5PZ8mbNsex9ajD3rVnARxNj2SZyjTa96ivGhuPgCby
+         wD0g==
+X-Gm-Message-State: AOJu0Ywpk3VRgMUoVMnyaX9EtobVx2jYRwxT3U85NvT6d7QtR8HUn2mH
+	+Z2Rk7IVMcBPVJcNc9v86HhP6Usf2fythcOIHLEnqKDAPNLWDCYEG6MNLH01JgvN
+X-Gm-Gg: ATEYQzxGxxg/kckZq8VPf2Nt5M5Fitq64DbY6gLb/gfTgRK/GiB4dkAoxrhbQYdV4H6
+	hwxV6GgnLsOYkPOXSAOkkhZ/cyTrpOAMuwOra3qCrqI0u9Pf2xQAS8iTnrpQxVCb4XtzvZbKxTJ
+	Wsepl7Nx/eft0v6vLiQySpXSXNBPseTY4sstfYghb7UPrxD8OdkX01QaJcAcMGFcFsP+7mUK+Zh
+	TWzK4wtAX7QBe0M+/750V13MQqquqRc99q3eSn86DKGO5A/r66iLL6DbZ6teCeFq9ypLUtnYHGS
+	UVRg/IldOBLcyOlz3POginNEXpN8Zv0xTDE/TL2aaSGtCsr47pUnnjeLzZTnucOHxIxcPXjF2it
+	fhIXeRTrURCqQXSIsA+rsptz/pdbT4wyhkoViuGRwf0di70wj6Plr45zSpnCHbmrUeJP6VoWmar
+	B3ktai6jSgZEz/k7pGRets8T2OSBvED2rK/Vo9hAYo8Cy9UT2ZENEciKCIR/s0lj2ZGm4HZgw7G
+	0qZDW/fMsnwncl95011wx2HmsaPkdl0YNZ+9QqLxOAsLXux
+X-Received: by 2002:a17:90b:1642:b0:359:8f7e:d337 with SMTP id 98e67ed59e1d1-35c30149c54mr5296429a91.7.1774790632619;
+        Sun, 29 Mar 2026 06:23:52 -0700 (PDT)
+Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c22d8c425sm11681876a91.12.2026.03.29.06.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2026 06:23:52 -0700 (PDT)
+From: Utkal Singh <singhutkal015@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	singhutkal015@gmail.com
+Subject: [PATCH] erofs-utils: lib: fix data race on __erofs_is_progressmsg
+Date: Sun, 29 Mar 2026 13:23:06 +0000
+Message-ID: <20260329132306.15353-1-singhutkal015@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -98,105 +93,137 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Deepak Pathik <deepakpathik2005@gmail.com>
-Date: Sun, 29 Mar 2026 18:46:40 +0530
-X-Gm-Features: AQROBzD5xynxqWtU1fxsl4CAtsMPI6VFZPdcZGhZXcDVGxZSPd_R86UjmZ_k0mw
-Message-ID: <CAHf8aCXHHLFCghBEy4hF+DoDpYed0yOafvKbdbmDgfjRC2Lfww@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BGSoC_2026=5D_Multi=2Dthreaded_decompression_for_fsck=2Eer?=
-	=?UTF-8?Q?ofs_=E2=80=94_design_question_on_z=5Ferofs=5Fdecompress=28=29_parallelism?=
-To: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="0000000000001ed961064e298cd4"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends in
+	*      digit
+	*      [singhutkal015(at)gmail.com]
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [singhutkal015(at)gmail.com]
+	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+	*      [117.203.246.41 listed in zen.spamhaus.org]
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [2607:f8b0:4864:20:0:0:0:635 listed in]
+	[list.dnswl.org]
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+X-Spamd-Result: default: False [4.30 / 15.00];
+	SPAM_FLAG(5.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3077-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCPT_COUNT_ONE(0.00)[1];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
+	GREYLIST(0.00)[pass,body];
+	FREEMAIL_CC(0.00)[linux.alibaba.com,kernel.org,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.996];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3078-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 88EDA352246
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 3289035244C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---0000000000001ed961064e298cd4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+erofs_msg() and erofs_update_progressinfo() both access the static
+variable __erofs_is_progressmsg without any synchronization. Since
+mkfs already runs multiple worker threads via erofs_alloc_workqueue()
+(e.g. in z_erofs_mt_compress()), and those threads call erofs_err()
+and erofs_info() which invoke erofs_msg(), this is a real data race
+on the current codebase.
 
-Hi,
+Fix this by protecting all accesses to __erofs_is_progressmsg with a
+static pthread_mutex_t. The mutex is statically initialized so no
+init/destroy changes are needed. Also restructure the
+erofs_update_progressinfo() I/O path to eliminate the early return
+inside the lock, ensuring pthread_mutex_unlock() is always reached.
 
-I'm Deepak Pathik, a second-year B.Tech student applying for the GSoC 2026
-project on multi-threaded decompression support in fsck.erofs.
+Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+---
+ lib/config.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-While reading through the source, I traced the decompression path in
-erofs_verify_inode_data() and noticed that z_erofs_decompress() operates on
-a locally scoped struct z_erofs_decompress_req with its own input and
-output buffers =E2=80=94 no shared mutable state between calls. My plan is =
-to wire
-the existing erofs_workqueue (already used in lib/compress.c for
-mkfs.erofs) into the fsck extraction path at the pcluster level, with
-pwrite() for position-based output writes to avoid ordering locks.
+diff --git a/lib/config.c b/lib/config.c
+index ab7eb01..7f58159 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -100,6 +100,7 @@ int erofs_selabel_open(const char *file_contexts)
+ #endif
+ 
+ static bool __erofs_is_progressmsg;
++static pthread_mutex_t erofs_msg_lock = PTHREAD_MUTEX_INITIALIZER;
+ 
+ char *erofs_trim_for_progressinfo(const char *str, int placeholder)
+ {
+@@ -141,6 +142,7 @@ void erofs_msg(int dbglv, const char *fmt, ...)
+ 	va_list ap;
+ 	FILE *f = dbglv >= EROFS_ERR ? stderr : stdout;
+ 
++	pthread_mutex_lock(&erofs_msg_lock);
+ 	if (__erofs_is_progressmsg) {
+ 		fputc('\n', stdout);
+ 		__erofs_is_progressmsg = false;
+@@ -148,6 +150,7 @@ void erofs_msg(int dbglv, const char *fmt, ...)
+ 	va_start(ap, fmt);
+ 	vfprintf(f, fmt, ap);
+ 	va_end(ap);
++	pthread_mutex_unlock(&erofs_msg_lock);
+ }
+ 
+ void erofs_update_progressinfo(const char *fmt, ...)
+@@ -162,14 +165,16 @@ void erofs_update_progressinfo(const char *fmt, ...)
+ 	vsprintf(msg, fmt, ap);
+ 	va_end(ap);
+ 
++	pthread_mutex_lock(&erofs_msg_lock);
+ 	if (erofs_stdout_tty) {
+ 		printf("\r\033[K%s", msg);
+ 		__erofs_is_progressmsg = true;
+ 		fflush(stdout);
+-		return;
++	} else {
++		fputs(msg, stdout);
++		fputc('\n', stdout);
+ 	}
+-	fputs(msg, stdout);
+-	fputc('\n', stdout);
++	pthread_mutex_unlock(&erofs_msg_lock);
+ }
+ 
+ unsigned int erofs_get_available_processors(void)
+-- 
+2.43.0
 
-One thing I wanted to confirm before finalizing my proposal: for
-LZMA-compressed images, are pclusters in fsck.erofs always fixed-size and
-independently decompressible at the userspace level, or are there cases
-where a pcluster depends on the state left by a previous one? I want to
-make sure I'm not understating the LZMA case in my design.
-
-I've drafted a proposal and would be happy to share it for early feedback
-if that's useful.
-
-Thanks,
-Deepak Pathik
-https://github.com/deepakpathik
-deepakpathik2005@gmail.com
-
---0000000000001ed961064e298cd4
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi,<br><br>I&#39;m Deepak Pathik, a second-year B.Tech stu=
-dent applying for the GSoC 2026 project on multi-threaded decompression sup=
-port in fsck.erofs.<br><br>While reading through the source, I traced the d=
-ecompression path in erofs_verify_inode_data() and noticed that z_erofs_dec=
-ompress() operates on a locally scoped struct z_erofs_decompress_req with i=
-ts own input and output buffers =E2=80=94 no shared mutable state between c=
-alls. My plan is to wire the existing erofs_workqueue (already used in lib/=
-compress.c for mkfs.erofs) into the fsck extraction path at the pcluster le=
-vel, with pwrite() for position-based output writes to avoid ordering locks=
-.<br><br>One thing I wanted to confirm before finalizing my proposal: for L=
-ZMA-compressed images, are pclusters in fsck.erofs always fixed-size and in=
-dependently decompressible at the userspace level, or are there cases where=
- a pcluster depends on the state left by a previous one? I want to make sur=
-e I&#39;m not understating the LZMA case in my design.<br><br>I&#39;ve draf=
-ted a proposal and would be happy to share it for early feedback if that&#3=
-9;s useful.<br><br>Thanks,<br>Deepak Pathik<br><a href=3D"https://github.co=
-m/deepakpathik">https://github.com/deepakpathik</a><br><a href=3D"mailto:de=
-epakpathik2005@gmail.com">deepakpathik2005@gmail.com</a><br></div>
-
---0000000000001ed961064e298cd4--
 
