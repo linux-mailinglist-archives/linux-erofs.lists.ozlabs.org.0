@@ -1,96 +1,55 @@
-Return-Path: <linux-erofs+bounces-3073-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3074-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0zXKJ7t6yGnbmgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3073-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 03:04:59 +0200
+	id UPHmCbIAyWkqtQUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3074-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 12:36:34 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB7B4350639
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 03:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C277E35197C
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 12:36:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fjx4R64Llz2ygd;
-	Sun, 29 Mar 2026 12:04:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fk9lq6cQJz2yYs;
+	Sun, 29 Mar 2026 21:36:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::330" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774746295;
-	cv=pass; b=cf8E7f51+kFaMq5rfDCQDRTp3sCLt0cDaOeqACNjsQ9v5uX55IvZ6sCnnl7wrDM880Zo/koI+Eo19SVPczc3WDUga9ZuO4TQwAF8ZugLKZskSsZjAYjikiYsgiwXA+EMlfA7Gn9fwfpkDsJmmUd+XeaXDgkbGDmd8xPpETUoodNsLJi2d7K0+gAEDP8A02SZa1ZHrC/wcv2xCxSHe1GA1YIQVtOnw5ElG5r3Lphb7FE5RvUUMf1w+qFYUP7lMDA5PAnfIs9uX6QLQ9hm9KrTsLyc0KnOt9Tq3+fzmfwlPJaDsV1ruqj9oGzNmYgqK++1Foh/fiAkh8RzvLeW5n+99g==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774746295; c=relaxed/relaxed;
-	bh=sNreSMZpBtA0cm7YcS5mSFx2U5astYECf8+l2/7kAQU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=KCLdNN+EO44WQl+qKo2azGxDP4oTeYOuSBx/DR+dG0kx5eZRRZANB29lzARlV3tlxyM3wA3AwIAshmHy9sQrNhRpOwk8R7Ki7yOCIg1ViYPR61yMHgpKqenguHkv0EG+WVvNUgAm/MIQob2Gqjb1GLdtvoAYdpJUGwrn/0MGk14+nNQct97wF6bN5m2TKRLdnpi1RgvRHNvcG9Q/CtZCtwtibvXGUTE0/73vhohK5vLqctdOkfIm5cDLpnPGNXbEpSZs2ozOB+qvVWLNUDwgY2G+A5iUBoyHmcluIv0g1bD9Lz7FeE5mjtHtQPTDQkoIqBYf1mUqCoPcVD3n3IloOg==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mlltbXEm; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::330; helo=mail-wm1-x330.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a01:4f8:192:486::2:0"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774780583;
+	cv=none; b=GzqEmAt+UAy/1wXS5VZSRteEaVaIQsohsWaJAVFRutHXGLATQ7cRYvTRs5bTualimWIsIcx8SYSuozOPskQzdQ5LrG9QsG+EiOqf5W7sOyQFX+SMBudAz+PTz39qZOLcz0HDphNKTN42H53LHx7EKyMp4Bakc0z32ouCEaM9ZJaOk1SAZsQZrneE/ZDyeXW4K5HjU0hY35y34B5YP4DlvFXdcjd6w0IxmXASTGmeESCxT2W0IiZ0n3/DmJ7dIQqSiRBten4D5P8/8TcZiu8NS6mI87XFemIXE6VVAniRsBNUY+TqHQ5FpJt2HXx4EkMxS5x0+p0BkkZBI/ba/ppd/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774780583; c=relaxed/relaxed;
+	bh=h5eM8nrJzZ6W15HT/jpsM8V2AUQr7PUIFnp6zW6jBc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d+gA0sb+tiwPWu8J5WILHKRNHVqRavPy2VL94a3KSSw6ma78gdhLlZebiOWWZgGHsrH+GZM9yutHf9XS/GUP9dqwskmVO12B99f3JgXD+AvODhTovXZ+NTrExpQTqFlXSqgUh/XprpmMzXT9pz1vSZ78JFG0KTfPD2J55JW3TxGCf3WQglq/Cs/v2RLo3+EpAtCCGw46qpuT5czNAEp6KbldtwfJ+OFklL0+S0uugQ5kvjcGiSxoe2TMIQ+mCCHxlvWLPXCGLBZG27IPlzQqVXv1tUFAbAzUSSc5zzJ2BL57hV1re/vYm3FWsmggnpb8aNwmKT918nNfvM9fNKuMug==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; dkim=pass (3072-bit key; secure) header.d=samba.org header.i=@samba.org header.a=rsa-sha256 header.s=42 header.b=z+2I+EsC; dkim-atps=neutral; spf=pass (client-ip=2a01:4f8:192:486::2:0; helo=hr2.samba.org; envelope-from=metze@samba.org; receiver=lists.ozlabs.org) smtp.mailfrom=samba.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mlltbXEm;
+	dkim=pass (3072-bit key; secure) header.d=samba.org header.i=@samba.org header.a=rsa-sha256 header.s=42 header.b=z+2I+EsC;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::330; helo=mail-wm1-x330.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=samba.org (client-ip=2a01:4f8:192:486::2:0; helo=hr2.samba.org; envelope-from=metze@samba.org; receiver=lists.ozlabs.org)
+Received: from hr2.samba.org (hr2.samba.org [IPv6:2a01:4f8:192:486::2:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fjx4Q1cxZz2xVT
-	for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 12:04:53 +1100 (AEDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-4870206f73bso19483255e9.3
-        for <linux-erofs@lists.ozlabs.org>; Sat, 28 Mar 2026 18:04:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774746290; cv=none;
-        d=google.com; s=arc-20240605;
-        b=G+JGOk5lUhfTjg0F9emsyq6W+1j0zE9SiGezwLdqO1Ef6q+ynVdKKq/n+jjD4q6qOc
-         OKtTAjnJS9alwSDPuDYLGZpADt3XCjkvw00RE+5EvhoADg4HzrMJiJo3xvkNj36cKWYA
-         B9TrGe7HRAs1vX1H+n1oiHmRtlzpOvMVeZa2CH4+qvT8u3X2AfJl1dWMdRfT0PWlOGnq
-         m6gQQZE9EETdSQNTf0FIZX08hPHfGOy5SX1eKf3YzPgEMkm3pR/UiKawUaJJVLVks9Jl
-         iedvJgrjy5qT8J69dGeLTxooCbximse74MUyhavvvWFE3Us0w+unlYIKC1mXQGsPLord
-         grPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :dkim-signature;
-        bh=sNreSMZpBtA0cm7YcS5mSFx2U5astYECf8+l2/7kAQU=;
-        fh=XxvPZv+Lqi2RGFOO86L+41VbmBYsI66wQPz+68YTBQs=;
-        b=ghNqAqttSOAPTbXfvxWWQLYEGy/onssGUOPggNv6OlEVGVeicisdWBSGZDSvcaW7V4
-         3ToJUf8+xT/Ax4rJim/gOGrNlp1XYPs9n6hAGbXUXIxSUI9tF0Wbfd/HXasCK9fsRese
-         csarkbKW7CC5eOKl1OGa/FoY54rCQP38vG41hJFU18346RZtMaPLOwbeDUPit1kXlLoG
-         4Ane/YTD5f+ghdKYReCowZxYxhBqW1JSyX7o7zCDGHfzkkXtvDIoUmLvCHr7MHKoZI60
-         D2tmZB4W6lhNApkQlRp5Jc1EtiDZ/es0KcxrmBEdQ3BKlGqmKZm8kx0gIYqdhXE70rC7
-         FWUg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774746290; x=1775351090; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sNreSMZpBtA0cm7YcS5mSFx2U5astYECf8+l2/7kAQU=;
-        b=mlltbXEma1gTcyblIh2kxz9HUkCpIAJlEM6E7deo95T7QlN2/JkOlog/jSRPZDUB/A
-         Q6i8f+Pv6BgzDVA2oT1VbvQjbU5V/+HeK0/nq7vAaHuQ6n1SR88QWS5ZXg/xsYuR5k5D
-         9cKQ9kAfcuMiIA83VsvnSepHPOE/iHc/BAGSJjQ1VTPsgNpUqgev3F1LsZnuedsyNg1h
-         Mfp4Xbi4/71lnd+X5E7XWo4RW93FOUU4UEvQdlH3bl9uQTvwSPaAWJnK79qocV4VYeMA
-         LhJp08qXrNk7iyNfHOUEPJ4iqxk8juKLYvEA+2ftHkN8td3ry0gSlZEKqQps+MRHJCC2
-         +0xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774746290; x=1775351090;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sNreSMZpBtA0cm7YcS5mSFx2U5astYECf8+l2/7kAQU=;
-        b=Aip0RWjeo2GvapsKmqfGsJFBq3fIEc6/IZmRoNSSXenkFsjO8xLpx+pBX4x26PgU2V
-         QkPRfawZ6kiWpkZn/nMffdiVLy3yIikFaZYR5P0t3y3cGfT0/pCyixn0pzu2gRxorQRU
-         vxji0g3H7DuYH5DPwc158utgYs4Y3hBjfEthianj2yzClqLyS3T4KwZ0GmXuDUbEuyAh
-         eChz+bc9RRQnl67xoQDUx6pjLNmfpLqk4jt++Td8R9ORYPe+ibSvSLlgXNEDvzkCJkAH
-         lS0GmLX5PmMICTcSAA7Fnm99/A8VlCFln0IVsFJws41ElJvR6qeOoM2T+/aIoiaHaHd5
-         aPDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUi/V2Ahjx5fg2VM9WgYAZtHT/S5Sii0z5JMbyd5huiyqMM30Vsy+XRmuqZ33c7IuyHRUfD4OvGGK3mA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzFhXW/2fFrpmI346/iw1e3iVxP6mAhJkd63GFd+fLfcbDT4NPh
-	f5bzlgrl/3ZG8P3Y8Fohm+MJ/GrqjRNbhtN1DiMowwLnpf2EXaHfIFww9OvvkWDieItr/ysnUsD
-	xXwT2ka4TWBP8Jue+6Vfg7zBBZP6AOq0=
-X-Gm-Gg: ATEYQzwGH2Ph1Y7urD/8dJk50Ra1XwcGtSvb2znLYNsBk9ZxTLRje/uffr5R8O+fHfN
-	mS0Uuxo88Liuo9jAsLMGJKq51+aYJKKKW6SRNLo7EPydMRvB7SFTtP+fY7LgT1x8mZKawY3zja4
-	aQ21Exj8jmo+66NxKcrniGQh4heVThMgoz/yN76w2F/lbP9j1uJuzOgWb1ipULQmYlCv60Ax1WW
-	qVHtLKLJVF5JQLDmnkvo7vyw7ebI84dBu5skAhvxvhfRuzREd5VU757itiVD17yIkNRBFA0FYww
-	OCiQKEK4AcaNNfTEFace3ASHTkY0RmLz2UI1YyOKuCbSVS4sx8A=
-X-Received: by 2002:a05:600c:c102:b0:485:3812:36f6 with SMTP id
- 5b1f17b1804b1-48727f7bd61mr91625075e9.21.1774746289645; Sat, 28 Mar 2026
- 18:04:49 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fk9ln5tkLz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 21:36:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=h5eM8nrJzZ6W15HT/jpsM8V2AUQr7PUIFnp6zW6jBc0=; b=z+2I+EsCMfs+xrchz8bAZUcLJu
+	mEgw1uxNVxyKoydzGHYkY1wgWsuXzWoBDiShT1BgwxuNr9yHEcFZ7y3TreWQ5MawJYOvVkY5Oa7Tp
+	Kd+sQykeeKv1irSbOtQL838p9yvhKEjt07JYtZHZ9ww7u5EOeGLG0A6OMzg1tC241DbmSroVFSska
+	5JiBs3eOWaTvanJUYirJFfUZSvzTrr9lcVR9n0b9jKidyNg+OutWdHaqoRCTfuGWUcjsWC54yukTj
+	BjTj6BsPyAbpXAW/uQOEbInho7iRjpaDbCvIzgJEwqaWrQPWvzj2Sfl/OWAmCagU7Na3aWuf6I629
+	M4Rvoq3+1hhUBWaS9DZkerCVtrHWS8QIhbzM8mpkL5kG6+i5T2kFKNUaCc9AstpwY8J7YzNwqvvLz
+	N/ccB5SEvjXdIdeYC6JH9T7+kSeNQz2YN6FC+dLv+We3mT2pphhvqyfE8UVdFIZH0D2S96cm4RQmJ
+	SIADzPqUoN3z9q4vzYSZFFXj;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1w6nV3-00000004jBp-1bxe;
+	Sun, 29 Mar 2026 10:36:09 +0000
+Message-ID: <1eda9321-e259-43b8-8c4a-d0f54a9d28d5@samba.org>
+Date: Sun, 29 Mar 2026 12:36:08 +0200
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -102,200 +61,178 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260328201555.5192-1-aghi.saksham5@gmail.com> <CAMhhD9gRZTgxOqVJ0np9JO4kUuNBao2e2WEMmhfGCjwzdogqiw@mail.gmail.com>
-In-Reply-To: <CAMhhD9gRZTgxOqVJ0np9JO4kUuNBao2e2WEMmhfGCjwzdogqiw@mail.gmail.com>
-From: Ajay Rajera <newajay.11r@gmail.com>
-Date: Sun, 29 Mar 2026 06:34:39 +0530
-X-Gm-Features: AQROBzDWPnUwEg3f2Z5J1LvPYcXANHbdbACdbBzZ3xxTfS4F7RVR580R0pBIakc
-Message-ID: <CAMhhD9jUqxY3H7Let-cnpaOh3vijL7jJ78=9zEjw0yDRA8F6WA@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: fix typos and enhance installation guide
-To: Saksham <aghi.saksham5@gmail.com>, Gao Xiang <xiang@kernel.org>, 
-	linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 17/26] cifs: Support ITER_BVECQ in
+ smb_extract_iter_to_rdma()
+To: David Howells <dhowells@redhat.com>,
+ Christian Brauner <christian@brauner.io>,
+ Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@infradead.org>
+Cc: Paulo Alcantara <pc@manguebit.com>, Jens Axboe <axboe@kernel.dk>,
+ Leon Romanovsky <leon@kernel.org>, Steve French <sfrench@samba.org>,
+ ChenXiaoSong <chenxiaosong@chenxiaosong.com>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Ilya Dryomov <idryomov@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
+ netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Paulo Alcantara <pc@manguebit.org>,
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>
+References: <20260326104544.509518-1-dhowells@redhat.com>
+ <20260326104544.509518-18-dhowells@redhat.com>
+Content-Language: en-US
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <20260326104544.509518-18-dhowells@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[samba.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[samba.org:s=42];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3073-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3074-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,lists.ozlabs.org];
+	FORGED_SENDER(0.00)[metze@samba.org,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[manguebit.com,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,manguebit.org,microsoft.com,talpey.com];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	FORGED_RECIPIENTS(0.00)[m:dhowells@redhat.com,m:christian@brauner.io,m:willy@infradead.org,m:hch@infradead.org,m:pc@manguebit.com,m:axboe@kernel.dk,m:leon@kernel.org,m:sfrench@samba.org,m:chenxiaosong@chenxiaosong.com,m:marc.dionne@auristor.com,m:ericvh@kernel.org,m:asmadeus@codewreck.org,m:idryomov@gmail.com,m:trondmy@kernel.org,m:netfs@lists.linux.dev,m:linux-afs@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:v9fs@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:pc@manguebit.org,m:sprasad@microsoft.com,m:tom@talpey.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:aghi.saksham5@gmail.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:aghisaksham5@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.997];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[metze@samba.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[samba.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,install.md:url,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: AB7B4350639
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,samba.org:dkim,samba.org:email,samba.org:mid,linux.dev:email]
+X-Rspamd-Queue-Id: C277E35197C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-hi,
-Also, I noticed your commit message is missing a Signed-off-by tag.
-This is required before any patch can be merged.
+Hi David,
 
-Thanks,
-Ajay Rajera
+this conflicts with my patches in ksmbd-for-next
+where we have this as smbdirect_map_sges_from_iter
+and shared between client and server.
 
-On Sun, 29 Mar 2026 at 06:26, Ajay Rajera <newajay.11r@gmail.com> wrote:
->
-> Hi,
-> The two "plusters" -> "pclusters" typo fixes are correct.
-> But for the INSTALL.md changes, there are few concerns:
->
-> - The Quick Start section only covers Debian/Ubuntu and mixes required
->   and optional deps (e.g. libselinux1-dev is off by default). It also
->   duplicates the existing build instructions already in the file.
->
-> - The multithreading section is already documented in the README
->   (lines 91-93), so adding it to INSTALL.md feels redundant.
->
-> It is better to split the typo fixes into their own patch so
-> they can be applied independently of the INSTALL.md additions.
->
-> Thanks,
-> Ajay Rajera
->
-> On Sun, 29 Mar 2026 at 01:46, Saksham <aghi.saksham5@gmail.com> wrote:
-> >
-> > This patch addresses several issues in the README and docs/INSTALL.md
-> > to improve the overall documentation quality and provide a better
-> > experience for new users and developers.
-> >
-> > First, multiple instances of "plusters" were found in the README file.
-> > These were typos for "pclusters" (physical clusters), which is a key
-> > concept in EROFS for block-level compression and data management.
-> > Correcting these ensures technical accuracy and avoids confusion
-> > for users trying to understand the filesystem's behavior, especially
-> > regarding the "big pcluster" feature introduced in Linux 5.13.
-> >
-> > Specifically:
-> > - Fixed "big plusters" to "big pclusters" in the section describing
-> >   high-compression image generation.
-> > - Fixed "4k plusters" to "4k pclusters" in the compression hints
-> >   example section.
-> >
-> > Second, the installation documentation in docs/INSTALL.md was updated
-> > to provide a more streamlined onboarding process. A "Quick Start"
-> > section was added at the top, listing all common prerequisites for
-> > Debian-based systems (Ubuntu, etc.). This allows users to quickly
-> > get all necessary libraries (lz4, xz, uuid, fuse, etc.) and build
-> > the project with a single set of commands.
-> >
-> > Third, a new section was added to docs/INSTALL.md regarding
-> > multithreading support. While multithreading is enabled by default
-> > in mkfs.erofs if the compiler and environment support it, it was
-> > not explicitly documented in the INSTALL guide. The new section
-> > explains how to explicitly enable it with --enable-multithreading
-> > or disable it with --disable-multithreading, providing users with
-> > more control over their build configuration.
-> >
-> > These changes ensure that the documentation remains up-to-date
-> > with the latest features of erofs-utils and provides clear
-> > instructions for both new and experienced users.
-> > ---
-> >  README          |  4 ++--
-> >  docs/INSTALL.md | 32 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 34 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/README b/README
-> > index 1ca376f..6f9e761 100644
-> > --- a/README
-> > +++ b/README
-> > @@ -122,7 +122,7 @@ images.  Users may prefer smaller images for archiving purposes, even if
-> >  random performance is compromised with those configurations, and even
-> >  worse when using 4KiB blocks.
-> >
-> > -In order to fulfill users' needs, big plusters has been introduced
-> > +In order to fulfill users' needs, big pclusters has been introduced
-> >  since Linux 5.13, in which each physical clusters will be more than one
-> >  blocks.
-> >
-> > @@ -159,7 +159,7 @@ write a compress-hints file like below:
-> >  and specify with `--compress-hints=` so that ".so" files will use
-> >  "lz4hc,12" compression with 4k pclusters, ".txt" files will use
-> >  "lzma,9" compression with 32k pclusters, files  under "/sbin" will use
-> > -the default "lzma" compression with 4k plusters and other files will
-> > +the default "lzma" compression with 4k pclusters and other files will
-> >  use "lzma" compression with 16k pclusters.
-> >
-> >  Note that the largest pcluster size should be specified with the "-C"
-> > diff --git a/docs/INSTALL.md b/docs/INSTALL.md
-> > index 2e818da..d96b15c 100644
-> > --- a/docs/INSTALL.md
-> > +++ b/docs/INSTALL.md
-> > @@ -4,6 +4,26 @@ source.
-> >  See the [README](../README) file in the top level directory about
-> >  the brief overview of erofs-utils.
-> >
-> > +## Quick Start
-> > +
-> > +For those who want a quick build, ensure that the following prerequisites are
-> > +installed (on Debian/Ubuntu):
-> > +
-> > +``` sh
-> > +$ sudo apt-get install autoconf automake libtool pkg-config uuid-dev \
-> > +                       liblz4-dev liblzma-dev libfuse-dev zlib1g-dev \
-> > +                       libselinux1-dev libzstd-dev
-> > +```
-> > +
-> > +Then, run the following commands to build and install:
-> > +
-> > +``` sh
-> > +$ ./autogen.sh
-> > +$ ./configure
-> > +$ make
-> > +# make install
-> > +```
-> > +
-> >  ## Dependencies & build
-> >
-> >  LZ4 1.9.3+ for LZ4(HC) enabled [^1].
-> > @@ -45,6 +65,18 @@ $ make
-> >  Additionally, you could specify liblzma target paths with
-> >  `--with-liblzma-incdir` and `--with-liblzma-libdir` manually.
-> >
-> > +## How to build with multithreading
-> > +
-> > +To enable multithreading support for mkfs.erofs, use the following:
-> > +
-> > +``` sh
-> > +$ ./configure --enable-multithreading
-> > +$ make
-> > +```
-> > +
-> > +Note that multithreading is enabled by default if the compiler supports it.
-> > +To disable it explicitly, use `--disable-multithreading`.
-> > +
-> >  ## How to build erofsfuse
-> >
-> >  It's disabled by default as an experimental feature for now due
-> > --
-> > 2.53.0
-> >
-> >
+Can you rebase on ksmbd-for-next?
+
+Thanks!
+metze
+
+Am 26.03.26 um 11:45 schrieb David Howells:
+> Add support for ITER_BVECQ to smb_extract_iter_to_rdma().
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Paulo Alcantara <pc@manguebit.org>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: Christoph Hellwig <hch@infradead.org>
+> cc: Steve French <sfrench@samba.org>
+> cc: Shyam Prasad N <sprasad@microsoft.com>
+> cc: Tom Talpey <tom@talpey.com>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>   fs/smb/client/smbdirect.c | 60 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 60 insertions(+)
+> 
+> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> index c79304012b08..f8a6be83db98 100644
+> --- a/fs/smb/client/smbdirect.c
+> +++ b/fs/smb/client/smbdirect.c
+> @@ -3298,6 +3298,63 @@ static ssize_t smb_extract_folioq_to_rdma(struct iov_iter *iter,
+>   	return ret;
+>   }
+>   
+> +/*
+> + * Extract memory fragments from a BVECQ-class iterator and add them to an RDMA
+> + * list.  The folios are not pinned.
+> + */
+> +static ssize_t smb_extract_bvecq_to_rdma(struct iov_iter *iter,
+> +					 struct smb_extract_to_rdma *rdma,
+> +					 ssize_t maxsize)
+> +{
+> +	const struct bvecq *bq = iter->bvecq;
+> +	unsigned int slot = iter->bvecq_slot;
+> +	ssize_t ret = 0;
+> +	size_t offset = iter->iov_offset;
+> +
+> +	if (slot >= bq->nr_slots) {
+> +		bq = bq->next;
+> +		if (WARN_ON_ONCE(!bq))
+> +			return -EIO;
+> +		slot = 0;
+> +	}
+> +
+> +	do {
+> +		struct bio_vec *bv = &bq->bv[slot];
+> +		struct page *page = bv->bv_page;
+> +		size_t bsize = bv->bv_len;
+> +
+> +		if (offset < bsize) {
+> +			size_t part = umin(maxsize, bsize - offset);
+> +
+> +			if (!smb_set_sge(rdma, page, bv->bv_offset + offset, part))
+> +				return -EIO;
+> +
+> +			offset += part;
+> +			ret += part;
+> +			maxsize -= part;
+> +		}
+> +
+> +		if (offset >= bsize) {
+> +			offset = 0;
+> +			slot++;
+> +			if (slot >= bq->nr_slots) {
+> +				if (!bq->next) {
+> +					WARN_ON_ONCE(ret < iter->count);
+> +					break;
+> +				}
+> +				bq = bq->next;
+> +				slot = 0;
+> +			}
+> +		}
+> +	} while (rdma->nr_sge < rdma->max_sge && maxsize > 0);
+> +
+> +	iter->bvecq = bq;
+> +	iter->bvecq_slot = slot;
+> +	iter->iov_offset = offset;
+> +	iter->count -= ret;
+> +	return ret;
+> +}
+> +
+>   /*
+>    * Extract page fragments from up to the given amount of the source iterator
+>    * and build up an RDMA list that refers to all of those bits.  The RDMA list
+> @@ -3325,6 +3382,9 @@ static ssize_t smb_extract_iter_to_rdma(struct iov_iter *iter, size_t len,
+>   	case ITER_FOLIOQ:
+>   		ret = smb_extract_folioq_to_rdma(iter, rdma, len);
+>   		break;
+> +	case ITER_BVECQ:
+> +		ret = smb_extract_bvecq_to_rdma(iter, rdma, len);
+> +		break;
+>   	default:
+>   		WARN_ON_ONCE(1);
+>   		return -EIO;
+> 
+
 
