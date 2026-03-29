@@ -1,86 +1,63 @@
-Return-Path: <linux-erofs+bounces-3078-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3079-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qLrDH1AryWknvgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3078-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:38:24 +0200
+	id 6JZbDDVjyWlXxwUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3079-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 19:36:53 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3289035244C
-	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 15:38:23 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 443ED3535EA
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Mar 2026 19:36:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkFT85tryz2yYs;
-	Mon, 30 Mar 2026 00:23:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkM4x3qKpz2ySS;
+	Mon, 30 Mar 2026 04:36:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::635"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774790636;
-	cv=none; b=LTqAr9KOB3/KiQ2m9+o0/LtrG2qouS8uJ3dE5OWszOWwAUZyRhhpoatR6MrKc8cYAH8L0ePuDRWxrbc1gMnUwUhEFiLx6vaqWyHXgJAHtIJg/iTp16/q7DBC7SCzVp53poYFWiYWS/jDE9hkNCX+QEXzh4RKofqkBHSQaW030ZeT3VMOw7gRuCuud0z4Bz5kDrgYCzaET05Oi/mPH+lCUN35x3Y/9kMF/UJS8bxJ+glCR2QHBTXba+gkz9nz8ka6dV+QJXOq8Ss71AmFWVfqdg/pJ7ty2BcRrsyInuQA2/HHSY5KmJeHLxYQPQeEFukAAHXxufYqgntQnjjLTFuHOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774790636; c=relaxed/relaxed;
-	bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zw9BJ9j92vJtcsvHFbf9r/IFBoUAF3BL4gkwWknofFtnaRV2Rr34joxbxiZ4GsPOu2vNu6r8b8yA79EFTK3d/8JbQBU8xtbkyz8fk3fKR97rxRDhJJKWGmFEnV5q1rUkqJySIKwFEn+V6JxePFQHLHQ+bZXh72g2XdACZr3MWndwxBMBu7xFtNNHu5YnNf5RVvXoSGb5NMRfSMst0c8xO7T3L4rQDPQHX7xkm71XoAz/1kBoolB1h62onLmQybE5hD93dFffmC5rh+utWOovn1eIdG12+DfgHcNbPxGMTKpVypVT6baeMXBABxx1Tiu+U6+8W+KGXLRadTgyJGMiZA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y0zu7jLe; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::635; helo=mail-pl1-x635.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774805809;
+	cv=pass; b=Eg8lr9ZQATJ1qbQ+oXhULe2PogvlXXFaWeLd6tx7KQ0hT8Rh1oNGQSv3jWF34SB00AIM9PzuaYsgymhzLX5/aaXp/D8EJ3kGqWp40gIqludqWWQPozIMnWUnvxAxHqzR9f5wSyAhxG13WK+QGoPKuRKsLU5hoKVBVVG34vNSYflb20MkxICuN8DmzgRTJgDfq9Vg9wtRf1JKDpSjHUzx6+VxzDVDfbs3KeAeqQ47+IPXjN6B0fVNhOupgypDXsIIl8Uo6Q8B6Y/QxOZ6pLM9Tg/7cfsOfquikP/oLhUL9Ma1noRgf2ipyS20S5VsliKzB0J2ZXBdGiCCKAa7Tyz1/Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774805809; c=relaxed/relaxed;
+	bh=Yl9AbJORGj3RXT1qZS1odU+6bW6wbR1iMcvjDyewOlw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XqLiGFp6T9/SbKkEUx2h8lc1AG3jxjPYtMP5aBsm6GFKcyhmCCf11pwzXCIiPXs/YeAZ8wsplzRxIqvU17i2GACA86xDJb4tvIV6SSznEdjd045HvHkdsMB3F67MRQl8778VpS5zwVfVZ6dzxK4WuYQoiOcPhxj4XOgwHDzE/H2uZVPtuOdRo7xg/UTIxbQX125nNf6DoyltLcVSI60cBhxIIZ8D5mwet2rYm4FUrckgfwGG2emGfFa4hQbh1E2CknhK5nRauM2mPA90Z7sP/veTBJToj+gW6vDSWcJNDEEmHXFBli0hd4T+LwPGS8bsfJXnTMRLPlL6KlxT9fmgiQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=KG3nn34T; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y0zu7jLe;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=KG3nn34T;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::635; helo=mail-pl1-x635.google.com; envelope-from=singhutkal015@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkFT76Qsdz2xlK
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 00:23:55 +1100 (AEDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2ab1c8fdc40so4530485ad.1
-        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 06:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774790633; x=1775395433; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
-        b=Y0zu7jLeq3OsTnHaJ28wsbocmdC0lvJnaEwIBHHexHEq1BiuiFarJWhZBoWmTYTz4l
-         s6UtuGEcPs9p/VWXB2sD9CNT9dwP8qOrENU+UT3dqkWlJBPlZ+KbHUdwNCejGa3uP/h1
-         t5iAmzClD0WLdAUZ58iKzj9wUN+bJOCJfzo1U09IImf7xlKd3sofLTYM8kf47nT3BCNo
-         leQ4e+mEykCQKVVO4q8wwplLQyCuf1XUtSeipb3/xYgAlJ/LIwy9ncj3hdC/il7BLT/w
-         C4JyTkEnVRbX4Nt6he5TZeEf0whXsNAKurQ3+7sPrAuxcNXga5wbvXUj2iRa1ZHOJl4w
-         Nz9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774790633; x=1775395433;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hpSUefsfaYfz/q2XmjcPuzUiWb7Ia1UhI16o56J1kgI=;
-        b=HFswvW0OY0wctvdZ+skSaz7gQyK6JpY2sPdabl/AFvCvS+1fSXd8jfonq4yaUZUSwf
-         QuPhIM0ERn9WdcpThS6YH0V3nvldI6KcAbiNqv/be7BXBz0LPELBkj9W7Kymrwsv84XW
-         hDUIYgyCMqHa1wUawaWULOkqjdFXYXPg7n7QwHQcWP+97j9E59FACAwhv8xqwhY9sEkx
-         TqeeEad+V63bihBWSy9aepoJtcFyaVOjLoAXCHU2pdGT4pS/1qOUgGDopDwOubmiAK7m
-         Ye/qVVLTemAN5BRzD3JCTqaO/m5PZ8mbNsex9ajD3rVnARxNj2SZyjTa96ivGhuPgCby
-         wD0g==
-X-Gm-Message-State: AOJu0Ywpk3VRgMUoVMnyaX9EtobVx2jYRwxT3U85NvT6d7QtR8HUn2mH
-	+Z2Rk7IVMcBPVJcNc9v86HhP6Usf2fythcOIHLEnqKDAPNLWDCYEG6MNLH01JgvN
-X-Gm-Gg: ATEYQzxGxxg/kckZq8VPf2Nt5M5Fitq64DbY6gLb/gfTgRK/GiB4dkAoxrhbQYdV4H6
-	hwxV6GgnLsOYkPOXSAOkkhZ/cyTrpOAMuwOra3qCrqI0u9Pf2xQAS8iTnrpQxVCb4XtzvZbKxTJ
-	Wsepl7Nx/eft0v6vLiQySpXSXNBPseTY4sstfYghb7UPrxD8OdkX01QaJcAcMGFcFsP+7mUK+Zh
-	TWzK4wtAX7QBe0M+/750V13MQqquqRc99q3eSn86DKGO5A/r66iLL6DbZ6teCeFq9ypLUtnYHGS
-	UVRg/IldOBLcyOlz3POginNEXpN8Zv0xTDE/TL2aaSGtCsr47pUnnjeLzZTnucOHxIxcPXjF2it
-	fhIXeRTrURCqQXSIsA+rsptz/pdbT4wyhkoViuGRwf0di70wj6Plr45zSpnCHbmrUeJP6VoWmar
-	B3ktai6jSgZEz/k7pGRets8T2OSBvED2rK/Vo9hAYo8Cy9UT2ZENEciKCIR/s0lj2ZGm4HZgw7G
-	0qZDW/fMsnwncl95011wx2HmsaPkdl0YNZ+9QqLxOAsLXux
-X-Received: by 2002:a17:90b:1642:b0:359:8f7e:d337 with SMTP id 98e67ed59e1d1-35c30149c54mr5296429a91.7.1774790632619;
-        Sun, 29 Mar 2026 06:23:52 -0700 (PDT)
-Received: from DESKTOP-PU4IGQQ.localdomain ([117.203.246.41])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c22d8c425sm11681876a91.12.2026.03.29.06.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2026 06:23:52 -0700 (PDT)
-From: Utkal Singh <singhutkal015@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkM4w29fPz2xgv
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 04:36:48 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774805801; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=ctE8nm9jUjioWFhKGWrPWuyH3borxJZHj6I+eH7tREJYpeP06qsO4WP3T2oc184r3KL0lcTE2o0GHLjOU7RGNg3l90geOY4MYu5rED7zLXd3Vuixp1eTgc3lhzZSwlKHfFPWUIOAR5vxMZQHiPk+6yCUTNBMLYwdgTmbf+UakvM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1774805801; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Yl9AbJORGj3RXT1qZS1odU+6bW6wbR1iMcvjDyewOlw=; 
+	b=fMKW9QMcuovVPKzCEYW5xr4M0AuSfCBr60DHOIKrFAUAr4kEPFBcxobz3DG79wnQnyWpbLsMPHdjI0jKGHI34DlwqLJ/XchEnBRDZrn6OpKi+9uZe29JM5QCPBMM1R3mRh6OV9dANtY6MgciyDGSlCnBzGdq+BK3C1bGB2sDtis=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=vnsh.in;
+	spf=pass  smtp.mailfrom=ch@vnsh.in;
+	dmarc=pass header.from=<ch@vnsh.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774805801;
+	s=zoho; d=vnsh.in; i=ch@vnsh.in;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Yl9AbJORGj3RXT1qZS1odU+6bW6wbR1iMcvjDyewOlw=;
+	b=KG3nn34TEjYUkCeQRDL5py3WAfAvICq4FLYOWAw0iWqncz5tHDhRrbZooSSGFN5P
+	Zu9FZDzialdwgZLvSVInnAUdB8+QseYNtjz4lQlyuxQb8AFmIRwuwnGJnW1QjCtBNB4
+	fXjbjTgvUwbGC0t2+JpphqbvTjhS0nn7kZA/XtoQ=
+Received: by mx.zoho.in with SMTPS id 1774805800464719.0327468855128;
+	Sun, 29 Mar 2026 23:06:40 +0530 (IST)
+From: Vansh Choudhary <ch@vnsh.in>
 To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	singhutkal015@gmail.com
-Subject: [PATCH] erofs-utils: lib: fix data race on __erofs_is_progressmsg
-Date: Sun, 29 Mar 2026 13:23:06 +0000
-Message-ID: <20260329132306.15353-1-singhutkal015@gmail.com>
+Cc: Vansh Choudhary <ch@vnsh.in>
+Subject: [PATCH] erofs-utils: lib: tar: fix fractional PAX mtime parsing
+Date: Sun, 29 Mar 2026 17:36:39 +0000
+Message-ID: <20260329173639.54997-1-ch@vnsh.in>
 X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -94,135 +71,111 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Report: 
-	* -0.0 SPF_PASS SPF: sender matches SPF record
-	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-	*      envelope-from domain
-	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-	*      valid
-	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
-	*       domain
-	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-	*  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends in
-	*      digit
-	*      [singhutkal015(at)gmail.com]
-	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
-	*      [singhutkal015(at)gmail.com]
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [117.203.246.41 listed in zen.spamhaus.org]
-	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
-	*      trust
-	*      [2607:f8b0:4864:20:0:0:0:635 listed in]
-	[list.dnswl.org]
-X-Spam-Level: ***
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [4.30 / 15.00];
-	SPAM_FLAG(5.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+X-Spamd-Result: default: False [-0.20 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	GREYLIST(0.00)[pass,body];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,kernel.org,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3078-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[singhutkal015@gmail.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-3079-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[vnsh.in];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	DKIM_TRACE(0.00)[vnsh.in:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 3289035244C
+X-Rspamd-Queue-Id: 443ED3535EA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-erofs_msg() and erofs_update_progressinfo() both access the static
-variable __erofs_is_progressmsg without any synchronization. Since
-mkfs already runs multiple worker threads via erofs_alloc_workqueue()
-(e.g. in z_erofs_mt_compress()), and those threads call erofs_err()
-and erofs_info() which invoke erofs_msg(), this is a real data race
-on the current codebase.
+The fractional part of PAX mtime values was parsed as a plain integer,
+so "123.5" ended up with 5ns instead of 500000000ns.
 
-Fix this by protecting all accesses to __erofs_is_progressmsg with a
-static pthread_mutex_t. The mutex is statically initialized so no
-init/destroy changes are needed. Also restructure the
-erofs_update_progressinfo() I/O path to eliminate the early return
-inside the lock, ensuring pthread_mutex_unlock() is always reached.
+Scale the fractional part according to its decimal width before storing
+it as nanoseconds. Also normalize negative fractional timestamps and
+reject malformed mtime values with missing digits or trailing junk.
 
-Signed-off-by: Utkal Singh <singhutkal015@gmail.com>
+Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
+Signed-off-by: Vansh Choudhary <ch@vnsh.in>
 ---
- lib/config.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ lib/tar.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/lib/config.c b/lib/config.c
-index ab7eb01..7f58159 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -100,6 +100,7 @@ int erofs_selabel_open(const char *file_contexts)
- #endif
- 
- static bool __erofs_is_progressmsg;
-+static pthread_mutex_t erofs_msg_lock = PTHREAD_MUTEX_INITIALIZER;
- 
- char *erofs_trim_for_progressinfo(const char *str, int placeholder)
- {
-@@ -141,6 +142,7 @@ void erofs_msg(int dbglv, const char *fmt, ...)
- 	va_list ap;
- 	FILE *f = dbglv >= EROFS_ERR ? stderr : stdout;
- 
-+	pthread_mutex_lock(&erofs_msg_lock);
- 	if (__erofs_is_progressmsg) {
- 		fputc('\n', stdout);
- 		__erofs_is_progressmsg = false;
-@@ -148,6 +150,7 @@ void erofs_msg(int dbglv, const char *fmt, ...)
- 	va_start(ap, fmt);
- 	vfprintf(f, fmt, ap);
- 	va_end(ap);
-+	pthread_mutex_unlock(&erofs_msg_lock);
- }
- 
- void erofs_update_progressinfo(const char *fmt, ...)
-@@ -162,14 +165,16 @@ void erofs_update_progressinfo(const char *fmt, ...)
- 	vsprintf(msg, fmt, ap);
- 	va_end(ap);
- 
-+	pthread_mutex_lock(&erofs_msg_lock);
- 	if (erofs_stdout_tty) {
- 		printf("\r\033[K%s", msg);
- 		__erofs_is_progressmsg = true;
- 		fflush(stdout);
--		return;
-+	} else {
-+		fputs(msg, stdout);
-+		fputc('\n', stdout);
- 	}
--	fputs(msg, stdout);
--	fputc('\n', stdout);
-+	pthread_mutex_unlock(&erofs_msg_lock);
- }
- 
- unsigned int erofs_get_available_processors(void)
+diff --git a/lib/tar.c b/lib/tar.c
+index 4eb0060..4e97522 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -2,6 +2,7 @@
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits.h>
+ #include <sys/stat.h>
+ #include "erofs/print.h"
+ #include "erofs/diskbuf.h"
+@@ -525,6 +526,9 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
+ 				eh->link = strdup(value);
+ 			} else if (!strncmp(kv, "mtime=",
+ 					sizeof("mtime=") - 1)) {
++				unsigned int ns = 0;
++				int digits = 0;
++
+ 				ret = sscanf(value, "%lld %n", &lln, &n);
+ 				if(ret < 1) {
+ 					ret = -EIO;
+@@ -532,12 +536,31 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
+ 				}
+ 				eh->st.st_mtime = lln;
+ 				if (value[n] == '.') {
+-					ret = sscanf(value + n + 1, "%d", &n);
+-					if (ret < 1) {
++					while (value[n + 1] >= '0' &&
++					       value[n + 1] <= '9') {
++						if (digits < 9)
++							ns = ns * 10 + value[n + 1] - '0';
++						++digits;
++						++n;
++					}
++					if (!digits || value[n + 1] != '\0') {
+ 						ret = -EIO;
+ 						goto out;
+ 					}
+-					ST_MTIM_NSEC_SET(&eh->st, n);
++					while (digits++ < 9)
++						ns *= 10;
++					if (ns && value[0] == '-') {
++						if (eh->st.st_mtime == LLONG_MIN) {
++							ret = -EIO;
++							goto out;
++						}
++						--eh->st.st_mtime;
++						ns = 1000000000 - ns;
++					}
++					ST_MTIM_NSEC_SET(&eh->st, ns);
++				} else if (value[n] != '\0') {
++					ret = -EIO;
++					goto out;
+ 				} else {
+ 					ST_MTIM_NSEC_SET(&eh->st, 0);
+ 				}
 -- 
 2.43.0
 
