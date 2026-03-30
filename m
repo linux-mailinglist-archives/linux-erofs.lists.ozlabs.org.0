@@ -1,96 +1,95 @@
-Return-Path: <linux-erofs+bounces-3105-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3106-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SHepN2ofymmu5QUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3105-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 08:59:54 +0200
+	id QEREBdEfymmu5QUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3106-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:01:37 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7826E35627C
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 08:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 375633562AF
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:01:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkhvT0Gllz2xpt;
-	Mon, 30 Mar 2026 17:59:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkhxN56bZz2xpt;
+	Mon, 30 Mar 2026 18:01:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::42c" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774853988;
-	cv=pass; b=ZBbu4t3T6J73ZZOJYxCVBvhgc15u0NYf+tByvgZIzS7Bh2zcFX5h+tJBN8HIha8H3njPbYwZ0Bxx2b3pevA3SpxkeSR7J6vBnRBcc6Qsj2c3Kwdt6FyTEnlAXS2eF5ZbNBTWASZ9Bmr/uILhPpbP+NAL5wJbkyGzNBKmHL+TMjgo4vNRofRLfHZI0jpk6a/lRm8rjcqFedsIC9xP3HznCv3P86IWLWWoS++AMWjgsAklxHSgwgTQFeBLVpmalIOoEJH/cNcAiNUgLJhsfaLaKG7Cd2cU8eK5yCjvd6YXTijUFT33WQRRHcyMPf2pUr5Mc4l7bkucWEQspPJTyT/xIw==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::334" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774854088;
+	cv=pass; b=CBxlPH3HiIfgzhSOaRgy1AVf/55aATXNIHAatDk08ieWz7+aChRFTMuS2sXmmwCQSB3B/Xt7E5tdQtKnEi0rkZdPdwz3ux9p23nyPbJx6Gd70u4jEFxfE1/3xwtZrPc7Ax5NCwUnsQWiPKYhtpXKrCdGgYMrzdtGdxPZ6E5adD5MszEeK1FKx6Fphhht+G0A3rt0oLpbfEVqytPmDLkvFvpNl7frxOVFei2ez22dIHxACOyp37knZWeUEyrwd2RrdA/6AwF3VHogeU4bC10KRUSAN27CAdTcEBWst3qzAXSkPIqctIbopZp2U/RJV4baaj47ZMrqrnjxFclGzyM6bQ==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774853988; c=relaxed/relaxed;
-	bh=zrm0ZGq/BAczHG0ILyRmm1i8VccXfQHatUXU5VyqOLo=;
+	t=1774854088; c=relaxed/relaxed;
+	bh=sppRpCouAGUIZOqQyXhqmWC7IWa8vHh1MtIhDK9b570=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HwKyeR9Z/Zz+/fcTlzqGo0cReo0Ep9CiUmCsCCvWc471QoTgADLAfopR9+VnZaGnR3z/yeIVCwjrQFNSSj0OMZRBRYfeq893bkPHi7uxdsWkq2g3G5FiUokrJbGPEwgb0U/TP6VxJ9x0nnV35kfGCpB3MwwDx5IYzk9SAVeJfUdyrWLOKuPclJNF+JLffn3Oz2jBSoAeOBag4jDdON7arxgUBZhwFLGj1/lJ4EdtGbNK3cp9cJHI7N2Z3YG6dOcjmmUvYdaUAqT8YKwW3amAB+OreIaKSOrtqhAZ1wOeyxp2qhtKTslbzgLUA9NF9RIeC79e2cf5zkQvSmG16N3zPA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Tu1sXDdx; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::42c; helo=mail-wr1-x42c.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=b4srs0JyXmFmJ6wESbmeyXeKzOSpq80N4SVo5UMHvcrJuhSYKiaSY/cS51jsvTJ6PXfeVC/jk2hcshkWudDdl11CKlMi2tj1cMMHk4i7UAW+FBUfyC2Hf2YfQOdYyhB+kbo5J0dWrAkQCC7GJBrLDf7exeT6xgROa8/0zKd0tz7Upp2/mXvInxrhyovOyGfHW3f0gUrKOS0KPX+foVM6AJlkhOCGDF+165l1+O148maF69a9PHwRORd3OMQn5jZHltU/ySL5ORgWn+U/eLS9sY3ETeHGU8mr4v2EqfPQssCIiqg9t3n9LAt7mWZ5LmCT+U492r/OY2MIB+hBadLpuQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=m72Y4ruF; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::334; helo=mail-wm1-x334.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Tu1sXDdx;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=m72Y4ruF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::42c; helo=mail-wr1-x42c.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::334; helo=mail-wm1-x334.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkhvR12QRz2xT6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 17:59:46 +1100 (AEDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-43d03db7f87so77071f8f.3
-        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 23:59:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774853983; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkhxM3J8Lz2xT6
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 18:01:27 +1100 (AEDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-486b96760easo44900595e9.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 00:01:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774854084; cv=none;
         d=google.com; s=arc-20240605;
-        b=Sn4MZgc8JrnGGtdQJ0jbZNoLiXU/7ZVwBwi3CxT/ZwGZpwZvnrBii28rkERA55yb84
-         4Bak5tvTQbV8zNZZuveFYe88TGLcLC4/4v/TSJSCpBkQwE7mjUhjAwih1MNuMx7LwWzN
-         Wti0BFMK3m8kiz90SRH9OF0HZuBwKLv7Vf5dx4g6N1PC98/XoNdxpxl7IM8iXbBrTyCZ
-         Xx8DfU1Xge8263pVyk1NS7kiUkMPWM1druoY89spVrUF2WLOy30MIZuVx4kM5x0XJPrq
-         Kh3Rktz8kjxdScA7pbKL0nGU4SoofJjY0NY5//Cko9QIa98E7RyBFxAtUhW3t5208Xfr
-         uFyw==
+        b=dRaG8Wu4prdezuTHK1dMIyhaZDhwjQr6815zuBBgqEW10Lwt8D5MGaI0bFln4c1v7v
+         Gc8yCXsEb+YCivg/RaHHrZRjhCrsTbo6+UGRCwlxt6+8M80EKyFdxBt2m3E3KZXJbY65
+         /vOXoBlyDiCK1t+8pNmZ5DyiSy9hf15zzuEfsowx6ww9Xv/hp7osemolpmb70XWnr313
+         vDUwD0FH3YkCzGUEvW2ONZqleIG19rie0LI0TzWRHHGDs7sW3U+1F2HPFfB1ObdroM79
+         Q4UK3nevGO1Iq8qS+VJFOk7Z/7Gdty0vIdEcxUFjIXTdz7DCERK+zoStG97JnLrfHAck
+         LdtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zrm0ZGq/BAczHG0ILyRmm1i8VccXfQHatUXU5VyqOLo=;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=sppRpCouAGUIZOqQyXhqmWC7IWa8vHh1MtIhDK9b570=;
         fh=9Wn/3jJ7cxXJ0f0APmYc1WKS3OekWYAY1EBckSr/YzQ=;
-        b=KByCxMtewDKd9ZI+jMkpL4hTbl4tTGcevbfy9ALofIZOWxB9wAD+GJdxYX6eMN06Ga
-         SIeWfVqt81VMHDILliHo9VYU+5I5WYq9EruY3UVX16aEypu5ZeGQHtP9Iv0B/9bNE7TO
-         8PfUn4GEr10RQwv/WPPF9raAPddQXGKBEy8bWNs3qljkdxvCb+E7rErZv2GQDt6jGMdW
-         CXLOMiH9hflS1mUiF4RlUmQjbXQA4SsPVo/YC11rUKtRZfL01uqt7pG0J1CB1Wv25aKJ
-         WtugWZtZuPrEuxHQhitr6enx8K0UdCoPLODTDtQGDQpVWY4uC+pVhG6DfgIqrPAvyyfM
-         RHfA==;
+        b=R6jV1O8fHWcQEj1q308cKJ3BCtZTkVeuWKUdX+UWYS4/A8eqEcopD+IRz9acqd0r/U
+         xotW4frYnqwXoTa1cwsW5uqcfSkGQIkyVY2FQD5iCiMIS1yDOI6ZtYPUpA5mKd6Vmpjs
+         t22VkoU85aIkkAyQXodx7R+2NQNe3MGxD/Qc6cnlzlxzulplLi/CmhAmzBm7kmJrs+TC
+         YhujJNptZ5oeyyUSy0pQDkdNOLkpWWZ42l8fPdlxXJ4mbcxAiDo1w1AZPybj59UdGX5Q
+         lNwzFYnuULY8QeCmiYcpETOR6cXa2VkNl2GczPm9jPyzS7acI6YLAdCR/SZChCa6LUol
+         d4Sg==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774853983; x=1775458783; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zrm0ZGq/BAczHG0ILyRmm1i8VccXfQHatUXU5VyqOLo=;
-        b=Tu1sXDdxsV0me2Q9Xq79h75WrRDnPB8nG07RZN0IE68l5toNFy5LU8cRZ4t/ReUSyp
-         TbG1aQkFopFYup93IOfKui0/NeU3T/ekfGH38U7TbGwKS8TT2rqyxqY7rCXlriwUx2wb
-         rA5LVME9I4jAY9y0sQSG6wcOWo3qDdX6RwEbFyFQoTUmOEnodlqTrjIdb7TszuuGTMfo
-         6uEU45HYQ+5hj3dHBrc908PJPWPhWXjWkTXF+5gTE7IMed2jjMfKlkKgU/hdaN/uQ83W
-         UVJeC2wmRNUlmOEbHtML+NjCPNcqIkHy7l7BNydf1pD58HvtHfa62Yav5RAJ/go91C4f
-         Xy8g==
+        d=gmail.com; s=20251104; t=1774854084; x=1775458884; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sppRpCouAGUIZOqQyXhqmWC7IWa8vHh1MtIhDK9b570=;
+        b=m72Y4ruF47lhdWxI3Bq6HlfrlH8CXHfG1CGHL6v1daHROv5aENUpozZbraniMfDVN/
+         W9T/XejQGeG68DLCYSoD60h2fLMgqZPj3CokoMNtS/d0FHtGv/Ojku1c/GKETxWtvFKQ
+         qz0FUJZN1Fvarn+low27QZvNgg5v0LQXJjdqdXwxbUFel5vxgUfOFgXNSE1Ci44abqJD
+         BQ9wN+wkfsuEfsz1Q07G4ZoPN5QTYyl5UkShXQ5xxqP0PfhjSWzT2kox04IaZWFPXHyj
+         Slw0g4qIT6rlRrbTKgBK1rEFgi6WMEdeugcPY1T9WYSApPJbszfQ89YKkPqjt6xtPboy
+         njvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774853983; x=1775458783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zrm0ZGq/BAczHG0ILyRmm1i8VccXfQHatUXU5VyqOLo=;
-        b=pHLUgDb8bxV3L2FfnH2it1bRqoXAIWJKv7qjVQYsTa3qXCjRu7UKIzSQATEBUuV15N
-         m3qy3sGs+O/qwJW772Suj9I709BBrc18O95XHCbKGGShYNLgU8x9cbV/SyvxOvvmAuZS
-         6PtF0Zm0XYL9IO21qst4MH2WockU8jmygwnRQEe2s2fKyeXpOtSxYbg+JX2piwVzH6Hz
-         fBJZsa98Km8ldFbwmHGDej4tADsvyn8MxYsR5DveSP8GloPV0pyTXRzuEh230tC2ZiQZ
-         UsjeawFj7zcYRRAPb3OR55XiG6nqnN8Q8MyyD/fy4UbF/ug/jipxwhVCAQOP5QcLwNuX
-         sh+Q==
-X-Gm-Message-State: AOJu0Yxx3H2kiDKNe+/aeHHc8G4evFG69JNI8C3vio/SjnNzoV5DivgQ
-	/wofiimNeKb6JPEyQkeaQU9mZBvBLOtTZgAiuxsKSGauDuayNjnP9nV2Ckf0lzk8gsR+MRJNo9A
-	2nJ1eBFDrTMxGCgIG/9bxgObOSjPMU3U=
-X-Gm-Gg: ATEYQzxBpx01M3o5TwVT3Ct9oST175Sgd3GH3EbaTvENrStYaS2IYGYRxLlI+lKFaD7
-	DS0dF0NQ+G9iu7b/SKLoNRUNT2XuBeUmtg7252DBbJi+HWtVgZSw72HtABYUI5t+sg1aRaljT+5
-	SAjHSdgh2HsiVYwUfxDVAtKGNaKTWQkqPk45aLJaEt9Digf4IisMNTzL9/a5fYoqqzwqb2vZapp
-	dAlQBEmZAfbtzeYcYkz6Dl36G5wf4CwBtR0fJMz4Dgv2B2sra8TfuGLluJUawwXbXmsASntvuR0
-	DNxdV9jU57mqxCmeKheW804hOrue+SFg5uB0t0G/
-X-Received: by 2002:a05:6000:2910:b0:43c:dc99:771c with SMTP id
- ffacd0b85a97d-43cdc9977cdmr13941211f8f.42.1774853982577; Sun, 29 Mar 2026
- 23:59:42 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774854084; x=1775458884;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sppRpCouAGUIZOqQyXhqmWC7IWa8vHh1MtIhDK9b570=;
+        b=gVSnOPrxcPfuRh72g23QEr5jMj1ivzSmRis/e60wLwkkzQM4g2ixsI7RhQqsibxslj
+         ykCUJpmPUlxsniplxRGaUL2JyD3PUyzJSq4X/QR9NntCbxxRQq9raWMTDZOLm7HZCtgl
+         HwSlPMyEO7LVlgG0O8Psz/sW8n6L2f3yQCRFv/B+7gM3YOLi5w3fGxGSp9FGUXTFO/fJ
+         vwm0CUoEKL/Ytfr55+JWJYN7t3mtSIMUp+YxZORmTRnYVGgZadHXu9RReTJCn7/7tVMd
+         HKN9KYNnYoD8gEyyKWNPDoSJYnv7jNEYAFT21tQ4Hk1afGuNZ8GAm22pywIXwkwQS7Ag
+         C+Fg==
+X-Gm-Message-State: AOJu0YwStGGcG/bWztfY0LslkiqMn2HMoH3cn/5qo9N6zqHS73BMN4bH
+	jF2y/FLyABsVf7NlUUHP2ameg/it3huXKezjZmDWSOvg+J4EJU+viNphWG5x4u5uCtlZJofp+Vj
+	yDscqRULEwckTtMudG83iZKAZo9197pM=
+X-Gm-Gg: ATEYQzww3LHv3uoemXEpwiM+HFoHGRgBIPKwz/Tc774jpv6UUlLSanrZkYhKgsZdIS5
+	53XJTRi+Xz8Gv3eT1b40P2zzAg7ewuPzA29UJy3cCds6SckxmtQVkSbLQNSVYFOgrbeYOhATLcI
+	nZcb1uEnQQwH0NCME1i66ffFXXy7LBymGe+DeZbGt+zVqxQG4iJEGJKKCYuHyiIq9qOk6/SELBs
+	Z4hL2h06mhtCqHccQl4iZNhecklkXz/dDDmIS/+IHoRPapS7ChYFh2FHPA27nRpCSdGh6gUEFSC
+	qy5rmWbOyR1QjBBxsnHo/RRxAY6K4oPSuCA2Zupc
+X-Received: by 2002:a05:600c:1f13:b0:487:169:9f64 with SMTP id
+ 5b1f17b1804b1-48727d73709mr186563405e9.12.1774854083891; Mon, 30 Mar 2026
+ 00:01:23 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -102,17 +101,16 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260330052840.12730-1-aghi.saksham5@gmail.com> <20260330052840.12730-3-aghi.saksham5@gmail.com>
-In-Reply-To: <20260330052840.12730-3-aghi.saksham5@gmail.com>
+References: <20260330052840.12730-1-aghi.saksham5@gmail.com> <20260330052840.12730-2-aghi.saksham5@gmail.com>
+In-Reply-To: <20260330052840.12730-2-aghi.saksham5@gmail.com>
 From: Ajay Rajera <newajay.11r@gmail.com>
-Date: Mon, 30 Mar 2026 12:29:26 +0530
-X-Gm-Features: AQROBzAcXj_PMkcnvDmYrpyW3z99oJarJcPaibpN2KsOU6xByuPe9YXjA-8QVFc
-Message-ID: <CAMhhD9infMAQyin+aRf1iGZUAJ_VmRKP6ra7OVxa6C2jULU6-g@mail.gmail.com>
-Subject: Re: [PATCH 3/4] README: comprehensive refactor for clarity and professionalism
+Date: Mon, 30 Mar 2026 12:31:05 +0530
+X-Gm-Features: AQROBzBuPUNAGP7R4z_1-YTKhlu8TbvQ7JoZNy-RBD87gpfpTY7juLyma8yG5Bg
+Message-ID: <CAMhhD9jVBbB92+eAn_mAwp-yAXamRh=Z2H=XiGiS+4kdfdmRNw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] erofs-utils: fix typos and enhance installation guide
 To: Saksham <aghi.saksham5@gmail.com>, Gao Xiang <xiang@kernel.org>
 Cc: linux-erofs@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
@@ -121,43 +119,44 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3105-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3106-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aghi.saksham5@gmail.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:aghisaksham5@gmail.com,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
 	FORGED_SENDER(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:aghi.saksham5@gmail.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:aghisaksham5@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	RCPT_COUNT_THREE(0.00)[3];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	MAILSPIKE_FAIL(0.00)[2404:9400:21b9:f100::1:query timed out];
 	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	NEURAL_HAM(-0.00)[-0.997];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ozlabs.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,erofs.fuse:url]
-X-Rspamd-Queue-Id: 7826E35627C
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 375633562AF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Hi Saksham,
 
-This patch is exactly the same as [PATCH 3/3] you sent, You have sent
+This patch is exactly the same as [PATCH 2/3] you sent, You have sent
 this same patch 3 times already. Please don't send repeated patches
 again and again.
 
@@ -167,547 +166,118 @@ Ajay Rajera
 
 On Mon, 30 Mar 2026 at 10:59, Saksham <aghi.saksham5@gmail.com> wrote:
 >
-> The current README contained several instances of awkward phrasing and
-> technical descriptions that could be improved for better readability
-> and professional presentation. Specifically, the phrase "form a generic
-> read-only filesystem solution" in the overview section was identified
-> as particularly unclear and has been refined for better flow.
+> This patch addresses several issues in the README and docs/INSTALL.md
+> to improve the overall documentation quality and provide a better
+> experience for new users and developers.
 >
-> This commit performs a comprehensive overhaul of the README file to:
+> First, multiple instances of "plusters" were found in the README file.
+> These were typos for "pclusters" (physical clusters), which is a key
+> concept in EROFS for block-level compression and data management.
+> Correcting these ensures technical accuracy and avoids confusion
+> for users trying to understand the filesystem's behavior, especially
+> regarding the "big pcluster" feature introduced in Linux 5.13.
 >
-> 1.  Improve the introduction: Rephrased the EROFS overview to clearly
->     state its design goals and advantages over traditional read-only
->     filesystems, emphasizing the balance between efficient compression
->     and superior data access speeds.
+> Specifically:
+> - Fixed "big plusters" to "big pclusters" in the section describing
+>   high-compression image generation.
+> - Fixed "4k plusters" to "4k pclusters" in the compression hints
+>   example section.
 >
-> 2.  Polish use case descriptions: Updated the list of typical scenarios
->     (firmware, container images, Live CDs, etc.) for better flow and
->     clarity. These descriptions now highlight the specific benefits
->     EROFS brings to each scenario, such as reduced metadata overhead
->     and optimized startup times.
+> Second, the installation documentation in docs/INSTALL.md was updated
+> to provide a more streamlined onboarding process. A "Quick Start"
+> section was added at the top, listing all common prerequisites for
+> Debian-based systems (Ubuntu, etc.). This allows users to quickly
+> get all necessary libraries (lz4, xz, uuid, fuse, etc.) and build
+> the project with a single set of commands.
 >
-> 3.  Clarify tool descriptions: Standardized and improved the summaries
->     for mkfs.erofs, mount.erofs, erofsfuse, dump.erofs, and fsck.erofs
->     to ensure users understand the primary purpose of each utility in
->     the erofs-utils suite.
+> Third, a new section was added to docs/INSTALL.md regarding
+> multithreading support. While multithreading is enabled by default
+> in mkfs.erofs if the compiler and environment support it, it was
+> not explicitly documented in the INSTALL guide. The new section
+> explains how to explicitly enable it with --enable-multithreading
+> or disable it with --disable-multithreading, providing users with
+> more control over their build configuration.
 >
-> 4.  Enhance technical instructional sections: Refined the "How to
->     generate" sections to be more instructional and professional.
->     Algorithm lists, command examples, and technical notes on
->     reproducibility and pcluster management have been rewritten for
->     improved clarity.
->
-> 5.  Refine the "Comments" section: Clarified the description of
->     tail-packing to better explain its benefits regarding I/O
->     minimization and storage efficiency by eliminating internal
->     fragmentation in the last block of a file.
->
-> 6.  General copy-editing: Fixed minor grammatical issues, improved
->     sentence structure, and ensured consistent capitalization and
->     terminology throughout the document.
->
-> These changes collectively provide a more professional and informative
-> first impression for new users while offering clearer technical context
-> for developers working with EROFS. This documentation update ensures
-> that the README remains an effective and high-quality introduction to
-> the project's capabilities and tooling.
->
-> Signed-off-by: Saksham <aghi.saksham5@gmail.com>
+> These changes ensure that the documentation remains up-to-date
+> with the latest features of erofs-utils and provides clear
+> instructions for both new and experienced users.
 > ---
->  README | 298 +++++++++++++++++++++++++++------------------------------
->  1 file changed, 141 insertions(+), 157 deletions(-)
+>  README          |  4 ++--
+>  docs/INSTALL.md | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 34 insertions(+), 2 deletions(-)
 >
 > diff --git a/README b/README
-> index 6f9e761..d974305 100644
+> index 1ca376f..6f9e761 100644
 > --- a/README
 > +++ b/README
-> @@ -1,292 +1,276 @@
->  erofs-utils
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> @@ -122,7 +122,7 @@ images.  Users may prefer smaller images for archiving purposes, even if
+>  random performance is compromised with those configurations, and even
+>  worse when using 4KiB blocks.
 >
-> -Userspace tools for EROFS filesystem, currently including:
-> +Userspace tools for the EROFS filesystem, including:
+> -In order to fulfill users' needs, big plusters has been introduced
+> +In order to fulfill users' needs, big pclusters has been introduced
+>  since Linux 5.13, in which each physical clusters will be more than one
+>  blocks.
 >
-> -  mkfs.erofs    filesystem formatter
-> -  mount.erofs   mount helper for EROFS
-> -  erofsfuse     FUSE daemon alternative
-> -  dump.erofs    filesystem analyzer
-> -  fsck.erofs    filesystem compatibility & consistency checker as well
-> -                as extractor
-> +  mkfs.erofs    Filesystem formatter
-> +  mount.erofs   Mount helper for EROFS
-> +  erofsfuse     FUSE-based EROFS implementation
-> +  dump.erofs    Filesystem analyzer
-> +  fsck.erofs    Filesystem consistency checker and extractor
+> @@ -159,7 +159,7 @@ write a compress-hints file like below:
+>  and specify with `--compress-hints=` so that ".so" files will use
+>  "lz4hc,12" compression with 4k pclusters, ".txt" files will use
+>  "lzma,9" compression with 32k pclusters, files  under "/sbin" will use
+> -the default "lzma" compression with 4k plusters and other files will
+> +the default "lzma" compression with 4k pclusters and other files will
+>  use "lzma" compression with 16k pclusters.
 >
+>  Note that the largest pcluster size should be specified with the "-C"
+> diff --git a/docs/INSTALL.md b/docs/INSTALL.md
+> index 2e818da..d96b15c 100644
+> --- a/docs/INSTALL.md
+> +++ b/docs/INSTALL.md
+> @@ -4,6 +4,26 @@ source.
+>  See the [README](../README) file in the top level directory about
+>  the brief overview of erofs-utils.
 >
-> -EROFS filesystem overview
-> +EROFS Filesystem Overview
->  -------------------------
->
-> -EROFS filesystem stands for Enhanced Read-Only File System.  It aims to
-> -form a generic read-only filesystem solution for various read-only use
-> -cases instead of just focusing on storage space saving without
-> -considering any side effects of runtime performance.
-> +EROFS (Enhanced Read-Only File System) is designed to provide a high-per=
-formance,
-> +generic read-only filesystem solution for a wide variety of scenarios. U=
-nlike
-> +traditional read-only filesystems that often prioritize maximum storage =
-savings
-> +at the cost of significant runtime performance overhead, EROFS is engine=
-ered to
-> +balance efficient compression with superior data access speeds.
->
-> -Typically EROFS could be considered in the following use scenarios:
-> -  - Firmwares in performance-sensitive systems, such as system
-> -    partitions of Android smartphones;
-> +Typical EROFS use cases include:
->
-> -  - Mountable immutable images such as container images for effective
-> -    metadata & data access compared with tar, cpio or other local
-> -    filesystems (e.g. ext4, XFS, btrfs, etc.)
-> +  - Firmware for performance-critical systems, such as system partitions=
- in
-> +    Android smartphones;
->
-> -  - FSDAX-enabled rootfs for secure containers (Linux 5.15+);
-> +  - Highly efficient, mountable immutable images (e.g., container images=
-)
-> +    offering optimized metadata and data access compared to tar, cpio, o=
-r
-> +    traditional local filesystems (such as ext4, XFS, and btrfs);
->
-> -  - Live CDs which need a set of files with another high-performance
-> -    algorithm to optimize startup time; others files for archival
-> -    purposes only are not needed;
-> +  - FSDAX-enabled rootfs for secure, high-performance containers (suppor=
-ted
-> +    since Linux 5.15);
->
-> -  - and more.
-> +  - Live CDs and bootable media requiring high-performance data retrieva=
-l to
-> +    minimize system startup times;
->
-> -Note that all EROFS metadata is uncompressed by design, so that you
-> -could take EROFS as a drop-in read-only replacement of ext4, XFS,
-> -btrfs, etc. without any compression-based dependencies and EROFS can
-> -bring more effective filesystem accesses to users with reduced
-> -metadata.
-> +  - Archival storage where fast random access to compressed data is requ=
-ired.
->
-> -For more details of EROFS filesystem itself, please refer to:
-> +By design, all EROFS metadata remains uncompressed. This allows EROFS to=
- serve
-> +as a high-performance, drop-in read-only replacement for filesystems lik=
-e ext4,
-> +XFS, or btrfs, even without compression-based dependencies. This archite=
-ctural
-> +choice ensures more effective filesystem access and reduced metadata ove=
-rhead
-> +for end users.
+> +## Quick Start
 > +
-> +For more details on the EROFS filesystem itself, please refer to the off=
-icial
-> +documentation:
->  https://www.kernel.org/doc/html/next/filesystems/erofs.html
->
-> -For more details on how to build erofs-utils, see `docs/INSTALL.md`.
-> +Detailed instructions for building erofs-utils are available in
-> +`docs/INSTALL.md`.
->
-> -For more details about filesystem performance, see
-> +For a comprehensive analysis of filesystem performance, see
->  `docs/PERFORMANCE.md`.
->
->
->  mkfs.erofs
->  ----------
->
-> -Two main kinds of EROFS images can be generated: (un)compressed images.
-> +`mkfs.erofs` can generate two primary types of EROFS images: uncompresse=
-d and
-> +compressed.
->
-> - - For uncompressed images, there will be no compressed files in these
-> -   images.  However, an EROFS image can contain files which consist of
-> -   various aligned data blocks and then a tail that is stored inline in
-> -   order to compact images [1].
-> + - **Uncompressed Images:** These images do not contain compressed file =
-data.
-> +   However, EROFS utilizes a technique where various aligned data blocks=
- are
-> +   followed by an inlined tail to compact the image size effectively [1]=
-.
->
-> - - For compressed images, it will try to use the given algorithms first
-> -   for each regular file and see if storage space can be saved with
-> -   compression. If not, it will fall back to an uncompressed file.
-> + - **Compressed Images:** The formatter attempts to compress each regula=
-r file
-> +   using the specified algorithms. If compression does not yield storage
-> +   savings, the tool automatically falls back to an uncompressed format =
-for
-> +   that specific file.
->
-> -Note that EROFS supports per-file compression configuration, proper
-> -configuration options need to be enabled to parse compressed files by
-> -the Linux kernel.
-> +Note that EROFS supports per-file compression configurations. Ensure tha=
-t the
-> +target Linux kernel is configured with the necessary options to parse th=
-e
-> +selected compression formats.
->
->  How to generate EROFS images
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -Compression algorithms could be specified with the command-line option
-> -`-z` to build a compressed EROFS image from a local directory:
-> +Compression algorithms are specified using the `-z` command-line option.=
- For
-> +example, to build a compressed EROFS image from a local directory using =
-LZ4HC:
->   $ mkfs.erofs -zlz4hc foo.erofs.img foo/
->
-> -Supported algorithms by the Linux kernel:
-> +Supported algorithms in the Linux kernel:
->   - LZ4 (Linux 5.3+);
->   - LZMA (Linux 5.16+);
->   - DEFLATE (Linux 6.6+);
->   - Zstandard (Linux 6.10+).
->
-> -Alternatively, generate an uncompressed EROFS from a local directory:
-> +Alternatively, to generate an uncompressed EROFS image:
->   $ mkfs.erofs foo.erofs.img foo/
->
-> -Additionally, you can specify a higher compression level to get a
-> -(slightly) smaller image than the default level:
-> +You can also specify a higher compression level to achieve a smaller ima=
-ge
-> +size (e.g., level 12 for LZ4HC):
->   $ mkfs.erofs -zlz4hc,12 foo.erofs.img foo/
->
-> -Multi-threaded support can be explicitly enabled with the ./configure
-> -option `--enable-multithreading`; otherwise, single-threaded compression
-> -will be used for now.  It may take more time on multiprocessor platforms
-> -if multi-threaded support is not enabled.
-> +Multi-threaded support can be enabled during the build process using the
-> +`--enable-multithreading` configure option. If enabled, `mkfs.erofs` wil=
-l
-> +utilize multiple processors to accelerate the compression process.
->
-> -Currently, `-Ededupe` doesn't support multi-threading due to limited
-> -development resources.
-> +Currently, the `-Ededupe` option does not support multi-threading.
->
->  Reproducible builds
->  ~~~~~~~~~~~~~~~~~~~
->
-> -Reproducible builds are typically used for verification and security,
-> -ensuring the same binaries/distributions to be reproduced in a
-> -deterministic way.
-> -
-> -Images generated by the same version of `mkfs.erofs` will be identical
-> -to previous runs if the same input is specified, and the same options
-> -are used.
-> +EROFS supports reproducible builds, which are essential for verification=
- and
-> +security. This ensures that the same input and options always result in
-> +bit-for-bit identical filesystem images.
->
-> -Specifically, variable timestamps and filesystem UUIDs can result in
-> -unreproducible EROFS images.  `-T` and `-U` can be used to fix them.
-> +To ensure reproducibility, you may need to fix variable timestamps and
-> +filesystem UUIDs using the `-T` and `-U` options, respectively.
->
->  How to generate EROFS big pcluster images (Linux 5.13+)
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -By default, EROFS formatter compresses data into separate one-block
-> -(e.g. 4KiB) filesystem physical clusters for outstanding random read
-> -performance.  In other words, each EROFS filesystem block can be
-> -independently decompressed.  However, other similar filesystems
-> -typically compress data into "blocks" of 128KiB or more for much smaller
-> -images.  Users may prefer smaller images for archiving purposes, even if
-> -random performance is compromised with those configurations, and even
-> -worse when using 4KiB blocks.
-> -
-> -In order to fulfill users' needs, big pclusters has been introduced
-> -since Linux 5.13, in which each physical clusters will be more than one
-> -blocks.
-> -
-> -Specifically, `-C` is used to specify the maximum size of each pcluster
-> -in bytes:
-> +By default, the EROFS formatter compresses data into separate one-block =
-(e.g.,
-> +4KiB) physical clusters (pclusters) to ensure exceptional random read
-> +performance. This allows each block to be decompressed independently. In
-> +contrast, other filesystems often use much larger compression blocks (12=
-8KiB+),
-> +which can improve compression ratios at the expense of random access lat=
-ency.
+> +For those who want a quick build, ensure that the following prerequisites are
+> +installed (on Debian/Ubuntu):
 > +
-> +To accommodate different needs, "big pclusters" were introduced in Linux=
- 5.13,
-> +allowing physical clusters to span multiple blocks.
+> +``` sh
+> +$ sudo apt-get install autoconf automake libtool pkg-config uuid-dev \
+> +                       liblz4-dev liblzma-dev libfuse-dev zlib1g-dev \
+> +                       libselinux1-dev libzstd-dev
+> +```
 > +
-> +The `-C` option specifies the maximum pcluster size in bytes:
->   $ mkfs.erofs -zlz4hc -C65536 foo.erofs.img foo/
->
-> -Thus, in this case, pcluster sizes can be up to 64KiB.
-> +In this example, pcluster sizes can reach up to 64KiB.
->
-> -Note that large pcluster size can degrade random performance (though it
-> -may improve sequential read performance for typical storage devices), so
-> -please evaluate carefully in advance.  Alternatively, you can make
-> -per-(sub)file compression strategies according to file access patterns
-> -if needed.
-> +Note: Larger pcluster sizes may improve sequential read performance on s=
-ome
-> +storage devices but can degrade random access performance. Evaluate your
-> +workload requirements carefully. You can also apply per-file compression
-> +strategies based on specific access patterns.
->
->  How to generate EROFS images with multiple algorithms
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -It's possible to generate an EROFS image with files in different
-> -algorithms due to various purposes.  For example, LZMA for archival
-> -purposes and LZ4 for runtime purposes.
-> +EROFS allows mixing different compression algorithms within a single ima=
-ge to
-> +suit different needs=E2=80=94for instance, using LZMA for archival data =
-and LZ4 for
-> +frequently accessed runtime files.
->
-> -In order to use alternative algorithms, just specify two or more
-> -compressing configurations together separated by ':' like below:
-> +To use multiple algorithms, specify them in the `-z` option separated by
-> +colons:
->      -zlzma:lz4hc,12:lzma,9 -C32768
->
-> -Although mkfs still choose the first one by default, you could try to
-> -write a compress-hints file like below:
-> +While the formatter defaults to the first algorithm, you can use a
-> +compress-hints file to map specific files or directories to different
-> +algorithms:
->      4096  1 .*\.so$
->      32768 2 .*\.txt$
->      4096    sbin/.*$
->      16384 0 .*
->
-> -and specify with `--compress-hints=3D` so that ".so" files will use
-> -"lz4hc,12" compression with 4k pclusters, ".txt" files will use
-> -"lzma,9" compression with 32k pclusters, files  under "/sbin" will use
-> -the default "lzma" compression with 4k pclusters and other files will
-> -use "lzma" compression with 16k pclusters.
-> +Specify the hints file with `--compress-hints=3D`. In this configuration=
-, `.so`
-> +files use `lz4hc,12` with 4KiB pclusters, `.txt` files use `lzma,9` with=
- 32KiB
-> +pclusters, and so on.
->
-> -Note that the largest pcluster size should be specified with the "-C"
-> -option (here 32k pcluster size), otherwise all larger pclusters will be
-> -limited.
-> +Note: The `-C` option must specify the largest pcluster size used in the
-> +hints file to avoid limiting compression efficiency.
->
->  How to generate well-compressed EROFS images
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -Even if EROFS is not designed for such purposes in the beginning, it
-> -could still produce some smaller images (not always) compared to other
-> -approaches with better performance (see `docs/PERFORMANCE.md`).  In
-> -order to build well-compressed EROFS images, try the following options:
-> - -C1048576                     (5.13+)
-> - -Eztailpacking                (5.16+)
-> - -Efragments / -Eall-fragments ( 6.1+);
-> - -Ededupe                      ( 6.1+).
-> +While EROFS prioritizes performance, it can still achieve competitive
-> +compression ratios. To maximize storage efficiency, consider the followi=
-ng
-> +options:
-> + -C1048576                     (Large pclusters, Linux 5.13+)
-> + -Eztailpacking                (Tail-packing for compressed files, Linux=
- 5.16+)
-> + -Efragments / -Eall-fragments (Fragment-based compression, Linux 6.1+)
-> + -Ededupe                      (Global data deduplication, Linux 6.1+)
->
-> -Also EROFS uses lz4hc level 9 by default, whereas some other approaches
-> -use lz4hc level 12 by default.  So please explicitly specify
-> -`-zlz4hc,12 ` for comparison purposes.
-> +EROFS defaults to LZ4HC level 9. For maximum compression, specify level =
-12:
-> + `-zlz4hc,12`
->
->  How to generate legacy EROFS images (Linux 4.19+)
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -Decompression inplace and compacted indexes have been introduced in
-> -Linux v5.3, which are not forward-compatible with older kernels.
-> -
-> -In order to generate _legacy_ EROFS images for old kernels,
-> -consider adding "-E legacy-compress" to the command line, e.g.
-> +Features like in-place decompression and compacted indexes (introduced i=
-n
-> +Linux 5.3) are not compatible with older kernels. To generate images for
-> +kernels between 4.19 and 5.3, use the legacy option:
->
->   $ mkfs.erofs -E legacy-compress -zlz4hc foo.erofs.img foo/
->
-> -For Linux kernel >=3D 5.3, legacy EROFS images are _NOT recommended_
-> -due to runtime performance loss compared with non-legacy images.
-> +Note: Legacy images are not recommended for Linux kernel 5.3 and newer, =
-as
-> +they do not benefit from the performance optimizations available in mode=
-rn
-> +EROFS implementations.
->
->  Obsoleted erofs.mkfs
->  ~~~~~~~~~~~~~~~~~~~~
->
-> -There is an original erofs.mkfs version developed by Li Guifu,
-> -which was replaced by the new erofs-utils implementation.
-> -
-> +The original `erofs.mkfs` implementation by Li Guifu has been superseded=
- by
-> +the current `erofs-utils`. The old version is available for historical
-> +reference but is highly discouraged for production use:
->  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b o=
-bsoleted_mkfs
->
-> -PLEASE NOTE: This version is highly _NOT recommended_ now.
-> -
->
->  mount.erofs
->  -----------
->
-> -mount.erofs is a mount helper for EROFS filesystem, which can be used
-> -to mount EROFS images with various backends including direct kernel
-> -mount, FUSE-based mount, and NBD for remote sources like OCI images.
-> +`mount.erofs` is a versatile mount helper that supports various backends=
-,
-> +including direct kernel mounts, FUSE-based mounts, and NBD for remote
-> +sources like OCI images.
->
->  How to mount an EROFS image
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -To mount an EROFS image directly:
-> +Direct kernel mount:
->   $ mount.erofs foo.erofs /mnt
->
-> -To mount with FUSE backend:
-> +FUSE-based mount:
->   $ mount.erofs -t erofs.fuse foo.erofs /mnt
->
-> -To mount from OCI image with NBD backend:
-> +NBD-based mount from an OCI image:
->   $ mount.erofs -t erofs.nbd -o oci.blob=3Dsha256:... <IMAGE>:<TAG> mnt
->
-> -To unmount an EROFS filesystem:
-> +Unmount:
->   $ mount.erofs -u mnt
->
-> -For more details, see mount.erofs(8) manpage.
-> +Refer to the `mount.erofs(8)` manpage for further details.
->
->
->  erofsfuse
->  ---------
->
-> -erofsfuse is introduced to support EROFS format for various platforms
-> -(including older linux kernels) and new on-disk features iteration.
-> -It can also be used as an unpacking tool for unprivileged users.
-> -
-> -It supports fixed-sized output decompression *without* any in-place
-> -I/O or in-place decompression optimization. Also like the other FUSE
-> -implementations, it suffers from most common performance issues (e.g.
-> -significant I/O overhead, double caching, etc.)
-> +`erofsfuse` provides EROFS support for platforms without native kernel
-> +drivers and serves as a tool for rapid feature iteration. It is also
-> +useful for unprivileged users to unpack EROFS images.
->
-> -Therefore, NEVER use it if performance is the top concern.
-> +`erofsfuse` performs fixed-sized output decompression and does not inclu=
-de
-> +the in-place I/O or decompression optimizations found in the kernel driv=
-er.
-> +As with most FUSE implementations, it may experience higher I/O overhead
-> +and double caching. It is not recommended for performance-critical
-> +applications.
->
->  How to mount an EROFS image with erofsfuse
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> -As the other FUSE implementations, it's quite easy to mount by using
-> -erofsfuse, e.g.:
-> +To mount an image:
->   $ erofsfuse foo.erofs.img foo/
->
-> -Alternatively, to make it run in foreground (with debugging level 3):
-> +To run in the foreground with debug logging (level 3):
->   $ erofsfuse -f --dbglevel=3D3 foo.erofs.img foo/
->
-> -To debug erofsfuse (also automatically run in foreground):
-> +To run in debug mode (automatically foreground):
->   $ erofsfuse -d foo.erofs.img foo/
->
-> -To unmount an erofsfuse mountpoint as a non-root user:
-> +To unmount as a non-root user:
->   $ fusermount -u foo/
->
->
->  dump.erofs and fsck.erofs
->  -------------------------
->
-> -dump.erofs and fsck.erofs are used to analyze, check, and extract
-> -EROFS filesystems. Note that extended attributes and ACLs are still
-> -unsupported when extracting images with fsck.erofs.
-> +`dump.erofs` and `fsck.erofs` are essential tools for analyzing, verifyi=
-ng,
-> +and extracting EROFS filesystems. Note that extended attributes (xattrs)=
- and
-> +ACLs are currently not supported during extraction with `fsck.erofs`.
+> +Then, run the following commands to build and install:
 > +
-> +Extraction in `fsck.erofs` is currently single-threaded. Contributions t=
-o
-> +optimize this process are welcome.
->
-> -Note that extraction with fsck.erofs is still single-threaded and will
-> -need optimization later.  If you are interested, contributions are, as
-> -always, welcome.
->
->  Contribution
->  ------------
->
-> -erofs-utils is a part of EROFS filesystem project, which is completely
-> -community-driven open source software.  If you have interest in EROFS,
-> -feel free to send feedback and/or patches to:
-> +EROFS-utils is a key component of the EROFS filesystem project and is
-> +entirely community-driven. We welcome feedback, bug reports, and patches=
-.
+> +``` sh
+> +$ ./autogen.sh
+> +$ ./configure
+> +$ make
+> +# make install
+> +```
 > +
-> +Please send your contributions to the mailing list:
->    linux-erofs mailing list   <linux-erofs@lists.ozlabs.org>
+>  ## Dependencies & build
 >
+>  LZ4 1.9.3+ for LZ4(HC) enabled [^1].
+> @@ -45,6 +65,18 @@ $ make
+>  Additionally, you could specify liblzma target paths with
+>  `--with-liblzma-incdir` and `--with-liblzma-libdir` manually.
 >
->  Comments
->  --------
+> +## How to build with multithreading
+> +
+> +To enable multithreading support for mkfs.erofs, use the following:
+> +
+> +``` sh
+> +$ ./configure --enable-multithreading
+> +$ make
+> +```
+> +
+> +Note that multithreading is enabled by default if the compiler supports it.
+> +To disable it explicitly, use `--disable-multithreading`.
+> +
+>  ## How to build erofsfuse
 >
-> -[1] According to the EROFS on-disk format, the tail blocks of files
-> -    could be inlined aggressively with their metadata (called
-> -    tail-packing) in order to minimize the extra I/Os and the storage
-> -    space.
-> +[1] EROFS on-disk format allows the tail blocks of files to be inlined
-> +    with their metadata (tail-packing). This reduces extra I/O operation=
-s
-> +    and saves storage space by eliminating internal fragmentation in the
-> +    last block of a file.
+>  It's disabled by default as an experimental feature for now due
 > --
 > 2.53.0
 >
