@@ -1,84 +1,88 @@
-Return-Path: <linux-erofs+bounces-3093-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3094-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kIFTImsIymk64gUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3093-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 07:21:47 +0200
+	id AIcEBm4Iymk64gUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3094-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 07:21:50 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFE5235576D
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 07:21:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 713D0355774
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 07:21:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkfkJ4LJsz2ygT;
-	Mon, 30 Mar 2026 16:21:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkfkL0yBYz2ygl;
+	Mon, 30 Mar 2026 16:21:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::62b"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774848104;
-	cv=none; b=SXG+dTFkpGpeuovg7PuA2Z3kYwJhcugI4DmYFuXgQE7imfZ/fUUHVooZmCEyRf2o9cq6AaIRrApkRDtCwngar1X+9bEeWwAfITUZnwllXM8gISjPGzz0q/FImEqz372lF6vM2I/DbDMBnGzyNV1vPKryHHa2z/PaEBA6OE859PRtSPMKAmmbzG+PEt6oXypbFQzWs9J3XQRpsGHdWNb9Yk5ay3xxtbMWwJiGAlBedkahPBfzFzjbI3XKK+TA1QJKhNtFGoLAdKrOC+D6gypsoGYDl0JTXutjt+65GK1OkyONWff7aAqC41NSuBoQdhGGL7MOx2AksleNgvxP8V4bww==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::634"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774848106;
+	cv=none; b=QQeYYyGTguW9KE8HJMM99lX9eH09VAEP6L6vUUEsA5zx4ngjlBqQ4YxbGXOUVSYcuj2qCEpqQnRlzgxUrk9rVipFSr5Ij/y4qja25CYH7N6rfFnaPm8d8fYRnlQrhi460QCoep9kGV/6DNgFEzTkBKYBbmuL25R190qHuGyCm+BHYZxd1Mmfbz+18jvm6R9x/tBu6oROe5at3J2jOoZOCKSUP89XsV82G6WOe6WTsY1PdwyvdzDGuTHKkPz4kZn+tSZb1qrwccaY0gMH7r1enY/C/+5kb5eP1UmAnaxBwRJJ0Pn/yIUUCb+fH9oDT1Dn918an9o6ivBHVbMsTKWHNQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774848104; c=relaxed/relaxed;
-	bh=Tze0wOTZorvP1ya6ZRuO2Q+rmvrJ9SIc25zX/+ZQgo0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=esdHwLg1GQmefFUcHqHBOPRNC4qU3vudm2jycsd3txzWZ7TteHRr5o22oL2WUVBAJH643ra5T/SZOmoSaSsgQ64ZDvVx3LVysHB48h5caVs4u5kHtOAz7XCcCW3PbZdjngUwEL8/9Wl+c3PiBalXV4JIXLlmQQP3EaZlL3aahpvQpL38tswcrYaCoYG0Hauimjqye0EhsSGsZUrItKHXrVqUzbV8TbbD2bcSWZe0FF/+t8rG65EpfudJdoAbYaKoEgQYL3ZYc/GEb77EfHYdi+H7bgCwTmqe7mYDxnTzifGmGwlvOfQJZmvlu+2XsKvA4XYeXB/l//WEXFhnZObz9w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CA5lB7mB; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62b; helo=mail-pl1-x62b.google.com; envelope-from=aghi.saksham5@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1774848106; c=relaxed/relaxed;
+	bh=nRa4Y3DTO90LLAywkvRujNPmCrM0radhzw/wt55MS0Y=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MnGdg981w0EQ9dvI+Ga4WM/iNyxwm9tgTZdQZGSZgj2/SAEaBBl2wzIHei4hkMQyf6yKgG5wPUl2i0T34bMcY1LjmJ4nfvD3HFG4z0R1sSS5q5KTlt6cPuAv2YTGPHj5+TvZUNnoVHOSpTCzk10IVl2zdFrMxaN+8+X/F8S/odwmHUBj9DjcgYStBgBwI4EZnwDjup72tkPt2URV1eL9wmVn99myA7I4qaDllFFSUR+KHibRCp77IoB5K/dRG6x6zvcK6LIzoiWuuNC11evNA5KiYoyp9T5RXc4kVxxgGILgrSmN5PlFCQKCEF4s+jnram6/mru1qxTDkkqq0rQTMw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hLn/94kg; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=aghi.saksham5@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CA5lB7mB;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hLn/94kg;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62b; helo=mail-pl1-x62b.google.com; envelope-from=aghi.saksham5@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::634; helo=mail-pl1-x634.google.com; envelope-from=aghi.saksham5@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkfkH6Gmnz2xpt
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 16:21:43 +1100 (AEDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2b24fede2acso4478195ad.3
-        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 22:21:43 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkfkK39Rjz2xpt
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 16:21:45 +1100 (AEDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2a9296b3926so25892595ad.1
+        for <linux-erofs@lists.ozlabs.org>; Sun, 29 Mar 2026 22:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774848102; x=1775452902; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tze0wOTZorvP1ya6ZRuO2Q+rmvrJ9SIc25zX/+ZQgo0=;
-        b=CA5lB7mBc2ImUdF2Slu7hkwwK4r8DM8uoJ2W3Xu/+bLaMTyoOn/HOW/d3x6Ph7gGwy
-         TlhkloYZrT3tLSjJ2P7AHmE2gcA3kgxnEQNbWHxngaraoyiKzvc50kRyThz+RHBdYHGL
-         eaRY2/KOl5aYZyYQkBlMQaDtLf3oX1KTpjbL8uow9q1Np4vCy4kPlwPZZtfOOsjOgBrn
-         aykVlohZCeiwNfdHkN64LSEyMNz0vvBzRgKIWktutX1key7QCIQuh3ANjlWezatBsY53
-         Uakyr79fuFHNtvNXf0tNl884B0l/+1cnXHja6RBRWMZhvdvJawA8dovpY04L8fx94A2F
-         8XUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774848102; x=1775452902;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20251104; t=1774848103; x=1775452903; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Tze0wOTZorvP1ya6ZRuO2Q+rmvrJ9SIc25zX/+ZQgo0=;
-        b=QPGm5TY5qZvkuAroUxhcYYIiHaMfyWXZdaMh0rDqtuIub3mL7p9IibGRa8Y7h1Rozc
-         1HRyezoOmWWolPGPw+mWoUAoVmlUrvTNKSZI9bIm/hGIlILQdJWC2PjffdevXaOSu1sY
-         yvCTATTLoIQilD70LCMXpYKgstTkiENnVpk+9qcS1h6B83RV0P5jA9kUwvRzLXGvtfld
-         2/YK1+thxXykAIkZc/InMw4HgUWQd8T9jlUlGnaOcID7UZRVi/M8UyWpkyQy8dwcupMA
-         I4egQyD5yHck5dJPcsJwaCWGWVbSk1JRQ31dXJ1F5sZJ6ZFGp6ebw2p0cljzPN5kDM6J
-         kSvA==
-X-Gm-Message-State: AOJu0YzMNGGiNoMWGA4P7XxO7TcyoxOH7ysi03qdjnAK4PeelQwfblwz
-	Zabm4kq3Ityxn7XAT4QXcWu0G4Zn4leeMJUm6ehUiKHRoiFwaTr+hxQ/jCCD5wpT
-X-Gm-Gg: ATEYQzzQLhNBgRonA7K36YXjixS09WTT98Y6OG2KEt/SWUZXFG0dmKrt2TNmj4j3NCF
-	rjSYQAg3m2O3HvTHwEtvEYzqfNv6ApMB93ApjSAIZZzPx1vylmmvOs/DnyBVKWITNVDGN+fmfo7
-	3mWh5m58dprL4yq+m6XepgPhMMRoYZHhPmHCvnAXGkAd1XCXhcJGDpsqmbahozUo99o0eViaLNE
-	ZuGxZ4QP8lj/AgfDvgpVw/1EGhtICf3vA/TslM3WgQI4WUfht+lepnLZsCLE2wVspqn3G9v/I2G
-	F1t49A09S/aRHYphlte+mCHAgn/44obQUEJO5U1Mt82/6yit0cD/hMln0l8RX1XY3Yjdc0P8DRG
-	mvsZeX0yZfwd3aVBVhDFUHfIQ/3o2LN7Qc6jKmg+ZhOveJgbqMc2ST/irQAQwNV5AE9euo8PsEg
-	C5XWmS1fQgQtBO+Jw/eNzrEh1Jt4huTIPyag==
-X-Received: by 2002:a17:903:292:b0:2b2:4e70:631c with SMTP id d9443c01a7336-2b24e706a7bmr34926425ad.28.1774848101466;
-        Sun, 29 Mar 2026 22:21:41 -0700 (PDT)
+        bh=nRa4Y3DTO90LLAywkvRujNPmCrM0radhzw/wt55MS0Y=;
+        b=hLn/94kg4if4jMJpPEZx+zSsH8S2gaHkEEagqT0P4Rgi/TZX+OSnU5qkqQoYd9LF9a
+         NcKH0ilsSab3o3xPdTQhOfiy2CBZO6FtbI2aqsVOcWzlsy8N1/vGTbSr/MkimL4M+PxD
+         5qhwjRCyS6ro16w6aHi9tVXTSxw1F+owSNPMo6t4ZI83kcCMUpSnd+Rb5Po0odMlJdsO
+         6H0cmywNFGrISbKROmFyR4GFqoUG8Qcxac2EoZKamyw+B5VVlUVEKZcXwHbBFbo3mOTL
+         X9PLTJy4w3+1WpfoBE2SoYaiP38PJ8AtNHoxOvaRqzxr6ArYkFlWC3CSiXVsKG+W2w0e
+         JCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774848103; x=1775452903;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nRa4Y3DTO90LLAywkvRujNPmCrM0radhzw/wt55MS0Y=;
+        b=Dt436C3Kf59w56Wk9pzT2gT+LiLVEaA94gbrX3HH+377Eu/sy6zQYiZT8ul0+QhJOl
+         LaSt6/4ha2ayiSe/Afuvc3Fu3lSHzbNgRlSgFqBiEC0Qi7Dh7HhHHh80yxf2ihP+sE6a
+         66crvCTXq7UrGykUpT7clai7OjIwJkIFjiH4xGQEP6zHkncGfkkQGvgazYnw+v+fZ9dx
+         ZBC83LkMlxGLbhQwMkFNgSIUeQsuMNsRZeZ5+epMKimjlcqultCrEq2f9cOyCDYHYJRv
+         B4lLP6sDaispd2xNdmPwD8Mgk+w9NNHYRKusmD5HIYFNsQTf8BhShWb5yO1+Fsjis/jX
+         eneg==
+X-Gm-Message-State: AOJu0YyP4xY0Fo8puHCNW7qHThpvVnyWId91hGk89BnmxlGeN5VP25th
+	FcLYbIKTWCxDPKZIeUFXS2lQqpPM/LuJBKMROBGniVnLB2+P/oPkTDK5esbRhrSs
+X-Gm-Gg: ATEYQzzLR8wjM+xhqZgxQWn7L6tj2NOfbqPnRe2TV370LlBKRTtxEkHyS/xQpsieziP
+	vRoB8bxF4Q842m12nIn43aKPdrhgHPZEy3hrEXn4Qgz8SLFS2QrwpUMvI0UIXsiU2bnlJN4pxyi
+	8kNDvnLB/uajwyN0jHWO2fcO8PkP+rhxCEsM5o0XbRtsW2Ub3BWUpRfH2Syl704ZlH61PCi4W0T
+	1Jy+FCmDxki8r87359OgkCLbC2RaUyD4Ea/U0LOMQe1giSRdT4Nzo7k6qTymOZSda9evZ2LbW0N
+	7OL6es53dinCuGHMbQmSgSDqYmNH35HuQNf/5rQ+ZWy5Ml2vowxv978CMdoA2cdPKZLEjW44lAd
+	2Mulk8QwKF0rzh72ff8NsfD0ad1pLENZ96SKiUiWfDEZo9byu1zo23g0zSVyw2ZJFgTUZBs6jMT
+	RINc5pO+skV1w2tBXaJY51+NTgUaljS2iuBw==
+X-Received: by 2002:a17:903:2287:b0:2b2:42b1:ad9a with SMTP id d9443c01a7336-2b242b1b124mr73254095ad.19.1774848102916;
+        Sun, 29 Mar 2026 22:21:42 -0700 (PDT)
 Received: from kali ([103.212.138.224])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2427b15a2sm78624325ad.73.2026.03.29.22.21.40
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2427b15a2sm78624325ad.73.2026.03.29.22.21.41
         for <linux-erofs@lists.ozlabs.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2026 22:21:41 -0700 (PDT)
+        Sun, 29 Mar 2026 22:21:42 -0700 (PDT)
 From: Saksham <aghi.saksham5@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/3] erofs-utils: lib: fix error-path resource leaks in stream setup
-Date: Mon, 30 Mar 2026 10:51:35 +0530
-Message-ID: <20260330052137.9273-1-aghi.saksham5@gmail.com>
+Subject: [PATCH 2/3] erofs-utils: fix typos and enhance installation guide
+Date: Mon, 30 Mar 2026 10:51:36 +0530
+Message-ID: <20260330052137.9273-2-aghi.saksham5@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260330052137.9273-1-aghi.saksham5@gmail.com>
+References: <20260330052137.9273-1-aghi.saksham5@gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -106,7 +110,7 @@ X-Spamd-Result: default: False [-1.70 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3093-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3094-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_ONE(0.00)[1];
 	FROM_NEQ_ENVFROM(0.00)[aghisaksham5@gmail.com,linux-erofs@lists.ozlabs.org];
@@ -123,226 +127,122 @@ X-Spamd-Result: default: False [-1.70 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: DFE5235576D
+X-Rspamd-Queue-Id: 713D0355774
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Currently, erofs_iostream_open() in lib/tar.c has several resource leaks
-in its error paths. Specifically:
+This patch addresses several issues in the README and docs/INSTALL.md
+to improve the overall documentation quality and provide a better
+experience for new users and developers.
 
-1. In the LZMA decoder path, if lzma_auto_decoder() fails, the allocated
-   ios->lzma structure is leaked. Furthermore, the file descriptor 'fd'
-   passed to the function is not closed, despite ownership being
-   conceptually transferred to the stream.
+First, multiple instances of "plusters" were found in the README file.
+These were typos for "pclusters" (physical clusters), which is a key
+concept in EROFS for block-level compression and data management.
+Correcting these ensures technical accuracy and avoids confusion
+for users trying to understand the filesystem's behavior, especially
+regarding the "big pcluster" feature introduced in Linux 5.13.
 
-2. In the GZRAN decoder path, if erofs_gzran_builder_init() fails, the
-   file descriptor 'fd' is leaked.
+Specifically:
+- Fixed "big plusters" to "big pclusters" in the section describing
+  high-compression image generation.
+- Fixed "4k plusters" to "4k pclusters" in the compression hints
+  example section.
 
-3. In the final buffer allocation loop, if malloc() fails for all
-   attempted buffer sizes, the function returns -ENOMEM without
-   cleaning up the already initialized decoder state (e.g., gzdopen'ed
-   handler, lzma state, or gzran builder). This also leaks the file
-   descriptor.
+Second, the installation documentation in docs/INSTALL.md was updated
+to provide a more streamlined onboarding process. A "Quick Start"
+section was added at the top, listing all common prerequisites for
+Debian-based systems (Ubuntu, etc.). This allows users to quickly
+get all necessary libraries (lz4, xz, uuid, fuse, etc.) and build
+the project with a single set of commands.
 
-This patch refactors erofs_iostream_open() to use a unified error
-cleanup path. A new 'err_close' label is introduced to handle failures
-that occur before the high-level stream is fully established, ensuring
-that the file descriptor is closed. For failures that occur after
-the stream is partially or fully initialized (like the buffer allocation
-failure), erofs_iostream_close() is called to perform a complete cleanup.
+Third, a new section was added to docs/INSTALL.md regarding
+multithreading support. While multithreading is enabled by default
+in mkfs.erofs if the compiler and environment support it, it was
+not explicitly documented in the INSTALL guide. The new section
+explains how to explicitly enable it with --enable-multithreading
+or disable it with --disable-multithreading, providing users with
+more control over their build configuration.
 
-Additionally, erofs_iostream_close() is updated to ensure that the
-underlying file descriptor is closed in the EROFS_IOS_DECODER_GZRAN
-case, which was previously overlooked.
-
-Furthermore, this patch fixes related resource leaks in lib/gzran.c,
-ensuring that erofs_gzran_builder_init() frees its state on failure,
-and erofs_gzran_builder_final() always frees its state regardless of
-inflateEnd()'s return value.
-
-These changes ensure clear resource ownership and robust error handling
-during stream setup, reducing the risk of file descriptor and memory
-leaks in long-running or resource-constrained environments.
-
-Signed-off-by: Saksham <aghi.saksham5@gmail.com>
+These changes ensure that the documentation remains up-to-date
+with the latest features of erofs-utils and provides clear
+instructions for both new and experienced users.
 ---
- lib/gzran.c |  9 +++----
- lib/tar.c   | 72 ++++++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 53 insertions(+), 28 deletions(-)
+ README          |  4 ++--
+ docs/INSTALL.md | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/lib/gzran.c b/lib/gzran.c
-index dffb20a..e64b5b0 100644
---- a/lib/gzran.c
-+++ b/lib/gzran.c
-@@ -50,8 +50,10 @@ struct erofs_gzran_builder *erofs_gzran_builder_init(struct erofs_vfile *vf,
- 	strm->avail_in = 0;
- 	strm->next_in = Z_NULL;
- 	ret = inflateInit2(strm, 47);	/* automatic zlib or gzip decoding */
--	if (ret != Z_OK)
-+	if (ret != Z_OK) {
-+		free(gb);
- 		return ERR_PTR(-EFAULT);
-+	}
- 	gb->vf = vf;
- 	gb->span_size = span_size;
- 	gb->totout = gb->totin = 0;
-@@ -187,11 +189,8 @@ int erofs_gzran_builder_export_zinfo(struct erofs_gzran_builder *gb,
- int erofs_gzran_builder_final(struct erofs_gzran_builder *gb)
- {
- 	struct erofs_gzran_cutpoint_item *ci, *n;
--	int ret;
+diff --git a/README b/README
+index 1ca376f..6f9e761 100644
+--- a/README
++++ b/README
+@@ -122,7 +122,7 @@ images.  Users may prefer smaller images for archiving purposes, even if
+ random performance is compromised with those configurations, and even
+ worse when using 4KiB blocks.
  
--	ret = inflateEnd(&gb->strm);
--	if (ret != Z_OK)
--		return -EFAULT;
-+	(void)inflateEnd(&gb->strm);
- 	list_for_each_entry_safe(ci, n, &gb->items, list) {
- 		list_del(&ci->list);
- 		free(ci);
-diff --git a/lib/tar.c b/lib/tar.c
-index eca29f5..dd8135b 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -53,80 +53,99 @@ struct erofs_iostream_liblzma {
+-In order to fulfill users' needs, big plusters has been introduced
++In order to fulfill users' needs, big pclusters has been introduced
+ since Linux 5.13, in which each physical clusters will be more than one
+ blocks.
  
- void erofs_iostream_close(struct erofs_iostream *ios)
- {
--	free(ios->buffer);
-+	if (ios->buffer) {
-+		free(ios->buffer);
-+		ios->buffer = NULL;
-+	}
- 	if (ios->decoder == EROFS_IOS_DECODER_GZIP) {
- #if defined(HAVE_ZLIB)
- 		gzclose(ios->handler);
- #endif
--		return;
- 	} else if (ios->decoder == EROFS_IOS_DECODER_LIBLZMA) {
- #if defined(HAVE_LIBLZMA)
- 		lzma_end(&ios->lzma->strm);
- 		close(ios->lzma->fd);
- 		free(ios->lzma);
- #endif
--		return;
--	} else if (ios->decoder == EROFS_IOS_DECODER_GZRAN) {
--		erofs_gzran_builder_final(ios->gb);
--		return;
-+	} else {
-+		if (ios->decoder == EROFS_IOS_DECODER_GZRAN)
-+			erofs_gzran_builder_final(ios->gb);
-+		erofs_io_close(&ios->vf);
- 	}
--	erofs_io_close(&ios->vf);
- }
+@@ -159,7 +159,7 @@ write a compress-hints file like below:
+ and specify with `--compress-hints=` so that ".so" files will use
+ "lz4hc,12" compression with 4k pclusters, ".txt" files will use
+ "lzma,9" compression with 32k pclusters, files  under "/sbin" will use
+-the default "lzma" compression with 4k plusters and other files will
++the default "lzma" compression with 4k pclusters and other files will
+ use "lzma" compression with 16k pclusters.
  
- int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
- {
- 	s64 fsz;
-+	int ret;
+ Note that the largest pcluster size should be specified with the "-C"
+diff --git a/docs/INSTALL.md b/docs/INSTALL.md
+index 2e818da..d96b15c 100644
+--- a/docs/INSTALL.md
++++ b/docs/INSTALL.md
+@@ -4,6 +4,26 @@ source.
+ See the [README](../README) file in the top level directory about
+ the brief overview of erofs-utils.
  
- 	ios->feof = false;
- 	ios->tail = ios->head = 0;
- 	ios->decoder = decoder;
- 	ios->dumpfd = -1;
-+	ios->buffer = NULL;
++## Quick Start
 +
- 	if (decoder == EROFS_IOS_DECODER_GZIP) {
- #if defined(HAVE_ZLIB)
- 		ios->handler = gzdopen(fd, "r");
--		if (!ios->handler)
--			return -ENOMEM;
-+		if (!ios->handler) {
-+			ret = -ENOMEM;
-+			goto err_close;
-+		}
- 		ios->sz = fsz = 0;
- 		ios->bufsize = 32768;
- #else
--		return -EOPNOTSUPP;
-+		ret = -EOPNOTSUPP;
-+		goto err_close;
- #endif
- 	} else if (decoder == EROFS_IOS_DECODER_LIBLZMA) {
- #ifdef HAVE_LIBLZMA
--		lzma_ret ret;
-+		lzma_ret lret;
- 
- 		ios->lzma = malloc(sizeof(*ios->lzma));
--		if (!ios->lzma)
--			return -ENOMEM;
-+		if (!ios->lzma) {
-+			ret = -ENOMEM;
-+			goto err_close;
-+		}
- 		ios->lzma->fd = fd;
- 		ios->lzma->strm = (lzma_stream)LZMA_STREAM_INIT;
--		ret = lzma_auto_decoder(&ios->lzma->strm,
-+		lret = lzma_auto_decoder(&ios->lzma->strm,
- 					UINT64_MAX, LZMA_CONCATENATED);
--		if (ret != LZMA_OK)
--			return -EFAULT;
-+		if (lret != LZMA_OK) {
-+			free(ios->lzma);
-+			ret = -EFAULT;
-+			goto err_close;
-+		}
- 		ios->sz = fsz = 0;
- 		ios->bufsize = 32768;
- #else
--		return -EOPNOTSUPP;
-+		ret = -EOPNOTSUPP;
-+		goto err_close;
- #endif
- 	} else if (decoder == EROFS_IOS_DECODER_GZRAN) {
- 		ios->vf.fd = fd;
-+		ios->vf.ops = NULL;
- 		ios->feof = false;
- 		ios->sz = 0;
- 		ios->bufsize = EROFS_GZRAN_WINSIZE * 2;
- 		ios->gb = erofs_gzran_builder_init(&ios->vf, 4194304);
--		if (IS_ERR(ios->gb))
--			return PTR_ERR(ios->gb);
-+		if (IS_ERR(ios->gb)) {
-+			ret = PTR_ERR(ios->gb);
-+			goto err_close;
-+		}
- 	} else {
- 		ios->vf.fd = fd;
-+		ios->vf.ops = NULL;
- 		fsz = lseek(fd, 0, SEEK_END);
- 		if (fsz <= 0) {
- 			ios->feof = !fsz;
- 			ios->sz = 0;
- 		} else {
- 			ios->sz = fsz;
--			if (lseek(fd, 0, SEEK_SET))
--				return -EIO;
-+			if (lseek(fd, 0, SEEK_SET)) {
-+				ret = -EIO;
-+				goto err_close;
-+			}
- #ifdef HAVE_POSIX_FADVISE
- 			if (posix_fadvise(fd, 0, 0, POSIX_FADV_SEQUENTIAL))
- 				erofs_warn("failed to fadvise: %s, ignored.",
-@@ -143,9 +162,16 @@ int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
- 		ios->bufsize >>= 1;
- 	} while (ios->bufsize >= 1024);
- 
--	if (!ios->buffer)
--		return -ENOMEM;
-+	if (!ios->buffer) {
-+		ret = -ENOMEM;
-+		erofs_iostream_close(ios);
-+		return ret;
-+	}
- 	return 0;
++For those who want a quick build, ensure that the following prerequisites are
++installed (on Debian/Ubuntu):
 +
-+err_close:
-+	close(fd);
-+	return ret;
- }
++``` sh
++$ sudo apt-get install autoconf automake libtool pkg-config uuid-dev \
++                       liblz4-dev liblzma-dev libfuse-dev zlib1g-dev \
++                       libselinux1-dev libzstd-dev
++```
++
++Then, run the following commands to build and install:
++
++``` sh
++$ ./autogen.sh
++$ ./configure
++$ make
++# make install
++```
++
+ ## Dependencies & build
  
- int erofs_iostream_read(struct erofs_iostream *ios, void **buf, u64 bytes)
+ LZ4 1.9.3+ for LZ4(HC) enabled [^1].
+@@ -45,6 +65,18 @@ $ make
+ Additionally, you could specify liblzma target paths with
+ `--with-liblzma-incdir` and `--with-liblzma-libdir` manually.
+ 
++## How to build with multithreading
++
++To enable multithreading support for mkfs.erofs, use the following:
++
++``` sh
++$ ./configure --enable-multithreading
++$ make
++```
++
++Note that multithreading is enabled by default if the compiler supports it.
++To disable it explicitly, use `--disable-multithreading`.
++
+ ## How to build erofsfuse
+ 
+ It's disabled by default as an experimental feature for now due
 -- 
 2.53.0
 
