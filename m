@@ -1,62 +1,76 @@
-Return-Path: <linux-erofs+bounces-3117-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3118-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mwr4NTVwymkF9AUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3117-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 14:44:37 +0200
+	id KPCFNDpwymkB9AUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3118-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 14:44:42 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A59C35B391
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 14:44:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DCEAB35B399
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 14:44:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkrYF3Cwvz2xpt;
-	Mon, 30 Mar 2026 23:44:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkrYM3n0Dz2yF1;
+	Mon, 30 Mar 2026 23:44:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774874673;
-	cv=none; b=TZdSff/yPb+L0s/oTfxbc05E13K9hH25ttUG6dEI84X6eZ0+RAn12fANd/5YLHrGYQ2VVHt9fWM5DtQrHKDgjAHznSXOslC1J4JBKYf4quR4sNPY9Oo6U+MtR8hRLLQN1RNmEIDoGRraJz8VaoiqLaBHoB2z4p/HsRI5AfidVDermfKBtC5pBhw3vAW4lWM4buewMk8Dc8dNazUR/3MVQR5QqaJodHskSYZBbwDsdZV+PPFza8nh/v8ztP1Vw4QchKu9YWUER1avaH1mnvcG+twJOJHd9348TZ02g3FamoK3IRayzu6QXQ//YLtJWW1kOJla4atajDuo9d6J3FZb9Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774874679;
+	cv=none; b=hn8oO5bQbkUEvUiYPN2qVCkUkz95PO2DvHmOZnlb3mzzxQWDY+qBuVYZSm6a4WZI0YrDFbfkTEU9mrOiWxCqxXSEdZzih8pCOBmmq8Gvdefvs19dtkxzgSKDDS21oKc0ur/VCbZLHatb4gigz+2vGBgB/V5LIdzyZt3HMQVPtYexE/AxbrG6iwPoeFGTsZvkYqfY4iJxG0CBZ1QpEfGq+X3hD/WAivqWf9WAoYUdH6Xu836ttnbMCzwNdWh/01WMJJcJd7vMAFvAySchUgEv7euR1ZsXde3BoRh9046YYu1XDtG/OFKQgCAYzep54Zpn9Sal64/IvzofLlcqNkRtaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774874673; c=relaxed/relaxed;
-	bh=NDZzd54xSBelgYoQEbtkuSXuOFCnzgwQe59OAY4fFH4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=STl4R67ixZ1ENETmUM3qMzXx5c0s6l7xA7ozoX36ybgaPAF2J864zn2UFBSVzKjOj/iMRI3bX3MPy+ljlWrN/Y6hDOeJPs1RbsSFLBBVlO1vWyuoGCcTPrblhUvE215MlqLfCvj1bZXeA4Nv8H52WTqqvIsWHq7Eb41MsQ9C8jFQ4m/cfL1eM3owfC17hAvQl+qQh2iH75cvtHmIx2qtdA/psNurtaRSM2nDCf9TmSQUzsmuTSpdhAceRolz10Dhg6eSn/s5SHorERdXWtzEv+9M0eEQ6AopKFRzOh1ccvq3o5m3y4cy06FlY4V1PrqXtELpoDuq0DEQzn/83B6x9Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bb5FAKsL; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	t=1774874679; c=relaxed/relaxed;
+	bh=kgoCMtc+Uvmcs4nJ/E5Fn8iHizALLiZwVzV7PDqkjLM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kM5CEVSmcNSI0itMW8jzGjeMKKts01Y1FzrcIqHd5fR1ZHHZvnbLkRAc4sPHSDM5WTai5rFvCyjjlW3aHEGz+S+YD3wnwJpTQOhqcYTNpibO946pvAqkhBYriJzLTzMNFEZcag41UbgAbBmc+G85Lx7I3IIR8eH0UA8kZiQLtzfYKmI0r/0VNt9VXbf4C2pzUmE2eqBXXmbs5mhQ7ERftQZAjiU15uriVwkm4hMIfAFdJEjl3w3DG1HPWL+Rkwtjhowb0qdFwwucp8fuQgJwtxNC8C9xwN1HUoCbgm3wEkXBaJ92+6MZKN5orepJHZspqiS4NURC2DNxf/EtJdQD2w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VoLmUR1N; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VoLmUR1N; dkim-atps=neutral; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bb5FAKsL;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VoLmUR1N;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VoLmUR1N;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkrYB3Zqzz2xlK
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 23:44:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkrYK47Zxz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 23:44:37 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=NDZzd54xSBelgYoQEbtkuSXuOFCnzgwQe59OAY4fFH4=;
-	b=bb5FAKsLFIdAHn+dHzkufWVfaSk8UqkBHw9quUKce2ct1O60zXyXKo2lZ3Yq6AMqVayQLMOIH
-	otjBCTKhsAgziuTYTkdxtBVzUVww1P9kZ6O7H7iUdeCQ52+v/UtHspbYbrx+lTmXCdcR54OOVP2
-	INfKeG5axUzKHg/DNLqff0Q=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fkrQP5KYWzpStK;
-	Mon, 30 Mar 2026 20:38:37 +0800 (CST)
+	bh=kgoCMtc+Uvmcs4nJ/E5Fn8iHizALLiZwVzV7PDqkjLM=;
+	b=VoLmUR1NVv+4ysvBYIBNVXsOQvPZ0BfCGez0FXaxKIWKrXcZnTsV3sRbOSEHYCrBJYOdWpLF0
+	fAjwT3tbi3PWymlPAyzmkkwx5f+SzmkYTf5qMnyZYmT+jWKiSxyoJHhVjYtPPetHAu5rv/Z3sjA
+	bKtwJVO4bslcOpN8VnP6Syg=
+Received: from canpmsgout09.his.huawei.com (unknown [172.19.92.135])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4fkrXy5DNkz1BG1Q
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 20:44:18 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=kgoCMtc+Uvmcs4nJ/E5Fn8iHizALLiZwVzV7PDqkjLM=;
+	b=VoLmUR1NVv+4ysvBYIBNVXsOQvPZ0BfCGez0FXaxKIWKrXcZnTsV3sRbOSEHYCrBJYOdWpLF0
+	fAjwT3tbi3PWymlPAyzmkkwx5f+SzmkYTf5qMnyZYmT+jWKiSxyoJHhVjYtPPetHAu5rv/Z3sjA
+	bKtwJVO4bslcOpN8VnP6Syg=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4fkrPz2Bvdz1cyPB;
+	Mon, 30 Mar 2026 20:38:15 +0800 (CST)
 Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7D4D240561;
-	Mon, 30 Mar 2026 20:44:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 254C74056C;
+	Mon, 30 Mar 2026 20:44:23 +0800 (CST)
 Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
  (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 30 Mar
- 2026 20:44:21 +0800
+ 2026 20:44:22 +0800
 From: Yifan Zhao <zhaoyifan28@huawei.com>
 To: <linux-erofs@lists.ozlabs.org>
 CC: <hsiangkao@linux.alibaba.com>, <jingrui@huawei.com>,
 	<zhukeqian1@huawei.com>, <zhaoyifan28@huawei.com>, <hudsonzhu@tencent.com>
-Subject: [PATCH 1/2 RESEND] erofs-utils: mount: generalize nbd source types for multi-backend support
-Date: Mon, 30 Mar 2026 20:44:01 +0800
-Message-ID: <20260330124402.899394-1-zhaoyifan28@huawei.com>
+Subject: [PATCH 2/2] erofs-utils: mount: add fanotify pre-content OCI backend
+Date: Mon, 30 Mar 2026 20:44:02 +0800
+Message-ID: <20260330124402.899394-2-zhaoyifan28@huawei.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260330124402.899394-1-zhaoyifan28@huawei.com>
+References: <20260330124402.899394-1-zhaoyifan28@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -73,8 +87,8 @@ Content-Type: text/plain
 X-Originating-IP: [10.50.159.234]
 X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
  kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-0.70 / 15.00];
@@ -88,7 +102,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3117-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3118-lists,linux-erofs=lfdr.de];
 	TO_DN_NONE(0.00)[];
 	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -96,7 +110,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	HAS_XOIP(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[huawei.com:+];
@@ -104,190 +118,1099 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:mid,tencent.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 2A59C35B391
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,huawei.com:dkim,huawei.com:email,huawei.com:mid,state.pid:url]
+X-Rspamd-Queue-Id: DCEAB35B399
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+From: Yifan Zhao <yifan.yfzhao@foxmail.com>
 
-Rename nbd-specific source type names to generic mount-level names in
-preparation for adding ublk backend support.
+Add a fanotify-backed mount mode for OCI sources that uses
+FAN_PRE_ACCESS permission events to populate a local sparse file
+on demand before the kernel consumes the requested data.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+The new erofs.fanotify subtype resolves a single OCI blob,
+creates a sparse cache file, and runs a fanotify event loop
+that fetches missing ranges before allowing access to proceed.
+
+A pid file recording the canonical mountpoint and sparse-file
+source is written for unmount to track the corresponding worker.
+
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
-Note: This is a former patch authored by Chengyu Zhu.
+ configure.ac            |  28 ++
+ lib/Makefile.am         |   7 +
+ lib/backends/fanotify.c | 110 +++++++
+ lib/liberofs_fanotify.h |  49 +++
+ lib/liberofs_oci.h      |   3 +
+ lib/remotes/oci.c       |  10 +-
+ mount/main.c            | 671 +++++++++++++++++++++++++++++++++++++++-
+ 7 files changed, 872 insertions(+), 6 deletions(-)
+ create mode 100644 lib/backends/fanotify.c
+ create mode 100644 lib/liberofs_fanotify.h
 
- mount/main.c | 52 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
-
+diff --git a/configure.ac b/configure.ac
+index 8a8e9b3..45b8190 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -194,6 +194,10 @@ AC_ARG_ENABLE(oci,
+                    [enable OCI registry based input support @<:@default=no@:>@]),
+     [enable_oci="$enableval"],[enable_oci="no"])
+ 
++AC_ARG_ENABLE(fanotify,
++   [AS_HELP_STRING([--enable-fanotify], [enable fanotify pre-content backend @<:@default=no@:>@])],
++   [enable_fanotify="$enableval"], [enable_fanotify="no"])
++
+ AC_ARG_ENABLE(fuse,
+    [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
+    [enable_fuse="$enableval"], [enable_fuse="no"])
+@@ -651,6 +655,24 @@ AS_IF([test "x$enable_oci" = "xyes"], [
+   ])
+ ], [have_oci="no"])
+ 
++have_fanotify="no"
++AS_IF([test "x$enable_fanotify" = "xyes"], [
++  AS_IF([test "x$build_linux" != "xyes"], [
++    AC_MSG_ERROR([fanotify backend requires Linux])
++  ])
++  AS_IF([test "x$have_oci" != "xyes"], [
++    AC_MSG_ERROR([fanotify backend requires --enable-oci])
++  ])
++  AC_CHECK_HEADERS([sys/fanotify.h], [
++    have_fanotify="yes"
++    AC_CHECK_TYPES([struct fanotify_event_info_range], [], [], [[
++#include <sys/fanotify.h>
++    ]])
++  ], [
++    AC_MSG_ERROR([fanotify backend disabled: missing sys/fanotify.h])
++  ])
++])
++
+ # Configure openssl
+ have_openssl="no"
+ AS_IF([test "x$with_openssl" != "xno"], [
+@@ -766,6 +788,7 @@ AM_CONDITIONAL([ENABLE_LIBXML2], [test "x${have_libxml2}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_S3], [test "x${have_s3}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_OCI], [test "x${have_oci}" = "xyes"])
++AM_CONDITIONAL([ENABLE_FANOTIFY], [test "x${have_fanotify}" = "xyes"])
+ 
+ if test "x$have_uuid" = "xyes"; then
+   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
+@@ -842,6 +865,11 @@ if test "x$have_oci" = "xyes"; then
+   AC_DEFINE([OCIEROFS_ENABLED], 1, [Define to 1 if OCI registry is enabled])
+ fi
+ 
++if test "x$have_fanotify" = "xyes"; then
++  AC_DEFINE([EROFS_FANOTIFY_ENABLED], 1,
++	    [Define to 1 if fanotify backend is enabled])
++fi
++
+ # Dump maximum block size
+ AS_IF([test "x$erofs_cv_max_block_size" = "x"],
+       [$erofs_cv_max_block_size = 4096], [])
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 77f6fd8..5f8812f 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -36,6 +36,10 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+       $(top_srcdir)/lib/liberofs_s3.h
+ 
+ noinst_HEADERS += compressor.h
++if ENABLE_FANOTIFY
++noinst_HEADERS += $(top_srcdir)/lib/liberofs_fanotify.h
++endif
++
+ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+ 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+@@ -88,6 +92,9 @@ if OS_LINUX
+ liberofs_la_CFLAGS += ${libnl3_CFLAGS}
+ liberofs_la_LDFLAGS += ${libnl3_LIBS}
+ liberofs_la_SOURCES += backends/nbd.c
++if ENABLE_FANOTIFY
++liberofs_la_SOURCES += backends/fanotify.c
++endif
+ endif
+ liberofs_la_SOURCES += remotes/oci.c remotes/docker_config.c
+ liberofs_la_CFLAGS += ${json_c_CFLAGS}
+diff --git a/lib/backends/fanotify.c b/lib/backends/fanotify.c
+new file mode 100644
+index 0000000..66a97a1
+--- /dev/null
++++ b/lib/backends/fanotify.c
+@@ -0,0 +1,110 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++#include "erofs/print.h"
++#include "liberofs_fanotify.h"
++
++int erofs_fanotify_init_precontent(void)
++{
++	int fan_fd;
++
++	fan_fd = fanotify_init(FAN_CLASS_PRE_CONTENT | FAN_CLOEXEC | FAN_NONBLOCK,
++			       O_RDONLY | O_LARGEFILE);
++	if (fan_fd < 0) {
++		erofs_err("fanotify_init failed: %s", strerror(errno));
++		return -errno;
++	}
++
++	return fan_fd;
++}
++
++int erofs_fanotify_mark_file(int fan_fd, const char *path)
++{
++	int err;
++
++	err = fanotify_mark(fan_fd, FAN_MARK_ADD, FAN_PRE_ACCESS, AT_FDCWD, path);
++	if (err < 0) {
++		erofs_err("fanotify_mark failed for %s: %s", path, strerror(errno));
++		return -errno;
++	}
++
++	erofs_dbg("Marked %s for FAN_PRE_ACCESS monitoring", path);
++	return 0;
++}
++
++int erofs_fanotify_parse_range_event(const struct fanotify_event_metadata *meta,
++				     struct erofs_fanotify_range *range)
++{
++	const struct fanotify_event_info_header *info_hdr;
++	const struct fanotify_event_info_range *range_info;
++	const char *ptr, *end;
++
++	if (meta->metadata_len > meta->event_len) {
++		erofs_err("Invalid fanotify metadata length");
++		return -EIO;
++	}
++
++	if (meta->vers != FANOTIFY_METADATA_VERSION) {
++		erofs_err("Unsupported fanotify metadata version %d", meta->vers);
++		return -EINVAL;
++	}
++
++	/* Initialize range to full file (will be overridden if range info present) */
++	range->offset = 0;
++	range->count = 0;
++
++	/* Parse additional info records for range information */
++	ptr = (const char *)meta + meta->metadata_len;
++	end = (const char *)meta + meta->event_len;
++
++	while (ptr < end) {
++		size_t info_len;
++
++		if (end - ptr < sizeof(*info_hdr)) {
++			erofs_err("Incomplete fanotify event info header");
++			return -EIO;
++		}
++		info_hdr = (const struct fanotify_event_info_header *)ptr;
++		info_len = info_hdr->len;
++		if (info_len < sizeof(*info_hdr) || ptr + info_len > end) {
++			erofs_err("Invalid fanotify event info length");
++			return -EIO;
++		}
++
++		if (info_hdr->info_type == FAN_EVENT_INFO_TYPE_RANGE) {
++			if (info_len < sizeof(*range_info)) {
++				erofs_err("Incomplete fanotify range info");
++				return -EIO;
++			}
++			range_info = (const struct fanotify_event_info_range *)ptr;
++			range->offset = range_info->offset;
++			range->count = range_info->count;
++			break;
++		}
++
++		ptr += info_hdr->len;
++	}
++
++	return 0;
++}
++
++int erofs_fanotify_respond(int fan_fd, int event_fd, bool allow)
++{
++	struct fanotify_response response = {
++		.fd = event_fd,
++		.response = allow ? FAN_ALLOW : FAN_DENY,
++	};
++	ssize_t ret;
++
++	ret = write(fan_fd, &response, sizeof(response));
++	if (ret != sizeof(response)) {
++		erofs_err("Failed to respond to fanotify event: %s",
++			  ret < 0 ? strerror(errno) : "short write");
++		return ret < 0 ? -errno : -EIO;
++	}
++
++	return 0;
++}
+diff --git a/lib/liberofs_fanotify.h b/lib/liberofs_fanotify.h
+new file mode 100644
+index 0000000..a22b7ee
+--- /dev/null
++++ b/lib/liberofs_fanotify.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++#ifndef __EROFS_LIB_LIBEROFS_FANOTIFY_H
++#define __EROFS_LIB_LIBEROFS_FANOTIFY_H
++
++#include "erofs/defs.h"
++#include <sys/fanotify.h>
++
++/* FAN_PRE_ACCESS may not be defined in older headers */
++#ifndef FAN_PRE_ACCESS
++#define FAN_PRE_ACCESS 0x00100000
++#endif
++
++#ifndef FAN_CLASS_PRE_CONTENT
++#define FAN_CLASS_PRE_CONTENT 0x00000008
++#endif
++
++#ifndef FAN_EVENT_INFO_TYPE_RANGE
++#define FAN_EVENT_INFO_TYPE_RANGE 6
++#endif
++
++/* Define struct fanotify_event_info_range if not in system headers */
++#ifndef HAVE_STRUCT_FANOTIFY_EVENT_INFO_RANGE
++struct fanotify_event_info_range {
++	struct fanotify_event_info_header hdr;
++	__u32 pad;
++	__u64 offset;
++	__u64 count;
++};
++#endif
++
++struct erofs_fanotify_range {
++	u64 offset;
++	u64 count;
++};
++
++/* Initialize fanotify with FAN_CLASS_PRE_CONTENT */
++int erofs_fanotify_init_precontent(void);
++
++/* Mark file for FAN_PRE_ACCESS monitoring */
++int erofs_fanotify_mark_file(int fan_fd, const char *path);
++
++/* Parse a single fanotify event and extract range information */
++int erofs_fanotify_parse_range_event(const struct fanotify_event_metadata *meta,
++				     struct erofs_fanotify_range *range);
++
++/* Respond to fanotify permission event */
++int erofs_fanotify_respond(int fan_fd, int event_fd, bool allow);
++
++#endif
+diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+index 2243c82..3b3d66d 100644
+--- a/lib/liberofs_oci.h
++++ b/lib/liberofs_oci.h
+@@ -76,6 +76,9 @@ struct ocierofs_iostream {
+  */
+ int ocierofs_build_trees(struct erofs_importer *importer,
+ 			 const struct ocierofs_config *cfg);
++int ocierofs_ctx_init(struct ocierofs_ctx *ctx,
++		      const struct ocierofs_config *cfg);
++void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx);
+ int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
+ 
+ char *ocierofs_encode_userpass(const char *username, const char *password);
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+index 47e8b27..f96be13 100644
+--- a/lib/remotes/oci.c
++++ b/lib/remotes/oci.c
+@@ -1144,7 +1144,7 @@ const char *ocierofs_get_platform_spec(void)
+ }
+ 
+ /**
+- * ocierofs_init - Initialize OCI context
++ * ocierofs_ctx_init - Initialize OCI context
+  * @ctx: OCI context structure to initialize
+  * @config: OCI configuration
+  *
+@@ -1154,7 +1154,7 @@ const char *ocierofs_get_platform_spec(void)
+  *
+  * Return: 0 on success, negative errno on failure
+  */
+-static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
++int ocierofs_ctx_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
+ {
+ 	int ret;
+ 
+@@ -1288,7 +1288,7 @@ out:
+  * Clean up CURL handle, free all allocated string parameters, and
+  * reset the OCI context structure to a clean state.
+  */
+-static void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx)
++void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx)
+ {
+ 	if (!ctx)
+ 		return;
+@@ -1316,7 +1316,7 @@ int ocierofs_build_trees(struct erofs_importer *importer,
+ 	int ret, i, end, fd;
+ 	u64 tar_offset = 0;
+ 
+-	ret = ocierofs_init(&ctx, config);
++	ret = ocierofs_ctx_init(&ctx, config);
+ 	if (ret) {
+ 		ocierofs_ctx_cleanup(&ctx);
+ 		return ret;
+@@ -1529,7 +1529,7 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 	if (!ctx)
+ 		return -ENOMEM;
+ 
+-	err = ocierofs_init(ctx, cfg);
++	err = ocierofs_ctx_init(ctx, cfg);
+ 	if (err)
+ 		goto out;
+ 
 diff --git a/mount/main.c b/mount/main.c
-index 3ef4e9c..350738d 100644
+index 350738d..e961937 100644
 --- a/mount/main.c
 +++ b/mount/main.c
-@@ -71,18 +71,18 @@ static struct erofsmount_cfg {
- 	.fstype = "erofs",
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ #define _GNU_SOURCE
++#include <dirent.h>
+ #include <fcntl.h>
+ #include <getopt.h>
+ #include <stdio.h>
+@@ -11,6 +12,7 @@
+ #include <sys/wait.h>
+ #include <pthread.h>
+ #include <unistd.h>
++#include <poll.h>
+ #include "erofs/config.h"
+ #include "erofs/print.h"
+ #include "erofs/err.h"
+@@ -18,6 +20,9 @@
+ #include "../lib/liberofs_nbd.h"
+ #include "../lib/liberofs_oci.h"
+ #include "../lib/liberofs_gzran.h"
++#ifdef EROFS_FANOTIFY_ENABLED
++#include "../lib/liberofs_fanotify.h"
++#endif
+ 
+ #ifdef HAVE_LINUX_LOOP_H
+ #include <linux/loop.h>
+@@ -40,12 +45,22 @@ struct loop_info {
+ 
+ /* Device boundary probe */
+ #define EROFSMOUNT_NBD_DISK_SIZE	(INT64_MAX >> 9)
++#define EROFSMOUNT_CACHE_DIR	"/var/cache/erofs"
++#define EROFSMOUNT_RUNTIME_DIR	"/run/erofs"
++#define EROFSMOUNT_FANOTIFY_STATE_DIR	EROFSMOUNT_RUNTIME_DIR "/fanotify"
++
++#ifdef EROFS_FANOTIFY_ENABLED
++#define EROFSMOUNT_FANOTIFY_HELP	", fanotify"
++#else
++#define EROFSMOUNT_FANOTIFY_HELP	""
++#endif
+ 
+ enum erofs_backend_drv {
+ 	EROFSAUTO,
+ 	EROFSLOCAL,
+ 	EROFSFUSE,
+ 	EROFSNBD,
++	EROFSFANOTIFY,
  };
  
--enum erofs_nbd_source_type {
--	EROFSNBD_SOURCE_LOCAL,
--	EROFSNBD_SOURCE_OCI,
-+enum erofsmount_source_type {
-+	EROFSMOUNT_SOURCE_LOCAL,
-+	EROFSMOUNT_SOURCE_OCI,
- };
- 
--static struct erofs_nbd_source {
--	enum erofs_nbd_source_type type;
-+static struct erofsmount_source {
-+	enum erofsmount_source_type type;
- 	union {
- 		const char *device_path;
- 		struct ocierofs_config ocicfg;
- 	};
--} nbdsrc;
-+} mountsrc;
- 
- static void usage(int argc, char **argv)
- {
-@@ -122,7 +122,7 @@ static void version(void)
- #ifdef OCIEROFS_ENABLED
- static int erofsmount_parse_oci_option(const char *option)
- {
--	struct ocierofs_config *oci_cfg = &nbdsrc.ocicfg;
-+	struct ocierofs_config *oci_cfg = &mountsrc.ocicfg;
- 	const char *p;
- 	long idx;
- 
-@@ -229,12 +229,12 @@ static long erofsmount_parse_flagopts(char *s, long flags, char **more)
- 		if (!strcmp(s, "loop")) {
- 			mountcfg.force_loopdev = true;
- 		} else if (strncmp(s, "oci", 3) == 0) {
--			/* Initialize ocicfg here iff != EROFSNBD_SOURCE_OCI */
--			if (nbdsrc.type != EROFSNBD_SOURCE_OCI) {
-+			/* Initialize ocicfg here iff != EROFSMOUNT_SOURCE_OCI */
-+			if (mountsrc.type != EROFSMOUNT_SOURCE_OCI) {
- 				erofs_warn("EXPERIMENTAL OCI mount support in use, use at your own risk.");
- 				erofs_warn("Note that runtime performance is still unoptimized.");
--				nbdsrc.type = EROFSNBD_SOURCE_OCI;
--				nbdsrc.ocicfg.layer_index = -1;
-+				mountsrc.type = EROFSMOUNT_SOURCE_OCI;
-+				mountsrc.ocicfg.layer_index = -1;
- 			}
- 			err = erofsmount_parse_oci_option(s);
- 			if (err < 0)
-@@ -288,7 +288,7 @@ static int erofsmount_parse_options(int argc, char **argv)
- 	int opt;
- 	int i;
- 
--	nbdsrc.ocicfg.layer_index = -1;
-+	mountsrc.ocicfg.layer_index = -1;
- 
- 	while ((opt = getopt_long(argc, argv, "VNfhd:no:st:uv",
- 				  long_options, NULL)) != -1) {
-@@ -664,14 +664,14 @@ out:
- 	return (void *)(uintptr_t)err;
+ enum erofsmount_mode {
+@@ -95,7 +110,7 @@ static void usage(int argc, char **argv)
+ 		" -d <0-9>              set output verbosity; 0=quiet, 9=verbose (default=%i)\n"
+ 		" -o options            comma-separated list of mount options\n"
+ 		" -t type[.subtype]     filesystem type (and optional subtype)\n"
+-		"                       subtypes: fuse, local, nbd\n"
++		"                       subtypes: fuse, local, nbd" EROFSMOUNT_FANOTIFY_HELP "\n"
+ 		" -u                    unmount the filesystem\n"
+ 		"    --disconnect       abort an existing NBD device forcibly\n"
+ 		"    --reattach         reattach to an existing NBD device\n"
+@@ -324,6 +339,13 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 					mountcfg.backend = EROFSLOCAL;
+ 				} else if (!strcmp(dot + 1, "nbd")) {
+ 					mountcfg.backend = EROFSNBD;
++				} else if (!strcmp(dot + 1, "fanotify")) {
++#ifdef EROFS_FANOTIFY_ENABLED
++					mountcfg.backend = EROFSFANOTIFY;
++#else
++					erofs_err("fanotify backend is not enabled at build time");
++					return -EINVAL;
++#endif
+ 				} else {
+ 					erofs_err("invalid filesystem subtype `%s`", dot + 1);
+ 					return -EINVAL;
+@@ -1342,6 +1364,629 @@ out_err:
+ 	return -errno;
  }
  
--static int erofsmount_startnbd(int nbdfd, struct erofs_nbd_source *source)
-+static int erofsmount_startnbd(int nbdfd, struct erofsmount_source *source)
++#ifdef EROFS_FANOTIFY_ENABLED
++struct erofsmount_fanotify_state {
++	pid_t pid;
++	char *mountpoint;
++	char *source;
++};
++
++static void erofsmount_free_fanotify_state(struct erofsmount_fanotify_state *state)
++{
++	free(state->mountpoint);
++	free(state->source);
++	state->mountpoint = NULL;
++	state->source = NULL;
++}
++
++static int erofsmount_write_fanotify_state(const char *state_path, pid_t pid,
++					   const char *mountpoint,
++					   const char *source)
++{
++	struct erofsmount_fanotify_state state;
++	char *tmp_path = NULL;
++	FILE *f = NULL;
++	int fd = -1, err;
++
++	if (mkdir(EROFSMOUNT_RUNTIME_DIR, 0700) < 0 && errno != EEXIST)
++		return -errno;
++	if (mkdir(EROFSMOUNT_FANOTIFY_STATE_DIR, 0700) < 0 &&
++	    errno != EEXIST)
++		return -errno;
++
++	state.pid = pid;
++	state.mountpoint = (char *)mountpoint;
++	state.source = (char *)source;
++
++	if (asprintf(&tmp_path, "%s.tmpXXXXXX", state_path) < 0)
++		return -ENOMEM;
++
++	fd = mkstemp(tmp_path);
++	if (fd < 0) {
++		err = -errno;
++		goto out;
++	}
++
++	f = fdopen(fd, "w");
++	if (!f) {
++		err = -errno;
++		goto out;
++	}
++	fd = -1;
++
++	if (fprintf(f, "%d\n%s\n%s\n", state.pid, state.mountpoint,
++		    state.source) < 0 || fflush(f) == EOF) {
++		err = errno ? -errno : -EIO;
++		goto out;
++	}
++
++	if (fsync(fileno(f)) < 0) {
++		err = -errno;
++		goto out;
++	}
++
++	if (fclose(f) < 0) {
++		err = -errno;
++		f = NULL;
++		goto out;
++	}
++	f = NULL;
++
++	if (rename(tmp_path, state_path) < 0) {
++		err = -errno;
++		goto out;
++	}
++
++	err = 0;
++out:
++	if (f)
++		fclose(f);
++	else if (fd >= 0)
++		close(fd);
++	if (err && tmp_path)
++		unlink(tmp_path);
++	free(tmp_path);
++	return err;
++}
++
++static int erofsmount_read_fanotify_state(const char *state_path,
++					  struct erofsmount_fanotify_state *state)
++{
++	FILE *f;
++	size_t n = 0;
++	int err = 0;
++
++	memset(state, 0, sizeof(*state));
++
++	f = fopen(state_path, "r");
++	if (!f)
++		return -errno;
++
++	if (fscanf(f, "%d", &state->pid) != 1)
++		err = -EINVAL;
++	else if (fgetc(f) != '\n')
++		err = -EINVAL;
++	else if (getline(&state->mountpoint, &n, f) < 0)
++		err = feof(f) ? -EINVAL : -errno;
++	else if (getline(&state->source, &n, f) < 0)
++		err = feof(f) ? -EINVAL : -errno;
++	fclose(f);
++	if (err) {
++		erofsmount_free_fanotify_state(state);
++		return err;
++	}
++
++	state->mountpoint[strcspn(state->mountpoint, "\n")] = '\0';
++	state->source[strcspn(state->source, "\n")] = '\0';
++	return err;
++}
++
++static int erofsmount_cleanup_fanotify_worker(const char *mountpoint,
++					      const char *source)
++{
++	DIR *dir;
++	struct dirent *de;
++	int err = 0;
++
++	dir = opendir(EROFSMOUNT_FANOTIFY_STATE_DIR);
++	if (!dir) {
++		if (errno == ENOENT)
++			return 0;
++		return -errno;
++	}
++
++	while ((de = readdir(dir)) != NULL) {
++		struct erofsmount_fanotify_state state;
++		char *state_path;
++
++		if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
++			continue;
++		if (!strstr(de->d_name, ".state"))
++			continue;
++		if (asprintf(&state_path, "%s/%s", EROFSMOUNT_FANOTIFY_STATE_DIR,
++			     de->d_name) < 0) {
++			err = -ENOMEM;
++			goto out;
++		}
++
++		err = erofsmount_read_fanotify_state(state_path, &state);
++		if (err == -ENOENT) {
++			free(state_path);
++			err = 0;
++			continue;
++		}
++		if (err) {
++			free(state_path);
++			goto out;
++		}
++		if (strcmp(state.mountpoint, mountpoint) ||
++		    strcmp(state.source, source)) {
++			erofsmount_free_fanotify_state(&state);
++			free(state_path);
++			continue;
++		}
++		if (kill(state.pid, SIGTERM) < 0 && errno != ESRCH)
++			err = -errno;
++		else if (unlink(state_path) < 0 && errno != ENOENT)
++			err = -errno;
++		erofsmount_free_fanotify_state(&state);
++		free(state_path);
++		goto out;
++	}
++out:
++	closedir(dir);
++	if (!err)
++		return 0;
++	return err;
++}
++
++struct erofsmount_fanotify_ctx {
++	struct erofs_vfile vd;		/* OCI virtual device */
++	int sparse_fd;			/* sparse file descriptor */
++	int fan_fd;			/* fanotify fd */
++	char *sparse_path;		/* path to sparse file */
++	u64 image_size;			/* blob size */
++};
++
++static int erofsmount_create_sparse_file(struct erofsmount_fanotify_ctx *ctx,
++					 u64 size, const char *blob_digest)
++{
++	char filepath[PATH_MAX];
++	const char *hex_digest;
++	int fd, err;
++
++	/* Extract hex part from "sha256:xxxx..." */
++	if (!blob_digest || strncmp(blob_digest, "sha256:", 7) != 0)
++		return -EINVAL;
++	hex_digest = blob_digest + 7;
++
++	/* Construct file path using blob SHA256 */
++	snprintf(filepath, sizeof(filepath), EROFSMOUNT_CACHE_DIR "/%s",
++		 hex_digest);
++
++	/* Try to open existing file or create new one */
++	fd = open(filepath, O_RDWR | O_CREAT, 0600);
++	if (fd < 0 && errno == ENOENT) {
++		err = mkdir(EROFSMOUNT_CACHE_DIR, 0700);
++		if (err)
++			return -errno;
++		fd = open(filepath, O_RDWR | O_CREAT, 0600);
++	}
++	if (fd < 0)
++		return -errno;
++
++	ctx->sparse_path = strdup(filepath);
++	if (!ctx->sparse_path) {
++		err = -ENOMEM;
++		goto err_path;
++	}
++
++	/* Set file size (creates sparse file) */
++	if (ftruncate(fd, size) < 0) {
++		err = -errno;
++		goto err_ftruncate;
++	}
++
++	ctx->sparse_fd = fd;
++	ctx->image_size = size;
++
++	erofs_dbg("Created local sparse file %s (size: %llu bytes)",
++		  ctx->sparse_path, (unsigned long long)size);
++	return 0;
++
++err_ftruncate:
++	free(ctx->sparse_path);
++	ctx->sparse_path = NULL;
++err_path:
++	close(fd);
++	unlink(filepath);
++	return err;
++}
++
++static bool erofsmount_range_in_sparse(int fd, u64 offset, size_t length)
++{
++	off_t data_start, hole_start;
++
++	/* Check if data exists at offset */
++	data_start = lseek(fd, offset, SEEK_DATA);
++	if (data_start < 0) {
++		if (errno == ENXIO)
++			return false;  /* No data in file at or after offset */
++		return false;  /* Error, assume not present */
++	}
++
++	/* If data doesn't start at our offset, range is not fully present */
++	if ((u64)data_start != offset)
++		return false;
++
++	/* Check if there's a hole before the end of our range */
++	hole_start = lseek(fd, offset, SEEK_HOLE);
++	if (hole_start < 0)
++		return false;
++
++	/* If hole starts before our range ends, data is not fully present */
++	if ((u64)hole_start < offset + length)
++		return false;
++
++	return true;
++}
++
++static int erofsmount_resolve_fanotify_blob(const struct ocierofs_config *oci_cfg,
++					    char **digest, u64 *image_size)
++{
++	struct ocierofs_ctx oci_ctx = {};
++	int err, i = -1;
++
++	err = ocierofs_ctx_init(&oci_ctx, oci_cfg);
++	if (err)
++		return err;
++
++	if (oci_ctx.blob_digest) {
++		for (i = 0; i < oci_ctx.layer_count; ++i) {
++			if (!strcmp(oci_ctx.layers[i]->digest, oci_ctx.blob_digest))
++				break;
++		}
++		if (i >= oci_ctx.layer_count) {
++			err = -ENOENT;
++			goto out;
++		}
++	} else if (oci_ctx.layer_count == 1) {
++		i = 0;
++	} else {
++		erofs_err("fanotify backend requires exactly one OCI blob; use oci.blob= or oci.layer=");
++		err = -EINVAL;
++		goto out;
++	}
++
++	*digest = strdup(oci_ctx.layers[i]->digest);
++	if (!*digest) {
++		err = -ENOMEM;
++		goto out;
++	}
++	*image_size = oci_ctx.layers[i]->size;
++	err = 0;
++
++out:
++	ocierofs_ctx_cleanup(&oci_ctx);
++	return err;
++}
++
++static int erofs_fanotify_handle_event(struct erofsmount_fanotify_ctx *ctx,
++				       struct fanotify_event_metadata *meta,
++				       void **fetch_buf, size_t *fetch_buf_size)
++{
++	struct erofs_fanotify_range range;
++	bool allow_access = true;
++	u64 offset;
++	size_t length;
++	ssize_t read_len, written;
++	int err, resp_err;
++
++	err = erofs_fanotify_parse_range_event(meta, &range);
++	if (err < 0) {
++		erofs_err("Failed to parse fanotify event: %s",
++			  erofs_strerror(err));
++		allow_access = false;
++		goto response;
++	}
++
++	if (!(meta->mask & FAN_PRE_ACCESS))
++		goto response;
++
++	offset = range.offset;
++	length = range.count;
++
++	if (length == 0)
++		length = min_t(u64, 1024 * 1024, ctx->image_size - offset);
++
++	if (offset >= ctx->image_size)
++		goto response;
++
++	/* Clamp length to not exceed file size */
++	if (offset + length > ctx->image_size)
++		length = ctx->image_size - offset;
++
++	/* Check if data already exists locally in sparse file */
++	if (erofsmount_range_in_sparse(ctx->sparse_fd, offset, length)) {
++		erofs_dbg("Range [%llu, %llu) already local, skipping fetch",
++			  (unsigned long long)offset,
++			  (unsigned long long)(offset + length));
++		goto response;
++	}
++
++	if (*fetch_buf_size < length) {
++		void *newbuf = realloc(*fetch_buf, length);
++
++		if (!newbuf) {
++			erofs_err("Failed to allocate %zu bytes", length);
++			err = -ENOMEM;
++			allow_access = false;
++			goto response;
++		}
++		*fetch_buf = newbuf;
++		*fetch_buf_size = length;
++	}
++
++	erofs_dbg("Fetching range [%llu, %llu)",
++		  (unsigned long long)offset,
++		  (unsigned long long)(offset + length));
++
++	read_len = erofs_io_pread(&ctx->vd, *fetch_buf, length, offset);
++	if (read_len < 0) {
++		erofs_err("Failed to fetch range [%llu, %llu): %s",
++			  (unsigned long long)offset,
++			  (unsigned long long)(offset + length),
++			  erofs_strerror(read_len));
++		err = read_len;
++		allow_access = false;
++		goto response;
++	}
++
++	written = pwrite(ctx->sparse_fd, *fetch_buf, read_len, offset);
++	if (written != read_len) {
++		erofs_err("Failed to write to sparse file at offset %llu: %s",
++			  (unsigned long long)offset,
++			  written < 0 ? strerror(errno) : "short write");
++		err = written < 0 ? -errno : -EIO;
++		allow_access = false;
++		goto response;
++	}
++
++	fsync(ctx->sparse_fd);
++	err = 0;
++
++response:
++	resp_err = erofs_fanotify_respond(ctx->fan_fd, meta->fd, allow_access);
++	if (meta->fd >= 0)
++		close(meta->fd);
++	return resp_err ? resp_err : err;
++}
++
++static int erofsmount_fanotify_loop(struct erofsmount_fanotify_ctx *ctx)
++{
++	char event_buf[4096] __attribute__((aligned(8)));
++	void *fetch_buf = NULL;
++	size_t fetch_buf_size = 0;
++	struct pollfd pfd;
++	int err = 0;
++
++	pfd.fd = ctx->fan_fd;
++	pfd.events = POLLIN;
++
++	while (1) {
++		struct fanotify_event_metadata *meta;
++		ssize_t len, remaining;
++
++		len = read(ctx->fan_fd, event_buf, sizeof(event_buf));
++		if (len <= 0) {
++			if (len < 0) {
++				if (errno == EAGAIN) {
++					if (poll(&pfd, 1, -1) < 0) {
++						if (errno == EINTR)
++							continue;
++						err = -errno;
++						break;
++					}
++					continue;
++				}
++				if (errno == EINTR)
++					continue;
++				err = -errno;
++				if (err == -EPIPE) {
++					err = 0;
++					break;
++				}
++				erofs_err("Failed to read fanotify events: %s",
++					  erofs_strerror(err));
++				break;
++			}
++			err = -EIO;
++			erofs_err("Unexpected EOF on fanotify fd");
++			break;
++		}
++
++		remaining = len;
++		for (meta = (struct fanotify_event_metadata *)event_buf;
++		     FAN_EVENT_OK(meta, remaining);
++		     meta = FAN_EVENT_NEXT(meta, remaining)) {
++			erofs_dbg("Handling fanotify event: mask=0x%llx fd=%d pid=%d",
++				  (unsigned long long)meta->mask,
++				  meta->fd, meta->pid);
++			err = erofs_fanotify_handle_event(ctx, meta, &fetch_buf,
++							  &fetch_buf_size);
++			if (err < 0)
++				break;
++		}
++		if (err)
++			break;
++		if (remaining) {
++			erofs_err("Invalid or incomplete fanotify event buffer");
++			err = -EIO;
++			break;
++		}
++	}
++
++	free(fetch_buf);
++	return err;
++}
++
++static void erofsmount_fanotify_ctx_cleanup(struct erofsmount_fanotify_ctx *ctx)
++{
++	if (ctx->fan_fd >= 0)
++		close(ctx->fan_fd);
++	if (ctx->sparse_fd >= 0)
++		close(ctx->sparse_fd);
++	if (ctx->vd.ops || ctx->vd.fd >= 0)
++		erofs_io_close(&ctx->vd);
++	free(ctx->sparse_path);
++}
++
++static int erofsmount_fanotify_child(struct erofsmount_fanotify_ctx *ctx,
++				     int pipefd)
++{
++	int err;
++
++	ctx->fan_fd = erofs_fanotify_init_precontent();
++	if (ctx->fan_fd < 0) {
++		err = ctx->fan_fd;
++		goto notify;
++	}
++
++	err = erofs_fanotify_mark_file(ctx->fan_fd, ctx->sparse_path);
++	if (err)
++		goto notify;
++
++	err = 0;
++notify:
++	write(pipefd, &err, sizeof(err));
++	close(pipefd);
++
++	if (err)
++		return err;
++
++	return erofsmount_fanotify_loop(ctx);
++}
++
++static int erofsmount_fanotify(struct erofsmount_source *source,
++			       const char *mountpoint, const char *fstype,
++			       int flags, const char *options)
++{
++	struct erofsmount_fanotify_ctx ctx = {
++		.vd = {.fd = -1},
++		.sparse_fd = -1,
++		.fan_fd = -1,
++	};
++	struct ocierofs_config layer_cfg;
++	char *blob_digest = NULL;
++	char *state_mountpoint = NULL;
++	char *state_path = NULL;
++	pid_t pid = -1;
++	int pipefd[2];
++	int err, child_err;
++	u64 image_size;
++
++	if (strcmp(fstype, "erofs")) {
++		fprintf(stderr, "unsupported filesystem type `%s`\n", fstype);
++		return -ENODEV;
++	}
++	flags |= MS_RDONLY;
++
++	if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
++		erofs_err("fanotify backend does not support tarindex or zinfo");
++		return -EOPNOTSUPP;
++	}
++
++	state_mountpoint = realpath(mountpoint, NULL);
++	if (!state_mountpoint) {
++		err = -errno;
++		goto out;
++	}
++
++	err = erofsmount_resolve_fanotify_blob(&source->ocicfg, &blob_digest,
++					       &image_size);
++	if (err)
++		goto out;
++
++	layer_cfg = source->ocicfg;
++	layer_cfg.blob_digest = blob_digest;
++	layer_cfg.layer_index = -1;
++
++	err = ocierofs_io_open(&ctx.vd, &layer_cfg);
++	if (err)
++		goto out;
++
++	err = erofsmount_create_sparse_file(&ctx, image_size, blob_digest);
++	if (err)
++		goto out;
++
++	/* Create pipe for parent-child communication */
++	if (pipe(pipefd) < 0) {
++		err = -errno;
++		goto out;
++	}
++
++	pid = fork();
++	if (pid < 0) {
++		err = -errno;
++		close(pipefd[0]);
++		close(pipefd[1]);
++		goto out;
++	}
++
++	if (pid == 0) {
++		close(pipefd[0]);
++		err = erofsmount_fanotify_child(&ctx, pipefd[1]);
++		erofsmount_fanotify_ctx_cleanup(&ctx);
++		exit(err ? EXIT_FAILURE : EXIT_SUCCESS);
++	}
++
++	/* Wait for child to report fanotify initialization result */
++	close(pipefd[1]);
++	if (read(pipefd[0], &child_err, sizeof(child_err)) != sizeof(child_err))
++		child_err = -EPIPE;
++	close(pipefd[0]);
++
++	if (child_err) {
++		erofs_err("Child process failed: %s", erofs_strerror(child_err));
++		err = child_err;
++		goto kill_child;
++	}
++
++	err = mount(ctx.sparse_path, mountpoint, fstype, flags, options);
++	if (err < 0)
++		err = -errno;
++	if (err)
++		goto kill_child;
++
++	if (asprintf(&state_path, "%s/%d.state",
++		     EROFSMOUNT_FANOTIFY_STATE_DIR, pid) < 0) {
++		err = -ENOMEM;
++		goto out_umount;
++	}
++
++	err = erofsmount_write_fanotify_state(state_path, pid, state_mountpoint,
++					      ctx.sparse_path);
++	if (err)
++		goto out_umount;
++	erofs_dbg("Mounted %s at %s successfully", ctx.sparse_path, mountpoint);
++	goto out;
++
++out_umount:
++	(void)umount(mountpoint);
++kill_child:
++	if (pid > 0) {
++		(void)kill(pid, SIGTERM);
++		(void)waitpid(pid, NULL, 0);
++	}
++out:
++	free(state_path);
++	free(state_mountpoint);
++	erofsmount_fanotify_ctx_cleanup(&ctx);
++	free(blob_digest);
++	return err;
++}
++#endif
++
+ int erofsmount_umount(char *target)
  {
- 	struct erofsmount_nbd_ctx ctx = {};
- 	uintptr_t retcode;
- 	pthread_t th;
- 	int err, err2;
- 
--	if (source->type == EROFSNBD_SOURCE_OCI) {
-+	if (source->type == EROFSMOUNT_SOURCE_OCI) {
- 		if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
- 			err = erofsmount_tarindex_open(&ctx.vd, &source->ocicfg,
- 						       source->ocicfg.tarindex_path,
-@@ -720,7 +720,7 @@ out_closefd:
- }
- 
- #ifdef OCIEROFS_ENABLED
--static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *source)
-+static int erofsmount_write_recovery_oci(FILE *f, struct erofsmount_source *source)
- {
- 	char *b64cred = NULL;
- 	const char *platform;
-@@ -774,13 +774,13 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
- 	return -EINVAL;
- }
- #else
--static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *source)
-+static int erofsmount_write_recovery_oci(FILE *f, struct erofsmount_source *source)
- {
- 	return -EOPNOTSUPP;
- }
- #endif
- 
--static int erofsmount_write_recovery_local(FILE *f, struct erofs_nbd_source *source)
-+static int erofsmount_write_recovery_local(FILE *f, struct erofsmount_source *source)
- {
- 	char *realp;
- 	int err;
-@@ -795,7 +795,7 @@ static int erofsmount_write_recovery_local(FILE *f, struct erofs_nbd_source *sou
- 	return err ? -ENOMEM : 0;
- }
- 
--static char *erofsmount_write_recovery_info(struct erofs_nbd_source *source)
-+static char *erofsmount_write_recovery_info(struct erofsmount_source *source)
- {
- 	char recp[] = "/var/run/erofs/mountnbd_XXXXXX";
- 	int fd, err;
-@@ -817,7 +817,7 @@ static char *erofsmount_write_recovery_info(struct erofs_nbd_source *source)
- 		return ERR_PTR(-errno);
+ 	char *device = NULL, *mountpoint = NULL;
+@@ -1437,6 +2082,15 @@ int erofsmount_umount(char *target)
+ 			goto err_out;
+ 		}
  	}
- 
--	if (source->type == EROFSNBD_SOURCE_OCI)
-+	if (source->type == EROFSMOUNT_SOURCE_OCI)
- 		err = erofsmount_write_recovery_oci(f, source);
- 	else
- 		err = erofsmount_write_recovery_local(f, source);
-@@ -1026,7 +1026,7 @@ static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
- 	return 0;
- }
- 
--static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
-+static int erofsmount_startnbd_nl(pid_t *pid, struct erofsmount_source *source)
- {
- 	int pipefd[2], err, num;
- 
-@@ -1042,7 +1042,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
- 		if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
- 			exit(EXIT_FAILURE);
- 
--		if (source->type == EROFSNBD_SOURCE_OCI) {
-+		if (source->type == EROFSMOUNT_SOURCE_OCI) {
- 			if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
- 				err = erofsmount_tarindex_open(&ctx.vd, &source->ocicfg,
- 							       source->ocicfg.tarindex_path,
-@@ -1201,7 +1201,7 @@ err_identifier:
- 	return err;
- }
- 
--static int erofsmount_nbd(struct erofs_nbd_source *source,
-+static int erofsmount_nbd(struct erofsmount_source *source,
- 			  const char *mountpoint, const char *fstype,
- 			  int flags, const char *options)
- {
-@@ -1524,11 +1524,11 @@ int main(int argc, char *argv[])
- 	}
- 
- 	if (mountcfg.backend == EROFSNBD) {
--		if (nbdsrc.type == EROFSNBD_SOURCE_OCI)
--			nbdsrc.ocicfg.image_ref = mountcfg.device;
-+		if (mountsrc.type == EROFSMOUNT_SOURCE_OCI)
-+			mountsrc.ocicfg.image_ref = mountcfg.device;
- 		else
--			nbdsrc.device_path = mountcfg.device;
--		err = erofsmount_nbd(&nbdsrc, mountcfg.target,
-+			mountsrc.device_path = mountcfg.device;
-+		err = erofsmount_nbd(&mountsrc, mountcfg.target,
- 				     mountcfg.fstype, mountcfg.flags, mountcfg.options);
++#ifdef EROFS_FANOTIFY_ENABLED
++	if (!isblk) {
++		err = erofsmount_cleanup_fanotify_worker(target, device);
++		if (err) {
++			close(fd);
++			goto err_out;
++		}
++	}
++#endif
+ 	err = fstat(fd, &st);
+ 	if (err < 0)
+ 		err = -errno;
+@@ -1533,6 +2187,21 @@ int main(int argc, char *argv[])
  		goto exit;
  	}
+ 
++#ifdef EROFS_FANOTIFY_ENABLED
++	if (mountcfg.backend == EROFSFANOTIFY) {
++		if (mountsrc.type != EROFSMOUNT_SOURCE_OCI) {
++			erofs_err("Fanotify backend only supports OCI sources");
++			err = -EINVAL;
++			goto exit;
++		}
++		mountsrc.ocicfg.image_ref = mountcfg.device;
++		err = erofsmount_fanotify(&mountsrc, mountcfg.target,
++					  mountcfg.fstype, mountcfg.flags,
++					  mountcfg.options);
++		goto exit;
++	}
++#endif
++
+ 	if (mountcfg.force_loopdev)
+ 		goto loopmount;
+ 
 -- 
 2.47.3
 
