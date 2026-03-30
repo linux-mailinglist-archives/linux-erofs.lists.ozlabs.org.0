@@ -1,49 +1,57 @@
-Return-Path: <linux-erofs+bounces-3108-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3109-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gB3GFJYqymnX5gUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3108-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:47:34 +0200
+	id APqYOukqymmQ5wUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3109-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:48:57 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 623C13569EA
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7E28356A17
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 09:48:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkjyV2mlyz2xpt;
-	Mon, 30 Mar 2026 18:47:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkk062st0z2xpt;
+	Mon, 30 Mar 2026 18:48:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774856850;
-	cv=none; b=MOgzxbdln9/R9/eDFTpIwFyAUQGS0SE8Zd341bfkChm8NGHi2n3YfDnNH05TPMZOJdNq+iatut325G45woNFar2ByMZZlKTwlCuoLFnPkrV9IiHtU9laWgZwMmULU9eKCER1mTakJboZaMNoPNcxZykpPdI1BtMZb5bMuUECDRW6n3+iRBYaBW9SOw2JkZp6lXbXoLSba2zi/non67cEaY/xUdoFjTxbkpB7SokdN6++6VThXBBW5mp5ffkuFQ6thr7CHS6SI9H9ukLZ5hq7b/2AyPiuFjHtQrcGCcXAb90CdLSxTpLp5imcK6RnKKNyNrCinIMzUHgfEX2v76nGsA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.224
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774856934;
+	cv=none; b=Wick8ShjNPVzxdeYoqSfRd0x8aofaFO902wrn2ymiN5OL5jPFuBG4AcGtSVNnsPgjhxpwCo7V+ZBQs3bVFuVzy1fKwJwHyWI9Jct4Tfk0+qJa47hUZwnYFoubh4C6vQnVg95mvpAwfPCeEi9nyN7kQRFANLlZtpWcF1aJs8tCifr73jRYwWsLYiw1cdi+3f/lXOlj2X7i5+t2bQQTzHemc+ib/bkAUIhx+Mt7kuUAXauYxuePvG1HnBpRwNMEdk2AFjOsjeZxkag1PUkHxat2UGY+hVQ8Gcn6kVmQHbOlkiCKMMAIGlRrmBGrS2Xwb+nfa7at4t4VAW4aaAdL+Ceqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774856850; c=relaxed/relaxed;
-	bh=s+PX6W5DVFgyIkA2yzyjNJNcTYqCzfscgZNN2GdHO6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NWb0pwOC5PjV0ZPR8/3zOh4Hb9KvF8oqsggulAWWzW/TurCMuyM5H+5GiqTtHHA/xjcoxpu069jtts/Fx5X2UkftmsTRYgxbGDorwHPZ2XJj+Cc4YIMGEt0RFJ0Gumeh9RJFlaJQz5+4wqN/MxtAq3fcxAjDUL/sqVQ0xGEjvVxO9OviXo/ItaTg0mTuBk7tFGGONbV5pSeudXWEkpCO3Fx/y5tFtJyuSM/ZNuCpDvxKQCZiQYhYLevvMXMmnkT46LfUHs8A0MYth6OuE/PDHGfei9Wj7orSxE0kc+qu5DrdQztQdMpo5utXQ+3konDczIfGz4sNePgc1wkAvZbSCg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F6YLhD1Q; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1774856934; c=relaxed/relaxed;
+	bh=zLbmgTLuJOvxWetia92ZsU58nUqs1JPA8nLWA2cX/8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YDgjhH8ofuNxyXxEO5pt1p2zJ73t2alnVzYtJxpG5KJ7Jnd5i4nVOCXsI16PIZBVuR+5RU9R9iFAqeUpX4nEt7foci5IIulk2YNM01qqNv91zE+wSfGzyh2gfCCg1+m6NgG8Ia8ntxImQXi+wmi9o2VGR0k0uAYacxMtWlrUwonyJu7LgjXYelZ4ZK7vFXje0QFqFXvJuQwRKWpmJVzEZyPXiMuYOvyPy+vu/zqSHoRpeobluYzgUTiqxtnJ4sX80npPD4C8YFH0/dadK/0xd99bdl07afsFnZbZ9r8c4yTztVZf+fl0kHKM5t4tNSdHI9f9ejG4eD5n98KUdO4oNQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=WQgXKaQv; dkim-atps=neutral; spf=pass (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F6YLhD1Q;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=WQgXKaQv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkjyR5bMxz2xlK
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 18:47:26 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1774856841; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=s+PX6W5DVFgyIkA2yzyjNJNcTYqCzfscgZNN2GdHO6w=;
-	b=F6YLhD1QF9CwIg+ETdnsuSmS5ZN87xoaPLYF0LwMJeZbuMVByIx2TPyQFk9Y8fg2lBTsSc3EJ843wZLmjhXNMD3RdoM+643XnPSxMscVp4kZfLLNyaeWzBfZDu93szwUJxV9IkesBZfyz43HTcX3nUWQm8Mv85zK/myi8PDCDJM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X.wSq8H_1774856838;
-Received: from 30.221.131.246(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X.wSq8H_1774856838 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Mar 2026 15:47:19 +0800
-Message-ID: <bc6ac6ae-ef88-4ff9-96ff-3395f84ce4ef@linux.alibaba.com>
-Date: Mon, 30 Mar 2026 15:47:18 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkk044LWHz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 18:48:52 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=zLbmgTLuJOvxWetia92ZsU58nUqs1JPA8nLWA2cX/8I=;
+	b=WQgXKaQvRCiKUqvFQ39Sf5/yeQHCoimzXjZRKVp5aeoBbSiMA+sRzbCBGTGqlzEuOvC4YyAhd
+	PSHbtBu5iBLdZU22MWAogUU+F6SDZseabF3Z9a8c28v49moqLieIhuheIKThRqs0Sb/nRFwMa6l
+	JGG3MmUL2t6QPROifK4n1GQ=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4fkjrw6YNKz1cyPj;
+	Mon, 30 Mar 2026 15:42:40 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id A7C9440563;
+	Mon, 30 Mar 2026 15:48:48 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 30 Mar 2026 15:48:48 +0800
+Message-ID: <275a0a1e-7d83-449d-87de-355c2e1e0918@huawei.com>
+Date: Mon, 30 Mar 2026 15:48:47 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,59 +65,62 @@ Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1] erofs: remove the guard of showing domain_id and fsid
-To: Yuezhang Mo <Yuezhang.Mo@sony.com>, linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
- Chunhai Guo <guochunhai@vivo.com>, Friendy Su <friendy.su@sony.com>,
- Daniel Palmer <daniel.palmer@sony.com>
+Content-Language: en-US
+To: Yuezhang Mo <Yuezhang.Mo@sony.com>, <linux-erofs@lists.ozlabs.org>
+CC: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu
+	<zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+	<dhavale@google.com>, Chunhai Guo <guochunhai@vivo.com>, Friendy Su
+	<friendy.su@sony.com>, Daniel Palmer <daniel.palmer@sony.com>
 References: <20260330073235.3328579-2-Yuezhang.Mo@sony.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
 In-Reply-To: <20260330073235.3328579-2-Yuezhang.Mo@sony.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3108-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:Yuezhang.Mo@sony.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:friendy.su@sony.com,m:daniel.palmer@sony.com,s:lists@lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,sony.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linux.alibaba.com,google.com,vivo.com,sony.com];
+	TAGGED_FROM(0.00)[bounces-3109-lists,linux-erofs=lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:Yuezhang.Mo@sony.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:guochunhai@vivo.com,m:friendy.su@sony.com,m:daniel.palmer@sony.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	HAS_XOIP(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 623C13569EA
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,huawei.com:dkim,huawei.com:mid,sony.com:email]
+X-Rspamd-Queue-Id: B7E28356A17
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Yuezhang,
+Hi Yuezhang
 
 On 2026/3/30 15:32, Yuezhang Mo wrote:
 > This change fixes an issue where domain_id was not shown when
@@ -124,15 +135,6 @@ On 2026/3/30 15:32, Yuezhang Mo wrote:
 > Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
 > Reviewed-by: Friendy Su <friendy.su@sony.com>
 > Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
-
-`domain_id` is a user-sensitive information for the page cache
-sharing feature (much like passwd), so it shouldn't be shown
-in the mount option by design, and only the mounter should
-know what it was set.
-
-Thanks,
-Gao Xiang
-
 > ---
 >   fs/erofs/super.c | 10 ++++------
 >   1 file changed, 4 insertions(+), 6 deletions(-)
@@ -155,8 +157,14 @@ Gao Xiang
 > +		seq_printf(seq, ",fsid=%s", sbi->fsid);
 > +	if (sbi->domain_id)
 > +		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
+
+The domain_id in CONFIG_EROFS_FS_PAGE_CACHE_SHARE case means the trusted 
+domain. We cannot show it to user.
+
+Thanks,
+Hongbo
+
 >   	if (sbi->dif0.fsoff)
 >   		seq_printf(seq, ",fsoffset=%llu", sbi->dif0.fsoff);
 >   	if (test_opt(opt, INODE_SHARE))
-
 
