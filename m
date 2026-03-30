@@ -1,95 +1,96 @@
-Return-Path: <linux-erofs+bounces-3110-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3111-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yPGyH8k0ymnn6QUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3110-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 10:31:05 +0200
+	id WL5qEPY1ymkx6gUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3111-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 10:36:06 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 919633572E5
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 10:31:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A867357432
+	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 10:36:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fkkwj6RC5z2yF1;
-	Mon, 30 Mar 2026 19:31:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fkl2V4k9dz2xpt;
+	Mon, 30 Mar 2026 19:36:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1234" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774859461;
-	cv=pass; b=CpegPl/XHEQViGpnro+tXWsQvcxeqgpmT1QyQCf4XPFwTsQxHu1rir01mLM45Zyl7VEH17DDGjEyD+b3QCv4aN6dg3/r0gY4WcEp2KVKwMmV+C+NU7wCPVCeNe0xPN3xXS4qbHDdrAjyJYqfv+iXtgDfPhFMbcrVorjJB33UijIRWNs6OYP8VvOhC9wU2eoUvxfMfq1freiZIZEw0HbEMDCYT5Wsn3010m1VEiVVR66DsQFlRz5JRzdZlDrsJJQSEtcfz4LiMRhcW0nvF7ucHbNwGzcFuh+no+wWG/Lm/7IRJLkjbdo+9tUJXBxI+w+emH0pOkfz+emqfjMCel6PoA==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::52d" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774859762;
+	cv=pass; b=oW6G9UCjQovzjUt2K8jCN5cfT54EKZqT7/xThcZDfhG2HrS6TYcDkfBT3MKACRGpvRDe1PlPkQXITL9MtdDhAaP56STRTIkgMuT4y02vcBB4263GT9DTxZ7OOlOAaSz3G7nz5xs9L977TfDjipojuiRxEKXGwXleMVTR66ahWH1z13GS0J2BGT4LnYrQMRRXNRmBGoAm3Pf9ER+vSxeTpL85MAvGoT2QKSLGrx8k/uvQH1YpgpmjKRBqVweUNQInQ7y3KwZyk29Wi+DUV1cJA7taTWi+hhRxbjC6WqAEafy+JooLqKXN2X0tBF8dr4yIQpSwFyymg9HypGLvwgVvJA==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774859461; c=relaxed/relaxed;
-	bh=qtk4k0CkoaM3EBO/yaHnjpE0vtAKzKX0hNipU8DeGbc=;
+	t=1774859762; c=relaxed/relaxed;
+	bh=I71iPJR9s5FJ08bq1DVMN2Jfu+xUh4nMv+VKY9J60bg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AQOkP9nR+RHJfPeNyIy77ZPtrY57SSxBf+UXpuGIbOAx6fbXz/JwvIqAQmDE0HgBWsVwGw7Zc/LsQ4WSJ3ApeKR9RQ9kHC+sdklksq5uj0DYui0LHrZk2AawVHO27zjNQX/P7PYqJYnKUteZK7jUjUxDV8uLmx546yBG1apTMc0QeJWwy5SzTtdw2J1tCjbmlO4JDFBzwMPTEuZsRXnb4bNr3mV6x8US15DdQQbZQOFk8hmToXIYc1lTupU5kIHE2RvELXDqMew6mDOrmbfoeVtuNUKKgG9CWD/Z57Ri7qiqeTb75fnW7fPQISdG93yGLb2DMdghLr9m1Q/an3SokA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EBHL6QAY; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1234; helo=mail-dl1-x1234.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=QOuCIkhihEmlbG3oY9h3DMpbfVFKPXSwNf9lGa4IPWDqu4WgcNH7wmMdabEjfKzIUVYMu8CwT+VN4zs3+UW4B+Ef8nrNqzhWZ1l7SAaJkvzcgsbf90GbRvg1c9x42Dul6eW6yIdJG2EvfYSkEqQtd/7kwg8mvA1atpk0Dg6Z2rj15VFYkXZQDHO/RRC+ky2PxDSHGIgk2xMCW1IbeQgMqyvtHglFS5jgPs49eGmp4c7XV0zsDABLREVnTepa1Qz1UyLbsIFzD9vFQlxn07hmG1tO48bXGLAlHdTO+GFh7JI680Y6V2pHmOrc++0I8Me8htFkiZiy497BLB3bmLuKXQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AkWExhoj; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::52d; helo=mail-ed1-x52d.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=EBHL6QAY;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AkWExhoj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1234; helo=mail-dl1-x1234.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-dl1-x1234.google.com (mail-dl1-x1234.google.com [IPv6:2607:f8b0:4864:20::1234])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::52d; helo=mail-ed1-x52d.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkkwh0Vmqz2xpt
-	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 19:30:59 +1100 (AEDT)
-Received: by mail-dl1-x1234.google.com with SMTP id a92af1059eb24-128e4d0cc48so4930297c88.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 01:30:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774859456; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fkl2T1DdKz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 19:36:00 +1100 (AEDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-66bf15430ecso885484a12.3
+        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 01:36:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774859756; cv=none;
         d=google.com; s=arc-20240605;
-        b=inf4WlYoFh+yH4UKLpftvz87dgM1FaWEQS8dgRyRGrGJwMI8SvFqyrqyYD4ovhwZTd
-         ef1GGmatqoCJ7O2msc9BN/KjH4vtnAx6XOrQMV4s+rSnjTouCzT9qxh11Whw9tQR9Mxk
-         Bo8AF360dZDGITmeDRTwGIyen/RAm+wDZK895N7s4E6A3gz6ABw0v06589Zfw2KIludn
-         7NJymsX+xOy+cf/VyjTCN4Ul/GR0H6XH9OZhi7MfyGpxGZnjFIl4gSd4jTAvFDLjHZF1
-         OBTpGsOl2ebtAdVYvDxuco6ESHqm9sene/jA69Ab/vyGatywDIb4uj3rvkKyXQS89n3R
-         +8xA==
+        b=ZxMETF4GTFCtCziFau5q1fI4PwLgfvvPfQDoVh9G8vA9n/sEkfbPJr8VY5ttYBadEg
+         h+ed/HKjxE2H2L0DMqKbnwAqQFcPSkemvljrh7ki6K0gayRHqlE/lCuJvoQPqaLoqEyK
+         8hiWzOwAH6OM1iERF3A1XbVl0j8IJ58wEyOCNVjCFVsXSYEA2eECssd/Wc+jNQltDWtH
+         N2OZ2dl5NIvBdmQf1g3z3CBr8dGhzcOb3DZybX0GU4dHjjr6KT1oWfycIX8odER1y3+T
+         Ip2Obq6bnMS/WuRdv1uWxs7S3+yn9HuvdtguoiDVuOmYu/C/0SfAHsh5rS9hbkkQ+s4+
+         3yXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=qtk4k0CkoaM3EBO/yaHnjpE0vtAKzKX0hNipU8DeGbc=;
-        fh=RlfH77I8/Kt0ZrtXOcpno9ZseSB9F3859mFc0m4jdXQ=;
-        b=d6ynKtF6rYLRx1dCCMBXSjRhxHvQjMHA+MbHly3KMdtxJl3je54uHGEwAisJUmQSDj
-         bIEIROmK30n3VpKqQqdl05qJvtJ4+nKCDamqUnMDI8ftd1S3bNblcLbOlA36BXfeYJEt
-         TQEOGuQD2X9Cu98WDnj6ADJtgn5fAzwRXaPXR50IcMzuw7IQ6ZZEfNoaEaMHxiekgJiC
-         +KaQnnn3WqXfp9AKHiwmXrKsrKH9E4k4wlPFkR9uf0sglKPQrWyE08BTeZ6MU1KQOte7
-         RwUiRE9nqVaItuTMGO6X2vVj9MTf7ulu7RpstpTModAMFsV+OYdXOR9I+Cgon12qlFhJ
-         DL4Q==;
+        bh=I71iPJR9s5FJ08bq1DVMN2Jfu+xUh4nMv+VKY9J60bg=;
+        fh=0rhMG/baBV6MiZ18p1njIVdAYqpCw8r0PWala2iSJd4=;
+        b=U0gWP53oHyg6syqslb3WCzq1Y3cw4bFDbCJORGXEcKrOkIRqaykX49OErATnMaOysb
+         TIXKLGV8WdtV6tscQPBG3vi0//8nBtniVjrs5aioAmLUpihsg8ALSUoFmf3km8NHVLpa
+         bM/Zy1xZJczwswzcKYZHeWr5s1XHU6YxRhSx4LZhTxnI0wPHJRAGrL1gan/xzfkfpb4G
+         zZxEOC/kBeUZXl4Mv/FCKsd+HpxWJS50VGmkXMQOsiT4yUpmT6cGZs33D37Kj6mjQKbE
+         RYFwybxlgbsJ10euSuGbRaurSGpxK7HzMwJULrkEq2K9+89ly5aQ1GfU6PhW3VfkLHjg
+         C7Ew==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774859456; x=1775464256; darn=lists.ozlabs.org;
+        d=gmail.com; s=20251104; t=1774859756; x=1775464556; darn=lists.ozlabs.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qtk4k0CkoaM3EBO/yaHnjpE0vtAKzKX0hNipU8DeGbc=;
-        b=EBHL6QAYmExGO0FLmWqlLVE6ofX27kUpVduhYnajarxDqvaREISwERqAjpOIeqhf06
-         tnkhlw6Bd9ek1dGHjEM/h4pLr4kRzEQ2S2zLL9YxxlinTc8w4gg5851ppWgONTVGRTsQ
-         Hdo01htqPSpX5Us2F9LLV/+M8h4aVEL9fQfoshy7Zqm5+Fo+bjIJoKrj/e8K1BvpcV0/
-         1BNC/jRh7p4pawPr+Mu+3zJEik3D4onmOEIYXZafJ/yKP8DS89oJgmLb4GsbMr5fGgyC
-         iPw1vL7zQu9IMYazmHU+uYYsufKS39sPoo1uCP1oS+Pt946kxsxGUu4MkW/+rCcTmspe
-         ipeg==
+        bh=I71iPJR9s5FJ08bq1DVMN2Jfu+xUh4nMv+VKY9J60bg=;
+        b=AkWExhoj2L6xkRS2jBLiCwU5BHcVfb4niZvv5cnPupBt9Mowl4D42akrLFTtcxox4I
+         JiveEwgPCFhsvnSYUUS2xTHYnBu8/D8Ov5IDXjb+bEXYa4C+lQQNsPHk0gsqxlZFUPSz
+         Vl7ckPtvP87m81VWnxqaBac6PHIIHOsEAILWlThwXIaHsw6Df2uMBz4Y3P/warnuBd41
+         ooBktqUJiaPtVGQVGhP5+rI7KELtwdR9SeqguDUNWC62ogmZmrn8wy8k4AueJbMTAK/I
+         UG/MxGIhHQTLr2CsKFHQFR69qos8Y3Hs0DHQQuMOzpzRm3Jn5AI6F18mTHbwHUb0Eat3
+         CUnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774859456; x=1775464256;
+        d=1e100.net; s=20251104; t=1774859756; x=1775464556;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qtk4k0CkoaM3EBO/yaHnjpE0vtAKzKX0hNipU8DeGbc=;
-        b=QMwVsX/FolWuAP1tF3Dfs76gwnpB0wyDvnI6+eJhzIhuUJRGnJvGMrSNgBLqRbH3+t
-         BouRcHtCiBcXUX+/BTx7w4UM1icPJkQPG0Nhom12whfkC9BtQqBzPgi24ONUiu42AGgC
-         fbinupXPvtDPW9/xsoyGZXgjbVi63Ihb2f/TQnlNJJc8RmvWS0dRtMMPurH98tx9jJwm
-         RuEkBpVdJiUVd19zsAIpiEZwr7qhqZPzpYVhnsEIN59MfCl1bwjrAUBmI6fmgNaP6Cci
-         6IkpbGQGtPPwC6hQdN7uM9/nZQXZ8f9TjHC96cFOBT5AjTSKv/776U34q83ySyb3MeI2
-         534g==
-X-Gm-Message-State: AOJu0YzIgUVvoWhzDDXy1shdB6VA9y1H4shQU2Bk+wrIXBdqcRpPHiQg
-	o4aaEqMzkFZMkWAt0sF3gxFCPLKDysnqUy3Vi2eJUob2LQ+fG/NkQe/3KkEvKZ0J1bsxaP9f5Uz
-	+xmMoq7xvX5COdZMYH+r/FitsiuvqyGY=
-X-Gm-Gg: ATEYQzyccDJWPxaoh++Eo1Q2zmSVj+aNSqw/iEsnwxpTZYfDlLiJu4qNhia029H2LGM
-	XlMPIzwtWvlWMpAnNKPahIzhjTBbgNTgt2BMd3ocnm0Eusbxzdh5/twGVFebNjU4ZCSZVt+ms0U
-	3ya7iTJr6V5rj5W3estE+pohc6i2Zh4xaOQLrTLX+qwqJ3n6Zd6+JLaviSzeY7B3IEub8Aqn+Eb
-	gbzvnC0rY9QRZsLneutHgVoazuyj3f/ALuCvLYOS/K9FgTZcvL30ipCgyUtB9d650zWQgNYmjE6
-	1pEcFCc=
-X-Received: by 2002:a05:7022:48f:b0:128:bae0:e044 with SMTP id
- a92af1059eb24-12ab28db6cfmr6100234c88.30.1774859455826; Mon, 30 Mar 2026
- 01:30:55 -0700 (PDT)
+        bh=I71iPJR9s5FJ08bq1DVMN2Jfu+xUh4nMv+VKY9J60bg=;
+        b=Hf1VONFOGlHmOMWX7DhpelD2uhcR3pIpMNWwOIe70ce6SKk/nwhn6AXbbfKxb1rAK7
+         EFskAMa0KnIqhK0gmEMadSqyBRxP851riZPjwfVKKrrpoXuKFPh9MgJ6+dHXA2YJzAm1
+         Ua09t1UStEucxcdUQI8B0frBXgPBbUGb49jt4DsvC1O36SM9xXGFb/naNonOBRY6boGF
+         NeF8AXsykgdtTz8hLaJrKD2p3QUz/i1ww5yPctAuMxxf+ddgBdzmp5b2e1sJgLRACbtt
+         kiiKjmDKcFbaUFK2fMS9fOzL1KmBSxnBiXdCYcNo+EPaBzTp6/vp1yh27KAMWARkXMYe
+         nBjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU31XRLOLD7aM2Q4nQi2k8h8y0B2QywhJrXWOGdzDzQ3+K3y7MU/jYPZH3WaM91Jei/BZ+sjx2+rH4f3w==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzKGeeXcvvo+3KPSGPQNhNyYNtgOiAju5cCev6s7EEHAxaoO42V
+	R1E+/dKyPe2D08FyC6ZEWsOl8XEDjqAcZsk/w7eeTY+pO0qo5m2WFKb6Z/Ni3HGDHXEYnQGkNoc
+	c+IEyF/cy1beeQewtzR+otLOT9cuEvOs=
+X-Gm-Gg: ATEYQzy9Pk1k7a0y6OYq/crLyZpjYAet/DXTSJfCVEtMdWqWBVW44Zp7vuRU+V5pv1c
+	4Ed35muXXYCrIjgZo2rq145BrncnawILRRgo+PcHVkKS6i+YHI/eeu3gxMyKixnK1mpLGyMSlNg
+	UeOmuAuHmC+LDMuXgZJutBpfez9+7Bf7hCRoKhE0gsfLEBXGOFK/CCrU8lbq66BLHS/ItWvp76H
+	squnCi0S7Sqkt0blv8R0nylUatQAx57RitQufdOARN5KtF3PgUY2ENrx1xcOg6ThDfDQzQc5EnK
+	cLwZc9PIcJPP2MaWzYDDhG0yX/EJ4sXZggry3VL4gg==
+X-Received: by 2002:a05:6402:23d8:b0:666:d675:e2d9 with SMTP id
+ 4fb4d7f45d1cf-66b28c711e8mr5369326a12.23.1774859756051; Mon, 30 Mar 2026
+ 01:35:56 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,321 +102,357 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <CAHf8aCXHHLFCghBEy4hF+DoDpYed0yOafvKbdbmDgfjRC2Lfww@mail.gmail.com>
- <CAGSu4WOLGADT4Z+iEw33K1M-1F1Pgu0aHBwk_8R_2tbee6k5+w@mail.gmail.com>
-In-Reply-To: <CAGSu4WOLGADT4Z+iEw33K1M-1F1Pgu0aHBwk_8R_2tbee6k5+w@mail.gmail.com>
-From: Deepak Pathik <deepakpathik2005@gmail.com>
-Date: Mon, 30 Mar 2026 14:00:44 +0530
-X-Gm-Features: AQROBzDMw-gwMaPkX2mxMWqVm_bHYTT1noMnTc7btaZkEoFomnd3yioTJf-qvXI
-Message-ID: <CAHf8aCV+d0-YL8Gt_Xhw0knS7gz8FZB_RF315XOLtfOi4ec0Vg@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BGSoC_2026=5D_Multi=2Dthreaded_decompression_for_fsc?=
-	=?UTF-8?Q?k=2Eerofs_=E2=80=94_design_question_on_z=5Ferofs=5Fdecompress=28=29_parallel?=
-	=?UTF-8?Q?ism?=
-To: Utkal Singh <singhutkal015@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="000000000000640f89064e39ab71"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
+References: <20260327220446.353103-4-paul@paul-moore.com> <20260327220446.353103-5-paul@paul-moore.com>
+In-Reply-To: <20260327220446.353103-5-paul@paul-moore.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 30 Mar 2026 10:35:44 +0200
+X-Gm-Features: AQROBzBDqnCdh1lsySXMReag-koNqxFZzXRJut44t6M3sk3oI72QO2jo_kKOcqI
+Message-ID: <CAOQ4uxgcOCP8cf8KvCsC=5OiuRvULKOf52mc2n9qEBAhPKoUGg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] lsm: add backing_file LSM hooks
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000495a5d064e39bd4e"
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
 	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-1.10 / 15.00];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:singhutkal015@gmail.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:paul@paul-moore.com,m:linux-security-module@vger.kernel.org,m:selinux@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:brauner@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[amir73il@gmail.com,linux-erofs@lists.ozlabs.org];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-3111-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3110-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	HAS_ATTACHMENT(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[amir73il@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	TAGGED_RCPT(0.00)[linux-erofs];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 919633572E5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,paul-moore.com:email]
+X-Rspamd-Queue-Id: 5A867357432
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---000000000000640f89064e39ab71
+--000000000000495a5d064e39bd4e
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Utkal,
-
-Thanks again for the detailed explanation and for pointing me to the RFC =
-=E2=80=94
-it really helped clarify the bigger picture.
-
-I spent some time going through the relevant parts of the code and your
-comments made a lot more sense in that context. I see now that while
-pcluster-level parallelism is valid, the main challenge is making the
-surrounding infrastructure safe before introducing concurrency.
-
-In particular, I hadn=E2=80=99t fully accounted for:
-
-   -
-
-   the lseek() + read() pattern in erofs_read_one_data() and why switching
-   to pread() is necessary for correctness,
-   -
-
-   the lack of synchronization in erofs_iget()/erofs_iput(), which could
-   lead to refcount races,
-   -
-
-   and the implications of using an unbounded workqueue on large images.
-
-Your point about backpressure was especially helpful =E2=80=94 I=E2=80=99m =
-now considering
-a bounded queue or a semaphore-based approach to ensure the producer
-doesn=E2=80=99t get too far ahead of the workers.
-
-I also revisited the design with this in mind, and the two-phase model
-(serial traversal + parallel data verification/extraction) makes a lot more
-sense now, especially for isolating shared state like fsckcfg and path
-handling.
-
-I=E2=80=99ll continue refining the proposal with these constraints in mind =
-and go
-deeper into io.c, inode.c, and workqueue.c to make sure the design is
-correct before thinking about actual parallel execution.
-
-Thanks again for taking the time to explain this =E2=80=94 it was very help=
-ful.
-
-Regards,
-Deepak Pathik
-
-On Mon, Mar 30, 2026 at 1:50=E2=80=AFAM Utkal Singh <singhutkal015@gmail.co=
-m> wrote:
-
-> On Sun, Mar 29, 2026 at 6:47 PM, Deepak Pathik wrote:
-> > for LZMA-compressed images, are pclusters in fsck.erofs always
-> > fixed-size and independently decompressible at the userspace level,
-> > or are there cases where a pcluster depends on the state left by a
-> > previous one?
+On Fri, Mar 27, 2026 at 11:05=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+rote:
 >
-> Hi Deepak,
+> Stacked filesystems such as overlayfs do not currently provide the
+> necessary mechanisms for LSMs to properly enforce access controls on the
+> mmap() and mprotect() operations.  In order to resolve this gap, a LSM
+> security blob is being added to the backing_file struct and the following
+> new LSM hooks are being created:
 >
-> To answer your LZMA question: yes, each pcluster is independently
-> decompressible by design. You can verify this directly in
-> lib/decompress.c =E2=80=94 z_erofs_decompress_lzma() calls lzma_stream_de=
-coder()
-> and lzma_end() within a single invocation, with no persistent lzma_stream
-> across calls. The same holds for ZSTD and deflate. The on-disk format
-> enforces this: no pcluster depends on decompressor state from a
-> previous one.
+>  security_backing_file_alloc()
+>  security_backing_file_free()
+>  security_mmap_backing_file()
 >
-> The parallelism boundary you identified is correct. The deeper issue
-> is one level up: erofs_check_inode() is called sequentially in the
-> dispatch loop in fsck/main.c, and each call may decompress many
-> pclusters per inode. Inode-level dispatch is simpler than
-> pcluster-level because it avoids output ordering constraints.
+> The first two hooks are to manage the lifecycle of the LSM security blob
+> in the backing_file struct, while the third provides a new mmap() access
+> control point for the underlying backing file.  It is also expected that
+> LSMs will likely want to update their security_file_mprotect() callback
+> to address issues with their mprotect() controls, but that does not
+> require a change to the security_file_mprotect() LSM hook.
 >
-> One thing worth thinking through before wiring erofs_workqueue into
-> the fsck path: the existing queue in lib/workqueue.c is an unbounded
-> producer queue built for mkfs compression workloads. On a 34,000+
-> inode image, it will accumulate all inode descriptors in memory before
-> workers can drain it. Backpressure =E2=80=94 either a bounded queue or a
-> semaphore on the existing one =E2=80=94 matters here.
+> There are a two other small changes to support these new LSM hooks.  We
+> pass the user file associated with a backing file down to
+> alloc_empty_backing_file() so it can be included in the
+> security_backing_file_alloc() hook, and we constify the file struct field
+> in the LSM common_audit_data struct to better support LSMs that need to
+> pass a const file struct pointer into the common LSM audit code.
 >
-> Two paths in the surrounding infrastructure also need fixing before
-> concurrent dispatch is correct:
+> Thanks to Arnd Bergmann for identifying the missing EXPORT_SYMBOL_GPL()
+> and supplying a fixup.
 >
->   - erofs_read_one_data() in lib/io.c: lseek()+read() on a shared fd
->     is a TOCTOU race under concurrent calls. pread(2) fixes it cleanly.
->
->   - erofs_iget()/erofs_iput() in lib/inode.c: ref-count mutations
->     without synchronisation. Concurrent iput() can double-free.
->
-> I sent an RFC on March 22 covering this design if it is useful context:
->
->
-> https://lore.kernel.org/linux-erofs/CAGSu4WNBdB30K61xoUCi3FB9QR081fNh-1ho=
-X1z2TZMk0nGpHQ@mail.gmail.com/
->
-> Happy to discuss further on the list.
->
-> Regards,
-> Utkal Singh
->
->
-> On Sun, 29 Mar 2026 at 18:47, Deepak Pathik <deepakpathik2005@gmail.com>
-> wrote:
-> >
-> > Hi,
-> >
-> > I'm Deepak Pathik, a second-year B.Tech student applying for the GSoC
-> 2026 project on multi-threaded decompression support in fsck.erofs.
-> >
-> > While reading through the source, I traced the decompression path in
-> erofs_verify_inode_data() and noticed that z_erofs_decompress() operates =
-on
-> a locally scoped struct z_erofs_decompress_req with its own input and
-> output buffers =E2=80=94 no shared mutable state between calls. My plan i=
-s to wire
-> the existing erofs_workqueue (already used in lib/compress.c for
-> mkfs.erofs) into the fsck extraction path at the pcluster level, with
-> pwrite() for position-based output writes to avoid ordering locks.
-> >
-> > One thing I wanted to confirm before finalizing my proposal: for
-> LZMA-compressed images, are pclusters in fsck.erofs always fixed-size and
-> independently decompressible at the userspace level, or are there cases
-> where a pcluster depends on the state left by a previous one? I want to
-> make sure I'm not understating the LZMA case in my design.
-> >
-> > I've drafted a proposal and would be happy to share it for early
-> feedback if that's useful.
-> >
-> > Thanks,
-> > Deepak Pathik
-> > https://github.com/deepakpathik
-> > deepakpathik2005@gmail.com
+> Cc: stable@vger.kernel.org
+> Acked-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Paul Moore <paul@paul-moore.com>
+> ---
+>  fs/backing-file.c             |  18 ++++--
+>  fs/erofs/ishare.c             |  10 +++-
+>  fs/file_table.c               |  21 ++++++-
+>  fs/fuse/passthrough.c         |   2 +-
+>  fs/internal.h                 |   3 +-
+>  fs/overlayfs/dir.c            |   2 +-
+>  fs/overlayfs/file.c           |   2 +-
+>  include/linux/backing-file.h  |   4 +-
+>  include/linux/fs.h            |   1 +
+>  include/linux/lsm_audit.h     |   2 +-
+>  include/linux/lsm_hook_defs.h |   5 ++
+>  include/linux/lsm_hooks.h     |   1 +
+>  include/linux/security.h      |  22 ++++++++
+>  security/lsm.h                |   1 +
+>  security/lsm_init.c           |   9 +++
+>  security/security.c           | 100 ++++++++++++++++++++++++++++++++++
+>  16 files changed, 187 insertions(+), 16 deletions(-)
 >
 
---000000000000640f89064e39ab71
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+That looks like a nice clean abstraction to me.
 
-<div dir=3D"ltr"><p>Hi Utkal,</p><p>Thanks again for the detailed explanati=
-on and for pointing me to the RFC =E2=80=94 it really helped clarify the bi=
-gger picture.</p><p>I spent some time going through the relevant parts of t=
-he code and your comments made a lot more sense in that context. I see now =
-that while pcluster-level parallelism is valid, the main challenge is makin=
-g the surrounding infrastructure safe before introducing concurrency.</p><p=
->In particular, I hadn=E2=80=99t fully accounted for:</p><ul><li><p>the lse=
-ek() + read() pattern in erofs_read_one_data() and why switching to pread()=
- is necessary for correctness,</p></li><li><p>the lack of synchronization i=
-n erofs_iget()/erofs_iput(), which could lead to refcount races,</p></li><l=
-i><p>and the implications of using an unbounded workqueue on large images.<=
-/p></li></ul><p>Your point about backpressure was especially helpful =E2=80=
-=94 I=E2=80=99m now considering a bounded queue or a semaphore-based approa=
-ch to ensure the producer doesn=E2=80=99t get too far ahead of the workers.=
-</p><p>I also revisited the design with this in mind, and the two-phase mod=
-el (serial traversal + parallel data verification/extraction) makes a lot m=
-ore sense now, especially for isolating shared state like fsckcfg and path =
-handling.</p><p>I=E2=80=99ll continue refining the proposal with these cons=
-traints in mind and go deeper into io.c, inode.c, and workqueue.c to make s=
-ure the design is correct before thinking about actual parallel execution.<=
-/p><p>Thanks again for taking the time to explain this =E2=80=94 it was ver=
-y helpful.</p><p>Regards,<br>Deepak Pathik</p></div><br><div class=3D"gmail=
-_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Mon,=
- Mar 30, 2026 at 1:50=E2=80=AFAM Utkal Singh &lt;<a href=3D"mailto:singhutk=
-al015@gmail.com">singhutkal015@gmail.com</a>&gt; wrote:<br></div><blockquot=
-e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px s=
-olid rgb(204,204,204);padding-left:1ex">On Sun, Mar 29, 2026 at 6:47 PM, De=
-epak Pathik wrote:<br>
-&gt; for LZMA-compressed images, are pclusters in fsck.erofs always<br>
-&gt; fixed-size and independently decompressible at the userspace level,<br=
->
-&gt; or are there cases where a pcluster depends on the state left by a<br>
-&gt; previous one?<br>
-<br>
-Hi Deepak,<br>
-<br>
-To answer your LZMA question: yes, each pcluster is independently<br>
-decompressible by design. You can verify this directly in<br>
-lib/decompress.c =E2=80=94 z_erofs_decompress_lzma() calls lzma_stream_deco=
-der()<br>
-and lzma_end() within a single invocation, with no persistent lzma_stream<b=
-r>
-across calls. The same holds for ZSTD and deflate. The on-disk format<br>
-enforces this: no pcluster depends on decompressor state from a<br>
-previous one.<br>
-<br>
-The parallelism boundary you identified is correct. The deeper issue<br>
-is one level up: erofs_check_inode() is called sequentially in the<br>
-dispatch loop in fsck/main.c, and each call may decompress many<br>
-pclusters per inode. Inode-level dispatch is simpler than<br>
-pcluster-level because it avoids output ordering constraints.<br>
-<br>
-One thing worth thinking through before wiring erofs_workqueue into<br>
-the fsck path: the existing queue in lib/workqueue.c is an unbounded<br>
-producer queue built for mkfs compression workloads. On a 34,000+<br>
-inode image, it will accumulate all inode descriptors in memory before<br>
-workers can drain it. Backpressure =E2=80=94 either a bounded queue or a<br=
->
-semaphore on the existing one =E2=80=94 matters here.<br>
-<br>
-Two paths in the surrounding infrastructure also need fixing before<br>
-concurrent dispatch is correct:<br>
-<br>
-=C2=A0 - erofs_read_one_data() in lib/io.c: lseek()+read() on a shared fd<b=
-r>
-=C2=A0 =C2=A0 is a TOCTOU race under concurrent calls. pread(2) fixes it cl=
-eanly.<br>
-<br>
-=C2=A0 - erofs_iget()/erofs_iput() in lib/inode.c: ref-count mutations<br>
-=C2=A0 =C2=A0 without synchronisation. Concurrent iput() can double-free.<b=
-r>
-<br>
-I sent an RFC on March 22 covering this design if it is useful context:<br>
-<br>
-=C2=A0 <a href=3D"https://lore.kernel.org/linux-erofs/CAGSu4WNBdB30K61xoUCi=
-3FB9QR081fNh-1hoX1z2TZMk0nGpHQ@mail.gmail.com/" rel=3D"noreferrer" target=
-=3D"_blank">https://lore.kernel.org/linux-erofs/CAGSu4WNBdB30K61xoUCi3FB9QR=
-081fNh-1hoX1z2TZMk0nGpHQ@mail.gmail.com/</a><br>
-<br>
-Happy to discuss further on the list.<br>
-<br>
-Regards,<br>
-Utkal Singh<br>
-<br>
-<br>
-On Sun, 29 Mar 2026 at 18:47, Deepak Pathik &lt;<a href=3D"mailto:deepakpat=
-hik2005@gmail.com" target=3D"_blank">deepakpathik2005@gmail.com</a>&gt; wro=
-te:<br>
-&gt;<br>
-&gt; Hi,<br>
-&gt;<br>
-&gt; I&#39;m Deepak Pathik, a second-year B.Tech student applying for the G=
-SoC 2026 project on multi-threaded decompression support in fsck.erofs.<br>
-&gt;<br>
-&gt; While reading through the source, I traced the decompression path in e=
-rofs_verify_inode_data() and noticed that z_erofs_decompress() operates on =
-a locally scoped struct z_erofs_decompress_req with its own input and outpu=
-t buffers =E2=80=94 no shared mutable state between calls. My plan is to wi=
-re the existing erofs_workqueue (already used in lib/compress.c for mkfs.er=
-ofs) into the fsck extraction path at the pcluster level, with pwrite() for=
- position-based output writes to avoid ordering locks.<br>
-&gt;<br>
-&gt; One thing I wanted to confirm before finalizing my proposal: for LZMA-=
-compressed images, are pclusters in fsck.erofs always fixed-size and indepe=
-ndently decompressible at the userspace level, or are there cases where a p=
-cluster depends on the state left by a previous one? I want to make sure I&=
-#39;m not understating the LZMA case in my design.<br>
-&gt;<br>
-&gt; I&#39;ve drafted a proposal and would be happy to share it for early f=
-eedback if that&#39;s useful.<br>
-&gt;<br>
-&gt; Thanks,<br>
-&gt; Deepak Pathik<br>
-&gt; <a href=3D"https://github.com/deepakpathik" rel=3D"noreferrer" target=
-=3D"_blank">https://github.com/deepakpathik</a><br>
-&gt; <a href=3D"mailto:deepakpathik2005@gmail.com" target=3D"_blank">deepak=
-pathik2005@gmail.com</a><br>
-</blockquote></div>
+...
 
---000000000000640f89064e39ab71--
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index aaa5faaace1e..0bdc26cae138 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -50,6 +50,7 @@ struct backing_file {
+>                 struct path user_path;
+>                 freeptr_t bf_freeptr;
+>         };
+> +       void *security;
+
+This needs ifdef SECURITY
+and the name should be user_security
+
+>  };
+>
+>  #define backing_file(f) container_of(f, struct backing_file, file)
+> @@ -66,6 +67,11 @@ void backing_file_set_user_path(struct file *f, const =
+struct path *path)
+>  }
+>  EXPORT_SYMBOL_GPL(backing_file_set_user_path);
+>
+> +void *backing_file_security(const struct file *f)
+> +{
+> +       return backing_file(f)->security;
+> +}
+
+I prefer the name backing_file_user_security()
+
+Terminology here is very confusing but when saying
+"backing file" it is more natural that one is referring to the
+backing xfs file with overlayfs has opened.
+
+The "backing file" already has an LSM blob f->f_security
+which is fair the call it the "backing file's LSM blob"
+
+Therefore, I think we need to make a distinction, as we did
+with backing_file_user_path() and refer to this as something along
+the lines of the "backing file's user LSM blob".
+
+> +
+>  static inline void file_free(struct file *f)
+>  {
+>         security_file_free(f);
+> @@ -73,8 +79,11 @@ static inline void file_free(struct file *f)
+>                 percpu_counter_dec(&nr_files);
+>         put_cred(f->f_cred);
+>         if (unlikely(f->f_mode & FMODE_BACKING)) {
+> -               path_put(backing_file_user_path(f));
+> -               kmem_cache_free(bfilp_cachep, backing_file(f));
+> +               struct backing_file *ff =3D backing_file(f);
+> +
+> +               security_backing_file_free(&ff->security);
+> +               path_put(&ff->user_path);
+> +               kmem_cache_free(bfilp_cachep, ff);
+
+Not directly related to your patch, but as this is growing, IMO
+this would look cleaner with backing_file_free() inline helper
+(see attached path).
+
+>         } else {
+>                 kmem_cache_free(filp_cachep, f);
+>         }
+> @@ -290,7 +299,8 @@ struct file *alloc_empty_file_noaccount(int flags, co=
+nst struct cred *cred)
+>   * This is only for kernel internal use, and the allocate file must not =
+be
+>   * installed into file tables or such.
+>   */
+> -struct file *alloc_empty_backing_file(int flags, const struct cred *cred=
+)
+> +struct file *alloc_empty_backing_file(int flags, const struct cred *cred=
+,
+> +                                     const struct file *user_file)
+>  {
+>         struct backing_file *ff;
+>         int error;
+> @@ -306,6 +316,11 @@ struct file *alloc_empty_backing_file(int flags, con=
+st struct cred *cred)
+>         }
+>
+>         ff->file.f_mode |=3D FMODE_BACKING | FMODE_NOACCOUNT;
+> +       error =3D security_backing_file_alloc(&ff->security, user_file);
+> +       if (unlikely(error)) {
+> +               fput(&ff->file);
+> +               return ERR_PTR(error);
+> +       }
+>         return &ff->file;
+>  }
+
+There is an API issue here.
+in order to call fput() we must ensure that user_security was initialized t=
+o
+NULL (or allocated).
+
+I don't think that we want security_backing_file_alloc() to provide this
+semantic and the current patch does not implement it.
+
+Furthermore, user_path is also not initialized in the error case.
+
+Attached UNTESTED fixup patch to suggest a cleanup with
+init_backing_file() helper.
+
+It also changes the variable and helper name to user_security
+and plays some trick to avoid many ifdef SECURITY.
+Feel free to take whichever bits you like with/without attribution.
+
+If you prefer, attached also a proper prep patch.
+compile tested only.
+
+Thanks,
+Amir.
+
+--000000000000495a5d064e39bd4e
+Content-Type: text/x-patch; charset="US-ASCII"; name="0001-backing_file_user_security.patch"
+Content-Disposition: attachment; 
+	filename="0001-backing_file_user_security.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mncx4u4t0>
+X-Attachment-Id: f_mncx4u4t0
+
+RnJvbSA0ODU4ZjYxMGQ5NjA0NTRhYjRkZTBmMjlmMzU1NzAxNmU4MDg0OGJkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBNb24sIDMwIE1hciAyMDI2IDA4OjI2OjAxICswMjAwClN1YmplY3Q6IFtQQVRDSF0gYmFj
+a2luZ19maWxlX3VzZXJfc2VjdXJpdHkKCi0tLQogZnMvZmlsZV90YWJsZS5jICAgIHwgNDcgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQogaW5jbHVkZS9saW51
+eC9mcy5oIHwgIDIgKy0KIDIgZmlsZXMgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKSwgMTEgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvZmlsZV90YWJsZS5jIGIvZnMvZmlsZV90YWJsZS5j
+CmluZGV4IDBiZGMyNmNhZTEzODkuLjQ2NjZlODhiYTY4N2QgMTAwNjQ0Ci0tLSBhL2ZzL2ZpbGVf
+dGFibGUuYworKysgYi9mcy9maWxlX3RhYmxlLmMKQEAgLTQzLDE0ICs0MywxOSBAQCBzdGF0aWMg
+c3RydWN0IGttZW1fY2FjaGUgKmJmaWxwX2NhY2hlcCBfX3JvX2FmdGVyX2luaXQ7CiAKIHN0YXRp
+YyBzdHJ1Y3QgcGVyY3B1X2NvdW50ZXIgbnJfZmlsZXMgX19jYWNoZWxpbmVfYWxpZ25lZF9pbl9z
+bXA7CiAKLS8qIENvbnRhaW5lciBmb3IgYmFja2luZyBmaWxlIHdpdGggb3B0aW9uYWwgdXNlciBw
+YXRoICovCisvKiBDb250YWluZXIgZm9yIGJhY2tpbmcgZmlsZSB3aXRoIG9wdGlvbmFsIHVzZXIg
+cGF0aCBhbmQgc2VjdXJpdHkgYmxvYiAqLwogc3RydWN0IGJhY2tpbmdfZmlsZSB7CiAJc3RydWN0
+IGZpbGUgZmlsZTsKIAl1bmlvbiB7CiAJCXN0cnVjdCBwYXRoIHVzZXJfcGF0aDsKIAkJZnJlZXB0
+cl90IGJmX2ZyZWVwdHI7CisJCXZvaWQgKmR1bW15X3NlY3VyaXR5OwogCX07Ci0Jdm9pZCAqc2Vj
+dXJpdHk7CisjaWZkZWYgQ09ORklHX1NFQ1VSSVRZCisJdm9pZCAqdXNlcl9zZWN1cml0eTsKKyNl
+bHNlCisjZGVmaW5lIHVzZXJfc2VjdXJpdHkgZHVtbXlfc2VjdXJpdHkKKyNlbmRpZgogfTsKIAog
+I2RlZmluZSBiYWNraW5nX2ZpbGUoZikgY29udGFpbmVyX29mKGYsIHN0cnVjdCBiYWNraW5nX2Zp
+bGUsIGZpbGUpCkBAIC02Nyw5ICs3MiwxNiBAQCB2b2lkIGJhY2tpbmdfZmlsZV9zZXRfdXNlcl9w
+YXRoKHN0cnVjdCBmaWxlICpmLCBjb25zdCBzdHJ1Y3QgcGF0aCAqcGF0aCkKIH0KIEVYUE9SVF9T
+WU1CT0xfR1BMKGJhY2tpbmdfZmlsZV9zZXRfdXNlcl9wYXRoKTsKIAotdm9pZCAqYmFja2luZ19m
+aWxlX3NlY3VyaXR5KGNvbnN0IHN0cnVjdCBmaWxlICpmKQordm9pZCAqYmFja2luZ19maWxlX3Vz
+ZXJfc2VjdXJpdHkoc3RydWN0IGZpbGUgKmYpCiB7Ci0JcmV0dXJuIGJhY2tpbmdfZmlsZShmKS0+
+c2VjdXJpdHk7CisJcmV0dXJuIGJhY2tpbmdfZmlsZShmKS0+dXNlcl9zZWN1cml0eTsKK30KKwor
+c3RhdGljIGlubGluZSB2b2lkIGJhY2tpbmdfZmlsZV9mcmVlKHN0cnVjdCBiYWNraW5nX2ZpbGUg
+KmZmKQoreworCXNlY3VyaXR5X2JhY2tpbmdfZmlsZV9mcmVlKCZmZi0+dXNlcl9zZWN1cml0eSk7
+CisJcGF0aF9wdXQoJmZmLT51c2VyX3BhdGgpOworCWttZW1fY2FjaGVfZnJlZShiZmlscF9jYWNo
+ZXAsIGZmKTsKIH0KIAogc3RhdGljIGlubGluZSB2b2lkIGZpbGVfZnJlZShzdHJ1Y3QgZmlsZSAq
+ZikKQEAgLTc5LDExICs5MSw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBmaWxlX2ZyZWUoc3RydWN0
+IGZpbGUgKmYpCiAJCXBlcmNwdV9jb3VudGVyX2RlYygmbnJfZmlsZXMpOwogCXB1dF9jcmVkKGYt
+PmZfY3JlZCk7CiAJaWYgKHVubGlrZWx5KGYtPmZfbW9kZSAmIEZNT0RFX0JBQ0tJTkcpKSB7Ci0J
+CXN0cnVjdCBiYWNraW5nX2ZpbGUgKmZmID0gYmFja2luZ19maWxlKGYpOwotCi0JCXNlY3VyaXR5
+X2JhY2tpbmdfZmlsZV9mcmVlKCZmZi0+c2VjdXJpdHkpOwotCQlwYXRoX3B1dCgmZmYtPnVzZXJf
+cGF0aCk7Ci0JCWttZW1fY2FjaGVfZnJlZShiZmlscF9jYWNoZXAsIGZmKTsKKwkJYmFja2luZ19m
+aWxlX2ZyZWUoYmFja2luZ19maWxlKGYpKTsKIAl9IGVsc2UgewogCQlrbWVtX2NhY2hlX2ZyZWUo
+ZmlscF9jYWNoZXAsIGYpOwogCX0KQEAgLTI5Miw2ICszMDAsMjMgQEAgc3RydWN0IGZpbGUgKmFs
+bG9jX2VtcHR5X2ZpbGVfbm9hY2NvdW50KGludCBmbGFncywgY29uc3Qgc3RydWN0IGNyZWQgKmNy
+ZWQpCiAJcmV0dXJuIGY7CiB9CiAKK3N0YXRpYyBpbnQgaW5pdF9iYWNraW5nX2ZpbGUoc3RydWN0
+IGJhY2tpbmdfZmlsZSAqZmYsCisJCQkgICAgIGNvbnN0IHN0cnVjdCBmaWxlICp1c2VyX2ZpbGUp
+Cit7CisJaW50IGVycm9yOworCisJbWVtc2V0KCZmZi0+dXNlcl9wYXRoLCAwLCBzaXplb2YoZmYt
+PnVzZXJfcGF0aCkpOworCWZmLT51c2VyX3NlY3VyaXR5ID0gTlVMTDsKKworCWVycm9yID0gc2Vj
+dXJpdHlfYmFja2luZ19maWxlX2FsbG9jKCZmZi0+dXNlcl9zZWN1cml0eSwgdXNlcl9maWxlKTsK
+KwlpZiAodW5saWtlbHkoZXJyb3IpKSB7CisJCWZwdXQoJmZmLT5maWxlKTsKKwkJcmV0dXJuIEVS
+Ul9QVFIoZXJyb3IpOworCX0KKworCXJldHVybiAwOworfQorCiAvKgogICogVmFyaWFudCBvZiBh
+bGxvY19lbXB0eV9maWxlKCkgdGhhdCBhbGxvY2F0ZXMgYSBiYWNraW5nX2ZpbGUgY29udGFpbmVy
+CiAgKiBhbmQgZG9lc24ndCBjaGVjayBhbmQgbW9kaWZ5IG5yX2ZpbGVzLgpAQCAtMzE1LDEyICsz
+NDAsMTQgQEAgc3RydWN0IGZpbGUgKmFsbG9jX2VtcHR5X2JhY2tpbmdfZmlsZShpbnQgZmxhZ3Ms
+IGNvbnN0IHN0cnVjdCBjcmVkICpjcmVkLAogCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CiAJfQog
+CisJLy8gVGhlIGZfbW9kZSBmbGFncyBtdXN0IGJlIHNldCBiZWZvcmUgZnB1dCgpCiAJZmYtPmZp
+bGUuZl9tb2RlIHw9IEZNT0RFX0JBQ0tJTkcgfCBGTU9ERV9OT0FDQ09VTlQ7Ci0JZXJyb3IgPSBz
+ZWN1cml0eV9iYWNraW5nX2ZpbGVfYWxsb2MoJmZmLT5zZWN1cml0eSwgdXNlcl9maWxlKTsKKwll
+cnJvciA9IGluaXRfYmFja2luZ19maWxlKGZmLCB1c2VyX2ZpbGUpOwogCWlmICh1bmxpa2VseShl
+cnJvcikpIHsKIAkJZnB1dCgmZmYtPmZpbGUpOwogCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CiAJ
+fQorCiAJcmV0dXJuICZmZi0+ZmlsZTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGFsbG9jX2VtcHR5
+X2JhY2tpbmdfZmlsZSk7CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2ZzLmggYi9pbmNsdWRl
+L2xpbnV4L2ZzLmgKaW5kZXggOGY1NzAyY2ZiNWUwYi4uNjA0NTBhMDc5MGFkZCAxMDA2NDQKLS0t
+IGEvaW5jbHVkZS9saW51eC9mcy5oCisrKyBiL2luY2x1ZGUvbGludXgvZnMuaApAQCAtMjQ3NCw3
+ICsyNDc0LDcgQEAgc3RydWN0IGZpbGUgKmRlbnRyeV9vcGVuX25vbm90aWZ5KGNvbnN0IHN0cnVj
+dCBwYXRoICpwYXRoLCBpbnQgZmxhZ3MsCiBzdHJ1Y3QgZmlsZSAqZGVudHJ5X2NyZWF0ZShzdHJ1
+Y3QgcGF0aCAqcGF0aCwgaW50IGZsYWdzLCB1bW9kZV90IG1vZGUsCiAJCQkgICBjb25zdCBzdHJ1
+Y3QgY3JlZCAqY3JlZCk7CiBjb25zdCBzdHJ1Y3QgcGF0aCAqYmFja2luZ19maWxlX3VzZXJfcGF0
+aChjb25zdCBzdHJ1Y3QgZmlsZSAqZik7Ci12b2lkICpiYWNraW5nX2ZpbGVfc2VjdXJpdHkoY29u
+c3Qgc3RydWN0IGZpbGUgKmYpOwordm9pZCAqYmFja2luZ19maWxlX3VzZXJfc2VjdXJpdHkoY29u
+c3Qgc3RydWN0IGZpbGUgKmYpOwogCiAvKgogICogV2hlbiBtbWFwcGluZyBhIGZpbGUgb24gYSBz
+dGFja2FibGUgZmlsZXN5c3RlbSAoZS5nLiwgb3ZlcmxheWZzKSwgdGhlIGZpbGUKLS0gCjIuNTMu
+MAoK
+--000000000000495a5d064e39bd4e
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-fs-prepare-for-adding-user_security-block-to-backing.patch"
+Content-Disposition: attachment; 
+	filename="0001-fs-prepare-for-adding-user_security-block-to-backing.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mncxnnsn1>
+X-Attachment-Id: f_mncxnnsn1
+
+RnJvbSBjYWQxZGYyODBiY2M5MzUyODljNzg3ZjVmNGRlYjRhMjNlYTIwZmNkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBNb24sIDMwIE1hciAyMDI2IDEwOjI3OjUxICswMjAwClN1YmplY3Q6IFtQQVRDSF0gZnM6
+IHByZXBhcmUgZm9yIGFkZGluZyB1c2VyX3NlY3VyaXR5IGJsb2NrIHRvIGJhY2tpbmdfZmlsZQoK
+SW4gcHJlcGFyYXRpb24gdG8gYWRkaW5nIHVzZXJfc2VjdXJpdHkgYmxvYiB0byBiYWNraW5nX2Zp
+bGUgc3RydWN0LApmYWN0b3Igb3V0IGhlbHBlcnMgaW5pdF9iYWNraW5nX2ZpbGUoKSBhbmQgYmFj
+a2luZ19maWxlX2ZyZWUoKS4KClNpZ25lZC1vZmYtYnk6IEFtaXIgR29sZHN0ZWluIDxhbWlyNzNp
+bEBnbWFpbC5jb20+Ci0tLQogZnMvZmlsZV90YWJsZS5jIHwgMjIgKysrKysrKysrKysrKysrKysr
+KystLQogMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvZnMvZmlsZV90YWJsZS5jIGIvZnMvZmlsZV90YWJsZS5jCmluZGV4IGFhYTVm
+YWFhY2UxZTkuLjllMDJjMWYxNmRiM2MgMTAwNjQ0Ci0tLSBhL2ZzL2ZpbGVfdGFibGUuYworKysg
+Yi9mcy9maWxlX3RhYmxlLmMKQEAgLTY2LDYgKzY2LDEyIEBAIHZvaWQgYmFja2luZ19maWxlX3Nl
+dF91c2VyX3BhdGgoc3RydWN0IGZpbGUgKmYsIGNvbnN0IHN0cnVjdCBwYXRoICpwYXRoKQogfQog
+RVhQT1JUX1NZTUJPTF9HUEwoYmFja2luZ19maWxlX3NldF91c2VyX3BhdGgpOwogCitzdGF0aWMg
+aW5saW5lIHZvaWQgYmFja2luZ19maWxlX2ZyZWUoc3RydWN0IGJhY2tpbmdfZmlsZSAqZmYpCit7
+CisJcGF0aF9wdXQoJmZmLT51c2VyX3BhdGgpOworCWttZW1fY2FjaGVfZnJlZShiZmlscF9jYWNo
+ZXAsIGZmKTsKK30KKwogc3RhdGljIGlubGluZSB2b2lkIGZpbGVfZnJlZShzdHJ1Y3QgZmlsZSAq
+ZikKIHsKIAlzZWN1cml0eV9maWxlX2ZyZWUoZik7CkBAIC03Myw4ICs3OSw3IEBAIHN0YXRpYyBp
+bmxpbmUgdm9pZCBmaWxlX2ZyZWUoc3RydWN0IGZpbGUgKmYpCiAJCXBlcmNwdV9jb3VudGVyX2Rl
+YygmbnJfZmlsZXMpOwogCXB1dF9jcmVkKGYtPmZfY3JlZCk7CiAJaWYgKHVubGlrZWx5KGYtPmZf
+bW9kZSAmIEZNT0RFX0JBQ0tJTkcpKSB7Ci0JCXBhdGhfcHV0KGJhY2tpbmdfZmlsZV91c2VyX3Bh
+dGgoZikpOwotCQlrbWVtX2NhY2hlX2ZyZWUoYmZpbHBfY2FjaGVwLCBiYWNraW5nX2ZpbGUoZikp
+OworCQliYWNraW5nX2ZpbGVfZnJlZShiYWNraW5nX2ZpbGUoZikpOwogCX0gZWxzZSB7CiAJCWtt
+ZW1fY2FjaGVfZnJlZShmaWxwX2NhY2hlcCwgZik7CiAJfQpAQCAtMjgzLDYgKzI4OCwxMiBAQCBz
+dHJ1Y3QgZmlsZSAqYWxsb2NfZW1wdHlfZmlsZV9ub2FjY291bnQoaW50IGZsYWdzLCBjb25zdCBz
+dHJ1Y3QgY3JlZCAqY3JlZCkKIAlyZXR1cm4gZjsKIH0KIAorc3RhdGljIGludCBpbml0X2JhY2tp
+bmdfZmlsZShzdHJ1Y3QgYmFja2luZ19maWxlICpmZikKK3sKKwltZW1zZXQoJmZmLT51c2VyX3Bh
+dGgsIDAsIHNpemVvZihmZi0+dXNlcl9wYXRoKSk7CisJcmV0dXJuIDA7Cit9CisKIC8qCiAgKiBW
+YXJpYW50IG9mIGFsbG9jX2VtcHR5X2ZpbGUoKSB0aGF0IGFsbG9jYXRlcyBhIGJhY2tpbmdfZmls
+ZSBjb250YWluZXIKICAqIGFuZCBkb2Vzbid0IGNoZWNrIGFuZCBtb2RpZnkgbnJfZmlsZXMuCkBA
+IC0zMDUsNyArMzE2LDE0IEBAIHN0cnVjdCBmaWxlICphbGxvY19lbXB0eV9iYWNraW5nX2ZpbGUo
+aW50IGZsYWdzLCBjb25zdCBzdHJ1Y3QgY3JlZCAqY3JlZCkKIAkJcmV0dXJuIEVSUl9QVFIoZXJy
+b3IpOwogCX0KIAorCS8vIFRoZSBmX21vZGUgZmxhZ3MgbXVzdCBiZSBzZXQgYmVmb3JlIGZwdXQo
+KQogCWZmLT5maWxlLmZfbW9kZSB8PSBGTU9ERV9CQUNLSU5HIHwgRk1PREVfTk9BQ0NPVU5UOwor
+CWVycm9yID0gaW5pdF9iYWNraW5nX2ZpbGUoZmYpOworCWlmICh1bmxpa2VseShlcnJvcikpIHsK
+KwkJZnB1dCgmZmYtPmZpbGUpOworCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CisJfQorCiAJcmV0
+dXJuICZmZi0+ZmlsZTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGFsbG9jX2VtcHR5X2JhY2tpbmdf
+ZmlsZSk7Ci0tIAoyLjUzLjAKCg==
+--000000000000495a5d064e39bd4e--
 
