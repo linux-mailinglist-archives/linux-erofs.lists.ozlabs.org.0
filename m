@@ -1,49 +1,92 @@
-Return-Path: <linux-erofs+bounces-3145-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3146-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKeRIgrey2lHMAYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3145-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:45:30 +0200
+	id 0IA7GQsDzGljNQYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3146-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 19:23:23 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85F6E36B24C
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:45:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 670E136E996
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 19:23:22 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4flWBG57Dbz2ybR;
-	Wed, 01 Apr 2026 01:45:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4flZhL3XkGz2yfK;
+	Wed, 01 Apr 2026 04:23:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774968326;
-	cv=none; b=JeXDxBtS26OKc2fAzYPrRQR1zfub0WqYFf/VnqiR2A/uSNguh0TeWg7aKR55mysimFGrG7AuSdUISXsNothnxh9Jrii/1uhARKrvW5EwlmkYH2ObUwXxOSQnwxBxa3CH2fTGcziedcSKop8sZjNwoHyV6mrPgXMNmymlt+JvbMRCKgp4UkYfftVk5tcaJTK3YCc7+a+sEhaVH4rHz14yWJThwVj458LnUufkPlbIlMeCYgNWKDJr5hApahAi7/ha5ZBzSy1wcLF9GJgy6zCMHsf1j8ElEFNBC4aCxgJcXBcR3xtYfVDvVlnYqz2nUtltnoXLT8H0q6F31VrNru2yqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774968326; c=relaxed/relaxed;
-	bh=L8lUCXpkxX3PqDuQSTwul4U3MPWRvorzFrrFrmLOFME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B6PF5eMSq9J2zmZQLpFJO7OHNXtsE+CJWd8xAFe/gGHdjcI3udyLa/YQhkPXcSAGNJR8cwI2Mk0waVf5qW8bRDSfwkdldOitjEBQEasPQ549WakV8OvoK2FTTYi4tvmgrd/VRqKrjvrm6mry/YDSvcQPoPxAEn8pNJMgulKkozDs0cI4nn8wghLCqNRgOlS/zGgH+HWHNdgCOwfiQKGLyHUMe0AJWZiml8oD0qMKKw7pmaiocmFnkJ2xH0+rHNldEAuuNVd2WoNcGAmKp3Nu8AlCIhYr/CLZNIeOuLRJyn3DBUNDtEmX0yxuFmE2+k8GxFJ4x9nSIO781eTpMf1+gA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CBvBdhob; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::22c" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774977794;
+	cv=pass; b=STazGs2SkkA2H60b689ordPtsBamxy+mXEsU9b4ykM2KwJVsgDaPLmtdBssr4eZoggA5+ySziwf5UbVbEgdiOFoWEdpVbWmmkuvarpImr9atyeR5Y04Xg0JXSIGdjDBL8TvWIYGzKalQCyeo3a0dy6+4iKShyPd6RwBZj+jmtT3AkUJKzR3VSYUkJkM/S234UiCUxsNeYZ8pdETbVMB60qEhWWgot3M4bfXs3XpzimcZfULysuRiZfzzCqbAmmYfHZiEnyhsvSBv/txkzjDXg+8XWO0VZZ/yYGDonho2kBSWJ16H+FREQGZpqh/bc3h/s7zS/islLtJ6Mz2ldd8W4g==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774977794; c=relaxed/relaxed;
+	bh=s45MsvRbiRiVvZUd+lkTR2gyJQ0poocb3cgflxbIQmU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=PiT1LSrgoxYpl8N/fGOA4eOwg/iMjctRw/Qu1savUrOj1n0pUNihBqWI67lRM71Q6+rUF+DYhP1KE7r270v6WrHivnEDQ5eZrdkrfIdLes3FA6t78pPMK8NGWtqG0GLOWOQbDzXvPlfjmf5ij7NoUf5z2Nt7XfoDXp8Nj5T5b1aENl+dOQmTFP/aSyP7MQea36SeWuMWl5fuS2ej60/qtOgAWBXrafCppUG72B8ohXBfvG7Bta3yYA27WF7wsWjs/eNiHzIvijshMNFwz8rSYiAqzQRRETqrN1qXXYhehv4UkjRMw98BsBw5kFG02mCP2ZVwNc/tK2Pc/8sLbCbvfA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PcaPaVDd; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::22c; helo=mail-lj1-x22c.google.com; envelope-from=bushrahz.giki@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CBvBdhob;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PcaPaVDd;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::22c; helo=mail-lj1-x22c.google.com; envelope-from=bushrahz.giki@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4flWBD0RNJz2xSb
-	for <linux-erofs@lists.ozlabs.org>; Wed, 01 Apr 2026 01:45:22 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1774968317; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=L8lUCXpkxX3PqDuQSTwul4U3MPWRvorzFrrFrmLOFME=;
-	b=CBvBdhob4xf3b71O3lYR0oAdsfONNaKKmoO3e+qCflDq/fT09Jl5TjujBLiggXRWqDFHrOFiF6eivQnJcrmRyTmqfmi2bkxrHC3tevTuAyggCbhFeXP1lmyJ2ln5Nxn99GRnLK2NmrU/NwOxwjXFG6y+YAXz7rrdnz+6h+RvigA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X04d3MY_1774968316;
-Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X04d3MY_1774968316 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 31 Mar 2026 22:45:17 +0800
-Message-ID: <5dccdd7e-f68f-48a6-b2af-9c8ae4a6ef2e@linux.alibaba.com>
-Date: Tue, 31 Mar 2026 22:45:15 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4flZhJ5kDGz2ydn
+	for <linux-erofs@lists.ozlabs.org>; Wed, 01 Apr 2026 04:23:11 +1100 (AEDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-38bcda08c76so47930041fa.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 10:23:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774977783; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RoMG7OE3Iaqc1UdVtOBmOGtjEdf7H5rIn4rVbJZek8Mxy7g6BtFiFIYtpBAikY1OK6
+         3Z3JPaikok0hkJrhEF6NX6EL1DF5xJPguvGqSlUcGQ0kV6bvoeWve28d2IzGOFOftYiB
+         JVn3unf+6UBmnRDWtrUB0+muqScuQfKHAcBMn86sBC5ieKFxegTA7aJtcA4lDva/xffE
+         WHcdgZ03EgCVZBGtgXCHkuvro8CfAKQRMmw8DG7e+m2lId4J0oVRjXjDbsJKRGa5bFPR
+         mrWpgOCL55qjOMyMPCFC5nio09biI3cxM/EoH/rsUG1jfLzN7Lbpd/fBKs6MmgFai7qT
+         /Qsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=s45MsvRbiRiVvZUd+lkTR2gyJQ0poocb3cgflxbIQmU=;
+        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
+        b=XbcxLzbV3lCnvyysNSWvbomS173R6c6kSz+qb4+VCC82xFnhaB6VNPrFmD1/ywQ3ET
+         5p9sUK7YENjrXisVUR46/SQPXAS9zQJDs7gCoblb0XEzc1Vgrhw+nVwcMBr5M0uaZlvB
+         de564Z+dWuFaKBbsb0OySTUbLkWNDsT3FOV70bx4yfCttXLuPfmGrtoFQCY6FYebbjyt
+         E4aq20oy+IGLd/52AI/F2ascO7rbzPJT3Q67ZZNfYF+mePtKb9Db2UKICo3QqzVa8JPg
+         pWTySQRyynh13vZ2o90nG0nVnEZT0282a7UPny1KmWdfwiVoXheC10UOGixzCPUIhn/E
+         IBDA==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774977783; x=1775582583; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s45MsvRbiRiVvZUd+lkTR2gyJQ0poocb3cgflxbIQmU=;
+        b=PcaPaVDdlkgdWu+ZZERsCNR1xjsvT3sW9AuWgNlVjsGpvKxXRbBuma9KOt+RIE+r9o
+         LNusfhs+PxxJWiGiWvnw9t6nFSBCmj9A8+43mo9Q683xNJscvWiQrzY1X2UxuhPbKPPw
+         4yt0zESQDg54ZF4l68t4bpiWSM9VuWDwxWRCHGdrwxFpNedWK/Yp3oYxr0PlTiGggr1t
+         xplruV+0o7bgvw7hU3B99zyU+sGISZ4ZELXafyMSXLqHvuhXCdtQSj/8t12l0DgQsISy
+         dT7ot5PL/8kwcEwZcJmc6n0UNAucFoIApxpyqWk9OMxkOrkAwIITKxeVmj6uutEMfmQM
+         MsXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774977783; x=1775582583;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s45MsvRbiRiVvZUd+lkTR2gyJQ0poocb3cgflxbIQmU=;
+        b=FGkVKTCF4F9w2yK4rLvE82Kv0dUPHfBoiYRkZbTE0yjaFwzCmCb0j2uJaSjkFB9Ld3
+         KKtxhziBXca3yb7f8VDsT4Y7sQLisKGLgUYV9JgEDUiUQA7OOR+7I1JG7MxLP9FLm0Hr
+         4D70EQHafX6QgBtaFq7loOlJgAwoL6MNRu+AV9+ZFkCUXyHHl+UHigKx4XLSBR/mK8ZB
+         GYxwFmfVU5rDcQ2KTB2fjnwFGkCHHLRXWnK24SCTOJ24+dASxi7fg9TN+E55swXGmtML
+         gjRuG7Rb1DqXDYArA7GFH7iX+wBlnjheRI4bo5YZj+k3Vo4CVsyUXu4zHqM4HFHRjssX
+         seHg==
+X-Gm-Message-State: AOJu0YwznxIHcGZGsHU/Z+3mDfGrx5ec6XDOXVDrEELgDPO7gLPnh54j
+	lU4vgZCdQCfuR5BLUWPy8nGC8BgPMNwipWhSYLo2/cL/diNuGYy/I86H3seUrIDmngNxEM5iMqw
+	gF+eHnE0srg4EG9JA3azsK2qEG8hDn0t/1zy7164=
+X-Gm-Gg: ATEYQzxWleHxhPyCPux/2/gALkl55CPqoAQZm3Aj0mfIoy6K5Rt+sKj2wEz18pE0W4r
+	72ty3L/RT8Ho7Jg+CWOASFMms8WSz1AnwGgdVhuAsVK/bhi/F+xmRfFVOy/r5F+5czgOvyyErf4
+	CwJgR7IAfFfasnhsghYK1aM+gfG8zDvMMRrakFMTSC/3nRySHmCNcZ+3ICCFaMjap/6cajJvMPU
+	jMVZNa5QvQ70DshKMZPucGqSdvrm2WYZbc5ZkQp0yDJddXtpBYY4iDdKiIhisN+VhGL2b+dDXJv
+	eIeWY5IzWPq5zA==
+X-Received: by 2002:a05:651c:41c8:b0:38a:98fd:d7c3 with SMTP id
+ 38308e7fff4ca-38cc3160da4mr538031fa.34.1774977782370; Tue, 31 Mar 2026
+ 10:23:02 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,243 +98,95 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] erofs-utils: mount: add fanotify pre-content OCI
- backend
-To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: jingrui@huawei.com, zhukeqian1@huawei.com, hudsonzhu@tencent.com
-References: <20260330124402.899394-2-zhaoyifan28@huawei.com>
- <20260331131401.901584-1-zhaoyifan28@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260331131401.901584-1-zhaoyifan28@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+From: Bushrah Zulfiqar <bushrahz.giki@gmail.com>
+Date: Tue, 31 Mar 2026 22:22:51 +0500
+X-Gm-Features: AQROBzC1vKCHVIPA4L9MnhWT5VtHmv26q-p4Q4V147KBh1is5uyXywvdFTKj8T8
+Message-ID: <CA+ug3id4+QYbqTFzaMB_9LaE1HivfA34jGj4FgbOKwq94MFVMA@mail.gmail.com>
+Subject: [GSoC 2026 + PATCH erofs-rs] chunk index (8-byte) layout support
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="00000000000033d636064e553868"
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	HTML_MESSAGE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3146-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3145-lists,linux-erofs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:jingrui@huawei.com,m:zhukeqian1@huawei.com,m:hudsonzhu@tencent.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCPT_COUNT_ONE(0.00)[1];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	MISSING_XM_UA(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bushrahzgiki@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,man7.org:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 85F6E36B24C
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 670E136E996
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Yifan,
+--00000000000033d636064e553868
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026/3/31 21:14, Yifan Zhao wrote:
-> Add a fanotify-backed mount mode for OCI sources that uses
-> FAN_PRE_ACCESS permission events to populate a local sparse file
-> on demand before the kernel consumes the requested data.
-> 
-> The new erofs.fanotify subtype resolves a single OCI blob,
-> creates a sparse cache file, and runs a fanotify event loop
-> that fetches missing ranges before allowing access to proceed.
-> 
-> A pid file recording the canonical mountpoint and sparse-file
-> source is written for unmount to track the corresponding worker.
-> 
-> [ Developed with assistance from GPT-5.4 ]
+Hi,
 
-I will apply this version, but some comments:
+I'm applying for GSoC 2026 for the "Complete Filesystem Feature Support for
+erofs-rs" project. I've submitted a patch implementing the missing
+erofs_inode_chunk_index (8-byte form) parsing:
 
-It should be marked as:
-Assisted-by: AGENT_NAME:GPT-5.4
+https://github.com/erofs/erofs-rs/pull/5
 
-for example.
+The EROFS_CHUNK_FORMAT_INDEXES path was unimplemented. This adds ChunkIndex
+parsing, hole detection, multi-device routing, and a map_chunk_offset()
+resolver for both array forms, with full tests.
 
-> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
-> ---
->   configure.ac            |  28 +++
->   lib/Makefile.am         |   7 +
->   lib/backends/fanotify.c | 283 ++++++++++++++++++++++++
->   lib/liberofs_fanotify.h |  59 +++++
->   lib/liberofs_oci.h      |   3 +
->   lib/remotes/oci.c       |  10 +-
->   mount/main.c            | 476 +++++++++++++++++++++++++++++++++++++++-
->   7 files changed, 860 insertions(+), 6 deletions(-)
->   create mode 100644 lib/backends/fanotify.c
->   create mode 100644 lib/liberofs_fanotify.h
-> 
+I plan to follow this with DEFLATE and Zstandard decompression backends as
+the GSoC work. Happy to receive any feedback or direction from maintainers.
 
-...
+=E2=80=94 Bushrah Zulfiqar
 
-> +
-> +static bool erofs_fanotify_range_in_sparse(int fd, u64 offset, size_t length)
-> +{
-> +	off_t data_start, hole_start;
-> +
-> +	data_start = lseek(fd, offset, SEEK_DATA);
-> +	if (data_start < 0)
-> +		return false;
-> +	if ((u64)data_start != offset)
-> +		return false;
-> +
-> +	hole_start = lseek(fd, offset, SEEK_HOLE);
-> +	if (hole_start < 0)
-> +		return false;
-> +	if ((u64)hole_start < offset + length)
-> +		return false;
+--00000000000033d636064e553868
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Here I really hope we could switch to bitmaps
-instead of relying on holes in the following commits.
+<div dir=3D"ltr"><p class=3D"gmail-font-claude-response-body gmail-break-wo=
+rds gmail-whitespace-normal gmail-leading-[1.7]">Hi,</p>
+<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
+ace-normal gmail-leading-[1.7]">I&#39;m applying for GSoC 2026 for the &quo=
+t;Complete Filesystem Feature Support for erofs-rs&quot; project. I&#39;ve =
+submitted a patch implementing the missing erofs_inode_chunk_index (8-byte =
+form) parsing:</p>
+<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
+ace-normal gmail-leading-[1.7]"><a href=3D"https://github.com/erofs/erofs-r=
+s/pull/5">https://github.com/erofs/erofs-rs/pull/5</a></p>
+<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
+ace-normal gmail-leading-[1.7]">The EROFS_CHUNK_FORMAT_INDEXES path was uni=
+mplemented. This adds ChunkIndex parsing, hole detection, multi-device rout=
+ing, and a map_chunk_offset() resolver for both array forms, with full test=
+s.</p>
+<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
+ace-normal gmail-leading-[1.7]">I plan to follow this with DEFLATE and Zsta=
+ndard decompression backends as the GSoC work. Happy to receive any feedbac=
+k or direction from maintainers.</p>
+<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
+ace-normal gmail-leading-[1.7]">=E2=80=94 Bushrah Zulfiqar</p></div>
 
-> +
-> +	return true;
-> +}
-
-...
-
-> +
-> +static int erofsmount_write_fanotify_state(const char *state_path, pid_t pid,
-> +					   const char *mountpoint,
-> +					   const char *source)
-> +{
-> +	struct erofsmount_fanotify_state state;
-> +	char *tmp_path = NULL;
-> +	FILE *f = NULL;
-> +	int fd = -1, err;
-> +
-> +	if (mkdir(EROFSMOUNT_RUNTIME_DIR, 0700) < 0 && errno != EEXIST)
-> +		return -errno;
-> +	if (mkdir(EROFSMOUNT_FANOTIFY_STATE_DIR, 0700) < 0 &&
-> +	    errno != EEXIST)
-> +		return -errno;
-> +
-> +	state.pid = pid;
-> +	state.mountpoint = (char *)mountpoint;
-> +	state.source = (char *)source;
-> +
-> +	if (asprintf(&tmp_path, "%s.tmpXXXXXX", state_path) < 0)
-> +		return -ENOMEM;
-> +
-> +	fd = mkstemp(tmp_path);
-> +	if (fd < 0) {
-> +		err = -errno;
-> +		goto out;
-> +	}
-> +
-> +	f = fdopen(fd, "w");
-> +	if (!f) {
-> +		err = -errno;
-> +		goto out;
-> +	}
-> +	fd = -1;
-> +
-> +	if (fprintf(f, "%d\n%s\n%s\n", state.pid, state.mountpoint,
-> +		    state.source) < 0 || fflush(f) == EOF) {
-
-Here, I do think you could identify the mountpoint
-using mnt_id (e.g. you could use `mnt_id` as
-filename), see statx(2):
-
-https://man7.org/linux/man-pages/man2/statx.2.html
-STATX_MNT_ID.
-
-unique mnt_id seems an overkill since we will delete
-such files when umounting.
-
-> +		err = errno ? -errno : -EIO;
-> +		goto out;
-
-...
-
-> +
-> +static int erofsmount_read_fanotify_state(const char *state_path,
-> +					  struct erofsmount_fanotify_state *state)
-> +{
-> +	FILE *f;
-> +	size_t n = 0;
-> +	int err = 0;
-> +
-> +	memset(state, 0, sizeof(*state));
-> +
-> +	f = fopen(state_path, "r");
-> +	if (!f)
-> +		return -errno;
-> +
-> +	if (fscanf(f, "%d", &state->pid) != 1)
-> +		err = -EINVAL;
-> +	else if (fgetc(f) != '\n')
-> +		err = -EINVAL;
-> +	else if (getline(&state->mountpoint, &n, f) < 0)
-> +		err = feof(f) ? -EINVAL : -errno;
-> +	else if (getline(&state->source, &n, f) < 0)
-> +		err = feof(f) ? -EINVAL : -errno;
-> +	fclose(f);
-> +	if (err) {
-> +		erofsmount_free_fanotify_state(state);
-> +		return err;
-> +	}
-> +
-> +	state->mountpoint[strcspn(state->mountpoint, "\n")] = '\0';
-> +	state->source[strcspn(state->source, "\n")] = '\0';
-> +	return err;
-> +}
-> +
-> +static int erofsmount_cleanup_fanotify_worker(const char *mountpoint,
-> +					      const char *source)
-> +{
-> +	DIR *dir;
-> +	struct dirent *de;
-> +	int err = 0;
-> +
-> +	dir = opendir(EROFSMOUNT_FANOTIFY_STATE_DIR);
-> +	if (!dir) {
-> +		if (errno == ENOENT)
-> +			return 0;
-> +		return -errno;
-> +	}
-> +
-> +	while ((de = readdir(dir)) != NULL) {
-> +		struct erofsmount_fanotify_state state;
-> +		char *state_path;
-> +
-> +		if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
-> +			continue;
-> +		if (!strstr(de->d_name, ".state"))
-> +			continue;
-> +		if (asprintf(&state_path, "%s/%s", EROFSMOUNT_FANOTIFY_STATE_DIR,
-> +			     de->d_name) < 0) {
-> +			err = -ENOMEM;
-> +			goto out;
-> +		}
-> +
-> +		err = erofsmount_read_fanotify_state(state_path, &state);
-
-same here, so that you don't need readdir() anymore, just
-use mnt_id for indexing.
-Thanks,
-Gao Xiang
->   
-
+--00000000000033d636064e553868--
 
