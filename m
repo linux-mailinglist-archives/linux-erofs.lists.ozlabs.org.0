@@ -1,49 +1,91 @@
-Return-Path: <linux-erofs+bounces-3132-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3133-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cAU4DIA4y2nGEwYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3132-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 04:59:12 +0200
+	id OOaEOXtAy2k9FAYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3133-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 05:33:15 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4321F36394C
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 04:59:11 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 435CB363B30
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 05:33:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4flCWJ3T4Hz2xSb;
-	Tue, 31 Mar 2026 13:59:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4flDGZ4v54z2ybQ;
+	Tue, 31 Mar 2026 14:33:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774925948;
-	cv=none; b=m9VqtTiZiE+TAbcp7V79a09D8YnXNt0pXifWhAzBum9KV+Mdd1A3O8LgouBQheV63TghviEXfxG91TtjYGuobYGxiqC47+GR2glBJLZFPXKf9k/WVn/SYNnnT8vsvHQlESuA05NKhNZP4scDQKLtSSfsTFCWEzuejDgaSCW30SyfC+40Gkr3TICniwsm6EaenxdkJjS9BpHhdcOSRbOsaVr+Bx9GIvYC9tU+1MFzhRYnJhwLorMdeF2WsfxPzS0ZeIGO/DbyH2syLqtd+U/SEKVr+MsgDlezH+7RsAE04fsA65Os3OHyDtDR0wZ1otW00f9Xp5DG1ml0tgEk4uLJFA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::102d"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774927990;
+	cv=none; b=i3mbH32sDCMf/ZBL/8Z9bCGlONwdtsXgATVX3RmVk3c6jfBXueKqW9+vqIAly3jAWs6y7Y1PK1zqT6q0cqxFvK0YvlU3eKFOoH40lPaEWLJjAOxK7hfHUE+2tL7CZBMy91V5ialibq1e7IgvSr28fLOt9FXK6Pxwm5wqAUtN5MbZ/jPfWVpvlped5cz5PQDMfw0leTmdc3KbZGQl900aJmBNWOAFrfR6rUjcvvXcQ75uc7gEsUQ6GcPcCdZ2cXKjlXUer3FqdTIyip8Z91LQawZgdqMy9b/VFgtADCrr+unzV1CILaPVVMCZLT5agI3UyUJI02DH3IYa4K2/g4fzrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774925948; c=relaxed/relaxed;
-	bh=qnEFCuxJf8bvijfk1/OEXlSQgWfpUL2dOo0rrZFQZRY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YTsVeGByduqDc7p6FnClLzaHwTbgYeZfPc+64N0lHTa6C+sAVmY7fCkBw3p6UpR0WPXzPKIVlPBFY7Arrl+x6Bl/h/9hqzsrNdu0zQ5CNm0kRZ5NoRevwAjxe66huuzdGyCmB8BRdxwod0j7UpxH/vo69PUbHa5F3KhEPBQGF0YH5G+hKyt3IrnkWmGOxowr1+57617rw3dbQJtWe6tIzLa3RK7Dm4RzXopeZRAa19y28IoBcBdNtFKHzdXJw7O6NhMH7dP5Ssp4NlrSfDc3ICgHBbhTYGsi337vdD6PloGB1b6EWaqWgq/32jBw3craFTmZKzAQnZDeY9uhDKBHVQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FNqHcF9E; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1774927990; c=relaxed/relaxed;
+	bh=a5728gVfKW3MwwJedBecCR4nLOtL5eDepwDGgOmB8Ic=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NZkKTKMyCQcUxJw1uuroRJeywxs5qMO7ua+AmKNtmfE7AG+FYeAQl0RDJ2hROwQy3pkqp3CLJzyRGtn/k3N5AJd3HdTXz35JI3zoVI43/LtYwToIPvShT3UZULNEcgPyVzs9s2ueHze0hnIJF/bha6+2DT+AGCu6cuD+VSJ6tHT8p+8z9Q/9Iz9+W9OH7T5VJJ8pt/hNhDQjYNL42MgW5HQFcmqttPKFQ2x1whN2OtQ4vRMrAsEAZsxl6aMA1tidFDs0BNLYw97UMAjNg9flra2HrJI2NpledmuYe9TDOUEDRF+SHTzI1guX8YlqQ+07z3PRCyJaa7UnfPy/4NKYiA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rxKvPOvJ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=zhanxusheng1024@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FNqHcF9E;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rxKvPOvJ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=zhanxusheng1024@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4flCWG2Cg6z2xHX
-	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 13:59:05 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1774925941; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=qnEFCuxJf8bvijfk1/OEXlSQgWfpUL2dOo0rrZFQZRY=;
-	b=FNqHcF9EuL5PcurOoOk2LQPI7td0d2rfmKj+h+dS2McXISWaMwlSNjoIpeJBuHrQ9RKqbpsYrMRCQTlWVHy/UQM+o8f7EM7+/MoQ+GzjDrw1smrmvLb2r3YUsIPSA3/Wqrne7zt8cM3vXlQO37PFbgxDj6z75ZVojXwvsM4PkQA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X02lc82_1774925938;
-Received: from 30.221.131.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X02lc82_1774925938 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 31 Mar 2026 10:58:59 +0800
-Message-ID: <cd8dd7e1-709b-4b4b-93b8-8d4147293c0c@linux.alibaba.com>
-Date: Tue, 31 Mar 2026 10:58:58 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4flDGY0yB4z2xlK
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 14:33:08 +1100 (AEDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-35d90833cacso1815120a91.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 20:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774927986; x=1775532786; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a5728gVfKW3MwwJedBecCR4nLOtL5eDepwDGgOmB8Ic=;
+        b=rxKvPOvJQmd9WPoJFyzHUBirzSMzCm1itJEY7Fpk0sMw/E2UxZAT3Fq/XQnFrkFc+9
+         VfRjn1pRCgJR9gxDBSHNCbv3G+QbbSQdf0nWsl1RyeIdbif5dsLEODUpKNAy0Qq8cmve
+         Bd2XrpcoYoruJR2+2TiljZBhI8MoMF9oGoa0tmlRPb40HOsIJD32nPyd+IkCJIxuTZFR
+         VuUATDiBqMwgzDSaZFTa7JYAL8mgkkQjFO5Gyn7MzhoqHY+Uhm3SkDLM4CeigEE6xehG
+         Hx7WE9S30JcgvJTTrFq5rcHmg+zVK0o12YDHB0qxz7Xfk0FdvMB6Psja+JFm7KDEjkXV
+         8PYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774927986; x=1775532786;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=a5728gVfKW3MwwJedBecCR4nLOtL5eDepwDGgOmB8Ic=;
+        b=pzKOOHtcvgbBa3taeV+axdiAIoxbsuXwROOWQpYi+sr3JMx4HCeBdJwYge4knt7rcn
+         ALH0851/JA7ur5slS0IWTGhZh+GSFq5UO3jD1bpNuigK5w59s2QRzY3HW8X3FOOgzTPy
+         Qqp7LYhxxipc08RwRaP/MNyccRmfPNC6CtLTzaegR/XyWICRCIaoXwjQjzIgaCTRgPiY
+         WKGRQbmHbOvGSOnh4r9UwpSIo/M9lHUtAyr4wbb27Tl46Fsds6bDDPYchFlJXmpoHfDE
+         /jKUYI7xh5e9mHs2vdzDRKlOsogM92orm0wYu8ziCYqLAg7DxpgP6NPcXLvvsDzsy+NE
+         c/bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQzbQyawc+iasSCp6jlztuIFuN8HPh75pyid7jJKkoSSx3lQxpUHk3Tf/Yvc8dzATAE1G9ZqqO5qfqxQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyaLNh6rGtugn+RKrDhFlHzBQ0lpucNXDVUiPuVYH3QbuPXMR5V
+	KezTCKqvbOYooApnQpMZ9OM+MSQVWuNPk2T9vPnSKzCLWqePPyOlfZsC
+X-Gm-Gg: ATEYQzxHHsUU8i/pBf+vnV3MHcv7jCvQM7Nhxl/ZP9kY5CAS487hPaPIxSYOrPKxaq0
+	CeqXee3UETlr3//kbwcq/PHsz7QIzUXROzBP7okNDHjRL101m+zrv+XVslKCvhkOatFEjCRdgML
+	yPGF5A5fpPtEEULfWLB2sQqpR0qc7GgQNMHOPfxu/+cZMl5XwQMMnnc2ykUthGZIbjFxWIqcmJ/
+	TTOktnyBnrZPeV9EFl+HZu+wPfQqSQU2OEByC7S+p1KEH/SXH4/bLXjL5B1ms99aGUrv8l8Hydi
+	urg82ofR/1lfOcd0mzocEhqqw0EmnszZQxej7U3yoou1u1Ti976fFhuFJ6FyKJTrnJERhvlRkzg
+	P3f+GivaEpDmACt/F1NY0AKbwWPVTqZTrhKI2TwXBkfRfCqKwzMeg/KExjwWOLuxfZjmFPxcAHy
+	EuQP5u+DkZqrpQjEtMiql5e8s747b+2sZNxq9uplSVupkcdt8=
+X-Received: by 2002:a17:90b:4c:b0:359:8eaa:7f42 with SMTP id 98e67ed59e1d1-35c30056c25mr13513619a91.18.1774927985666;
+        Mon, 30 Mar 2026 20:33:05 -0700 (PDT)
+Received: from DESKTOP-MOQC9AF.mioffice.cn ([43.224.245.237])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbe624756sm75102a91.5.2026.03.30.20.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 20:33:05 -0700 (PDT)
+From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Zhan Xusheng <zhanxusheng@xiaomi.com>,
+	linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH] erofs: fix missing folio_unlock causing lock imbalance
+Date: Tue, 31 Mar 2026 11:32:58 +0800
+Message-ID: <20260331033300.21366-1-zhanxusheng@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cd8dd7e1-709b-4b4b-93b8-8d4147293c0c@linux.alibaba.com>
+References: 
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,143 +97,62 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix missing folio_unlock causing lock imbalance
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Zhan Xusheng <zhanxusheng1024@gmail.com>, Gao Xiang <xiang@kernel.org>
-Cc: "open list:EROFS FILE SYSTEM" <linux-erofs@lists.ozlabs.org>,
- linux-kernel@vger.kernel.org, Zhan Xusheng <zhanxusheng@xiaomi.com>
-References: <20260331023306.18574-1-zhanxusheng@xiaomi.com>
- <669c3c5c-aece-42a6-907a-fdee99e9f1a8@linux.alibaba.com>
-In-Reply-To: <669c3c5c-aece-42a6-907a-fdee99e9f1a8@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-3133-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhanxusheng1024@gmail.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zhanxusheng@xiaomi.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[zhanxusheng1024@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:zhanxusheng@xiaomi.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3132-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	FROM_NEQ_ENVFROM(0.00)[zhanxusheng1024@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[xiaomi.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 4321F36394C
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 435CB363B30
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Gao,
 
+Thanks for the detailed explanation.
 
-On 2026/3/31 10:50, Gao Xiang wrote:
-> Hi Zhan,
-> 
-> On 2026/3/31 10:33, Zhan Xusheng wrote:
->> folio_trylock() in erofs_try_to_free_all_cached_folios() may
->> successfully acquire the folio lock, but the subsequent check
->> for erofs_folio_is_managed() can skip unlocking when the folio
->> is not managed by EROFS.
-> 
-> Do you find some real timing?
-> 
-> I don't think it can really happen, because:
-> 
->>
->> This leads to a lock imbalance and leaves the folio permanently
->> locked, which may cause reclaim stalls or interfere with memory
->> management.
->>
->> Fix this by ensuring folio_unlock() is called before continuing.
-> 
-> If a folio links to a pcluster, folio->private will be non-NULL,
-> and pcl->compressed_bvecs[i] points to that folios.
-> 
-> And z_erofs_cache_release_folio() will be called with folio lock,
-> and pcl->compressed_bvecs[i] will be set NULL here.
-> 
-> So I don't think erofs_try_to_free_all_cached_folios() can find
-> !erofs_folio_is_managed(sbi, folio) in the real world.
-> 
->>
->> Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
->> ---
->>   fs/erofs/zdata.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->> index fe8121df9ef2..9d7ff22f1622 100644
->> --- a/fs/erofs/zdata.c
->> +++ b/fs/erofs/zdata.c
->> @@ -605,8 +605,10 @@ static int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
->>               if (!folio_trylock(folio))
->>                   return -EBUSY;
->> -            if (!erofs_folio_is_managed(sbi, folio))
->> +            if (!erofs_folio_is_managed(sbi, folio)) {
->> +                folio_unlock(folio);
->>                   continue;
->> +            }
->>               pcl->compressed_bvecs[i].page = NULL;
->>               folio_detach_private(folio);
-> 
-> But I admit that we should rewrite in function as:
-> 
->              if (!erofs_folio_is_managed(sbi, folio)) {
->                  DBG_BUGON(1);
->              } else {
->                  pcl->compressed_bvecs[i].page = NULL;
->                  folio_detach_private(folio);
->              }
+I see your point that folios attached to a pcluster should
+always be managed by EROFS, and the !erofs_folio_is_managed()
+case should not happen in practice.
 
-Or maybe just:
-		DBG_BUGON(!erofs_folio_is_managed(sbi, folio));
-		pcl->compressed_bvecs[i].page = NULL;
-		folio_detach_private(folio);
-		folio_unlock(folio);
+Instead of handling it silently, it makes more sense to
+treat this as an invariant and catch unexpected cases
+explicitly.
 
-Since if a pcluster goes here (!pcl->lockref.count),
-`pcl->compressed_bvecs[i]` should leave all valid cached
-folios (Or some should be recycled by .release_folio
-instead.)
-
-Unless there is the other bug somewhere, but in any case,
-I don't think your phenomenon is related to EROFS.
+I'll update the patch accordingly by adding DBG_BUGON()
+and send a v2.
 
 Thanks,
-Gao Xiang
-
->              folio_unlock(folio);
-> 
-> Thanks,
-> Gao Xiang
-> 
-> 
->>               folio_unlock(folio);
-> 
-
+Zhan Xusheng
 
