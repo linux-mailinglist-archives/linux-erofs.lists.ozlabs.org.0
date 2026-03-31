@@ -1,92 +1,49 @@
-Return-Path: <linux-erofs+bounces-3144-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3145-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0KyGLkjUy2mILwYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3144-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:03:52 +0200
+	id uKeRIgrey2lHMAYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3145-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:45:30 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5D3436A9FA
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:03:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85F6E36B24C
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 16:45:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4flVGD6dm4z2ybR;
-	Wed, 01 Apr 2026 01:03:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4flWBG57Dbz2ybR;
+	Wed, 01 Apr 2026 01:45:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1336" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774965828;
-	cv=pass; b=W6CjZRNKvwaKtRGdi2amajk5JbyBB1xMIm75nmTfghhpVSEFmKsgRGGPPd7tnXYe4a7RxtTCaGKiIuAj92+on4t1pQHYrnQCcC0o1BgJMsTF+Pt2BdyanUvxG4oXmpY1CNIZNA0CPlbUghX77tcGwWtOCSSisxsFVevoiGbW0dtzF8tzltmuNdwE5WoPzuGu+kgsBMc+x+UygoQjJzVWjM4eKf0d58+vb+uCl7I8HvDjOk/aw1/zciWpqtVAOBVoj/EDPMSRKp/cLLv5DQb/2c+TJaHpVVUOps+jLtVRFpRD3bnLlR9Ipv/kX52+92guPMcw84Uj5LkFNEc7gVYZuQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774965828; c=relaxed/relaxed;
-	bh=vyvhTs1OicliWu+WtWpV4638VOyupuZR7VYdwSTf7iM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=S5WWRySZcyVuWlIeSx3Mndj1s/IEdyQpweYbNEyltB/CMDk9xH0Uug0ToEJyvMG8nENc2uD2oP0kMQR7cnznzXrWOeczy+j+vOajcIScpVkwp0CkuNwAGLXnUE0vfiOlJhHHE9cCjjlBhqqxegPA84RDwx8ejXZm0L8wVTXJDvIliK3zpIz9ZAIjXjRs507PlFwdeIhXVG7S3DlJPiy5RSO+L2NPmCl3WcHstQnBvYUSjmc8+VHRRpeeDaREy4m/QLFIvkTsb/ziQxRjtnuz4Z15GIKyk8g0nEYccbC427ZYUAYI3UzJjZptYhKhTsgUpkEYwYQOG2wYmB/YZ3lajA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=W8FEtGEL; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1336; helo=mail-dy1-x1336.google.com; envelope-from=yashgupta9437@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774968326;
+	cv=none; b=JeXDxBtS26OKc2fAzYPrRQR1zfub0WqYFf/VnqiR2A/uSNguh0TeWg7aKR55mysimFGrG7AuSdUISXsNothnxh9Jrii/1uhARKrvW5EwlmkYH2ObUwXxOSQnwxBxa3CH2fTGcziedcSKop8sZjNwoHyV6mrPgXMNmymlt+JvbMRCKgp4UkYfftVk5tcaJTK3YCc7+a+sEhaVH4rHz14yWJThwVj458LnUufkPlbIlMeCYgNWKDJr5hApahAi7/ha5ZBzSy1wcLF9GJgy6zCMHsf1j8ElEFNBC4aCxgJcXBcR3xtYfVDvVlnYqz2nUtltnoXLT8H0q6F31VrNru2yqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774968326; c=relaxed/relaxed;
+	bh=L8lUCXpkxX3PqDuQSTwul4U3MPWRvorzFrrFrmLOFME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B6PF5eMSq9J2zmZQLpFJO7OHNXtsE+CJWd8xAFe/gGHdjcI3udyLa/YQhkPXcSAGNJR8cwI2Mk0waVf5qW8bRDSfwkdldOitjEBQEasPQ549WakV8OvoK2FTTYi4tvmgrd/VRqKrjvrm6mry/YDSvcQPoPxAEn8pNJMgulKkozDs0cI4nn8wghLCqNRgOlS/zGgH+HWHNdgCOwfiQKGLyHUMe0AJWZiml8oD0qMKKw7pmaiocmFnkJ2xH0+rHNldEAuuNVd2WoNcGAmKp3Nu8AlCIhYr/CLZNIeOuLRJyn3DBUNDtEmX0yxuFmE2+k8GxFJ4x9nSIO781eTpMf1+gA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CBvBdhob; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=W8FEtGEL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CBvBdhob;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1336; helo=mail-dy1-x1336.google.com; envelope-from=yashgupta9437@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-dy1-x1336.google.com (mail-dy1-x1336.google.com [IPv6:2607:f8b0:4864:20::1336])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4flVGC5nsyz2ybQ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 01 Apr 2026 01:03:47 +1100 (AEDT)
-Received: by mail-dy1-x1336.google.com with SMTP id 5a478bee46e88-2b6b0500e06so7629745eec.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 07:03:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774965825; cv=none;
-        d=google.com; s=arc-20240605;
-        b=d06FmKYfU9WejqK1Ma82Is6axVe+e5JXsjrGnr7bAJZbZOEyhYtiz5O7tWb4QL1FXR
-         Tf9xm9+2AwZuWhvciud2DU25Spfq5l0RG2qmL3MNsynlOrUxk8fAOk5m4xu0AQlJzpRh
-         Rim8YzcQcPoLSR1XCDvWQXd4vPhduekO246sMtME9hDQIdWG6jJyLLRpFyw8wi26N5C3
-         1cjpMbS1qkx970zI9+/xQFqEjN8sbZh8D6/W5xCrtHG79StwpPRKWObC93od+LJq3HDR
-         XS3cJ8WNpc9on4ugs0Y2pTx4Nk3eYOV9gPvwEb1qipwV2ujVaE7ZyhMoWldzHVlCqcyq
-         kCSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=vyvhTs1OicliWu+WtWpV4638VOyupuZR7VYdwSTf7iM=;
-        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
-        b=ZlsLpzKh/0dAO2+vBMuUx+V1r5qWl3EZkbbPcO98U9amw44qf2+iBZuVH4jznWbaEU
-         4maiIYMdmMx/eLyIIB4mR2Yv4YsymgXlDCDmsrNyZxoNKtjnIzhdE5R6AckOSmr080VI
-         uPznH1ZEmACX1gdORKSlCkbRPUrlU0MYV+ZNyXCT7pk2Nts2A3ef6zJ6/Yah3B5571DK
-         F/zpr7ia5PQNmJ762sd+a/otOEWKb8D3N6SdQxW6CDEiQetV+c+2ytEMjDk+iAJpcxEd
-         o5yyVl2wfb3d+x+t5X08yJNRcCKdOxOkajBsOCayUfS9Gz2msZBSlJNKLPnx2nDm2vdt
-         9OVQ==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774965825; x=1775570625; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vyvhTs1OicliWu+WtWpV4638VOyupuZR7VYdwSTf7iM=;
-        b=W8FEtGELE9vtZDLRF1rCYQpgbjXrWuIDK4m60n35lwrIQOom3U6zcahhPSdJcDuMCt
-         DObvVQGAuYPm7vjNBdIH9uQ7nPJMr18YDuVGiim4p6Wy1kq4Q38Ifey3S7egna1Ztmjo
-         1+Hhgj6NJEgS7OU0twdGmhQqPlwaxBVHxu17Ct/+sKlN5XEEKzID1jdaVXp0KWJkp1kZ
-         38iDLEop5yLDXqnRUYQpdUdoJGZi819bjt/6ZyLLrEaJtzUz/HrMhmKHh967tagiLbDq
-         2XFIhFbe2gJTr97lioCfyowt9E9IVDtpzpI0FJdn+8J4CVicCWhMeled3vurRkquQ1Ed
-         U20w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774965825; x=1775570625;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vyvhTs1OicliWu+WtWpV4638VOyupuZR7VYdwSTf7iM=;
-        b=NSuG9TMq69i7IH+tjnF6ddwd46BJfd2BGm8t30nhBzACMfclCV4jYlK08tHTqU2Of/
-         9dHQo2iRgzH4pQpjPH2wsnP5gQr133VmE07Z5uz8gBjYrXRwWOh6vouYvxe8ZLPJUFly
-         h/uZOv/Zky8K5A5Zh53HHPmsr+EQJEZi+lXHkTqOseGdbPDaoFABkQuO4da8Pzw/Eet2
-         XCyDP5PUJaSCy77omQBe+0X0O/95mo4JKiX7XHaplTN+aaCO+c1DjWr33jB5j/bEjNOL
-         PQ0yyhnB+Da3Kl1h4OoBoqI6ye1nzr81LYEfpOLSeGUhNUvTSoJ9eq6/r+ASOgEip0Ee
-         GFhg==
-X-Gm-Message-State: AOJu0YyNlgj2JzbRFXhDmNr0u9q12JsZ4+FrtvEsM9Y9PGjbMH5fKSJT
-	KM6rqUlvDxFE3jdFBgyZ50zQ8zB2Rv92tfHMCE4TZgZGNCYFFSLX6nL+fuF7ztS66Qu7oI8KnE2
-	88Ug9MUy9mGAeyA28wNGa+l7jLXNRGnoCNvt3FoI=
-X-Gm-Gg: ATEYQzwnWuvWCABs3b9s4eYIHN09fAzjgmMNsgiclxE0J8i+fqyZXj8PmveBZEC7q1v
-	LV3s/JltuAx3BLndCUVMkY2LX0f95qsM+nKyx/5zKZAoSW6mPpmxS+zC3DukBH5tXWVGSg9ygLy
-	cCvHtpLFugeZoa8+vWHSPQwIs27h+yHPfQg/GylQ2Xo468nTBsMFCaevFp5R3n8x+oJC8diph8o
-	/ZztwxQD+z9MlxSR/smFfaywb71QaoAHGLcO7I/LnhFvYp7iGA536qAEpXc0hGPItRPv2R7+7MR
-	k9+evA==
-X-Received: by 2002:a05:7301:129b:b0:2c0:c767:b6b with SMTP id
- 5a478bee46e88-2c185f58b3bmr8592582eec.32.1774965824532; Tue, 31 Mar 2026
- 07:03:44 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4flWBD0RNJz2xSb
+	for <linux-erofs@lists.ozlabs.org>; Wed, 01 Apr 2026 01:45:22 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1774968317; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=L8lUCXpkxX3PqDuQSTwul4U3MPWRvorzFrrFrmLOFME=;
+	b=CBvBdhob4xf3b71O3lYR0oAdsfONNaKKmoO3e+qCflDq/fT09Jl5TjujBLiggXRWqDFHrOFiF6eivQnJcrmRyTmqfmi2bkxrHC3tevTuAyggCbhFeXP1lmyJ2ln5Nxn99GRnLK2NmrU/NwOxwjXFG6y+YAXz7rrdnz+6h+RvigA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X04d3MY_1774968316;
+Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X04d3MY_1774968316 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 31 Mar 2026 22:45:17 +0800
+Message-ID: <5dccdd7e-f68f-48a6-b2af-9c8ae4a6ef2e@linux.alibaba.com>
+Date: Tue, 31 Mar 2026 22:45:15 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -98,170 +55,243 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Yash Gupta <yashgupta9437@gmail.com>
-Date: Tue, 31 Mar 2026 19:33:08 +0530
-X-Gm-Features: AQROBzAy7TRo5tgIB1VqbPl4Mywmpj99P7qmqYegYRzudnjqrQPwtuZucUiXQwE
-Message-ID: <CAJ-i-wEroK3Yx-6h7dydGECqVO_Xh7hOvFAS-M75MO98_QKjog@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BGSoC_2026=5D_Introduction_=26_Proposal_Discussion_=E2=80=94_f?=
-	=?UTF-8?Q?sck=2Eerofs_Multi=2Dthreaded_Decompression?=
-To: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="00000000000075b463064e526f1b"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] erofs-utils: mount: add fanotify pre-content OCI
+ backend
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: jingrui@huawei.com, zhukeqian1@huawei.com, hudsonzhu@tencent.com
+References: <20260330124402.899394-2-zhaoyifan28@huawei.com>
+ <20260331131401.901584-1-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260331131401.901584-1-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3144-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCPT_COUNT_ONE(0.00)[1];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TO_DN_NONE(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yashgupta9437@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3145-lists,linux-erofs=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:jingrui@huawei.com,m:zhukeqian1@huawei.com,m:hudsonzhu@tencent.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,linkedin.com:url,ozlabs.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: A5D3436A9FA
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,man7.org:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 85F6E36B24C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---00000000000075b463064e526f1b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Yifan,
 
- Dear Yifan, Chunhai, and Gao Xiang,
+On 2026/3/31 21:14, Yifan Zhao wrote:
+> Add a fanotify-backed mount mode for OCI sources that uses
+> FAN_PRE_ACCESS permission events to populate a local sparse file
+> on demand before the kernel consumes the requested data.
+> 
+> The new erofs.fanotify subtype resolves a single OCI blob,
+> creates a sparse cache file, and runs a fanotify event loop
+> that fetches missing ranges before allowing access to proceed.
+> 
+> A pid file recording the canonical mountpoint and sparse-file
+> source is written for unmount to track the corresponding worker.
+> 
+> [ Developed with assistance from GPT-5.4 ]
 
-I am Yash Gupta, a second-year MCA student at Chandigarh University, India
-(IST, UTC+5:30). I am writing to introduce myself ahead of submitting my
-GSoC 2026 proposal for the "Multi-threaded Decompression Support in
-fsck.erofs" project.
+I will apply this version, but some comments:
 
-I have studied the three problems documented openly in the erofs-utils
-README =E2=80=94 single-threaded extraction, slow fragment decompression, a=
-nd
-missing xattr/ACL restoration =E2=80=94 and my proposal addresses all three
-directly.
+It should be marked as:
+Assisted-by: AGENT_NAME:GPT-5.4
 
-Preparation I have done so far:
+for example.
 
-- Built erofs-utils from source on Fedora 41 and Debian 13
-- Profiled fsck.erofs --extract on sample images using perf and confirmed
-the single-threaded CPU bottleneck firsthand
-- Traced the pcluster decompression call path end-to-end through fsck/ and
-lib/
-- Reviewed the mkfs.erofs thread-pool implementation as a reference for
-pool design
-- Read the containerd EROFS snapshotter documentation to understand how
-EROFS layer blobs are consumed downstream
-- Subscribed to linux-erofs@lists.ozlabs.org and reviewed the last three
-months of patches, including commit 2ce4b18 (xattr crash fix in the rebuild
-path)
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+> ---
+>   configure.ac            |  28 +++
+>   lib/Makefile.am         |   7 +
+>   lib/backends/fanotify.c | 283 ++++++++++++++++++++++++
+>   lib/liberofs_fanotify.h |  59 +++++
+>   lib/liberofs_oci.h      |   3 +
+>   lib/remotes/oci.c       |  10 +-
+>   mount/main.c            | 476 +++++++++++++++++++++++++++++++++++++++-
+>   7 files changed, 860 insertions(+), 6 deletions(-)
+>   create mode 100644 lib/backends/fanotify.c
+>   create mode 100644 lib/liberofs_fanotify.h
+> 
 
-My proposed technical approach:
+...
 
-- A fixed-size pthreads pool (default: nproc, overridable via -j N) with an
-MPMC work queue
-- Pre-allocated, non-overlapping output buffers per inode =E2=80=94 no lock=
-s needed
-at write time, zero coordination between worker threads during decompressio=
-n
-- A reader-writer-locked hash-map cache keyed by pcluster disk block
-address to eliminate redundant fragment re-decompression
-- xattr and ACL restoration via lsetxattr(), built on the stabilized
-2ce4b18 base, covering SELinux labels, file capabilities, and POSIX ACL
-round-trips
-- TSAN validation on every patch before sending upstream
+> +
+> +static bool erofs_fanotify_range_in_sparse(int fd, u64 offset, size_t length)
+> +{
+> +	off_t data_start, hole_start;
+> +
+> +	data_start = lseek(fd, offset, SEEK_DATA);
+> +	if (data_start < 0)
+> +		return false;
+> +	if ((u64)data_start != offset)
+> +		return false;
+> +
+> +	hole_start = lseek(fd, offset, SEEK_HOLE);
+> +	if (hole_start < 0)
+> +		return false;
+> +	if ((u64)hole_start < offset + length)
+> +		return false;
 
-I have practical experience with POSIX pthreads, producer-consumer queues,
-and reader-writer locks from coursework and personal projects. I am
-familiar with git format-patch, git send-email, Linux kernel coding style,
-and checkpatch.pl.
+Here I really hope we could switch to bitmaps
+instead of relying on holes in the following commits.
 
-I plan to post baseline benchmark numbers to the mailing list during the
-community bonding period before writing any code, and to send incremental
-patch series for review throughout the summer rather than a single large
-batch at the end.
+> +
+> +	return true;
+> +}
 
-My proposal draft is attached. I would greatly appreciate any early
-feedback =E2=80=94 particularly on the thread-pool design, the fragment cac=
-he
-approach, and whether the 12-week timeline is realistic from your
-perspective.
+...
 
-Thank you for your time and for maintaining such a well-documented project.
+> +
+> +static int erofsmount_write_fanotify_state(const char *state_path, pid_t pid,
+> +					   const char *mountpoint,
+> +					   const char *source)
+> +{
+> +	struct erofsmount_fanotify_state state;
+> +	char *tmp_path = NULL;
+> +	FILE *f = NULL;
+> +	int fd = -1, err;
+> +
+> +	if (mkdir(EROFSMOUNT_RUNTIME_DIR, 0700) < 0 && errno != EEXIST)
+> +		return -errno;
+> +	if (mkdir(EROFSMOUNT_FANOTIFY_STATE_DIR, 0700) < 0 &&
+> +	    errno != EEXIST)
+> +		return -errno;
+> +
+> +	state.pid = pid;
+> +	state.mountpoint = (char *)mountpoint;
+> +	state.source = (char *)source;
+> +
+> +	if (asprintf(&tmp_path, "%s.tmpXXXXXX", state_path) < 0)
+> +		return -ENOMEM;
+> +
+> +	fd = mkstemp(tmp_path);
+> +	if (fd < 0) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +
+> +	f = fdopen(fd, "w");
+> +	if (!f) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +	fd = -1;
+> +
+> +	if (fprintf(f, "%d\n%s\n%s\n", state.pid, state.mountpoint,
+> +		    state.source) < 0 || fflush(f) == EOF) {
 
-Best regards,
-Yash Gupta
-MCA =C2=B7 Chandigarh University =C2=B7 India
-github.com/developer-yashgupta
-linkedin.com/in/developer-yash
-yashgupta9437@gmail.com
-IST (UTC +5:30)
+Here, I do think you could identify the mountpoint
+using mnt_id (e.g. you could use `mnt_id` as
+filename), see statx(2):
 
---00000000000075b463064e526f1b
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+https://man7.org/linux/man-pages/man2/statx.2.html
+STATX_MNT_ID.
 
-<div dir=3D"ltr">=C2=A0Dear Yifan, Chunhai, and Gao Xiang,<br><br>I am Yash=
- Gupta, a second-year MCA student at Chandigarh University, India (IST, UTC=
-+5:30). I am writing to introduce myself ahead of submitting my GSoC 2026 p=
-roposal for the &quot;Multi-threaded Decompression Support in fsck.erofs&qu=
-ot; project.<br><br>I have studied the three problems documented openly in =
-the erofs-utils README =E2=80=94 single-threaded extraction, slow fragment =
-decompression, and missing xattr/ACL restoration =E2=80=94 and my proposal =
-addresses all three directly.<br><br>Preparation I have done so far:<br><br=
->- Built erofs-utils from source on Fedora 41 and Debian 13<br>- Profiled f=
-sck.erofs --extract on sample images using perf and confirmed the single-th=
-readed CPU bottleneck firsthand<br>- Traced the pcluster decompression call=
- path end-to-end through fsck/ and lib/<br>- Reviewed the mkfs.erofs thread=
--pool implementation as a reference for pool design<br>- Read the container=
-d EROFS snapshotter documentation to understand how EROFS layer blobs are c=
-onsumed downstream<br>- Subscribed to <a href=3D"mailto:linux-erofs@lists.o=
-zlabs.org">linux-erofs@lists.ozlabs.org</a> and reviewed the last three mon=
-ths of patches, including commit 2ce4b18 (xattr crash fix in the rebuild pa=
-th)<br><br>My proposed technical approach:<br><br>- A fixed-size pthreads p=
-ool (default: nproc, overridable via -j N) with an MPMC work queue<br>- Pre=
--allocated, non-overlapping output buffers per inode =E2=80=94 no locks nee=
-ded at write time, zero coordination between worker threads during decompre=
-ssion<br>- A reader-writer-locked hash-map cache keyed by pcluster disk blo=
-ck address to eliminate redundant fragment re-decompression<br>- xattr and =
-ACL restoration via lsetxattr(), built on the stabilized 2ce4b18 base, cove=
-ring SELinux labels, file capabilities, and POSIX ACL round-trips<br>- TSAN=
- validation on every patch before sending upstream<br><br>I have practical =
-experience with POSIX pthreads, producer-consumer queues, and reader-writer=
- locks from coursework and personal projects. I am familiar with git format=
--patch, git send-email, Linux kernel coding style, and <a href=3D"http://ch=
-eckpatch.pl">checkpatch.pl</a>.<br><br>I plan to post baseline benchmark nu=
-mbers to the mailing list during the community bonding period before writin=
-g any code, and to send incremental patch series for review throughout the =
-summer rather than a single large batch at the end.<br><br>My proposal draf=
-t is attached. I would greatly appreciate any early feedback =E2=80=94 part=
-icularly on the thread-pool design, the fragment cache approach, and whethe=
-r the 12-week timeline is realistic from your perspective.<br><br>Thank you=
- for your time and for maintaining such a well-documented project.<br><br>B=
-est regards,<br>Yash Gupta<br>MCA =C2=B7 Chandigarh University =C2=B7 India=
-<br><a href=3D"http://github.com/developer-yashgupta">github.com/developer-=
-yashgupta</a><br><a href=3D"http://linkedin.com/in/developer-yash">linkedin=
-.com/in/developer-yash</a><br><a href=3D"mailto:yashgupta9437@gmail.com">ya=
-shgupta9437@gmail.com</a><br>IST (UTC +5:30)</div>
+unique mnt_id seems an overkill since we will delete
+such files when umounting.
 
---00000000000075b463064e526f1b--
+> +		err = errno ? -errno : -EIO;
+> +		goto out;
+
+...
+
+> +
+> +static int erofsmount_read_fanotify_state(const char *state_path,
+> +					  struct erofsmount_fanotify_state *state)
+> +{
+> +	FILE *f;
+> +	size_t n = 0;
+> +	int err = 0;
+> +
+> +	memset(state, 0, sizeof(*state));
+> +
+> +	f = fopen(state_path, "r");
+> +	if (!f)
+> +		return -errno;
+> +
+> +	if (fscanf(f, "%d", &state->pid) != 1)
+> +		err = -EINVAL;
+> +	else if (fgetc(f) != '\n')
+> +		err = -EINVAL;
+> +	else if (getline(&state->mountpoint, &n, f) < 0)
+> +		err = feof(f) ? -EINVAL : -errno;
+> +	else if (getline(&state->source, &n, f) < 0)
+> +		err = feof(f) ? -EINVAL : -errno;
+> +	fclose(f);
+> +	if (err) {
+> +		erofsmount_free_fanotify_state(state);
+> +		return err;
+> +	}
+> +
+> +	state->mountpoint[strcspn(state->mountpoint, "\n")] = '\0';
+> +	state->source[strcspn(state->source, "\n")] = '\0';
+> +	return err;
+> +}
+> +
+> +static int erofsmount_cleanup_fanotify_worker(const char *mountpoint,
+> +					      const char *source)
+> +{
+> +	DIR *dir;
+> +	struct dirent *de;
+> +	int err = 0;
+> +
+> +	dir = opendir(EROFSMOUNT_FANOTIFY_STATE_DIR);
+> +	if (!dir) {
+> +		if (errno == ENOENT)
+> +			return 0;
+> +		return -errno;
+> +	}
+> +
+> +	while ((de = readdir(dir)) != NULL) {
+> +		struct erofsmount_fanotify_state state;
+> +		char *state_path;
+> +
+> +		if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
+> +			continue;
+> +		if (!strstr(de->d_name, ".state"))
+> +			continue;
+> +		if (asprintf(&state_path, "%s/%s", EROFSMOUNT_FANOTIFY_STATE_DIR,
+> +			     de->d_name) < 0) {
+> +			err = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		err = erofsmount_read_fanotify_state(state_path, &state);
+
+same here, so that you don't need readdir() anymore, just
+use mnt_id for indexing.
+Thanks,
+Gao Xiang
+>   
+
 
