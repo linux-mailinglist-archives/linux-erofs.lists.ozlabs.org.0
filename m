@@ -1,95 +1,49 @@
-Return-Path: <linux-erofs+bounces-3126-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3127-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MDuEOMvIymmL/wUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3126-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 21:02:35 +0200
+	id oIuELEwpy2n8EQYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3127-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 03:54:20 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63356360168
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Mar 2026 21:02:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C5E1363355
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Mar 2026 03:54:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fl0xM2FlZz2xT6;
-	Tue, 31 Mar 2026 06:02:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4flB4M5q5qz2ybQ;
+	Tue, 31 Mar 2026 12:54:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1229" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774897351;
-	cv=pass; b=aeZTzrDs3B7z1yrqXmlAH8a2o1bQtPT7aYlX2xU+i+X36wohfx+KTQfJYniAYg9t+Dp205ESngp2fCsRSOcyItXUPppUHl3Pf+TbEz1pRK9eUSVXbaE3cZE7sYd8ExI+FXaggLk2FiyY8M6lyYEcOjQ7WS5C9nqTt1OMg5fEDkumjJuXcEFisUP1dn88I3gDoShmA9KoMZQCclzLRfv02ng4EI6ldw19U/fXd42LiX1HYiFCkWZ4hGfbZ2DMVPcA9QNjOdDbmWFuTqcfmP8a+TIILGcXY7h7qDRgCNeRymFEO5/mbtUksrEz++Iq2vT/FcsocaKxLIcnGkb0IORCSQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1774897351; c=relaxed/relaxed;
-	bh=zWtBuaGbm7IvkZv04xOo2zsbrx8BTVRPyDGG9ew1ue0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DkEE1i2Wq4GNjh5RJ0k6tV8ZHYoUOTxgGpHfsTCNrCFvHHnH4ev22Dtyw3GdRlzsaYKrH8TZxLvX/I1wKlNflA2rTl4WBwzN14rqJPct31ri7o/K2sh/oRxAge9haUXOm9aPwzKQ6gEXbk1rf8GblmwNOqDTxk9MZCKLTAg0gL5irFCX8zO4G+6DAzeZgfKDIY2dhjR+frivBoi9MYoyFUmoSomIUEgHoSlsuRQ2tBTLIixhDHsaiVs+tAKRAvUR08xvB+e0l8ARKooR3A7ooEKAlU/8JpJzPuWhyAK7vdyVU45d9bvI5awBg0pm9Ajv0SqQKDbaenHO7t6iJI+4kw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y5OrpxH9; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1229; helo=mail-dl1-x1229.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1774922051;
+	cv=none; b=Cp3AD7D1MllUEzc1r27c5FSep1SSv5goUBRbo3TFpzfGqYD52ZnHVRvhJX73sQDX4y7zIB1FrTF8N+IFN3MbJQjHyUv3CWEyBY3MUIJws2ZdIzDhSAz9K0EqVz+wVpYn+hd3d95TyT+f1oQElRx5IoGTREtvB5IAGUVmta8PIDg7dSHm0+/VUhP3hXSR6YjvGOFMulA0dVZKrwgAyEg+x2/QjNGAejOZpq3QpOtu4OTdrANOJbql6cuu0+YTk4Vod1AYXIU6EujODKcKepLoxO071D1v8n8USjvFKNzNLOBO3JhTrTixQ48XB6iHoYUU1UFZPGcA7jkxsknc1rRD+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1774922051; c=relaxed/relaxed;
+	bh=tgvNAGimiI6tldRAivhAsVH4S6HHvqfZc2n7ZhaAGO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JJR2IiloPygk0itQ48ba56ZvetT9JXSpykkMgnscXAjXLH+dEg9aD2Ewu+NX0I/cjWMDAXIjpi8zkzhwozij4axCYxMBinfcW8oJD72hHRs+UgESofuuFNETgSOfI7yUTlqGZLqz3DOu2cKGU1hUlO93ePNjey4npj4v/+tUVCic3QtndRJuqQ5MooFniSkmhUaaqpjoh0mWjQdMIWTXzDkHLRJvDfWhiTRwSl7CFs/IZXEuSzhjHj67mBHWOMOJ0POvrzOT5P1gLIQsP3Pi05FLtwV7S44YNqDjf5FmOhZ83nxST8E9Br7kMeM2ft63pjwBqbHO7uLxivgEaFkWMg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NwdhAAAu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=Y5OrpxH9;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NwdhAAAu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1229; helo=mail-dl1-x1229.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-dl1-x1229.google.com (mail-dl1-x1229.google.com [IPv6:2607:f8b0:4864:20::1229])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fl0xK6s8pz2xSb
-	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 06:02:28 +1100 (AEDT)
-Received: by mail-dl1-x1229.google.com with SMTP id a92af1059eb24-127380532eeso354574c88.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 30 Mar 2026 12:02:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774897346; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bF4MO6ptaLm+NJmtGdAZct/W8l58SXzk0sjrlzf+iKXzzfqhbexE3uujlayys0MPyr
-         mR9iya3YXS/0wgpBNT19ZL3MencKcgIi+VEDKDmH2PpMMlr0gY7JGNSs9ylo7pOn5rDb
-         ohj/0iUGPgRC6pVNo9/qQDa54fmNbA0en3uyGviRsEfn4MMYhnkU5KNklqwlMzf0HRtO
-         IsyXXDIRmpn8eBQ+NwVZwDZ+KIsqBbxCI65KHBJxauHA3sg/CK2OzIpxT97xc0ZghTpC
-         tiMUvvxd9Tb4E7YiIFtr5otG9KtwLvP3TLUeY0wgZb4VqnEX7K31AttBYrWr26Q8rDXS
-         CbcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=zWtBuaGbm7IvkZv04xOo2zsbrx8BTVRPyDGG9ew1ue0=;
-        fh=RlfH77I8/Kt0ZrtXOcpno9ZseSB9F3859mFc0m4jdXQ=;
-        b=MZwUGeaNqnYRO+lucaMHYGuR4n4V3pSWkjjJE1SmHAeSiXebr1DPAFOQj+6s0ar64N
-         fwHnBnYKowEtdQwykhJiyRFel7SIKrsEkZJhAA6sm63DlAM6OL2zj4SD0I7LaF5VMhDN
-         JKEXwGuSagTRLXIGNE0yir2wblxHedA0zreA9I2h+q9n4qICSs3f3w5pjoaa4fI5ntVY
-         iM2J1iCkoEn7twjspSOJfgc1dW4VyGOTpukeeos+NzaoyzSuKzOC0uxtauuQy+AlPs2P
-         CE5OGdg2N5n+u3DKTRT1Ih/e/pzYopMn9yhHWg5IQQSmg5mE6Ih9kZtkJwVYHTiOYPJ7
-         2paQ==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774897346; x=1775502146; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zWtBuaGbm7IvkZv04xOo2zsbrx8BTVRPyDGG9ew1ue0=;
-        b=Y5OrpxH9h0shvaqagpfd+uRmXh0Wv/xwXDjTlGx/RBIg5XndfcXv7v18eSIv6EiXv4
-         0ptUdmz14bViCeXq5zHpSXBovCmFAxetejTvw3g2pbm5XDIEBIO67BZPiN1yzLu8XCui
-         76iRXIL3fR5uyVm+pB6hOiDesgHlCQdbXg4pDK/GZYRB1ByxCTaV0Iopu1MnbxtFFT/m
-         Xqas9w8i7Jw34BtiAuc/NkU2d9G5qoshRz2tYdb0471S1f6zIdaTZNSCLPQNyY3rwJ3z
-         jf4lDpDHYrU3RUcsDPilrQYwXxJI2L+SqLbu0koN2BL5uU9Yt6n6kO9XsMvsgInauo/L
-         o6Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774897346; x=1775502146;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zWtBuaGbm7IvkZv04xOo2zsbrx8BTVRPyDGG9ew1ue0=;
-        b=RJdF/9uZcoIchoGz8Oiphkj/+H+XKXrvr+ifkgierc0EDKeB+x9ySDMcuv/Zl2sE3k
-         31w0JWdI6ANO3FV633aaXFkcvWS6PjpI4HcKl0qHNhXpbgTYpw8Cpjlhm3jqTsQwvPxW
-         5MO2sKzKndj/HtIL+BbMN+xbs5uphbWoQlBHCc3zsmx84FqDyYCEqyEQlTBrAmHhCOW/
-         3NJJCHMJ7ZNpjXo+I04Wyne3pbTLxvwmNc6gAPITdSoMcZoUw34Y2zIbGhUZhhMdLmLL
-         qes7TpZBzhPyhiVFpoid0fXnsiR1NOqJlJEHyW+95BvMo1J/I81BnQPm6/egUB4VO3bw
-         QeQA==
-X-Gm-Message-State: AOJu0Yx1G7AD9A3KyES1k6mhNyf8jyclhRVZMvotsNPqeQQNWcGEQTZC
-	V6aLhDrzKFs/sQJezmo8qyxl8R5mBdSGxLqftPs9UcFxHvHAnO4DZj4vl/Mk0CwOFZ+umiPplBT
-	mMSGdeq5L9WYRyo94b702id7ql5x4equdO8WH
-X-Gm-Gg: ATEYQzx03tXI6bSFY5e7xx48Bg23Hi0eQLjMwkE8J/b+2ybPCT0VDW6KoUKWf2J1C7e
-	w7AHUTJv8l7rH0CmpUMhIORR31gAAhGgbiLUdG+7dQVZsbJlHEWGcfioxTxPxULGR3FMFuWIEOT
-	b3VfqO/WyoDMnqQwRO7FOogfBW4M7uF0iSjTh75lFMnh18XnzivK4WHAScaBArYibsVkNlFvW90
-	/8rMyjbHIB/ahlqozCOEeRgT2Ew0aE3rUQJaVTQvkS4HOl2hgw9dhxG6rTNq8JBbambSeyiLX56
-	Q13h8ejOgI//bhPa2Es=
-X-Received: by 2002:a05:7022:388a:b0:128:ce44:be8f with SMTP id
- a92af1059eb24-12ab2844a9amr7585346c88.2.1774897345964; Mon, 30 Mar 2026
- 12:02:25 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4flB4J6FkJz2xSb
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Mar 2026 12:54:07 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1774922042; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=tgvNAGimiI6tldRAivhAsVH4S6HHvqfZc2n7ZhaAGO8=;
+	b=NwdhAAAuOJyQr5IaZ1dGlUukfN59DCJvba+6H+aB09sXvSN4P0ir5PdYNSLQNgaREi9ezknwDBD8Fdt/zB3/5ZSSDviAvv4AL6fsKYIuxfccWTzFejftlF5/8MFrxFqSSWbWOhIM6Z47gDQzF+pTkev/aQQruWclc00kGyH+fcw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X02d5Nk_1774922040;
+Received: from 30.221.131.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X02d5Nk_1774922040 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 31 Mar 2026 09:54:00 +0800
+Message-ID: <fe0be135-0ab8-4359-a800-e42ffa071ed9@linux.alibaba.com>
+Date: Tue, 31 Mar 2026 09:53:59 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,436 +55,945 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <CAHf8aCXHHLFCghBEy4hF+DoDpYed0yOafvKbdbmDgfjRC2Lfww@mail.gmail.com>
- <CAGSu4WOLGADT4Z+iEw33K1M-1F1Pgu0aHBwk_8R_2tbee6k5+w@mail.gmail.com>
- <CAHf8aCV+d0-YL8Gt_Xhw0knS7gz8FZB_RF315XOLtfOi4ec0Vg@mail.gmail.com> <CAGSu4WMJ43VwWa-_6rvxmjQHNJxOAWfMZv+0jJAy2joQ+6vzeA@mail.gmail.com>
-In-Reply-To: <CAGSu4WMJ43VwWa-_6rvxmjQHNJxOAWfMZv+0jJAy2joQ+6vzeA@mail.gmail.com>
-From: Deepak Pathik <deepakpathik2005@gmail.com>
-Date: Tue, 31 Mar 2026 00:32:13 +0530
-X-Gm-Features: AQROBzB9DBLcw2NnSZIN_4uUruY-3uUOq15xyFCChL0UMEM_AE4Jsr2397-aaHU
-Message-ID: <CAHf8aCV0S61bQ3+MqVbi0+iyvZ=ysR4GcpenKp8h_AomH-Hd0A@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BGSoC_2026=5D_Multi=2Dthreaded_decompression_for_fsc?=
-	=?UTF-8?Q?k=2Eerofs_=E2=80=94_design_question_on_z=5Ferofs=5Fdecompress=28=29_parallel?=
-	=?UTF-8?Q?ism?=
-To: Utkal Singh <singhutkal015@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="000000000000d1afde064e427dee"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] erofs-utils: mount: add fanotify pre-content OCI
+ backend
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: jingrui@huawei.com, zhukeqian1@huawei.com, hudsonzhu@tencent.com
+References: <20260330124402.899394-1-zhaoyifan28@huawei.com>
+ <20260330124402.899394-2-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260330124402.899394-2-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:singhutkal015@gmail.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3127-lists,linux-erofs=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:jingrui@huawei.com,m:zhukeqian1@huawei.com,m:hudsonzhu@tencent.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3126-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 63356360168
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,configure.ac:url,linux.alibaba.com:dkim,linux.alibaba.com:mid,state.pid:url]
+X-Rspamd-Queue-Id: 8C5E1363355
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---000000000000d1afde064e427dee
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Yifan,
 
-That=E2=80=99s a great point =E2=80=94 I hadn=E2=80=99t fully thought throu=
-gh the error aggregation
-side yet.
-I=E2=80=99m leaning towards running to completion with a shared error accum=
-ulator
-so fsck can surface all corruption in one run, but I=E2=80=99ll think throu=
-gh the
-exit semantics carefully.
+On 2026/3/30 20:44, Yifan Zhao wrote:
+> From: Yifan Zhao <yifan.yfzhao@foxmail.com>
 
-Thanks again for the insights, really helpful.
+The author seems incorrect here.
 
-Regards,
-Deepak Pathik
+> 
+> Add a fanotify-backed mount mode for OCI sources that uses
+> FAN_PRE_ACCESS permission events to populate a local sparse file
+> on demand before the kernel consumes the requested data.
+> 
+> The new erofs.fanotify subtype resolves a single OCI blob,
+> creates a sparse cache file, and runs a fanotify event loop
+> that fetches missing ranges before allowing access to proceed.
+> 
+> A pid file recording the canonical mountpoint and sparse-file
+> source is written for unmount to track the corresponding worker.
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+> ---
+>   configure.ac            |  28 ++
+>   lib/Makefile.am         |   7 +
+>   lib/backends/fanotify.c | 110 +++++++
+>   lib/liberofs_fanotify.h |  49 +++
+>   lib/liberofs_oci.h      |   3 +
+>   lib/remotes/oci.c       |  10 +-
+>   mount/main.c            | 671 +++++++++++++++++++++++++++++++++++++++-
+>   7 files changed, 872 insertions(+), 6 deletions(-)
+>   create mode 100644 lib/backends/fanotify.c
+>   create mode 100644 lib/liberofs_fanotify.h
+> 
+> diff --git a/configure.ac b/configure.ac
+> index 8a8e9b3..45b8190 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -194,6 +194,10 @@ AC_ARG_ENABLE(oci,
+>                      [enable OCI registry based input support @<:@default=no@:>@]),
+>       [enable_oci="$enableval"],[enable_oci="no"])
+>   
+> +AC_ARG_ENABLE(fanotify,
+> +   [AS_HELP_STRING([--enable-fanotify], [enable fanotify pre-content backend @<:@default=no@:>@])],
+> +   [enable_fanotify="$enableval"], [enable_fanotify="no"])
+> +
+>   AC_ARG_ENABLE(fuse,
+>      [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
+>      [enable_fuse="$enableval"], [enable_fuse="no"])
+> @@ -651,6 +655,24 @@ AS_IF([test "x$enable_oci" = "xyes"], [
+>     ])
+>   ], [have_oci="no"])
+>   
+> +have_fanotify="no"
+> +AS_IF([test "x$enable_fanotify" = "xyes"], [
+> +  AS_IF([test "x$build_linux" != "xyes"], [
+> +    AC_MSG_ERROR([fanotify backend requires Linux])
+> +  ])
+> +  AS_IF([test "x$have_oci" != "xyes"], [
+> +    AC_MSG_ERROR([fanotify backend requires --enable-oci])
+> +  ])
+> +  AC_CHECK_HEADERS([sys/fanotify.h], [
+> +    have_fanotify="yes"
+> +    AC_CHECK_TYPES([struct fanotify_event_info_range], [], [], [[
+> +#include <sys/fanotify.h>
+> +    ]])
+> +  ], [
+> +    AC_MSG_ERROR([fanotify backend disabled: missing sys/fanotify.h])
+> +  ])
+> +])
+> +
+>   # Configure openssl
+>   have_openssl="no"
+>   AS_IF([test "x$with_openssl" != "xno"], [
+> @@ -766,6 +788,7 @@ AM_CONDITIONAL([ENABLE_LIBXML2], [test "x${have_libxml2}" = "xyes"])
+>   AM_CONDITIONAL([ENABLE_S3], [test "x${have_s3}" = "xyes"])
+>   AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
+>   AM_CONDITIONAL([ENABLE_OCI], [test "x${have_oci}" = "xyes"])
+> +AM_CONDITIONAL([ENABLE_FANOTIFY], [test "x${have_fanotify}" = "xyes"])
+>   
+>   if test "x$have_uuid" = "xyes"; then
+>     AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
+> @@ -842,6 +865,11 @@ if test "x$have_oci" = "xyes"; then
+>     AC_DEFINE([OCIEROFS_ENABLED], 1, [Define to 1 if OCI registry is enabled])
+>   fi
+>   
+> +if test "x$have_fanotify" = "xyes"; then
+> +  AC_DEFINE([EROFS_FANOTIFY_ENABLED], 1,
+> +	    [Define to 1 if fanotify backend is enabled])
+> +fi
+> +
+>   # Dump maximum block size
+>   AS_IF([test "x$erofs_cv_max_block_size" = "x"],
+>         [$erofs_cv_max_block_size = 4096], [])
+> diff --git a/lib/Makefile.am b/lib/Makefile.am
+> index 77f6fd8..5f8812f 100644
+> --- a/lib/Makefile.am
+> +++ b/lib/Makefile.am
+> @@ -36,6 +36,10 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+>         $(top_srcdir)/lib/liberofs_s3.h
+>   
+>   noinst_HEADERS += compressor.h
+> +if ENABLE_FANOTIFY
+> +noinst_HEADERS += $(top_srcdir)/lib/liberofs_fanotify.h
+> +endif
+> +
+>   liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+>   		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+>   		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+> @@ -88,6 +92,9 @@ if OS_LINUX
+>   liberofs_la_CFLAGS += ${libnl3_CFLAGS}
+>   liberofs_la_LDFLAGS += ${libnl3_LIBS}
+>   liberofs_la_SOURCES += backends/nbd.c
+> +if ENABLE_FANOTIFY
+> +liberofs_la_SOURCES += backends/fanotify.c
+> +endif
+>   endif
+>   liberofs_la_SOURCES += remotes/oci.c remotes/docker_config.c
+>   liberofs_la_CFLAGS += ${json_c_CFLAGS}
+> diff --git a/lib/backends/fanotify.c b/lib/backends/fanotify.c
+> new file mode 100644
+> index 0000000..66a97a1
+> --- /dev/null
+> +++ b/lib/backends/fanotify.c
+> @@ -0,0 +1,110 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +#define _GNU_SOURCE
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <unistd.h>
+> +#include <string.h>
+> +#include "erofs/print.h"
+> +#include "liberofs_fanotify.h"
+> +
+> +int erofs_fanotify_init_precontent(void)
+> +{
+> +	int fan_fd;
+> +
+> +	fan_fd = fanotify_init(FAN_CLASS_PRE_CONTENT | FAN_CLOEXEC | FAN_NONBLOCK,
+> +			       O_RDONLY | O_LARGEFILE);
+> +	if (fan_fd < 0) {
+> +		erofs_err("fanotify_init failed: %s", strerror(errno));
+> +		return -errno;
+> +	}
+> +
+> +	return fan_fd;
+> +}
+> +
+> +int erofs_fanotify_mark_file(int fan_fd, const char *path)
+> +{
+> +	int err;
+> +
+> +	err = fanotify_mark(fan_fd, FAN_MARK_ADD, FAN_PRE_ACCESS, AT_FDCWD, path);
+> +	if (err < 0) {
+> +		erofs_err("fanotify_mark failed for %s: %s", path, strerror(errno));
+> +		return -errno;
+> +	}
+> +
+> +	erofs_dbg("Marked %s for FAN_PRE_ACCESS monitoring", path);
+> +	return 0;
+> +}
+> +
+> +int erofs_fanotify_parse_range_event(const struct fanotify_event_metadata *meta,
+> +				     struct erofs_fanotify_range *range)
+> +{
+> +	const struct fanotify_event_info_header *info_hdr;
+> +	const struct fanotify_event_info_range *range_info;
+> +	const char *ptr, *end;
+> +
+> +	if (meta->metadata_len > meta->event_len) {
+> +		erofs_err("Invalid fanotify metadata length");
+> +		return -EIO;
+> +	}
+> +
+> +	if (meta->vers != FANOTIFY_METADATA_VERSION) {
+> +		erofs_err("Unsupported fanotify metadata version %d", meta->vers);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Initialize range to full file (will be overridden if range info present) */
+> +	range->offset = 0;
+> +	range->count = 0;
+> +
+> +	/* Parse additional info records for range information */
+> +	ptr = (const char *)meta + meta->metadata_len;
+> +	end = (const char *)meta + meta->event_len;
+> +
+> +	while (ptr < end) {
+> +		size_t info_len;
+> +
+> +		if (end - ptr < sizeof(*info_hdr)) {
+> +			erofs_err("Incomplete fanotify event info header");
+> +			return -EIO;
+> +		}
+> +		info_hdr = (const struct fanotify_event_info_header *)ptr;
+> +		info_len = info_hdr->len;
+> +		if (info_len < sizeof(*info_hdr) || ptr + info_len > end) {
+> +			erofs_err("Invalid fanotify event info length");
+> +			return -EIO;
+> +		}
+> +
+> +		if (info_hdr->info_type == FAN_EVENT_INFO_TYPE_RANGE) {
+> +			if (info_len < sizeof(*range_info)) {
+> +				erofs_err("Incomplete fanotify range info");
+> +				return -EIO;
+> +			}
+> +			range_info = (const struct fanotify_event_info_range *)ptr;
+> +			range->offset = range_info->offset;
+> +			range->count = range_info->count;
+> +			break;
+> +		}
+> +
+> +		ptr += info_hdr->len;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int erofs_fanotify_respond(int fan_fd, int event_fd, bool allow)
+> +{
+> +	struct fanotify_response response = {
+> +		.fd = event_fd,
+> +		.response = allow ? FAN_ALLOW : FAN_DENY,
+> +	};
+> +	ssize_t ret;
+> +
+> +	ret = write(fan_fd, &response, sizeof(response));
+> +	if (ret != sizeof(response)) {
+> +		erofs_err("Failed to respond to fanotify event: %s",
+> +			  ret < 0 ? strerror(errno) : "short write");
+> +		return ret < 0 ? -errno : -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/lib/liberofs_fanotify.h b/lib/liberofs_fanotify.h
+> new file mode 100644
+> index 0000000..a22b7ee
+> --- /dev/null
+> +++ b/lib/liberofs_fanotify.h
+> @@ -0,0 +1,49 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +#ifndef __EROFS_LIB_LIBEROFS_FANOTIFY_H
+> +#define __EROFS_LIB_LIBEROFS_FANOTIFY_H
+> +
+> +#include "erofs/defs.h"
+> +#include <sys/fanotify.h>
+> +
+> +/* FAN_PRE_ACCESS may not be defined in older headers */
+> +#ifndef FAN_PRE_ACCESS
+> +#define FAN_PRE_ACCESS 0x00100000
+> +#endif
 
-On Tue, Mar 31, 2026 at 12:05=E2=80=AFAM Utkal Singh <singhutkal015@gmail.c=
-om>
-wrote:
+How about called EROFS_FAN_PRE_ACCESS instead, like
 
-> On Mon, Mar 30, 2026 at 2:00 PM, Deepak Pathik wrote:
-> > the two-phase model (serial traversal + parallel data
-> > verification/extraction) makes a lot more sense now
->
-> Good, that is the right framing.
->
-> One more thing worth deciding early: error aggregation policy. In the
-> current serial path, erofs_check_inode() returns -errno and the caller
-> stops on first error. With parallel workers you need a shared error
-> accumulator and a policy for whether to drain the queue on first
-> error or run to completion =E2=80=94 the choice affects both exit status
-> correctness and how much corruption a single run surfaces on large
-> images.
->
-> Good luck with the proposal.
->
-> Regards,
-> Utkal Singh
->
-> On Mon, 30 Mar 2026 at 14:00, Deepak Pathik <deepakpathik2005@gmail.com>
-> wrote:
-> >
-> > Hi Utkal,
-> >
-> > Thanks again for the detailed explanation and for pointing me to the RF=
-C
-> =E2=80=94 it really helped clarify the bigger picture.
-> >
-> > I spent some time going through the relevant parts of the code and your
-> comments made a lot more sense in that context. I see now that while
-> pcluster-level parallelism is valid, the main challenge is making the
-> surrounding infrastructure safe before introducing concurrency.
-> >
-> > In particular, I hadn=E2=80=99t fully accounted for:
-> >
-> > the lseek() + read() pattern in erofs_read_one_data() and why switching
-> to pread() is necessary for correctness,
-> >
-> > the lack of synchronization in erofs_iget()/erofs_iput(), which could
-> lead to refcount races,
-> >
-> > and the implications of using an unbounded workqueue on large images.
-> >
-> > Your point about backpressure was especially helpful =E2=80=94 I=E2=80=
-=99m now
-> considering a bounded queue or a semaphore-based approach to ensure the
-> producer doesn=E2=80=99t get too far ahead of the workers.
-> >
-> > I also revisited the design with this in mind, and the two-phase model
-> (serial traversal + parallel data verification/extraction) makes a lot mo=
-re
-> sense now, especially for isolating shared state like fsckcfg and path
-> handling.
-> >
-> > I=E2=80=99ll continue refining the proposal with these constraints in m=
-ind and
-> go deeper into io.c, inode.c, and workqueue.c to make sure the design is
-> correct before thinking about actual parallel execution.
-> >
-> > Thanks again for taking the time to explain this =E2=80=94 it was very =
-helpful.
-> >
-> > Regards,
-> > Deepak Pathik
-> >
-> >
-> > On Mon, Mar 30, 2026 at 1:50=E2=80=AFAM Utkal Singh <singhutkal015@gmai=
-l.com>
-> wrote:
-> >>
-> >> On Sun, Mar 29, 2026 at 6:47 PM, Deepak Pathik wrote:
-> >> > for LZMA-compressed images, are pclusters in fsck.erofs always
-> >> > fixed-size and independently decompressible at the userspace level,
-> >> > or are there cases where a pcluster depends on the state left by a
-> >> > previous one?
-> >>
-> >> Hi Deepak,
-> >>
-> >> To answer your LZMA question: yes, each pcluster is independently
-> >> decompressible by design. You can verify this directly in
-> >> lib/decompress.c =E2=80=94 z_erofs_decompress_lzma() calls lzma_stream=
-_decoder()
-> >> and lzma_end() within a single invocation, with no persistent
-> lzma_stream
-> >> across calls. The same holds for ZSTD and deflate. The on-disk format
-> >> enforces this: no pcluster depends on decompressor state from a
-> >> previous one.
-> >>
-> >> The parallelism boundary you identified is correct. The deeper issue
-> >> is one level up: erofs_check_inode() is called sequentially in the
-> >> dispatch loop in fsck/main.c, and each call may decompress many
-> >> pclusters per inode. Inode-level dispatch is simpler than
-> >> pcluster-level because it avoids output ordering constraints.
-> >>
-> >> One thing worth thinking through before wiring erofs_workqueue into
-> >> the fsck path: the existing queue in lib/workqueue.c is an unbounded
-> >> producer queue built for mkfs compression workloads. On a 34,000+
-> >> inode image, it will accumulate all inode descriptors in memory before
-> >> workers can drain it. Backpressure =E2=80=94 either a bounded queue or=
- a
-> >> semaphore on the existing one =E2=80=94 matters here.
-> >>
-> >> Two paths in the surrounding infrastructure also need fixing before
-> >> concurrent dispatch is correct:
-> >>
-> >>   - erofs_read_one_data() in lib/io.c: lseek()+read() on a shared fd
-> >>     is a TOCTOU race under concurrent calls. pread(2) fixes it cleanly=
-.
-> >>
-> >>   - erofs_iget()/erofs_iput() in lib/inode.c: ref-count mutations
-> >>     without synchronisation. Concurrent iput() can double-free.
-> >>
-> >> I sent an RFC on March 22 covering this design if it is useful context=
-:
-> >>
-> >>
-> https://lore.kernel.org/linux-erofs/CAGSu4WNBdB30K61xoUCi3FB9QR081fNh-1ho=
-X1z2TZMk0nGpHQ@mail.gmail.com/
-> >>
-> >> Happy to discuss further on the list.
-> >>
-> >> Regards,
-> >> Utkal Singh
-> >>
-> >>
-> >> On Sun, 29 Mar 2026 at 18:47, Deepak Pathik <deepakpathik2005@gmail.co=
-m>
-> wrote:
-> >> >
-> >> > Hi,
-> >> >
-> >> > I'm Deepak Pathik, a second-year B.Tech student applying for the GSo=
-C
-> 2026 project on multi-threaded decompression support in fsck.erofs.
-> >> >
-> >> > While reading through the source, I traced the decompression path in
-> erofs_verify_inode_data() and noticed that z_erofs_decompress() operates =
-on
-> a locally scoped struct z_erofs_decompress_req with its own input and
-> output buffers =E2=80=94 no shared mutable state between calls. My plan i=
-s to wire
-> the existing erofs_workqueue (already used in lib/compress.c for
-> mkfs.erofs) into the fsck extraction path at the pcluster level, with
-> pwrite() for position-based output writes to avoid ordering locks.
-> >> >
-> >> > One thing I wanted to confirm before finalizing my proposal: for
-> LZMA-compressed images, are pclusters in fsck.erofs always fixed-size and
-> independently decompressible at the userspace level, or are there cases
-> where a pcluster depends on the state left by a previous one? I want to
-> make sure I'm not understating the LZMA case in my design.
-> >> >
-> >> > I've drafted a proposal and would be happy to share it for early
-> feedback if that's useful.
-> >> >
-> >> > Thanks,
-> >> > Deepak Pathik
-> >> > https://github.com/deepakpathik
-> >> > deepakpathik2005@gmail.com
->
+#ifndef FAN_PRE_ACCESS
+#define EROFS_FAN_PRE_ACCESS	0x00100000
+#else
+#define EROFS_FAN_PRE_ACCESS	FAN_PRE_ACCESS
+#endif
 
---000000000000d1afde064e427dee
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> +
+> +#ifndef FAN_CLASS_PRE_CONTENT
+> +#define FAN_CLASS_PRE_CONTENT 0x00000008
+> +#endif
 
-<div dir=3D"ltr">That=E2=80=99s a great point =E2=80=94 I hadn=E2=80=99t fu=
-lly thought through the error aggregation side yet.<br>I=E2=80=99m leaning =
-towards running to completion with a shared error accumulator so fsck can s=
-urface all corruption in one run, but I=E2=80=99ll think through the exit s=
-emantics carefully.<br><br>Thanks again for the insights, really helpful.<b=
-r><br>Regards, =C2=A0<br>Deepak Pathik</div><br><div class=3D"gmail_quote g=
-mail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Mar 31,=
- 2026 at 12:05=E2=80=AFAM Utkal Singh &lt;<a href=3D"mailto:singhutkal015@g=
-mail.com">singhutkal015@gmail.com</a>&gt; wrote:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
-b(204,204,204);padding-left:1ex">On Mon, Mar 30, 2026 at 2:00 PM, Deepak Pa=
-thik wrote:<br>
-&gt; the two-phase model (serial traversal + parallel data<br>
-&gt; verification/extraction) makes a lot more sense now<br>
-<br>
-Good, that is the right framing.<br>
-<br>
-One more thing worth deciding early: error aggregation policy. In the<br>
-current serial path, erofs_check_inode() returns -errno and the caller<br>
-stops on first error. With parallel workers you need a shared error<br>
-accumulator and a policy for whether to drain the queue on first<br>
-error or run to completion =E2=80=94 the choice affects both exit status<br=
->
-correctness and how much corruption a single run surfaces on large<br>
-images.<br>
-<br>
-Good luck with the proposal.<br>
-<br>
-Regards,<br>
-Utkal Singh<br>
-<br>
-On Mon, 30 Mar 2026 at 14:00, Deepak Pathik &lt;<a href=3D"mailto:deepakpat=
-hik2005@gmail.com" target=3D"_blank">deepakpathik2005@gmail.com</a>&gt; wro=
-te:<br>
-&gt;<br>
-&gt; Hi Utkal,<br>
-&gt;<br>
-&gt; Thanks again for the detailed explanation and for pointing me to the R=
-FC =E2=80=94 it really helped clarify the bigger picture.<br>
-&gt;<br>
-&gt; I spent some time going through the relevant parts of the code and you=
-r comments made a lot more sense in that context. I see now that while pclu=
-ster-level parallelism is valid, the main challenge is making the surroundi=
-ng infrastructure safe before introducing concurrency.<br>
-&gt;<br>
-&gt; In particular, I hadn=E2=80=99t fully accounted for:<br>
-&gt;<br>
-&gt; the lseek() + read() pattern in erofs_read_one_data() and why switchin=
-g to pread() is necessary for correctness,<br>
-&gt;<br>
-&gt; the lack of synchronization in erofs_iget()/erofs_iput(), which could =
-lead to refcount races,<br>
-&gt;<br>
-&gt; and the implications of using an unbounded workqueue on large images.<=
-br>
-&gt;<br>
-&gt; Your point about backpressure was especially helpful =E2=80=94 I=E2=80=
-=99m now considering a bounded queue or a semaphore-based approach to ensur=
-e the producer doesn=E2=80=99t get too far ahead of the workers.<br>
-&gt;<br>
-&gt; I also revisited the design with this in mind, and the two-phase model=
- (serial traversal + parallel data verification/extraction) makes a lot mor=
-e sense now, especially for isolating shared state like fsckcfg and path ha=
-ndling.<br>
-&gt;<br>
-&gt; I=E2=80=99ll continue refining the proposal with these constraints in =
-mind and go deeper into io.c, inode.c, and workqueue.c to make sure the des=
-ign is correct before thinking about actual parallel execution.<br>
-&gt;<br>
-&gt; Thanks again for taking the time to explain this =E2=80=94 it was very=
- helpful.<br>
-&gt;<br>
-&gt; Regards,<br>
-&gt; Deepak Pathik<br>
-&gt;<br>
-&gt;<br>
-&gt; On Mon, Mar 30, 2026 at 1:50=E2=80=AFAM Utkal Singh &lt;<a href=3D"mai=
-lto:singhutkal015@gmail.com" target=3D"_blank">singhutkal015@gmail.com</a>&=
-gt; wrote:<br>
-&gt;&gt;<br>
-&gt;&gt; On Sun, Mar 29, 2026 at 6:47 PM, Deepak Pathik wrote:<br>
-&gt;&gt; &gt; for LZMA-compressed images, are pclusters in fsck.erofs alway=
-s<br>
-&gt;&gt; &gt; fixed-size and independently decompressible at the userspace =
-level,<br>
-&gt;&gt; &gt; or are there cases where a pcluster depends on the state left=
- by a<br>
-&gt;&gt; &gt; previous one?<br>
-&gt;&gt;<br>
-&gt;&gt; Hi Deepak,<br>
-&gt;&gt;<br>
-&gt;&gt; To answer your LZMA question: yes, each pcluster is independently<=
-br>
-&gt;&gt; decompressible by design. You can verify this directly in<br>
-&gt;&gt; lib/decompress.c =E2=80=94 z_erofs_decompress_lzma() calls lzma_st=
-ream_decoder()<br>
-&gt;&gt; and lzma_end() within a single invocation, with no persistent lzma=
-_stream<br>
-&gt;&gt; across calls. The same holds for ZSTD and deflate. The on-disk for=
-mat<br>
-&gt;&gt; enforces this: no pcluster depends on decompressor state from a<br=
->
-&gt;&gt; previous one.<br>
-&gt;&gt;<br>
-&gt;&gt; The parallelism boundary you identified is correct. The deeper iss=
-ue<br>
-&gt;&gt; is one level up: erofs_check_inode() is called sequentially in the=
-<br>
-&gt;&gt; dispatch loop in fsck/main.c, and each call may decompress many<br=
->
-&gt;&gt; pclusters per inode. Inode-level dispatch is simpler than<br>
-&gt;&gt; pcluster-level because it avoids output ordering constraints.<br>
-&gt;&gt;<br>
-&gt;&gt; One thing worth thinking through before wiring erofs_workqueue int=
-o<br>
-&gt;&gt; the fsck path: the existing queue in lib/workqueue.c is an unbound=
-ed<br>
-&gt;&gt; producer queue built for mkfs compression workloads. On a 34,000+<=
-br>
-&gt;&gt; inode image, it will accumulate all inode descriptors in memory be=
-fore<br>
-&gt;&gt; workers can drain it. Backpressure =E2=80=94 either a bounded queu=
-e or a<br>
-&gt;&gt; semaphore on the existing one =E2=80=94 matters here.<br>
-&gt;&gt;<br>
-&gt;&gt; Two paths in the surrounding infrastructure also need fixing befor=
-e<br>
-&gt;&gt; concurrent dispatch is correct:<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0- erofs_read_one_data() in lib/io.c: lseek()+read() on=
- a shared fd<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0is a TOCTOU race under concurrent calls. pread(=
-2) fixes it cleanly.<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0- erofs_iget()/erofs_iput() in lib/inode.c: ref-count =
-mutations<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0without synchronisation. Concurrent iput() can =
-double-free.<br>
-&gt;&gt;<br>
-&gt;&gt; I sent an RFC on March 22 covering this design if it is useful con=
-text:<br>
-&gt;&gt;<br>
-&gt;&gt;=C2=A0 =C2=A0<a href=3D"https://lore.kernel.org/linux-erofs/CAGSu4W=
-NBdB30K61xoUCi3FB9QR081fNh-1hoX1z2TZMk0nGpHQ@mail.gmail.com/" rel=3D"norefe=
-rrer" target=3D"_blank">https://lore.kernel.org/linux-erofs/CAGSu4WNBdB30K6=
-1xoUCi3FB9QR081fNh-1hoX1z2TZMk0nGpHQ@mail.gmail.com/</a><br>
-&gt;&gt;<br>
-&gt;&gt; Happy to discuss further on the list.<br>
-&gt;&gt;<br>
-&gt;&gt; Regards,<br>
-&gt;&gt; Utkal Singh<br>
-&gt;&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; On Sun, 29 Mar 2026 at 18:47, Deepak Pathik &lt;<a href=3D"mailto:=
-deepakpathik2005@gmail.com" target=3D"_blank">deepakpathik2005@gmail.com</a=
->&gt; wrote:<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; Hi,<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; I&#39;m Deepak Pathik, a second-year B.Tech student applying =
-for the GSoC 2026 project on multi-threaded decompression support in fsck.e=
-rofs.<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; While reading through the source, I traced the decompression =
-path in erofs_verify_inode_data() and noticed that z_erofs_decompress() ope=
-rates on a locally scoped struct z_erofs_decompress_req with its own input =
-and output buffers =E2=80=94 no shared mutable state between calls. My plan=
- is to wire the existing erofs_workqueue (already used in lib/compress.c fo=
-r mkfs.erofs) into the fsck extraction path at the pcluster level, with pwr=
-ite() for position-based output writes to avoid ordering locks.<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; One thing I wanted to confirm before finalizing my proposal: =
-for LZMA-compressed images, are pclusters in fsck.erofs always fixed-size a=
-nd independently decompressible at the userspace level, or are there cases =
-where a pcluster depends on the state left by a previous one? I want to mak=
-e sure I&#39;m not understating the LZMA case in my design.<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; I&#39;ve drafted a proposal and would be happy to share it fo=
-r early feedback if that&#39;s useful.<br>
-&gt;&gt; &gt;<br>
-&gt;&gt; &gt; Thanks,<br>
-&gt;&gt; &gt; Deepak Pathik<br>
-&gt;&gt; &gt; <a href=3D"https://github.com/deepakpathik" rel=3D"noreferrer=
-" target=3D"_blank">https://github.com/deepakpathik</a><br>
-&gt;&gt; &gt; <a href=3D"mailto:deepakpathik2005@gmail.com" target=3D"_blan=
-k">deepakpathik2005@gmail.com</a><br>
-</blockquote></div>
+Same here.
 
---000000000000d1afde064e427dee--
+> +
+> +#ifndef FAN_EVENT_INFO_TYPE_RANGE
+> +#define FAN_EVENT_INFO_TYPE_RANGE 6
+> +#endif
+
+Same here.
+
+> +
+> +/* Define struct fanotify_event_info_range if not in system headers */
+> +#ifndef HAVE_STRUCT_FANOTIFY_EVENT_INFO_RANGE
+> +struct fanotify_event_info_range {
+> +	struct fanotify_event_info_header hdr;
+> +	__u32 pad;
+> +	__u64 offset;
+> +	__u64 count;
+> +};
+> +#endif
+
+Same here.
+
+#ifndef HAVE_STRUCT_FANOTIFY_EVENT_INFO_RANGE
+typedef struct erofs_fanotify_event_info_range {
+	struct fanotify_event_info_header hdr;
+	...
+} erofs_fanotify_event_info_range_t;
+#else
+typedef struct fanotify_event_info_range erofs_fanotify_event_info_range_t;
+#endif
+
+and use `erofs_fanotify_event_info_range_t` instead.
+
+> +
+> +struct erofs_fanotify_range {
+> +	u64 offset;
+> +	u64 count;
+> +};
+> +
+> +/* Initialize fanotify with FAN_CLASS_PRE_CONTENT */
+> +int erofs_fanotify_init_precontent(void);
+> +
+> +/* Mark file for FAN_PRE_ACCESS monitoring */
+> +int erofs_fanotify_mark_file(int fan_fd, const char *path);
+> +
+> +/* Parse a single fanotify event and extract range information */
+> +int erofs_fanotify_parse_range_event(const struct fanotify_event_metadata *meta,
+> +				     struct erofs_fanotify_range *range);
+> +
+> +/* Respond to fanotify permission event */
+> +int erofs_fanotify_respond(int fan_fd, int event_fd, bool allow);
+> +
+> +#endif
+> diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+> index 2243c82..3b3d66d 100644
+> --- a/lib/liberofs_oci.h
+> +++ b/lib/liberofs_oci.h
+> @@ -76,6 +76,9 @@ struct ocierofs_iostream {
+>    */
+>   int ocierofs_build_trees(struct erofs_importer *importer,
+>   			 const struct ocierofs_config *cfg);
+> +int ocierofs_ctx_init(struct ocierofs_ctx *ctx,
+> +		      const struct ocierofs_config *cfg);
+> +void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx);
+>   int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
+>   
+>   char *ocierofs_encode_userpass(const char *username, const char *password);
+> diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+> index 47e8b27..f96be13 100644
+> --- a/lib/remotes/oci.c
+> +++ b/lib/remotes/oci.c
+> @@ -1144,7 +1144,7 @@ const char *ocierofs_get_platform_spec(void)
+>   }
+>   
+>   /**
+> - * ocierofs_init - Initialize OCI context
+> + * ocierofs_ctx_init - Initialize OCI context
+>    * @ctx: OCI context structure to initialize
+>    * @config: OCI configuration
+>    *
+> @@ -1154,7 +1154,7 @@ const char *ocierofs_get_platform_spec(void)
+>    *
+>    * Return: 0 on success, negative errno on failure
+>    */
+> -static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
+> +int ocierofs_ctx_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
+>   {
+>   	int ret;
+>   
+> @@ -1288,7 +1288,7 @@ out:
+>    * Clean up CURL handle, free all allocated string parameters, and
+>    * reset the OCI context structure to a clean state.
+>    */
+> -static void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx)
+> +void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx)
+>   {
+>   	if (!ctx)
+>   		return;
+> @@ -1316,7 +1316,7 @@ int ocierofs_build_trees(struct erofs_importer *importer,
+>   	int ret, i, end, fd;
+>   	u64 tar_offset = 0;
+>   
+> -	ret = ocierofs_init(&ctx, config);
+> +	ret = ocierofs_ctx_init(&ctx, config);
+>   	if (ret) {
+>   		ocierofs_ctx_cleanup(&ctx);
+>   		return ret;
+> @@ -1529,7 +1529,7 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+>   	if (!ctx)
+>   		return -ENOMEM;
+>   
+> -	err = ocierofs_init(ctx, cfg);
+> +	err = ocierofs_ctx_init(ctx, cfg);
+>   	if (err)
+>   		goto out;
+>   
+> diff --git a/mount/main.c b/mount/main.c
+> index 350738d..e961937 100644
+> --- a/mount/main.c
+> +++ b/mount/main.c
+> @@ -1,5 +1,6 @@
+>   // SPDX-License-Identifier: GPL-2.0+
+>   #define _GNU_SOURCE
+> +#include <dirent.h>
+>   #include <fcntl.h>
+>   #include <getopt.h>
+>   #include <stdio.h>
+> @@ -11,6 +12,7 @@
+>   #include <sys/wait.h>
+>   #include <pthread.h>
+>   #include <unistd.h>
+> +#include <poll.h>
+>   #include "erofs/config.h"
+>   #include "erofs/print.h"
+>   #include "erofs/err.h"
+> @@ -18,6 +20,9 @@
+>   #include "../lib/liberofs_nbd.h"
+>   #include "../lib/liberofs_oci.h"
+>   #include "../lib/liberofs_gzran.h"
+> +#ifdef EROFS_FANOTIFY_ENABLED
+> +#include "../lib/liberofs_fanotify.h"
+> +#endif
+>   
+>   #ifdef HAVE_LINUX_LOOP_H
+>   #include <linux/loop.h>
+> @@ -40,12 +45,22 @@ struct loop_info {
+>   
+>   /* Device boundary probe */
+>   #define EROFSMOUNT_NBD_DISK_SIZE	(INT64_MAX >> 9)
+> +#define EROFSMOUNT_CACHE_DIR	"/var/cache/erofs"
+
+`/var/cache/erofsmount` ?
+
+> +#define EROFSMOUNT_RUNTIME_DIR	"/run/erofs"
+
+`/run/erofsmount` ?
+
+> +#define EROFSMOUNT_FANOTIFY_STATE_DIR	EROFSMOUNT_RUNTIME_DIR "/fanotify"
+> +
+> +#ifdef EROFS_FANOTIFY_ENABLED
+> +#define EROFSMOUNT_FANOTIFY_HELP	", fanotify"
+> +#else
+> +#define EROFSMOUNT_FANOTIFY_HELP	""
+> +#endif
+>   
+>   enum erofs_backend_drv {
+>   	EROFSAUTO,
+>   	EROFSLOCAL,
+>   	EROFSFUSE,
+>   	EROFSNBD,
+> +	EROFSFANOTIFY,
+>   };
+>   
+>   enum erofsmount_mode {
+> @@ -95,7 +110,7 @@ static void usage(int argc, char **argv)
+>   		" -d <0-9>              set output verbosity; 0=quiet, 9=verbose (default=%i)\n"
+>   		" -o options            comma-separated list of mount options\n"
+>   		" -t type[.subtype]     filesystem type (and optional subtype)\n"
+> -		"                       subtypes: fuse, local, nbd\n"
+> +		"                       subtypes: fuse, local, nbd" EROFSMOUNT_FANOTIFY_HELP "\n"
+>   		" -u                    unmount the filesystem\n"
+>   		"    --disconnect       abort an existing NBD device forcibly\n"
+>   		"    --reattach         reattach to an existing NBD device\n"
+> @@ -324,6 +339,13 @@ static int erofsmount_parse_options(int argc, char **argv)
+>   					mountcfg.backend = EROFSLOCAL;
+>   				} else if (!strcmp(dot + 1, "nbd")) {
+>   					mountcfg.backend = EROFSNBD;
+> +				} else if (!strcmp(dot + 1, "fanotify")) {
+> +#ifdef EROFS_FANOTIFY_ENABLED
+> +					mountcfg.backend = EROFSFANOTIFY;
+> +#else
+> +					erofs_err("fanotify backend is not enabled at build time");
+> +					return -EINVAL;
+> +#endif
+>   				} else {
+>   					erofs_err("invalid filesystem subtype `%s`", dot + 1);
+>   					return -EINVAL;
+> @@ -1342,6 +1364,629 @@ out_err:
+>   	return -errno;
+>   }
+>   
+> +#ifdef EROFS_FANOTIFY_ENABLED
+> +struct erofsmount_fanotify_state {
+> +	pid_t pid;
+> +	char *mountpoint;
+> +	char *source;
+> +};
+> +
+> +static void erofsmount_free_fanotify_state(struct erofsmount_fanotify_state *state)
+> +{
+> +	free(state->mountpoint);
+> +	free(state->source);
+> +	state->mountpoint = NULL;
+> +	state->source = NULL;
+> +}
+> +
+> +static int erofsmount_write_fanotify_state(const char *state_path, pid_t pid,
+> +					   const char *mountpoint,
+> +					   const char *source)
+> +{
+> +	struct erofsmount_fanotify_state state;
+> +	char *tmp_path = NULL;
+> +	FILE *f = NULL;
+> +	int fd = -1, err;
+> +
+> +	if (mkdir(EROFSMOUNT_RUNTIME_DIR, 0700) < 0 && errno != EEXIST)
+> +		return -errno;
+> +	if (mkdir(EROFSMOUNT_FANOTIFY_STATE_DIR, 0700) < 0 &&
+> +	    errno != EEXIST)
+> +		return -errno;
+> +
+> +	state.pid = pid;
+> +	state.mountpoint = (char *)mountpoint;
+> +	state.source = (char *)source;
+> +
+> +	if (asprintf(&tmp_path, "%s.tmpXXXXXX", state_path) < 0)
+> +		return -ENOMEM;
+> +
+> +	fd = mkstemp(tmp_path);
+> +	if (fd < 0) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +
+> +	f = fdopen(fd, "w");
+> +	if (!f) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +	fd = -1;
+> +
+> +	if (fprintf(f, "%d\n%s\n%s\n", state.pid, state.mountpoint,
+> +		    state.source) < 0 || fflush(f) == EOF) {
+> +		err = errno ? -errno : -EIO;
+> +		goto out;
+> +	}
+> +
+> +	if (fsync(fileno(f)) < 0) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +
+> +	if (fclose(f) < 0) {
+> +		err = -errno;
+> +		f = NULL;
+> +		goto out;
+> +	}
+> +	f = NULL;
+> +
+> +	if (rename(tmp_path, state_path) < 0) {
+> +		err = -errno;
+> +		goto out;
+> +	}
+> +
+> +	err = 0;
+> +out:
+> +	if (f)
+> +		fclose(f);
+> +	else if (fd >= 0)
+> +		close(fd);
+> +	if (err && tmp_path)
+> +		unlink(tmp_path);
+> +	free(tmp_path);
+> +	return err;
+> +}
+> +
+> +static int erofsmount_read_fanotify_state(const char *state_path,
+> +					  struct erofsmount_fanotify_state *state)
+> +{
+> +	FILE *f;
+> +	size_t n = 0;
+> +	int err = 0;
+> +
+> +	memset(state, 0, sizeof(*state));
+> +
+> +	f = fopen(state_path, "r");
+> +	if (!f)
+> +		return -errno;
+> +
+> +	if (fscanf(f, "%d", &state->pid) != 1)
+> +		err = -EINVAL;
+> +	else if (fgetc(f) != '\n')
+> +		err = -EINVAL;
+> +	else if (getline(&state->mountpoint, &n, f) < 0)
+> +		err = feof(f) ? -EINVAL : -errno;
+> +	else if (getline(&state->source, &n, f) < 0)
+> +		err = feof(f) ? -EINVAL : -errno;
+> +	fclose(f);
+> +	if (err) {
+> +		erofsmount_free_fanotify_state(state);
+> +		return err;
+> +	}
+> +
+> +	state->mountpoint[strcspn(state->mountpoint, "\n")] = '\0';
+> +	state->source[strcspn(state->source, "\n")] = '\0';
+> +	return err;
+> +}
+> +
+> +static int erofsmount_cleanup_fanotify_worker(const char *mountpoint,
+> +					      const char *source)
+> +{
+> +	DIR *dir;
+> +	struct dirent *de;
+> +	int err = 0;
+> +
+> +	dir = opendir(EROFSMOUNT_FANOTIFY_STATE_DIR);
+> +	if (!dir) {
+> +		if (errno == ENOENT)
+> +			return 0;
+> +		return -errno;
+> +	}
+> +
+> +	while ((de = readdir(dir)) != NULL) {
+> +		struct erofsmount_fanotify_state state;
+> +		char *state_path;
+> +
+> +		if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
+> +			continue;
+> +		if (!strstr(de->d_name, ".state"))
+> +			continue;
+> +		if (asprintf(&state_path, "%s/%s", EROFSMOUNT_FANOTIFY_STATE_DIR,
+> +			     de->d_name) < 0) {
+> +			err = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		err = erofsmount_read_fanotify_state(state_path, &state);
+> +		if (err == -ENOENT) {
+> +			free(state_path);
+> +			err = 0;
+> +			continue;
+> +		}
+> +		if (err) {
+> +			free(state_path);
+> +			goto out;
+> +		}
+> +		if (strcmp(state.mountpoint, mountpoint) ||
+> +		    strcmp(state.source, source)) {
+> +			erofsmount_free_fanotify_state(&state);
+> +			free(state_path);
+> +			continue;
+> +		}
+> +		if (kill(state.pid, SIGTERM) < 0 && errno != ESRCH)
+> +			err = -errno;
+> +		else if (unlink(state_path) < 0 && errno != ENOENT)
+> +			err = -errno;
+> +		erofsmount_free_fanotify_state(&state);
+> +		free(state_path);
+> +		goto out;
+> +	}
+> +out:
+> +	closedir(dir);
+> +	if (!err)
+> +		return 0;
+> +	return err;
+> +}
+> +
+> +struct erofsmount_fanotify_ctx {
+> +	struct erofs_vfile vd;		/* OCI virtual device */
+> +	int sparse_fd;			/* sparse file descriptor */
+> +	int fan_fd;			/* fanotify fd */
+> +	char *sparse_path;		/* path to sparse file */
+> +	u64 image_size;			/* blob size */
+> +};
+> +
+> +static int erofsmount_create_sparse_file(struct erofsmount_fanotify_ctx *ctx,
+> +					 u64 size, const char *blob_digest)
+> +{
+> +	char filepath[PATH_MAX];
+> +	const char *hex_digest;
+> +	int fd, err;
+> +
+> +	/* Extract hex part from "sha256:xxxx..." */
+> +	if (!blob_digest || strncmp(blob_digest, "sha256:", 7) != 0)
+> +		return -EINVAL;
+> +	hex_digest = blob_digest + 7;
+> +
+> +	/* Construct file path using blob SHA256 */
+> +	snprintf(filepath, sizeof(filepath), EROFSMOUNT_CACHE_DIR "/%s",
+> +		 hex_digest);
+> +
+> +	/* Try to open existing file or create new one */
+> +	fd = open(filepath, O_RDWR | O_CREAT, 0600);
+> +	if (fd < 0 && errno == ENOENT) {
+> +		err = mkdir(EROFSMOUNT_CACHE_DIR, 0700);
+> +		if (err)
+> +			return -errno;
+> +		fd = open(filepath, O_RDWR | O_CREAT, 0600);
+> +	}
+> +	if (fd < 0)
+> +		return -errno;
+> +
+> +	ctx->sparse_path = strdup(filepath);
+> +	if (!ctx->sparse_path) {
+> +		err = -ENOMEM;
+> +		goto err_path;
+> +	}
+> +
+> +	/* Set file size (creates sparse file) */
+> +	if (ftruncate(fd, size) < 0) {
+> +		err = -errno;
+> +		goto err_ftruncate;
+> +	}
+> +
+> +	ctx->sparse_fd = fd;
+> +	ctx->image_size = size;
+> +
+> +	erofs_dbg("Created local sparse file %s (size: %llu bytes)",
+> +		  ctx->sparse_path, (unsigned long long)size);
+> +	return 0;
+> +
+> +err_ftruncate:
+> +	free(ctx->sparse_path);
+> +	ctx->sparse_path = NULL;
+> +err_path:
+> +	close(fd);
+> +	unlink(filepath);
+> +	return err;
+> +}
+> +
+> +static bool erofsmount_range_in_sparse(int fd, u64 offset, size_t length)
+> +{
+> +	off_t data_start, hole_start;
+> +
+> +	/* Check if data exists at offset */
+> +	data_start = lseek(fd, offset, SEEK_DATA);
+> +	if (data_start < 0) {
+> +		if (errno == ENXIO)
+> +			return false;  /* No data in file at or after offset */
+> +		return false;  /* Error, assume not present */
+> +	}
+> +
+> +	/* If data doesn't start at our offset, range is not fully present */
+> +	if ((u64)data_start != offset)
+> +		return false;
+> +
+> +	/* Check if there's a hole before the end of our range */
+> +	hole_start = lseek(fd, offset, SEEK_HOLE);
+> +	if (hole_start < 0)
+> +		return false;
+> +
+> +	/* If hole starts before our range ends, data is not fully present */
+> +	if ((u64)hole_start < offset + length)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static int erofsmount_resolve_fanotify_blob(const struct ocierofs_config *oci_cfg,
+> +					    char **digest, u64 *image_size)
+> +{
+> +	struct ocierofs_ctx oci_ctx = {};
+> +	int err, i = -1;
+> +
+> +	err = ocierofs_ctx_init(&oci_ctx, oci_cfg);
+> +	if (err)
+> +		return err;
+> +
+> +	if (oci_ctx.blob_digest) {
+> +		for (i = 0; i < oci_ctx.layer_count; ++i) {
+> +			if (!strcmp(oci_ctx.layers[i]->digest, oci_ctx.blob_digest))
+> +				break;
+> +		}
+> +		if (i >= oci_ctx.layer_count) {
+> +			err = -ENOENT;
+> +			goto out;
+> +		}
+> +	} else if (oci_ctx.layer_count == 1) {
+> +		i = 0;
+> +	} else {
+> +		erofs_err("fanotify backend requires exactly one OCI blob; use oci.blob= or oci.layer=");
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	*digest = strdup(oci_ctx.layers[i]->digest);
+> +	if (!*digest) {
+> +		err = -ENOMEM;
+> +		goto out;
+> +	}
+> +	*image_size = oci_ctx.layers[i]->size;
+> +	err = 0;
+> +
+> +out:
+> +	ocierofs_ctx_cleanup(&oci_ctx);
+> +	return err;
+> +}
+> +
+> +static int erofs_fanotify_handle_event(struct erofsmount_fanotify_ctx *ctx,
+> +				       struct fanotify_event_metadata *meta,
+> +				       void **fetch_buf, size_t *fetch_buf_size)
+> +{
+> +	struct erofs_fanotify_range range;
+> +	bool allow_access = true;
+> +	u64 offset;
+> +	size_t length;
+> +	ssize_t read_len, written;
+> +	int err, resp_err;
+> +
+> +	err = erofs_fanotify_parse_range_event(meta, &range);
+> +	if (err < 0) {
+> +		erofs_err("Failed to parse fanotify event: %s",
+> +			  erofs_strerror(err));
+> +		allow_access = false;
+> +		goto response;
+> +	}
+> +
+> +	if (!(meta->mask & FAN_PRE_ACCESS))
+> +		goto response;
+> +
+> +	offset = range.offset;
+> +	length = range.count;
+> +
+> +	if (length == 0)
+> +		length = min_t(u64, 1024 * 1024, ctx->image_size - offset);
+> +
+> +	if (offset >= ctx->image_size)
+> +		goto response;
+> +
+> +	/* Clamp length to not exceed file size */
+> +	if (offset + length > ctx->image_size)
+> +		length = ctx->image_size - offset;
+> +
+> +	/* Check if data already exists locally in sparse file */
+> +	if (erofsmount_range_in_sparse(ctx->sparse_fd, offset, length)) {
+> +		erofs_dbg("Range [%llu, %llu) already local, skipping fetch",
+> +			  (unsigned long long)offset,
+> +			  (unsigned long long)(offset + length));
+> +		goto response;
+> +	}
+> +
+> +	if (*fetch_buf_size < length) {
+> +		void *newbuf = realloc(*fetch_buf, length);
+> +
+> +		if (!newbuf) {
+> +			erofs_err("Failed to allocate %zu bytes", length);
+> +			err = -ENOMEM;
+> +			allow_access = false;
+> +			goto response;
+> +		}
+> +		*fetch_buf = newbuf;
+> +		*fetch_buf_size = length;
+> +	}
+> +
+> +	erofs_dbg("Fetching range [%llu, %llu)",
+> +		  (unsigned long long)offset,
+> +		  (unsigned long long)(offset + length));
+> +
+> +	read_len = erofs_io_pread(&ctx->vd, *fetch_buf, length, offset);
+> +	if (read_len < 0) {
+> +		erofs_err("Failed to fetch range [%llu, %llu): %s",
+> +			  (unsigned long long)offset,
+> +			  (unsigned long long)(offset + length),
+> +			  erofs_strerror(read_len));
+> +		err = read_len;
+> +		allow_access = false;
+> +		goto response;
+> +	}
+> +
+> +	written = pwrite(ctx->sparse_fd, *fetch_buf, read_len, offset);
+> +	if (written != read_len) {
+> +		erofs_err("Failed to write to sparse file at offset %llu: %s",
+> +			  (unsigned long long)offset,
+> +			  written < 0 ? strerror(errno) : "short write");
+> +		err = written < 0 ? -errno : -EIO;
+> +		allow_access = false;
+> +		goto response;
+> +	}
+> +
+> +	fsync(ctx->sparse_fd);
+> +	err = 0;
+> +
+> +response:
+> +	resp_err = erofs_fanotify_respond(ctx->fan_fd, meta->fd, allow_access);
+> +	if (meta->fd >= 0)
+> +		close(meta->fd);
+> +	return resp_err ? resp_err : err;
+> +}
+> +
+> +static int erofsmount_fanotify_loop(struct erofsmount_fanotify_ctx *ctx)
+> +{
+> +	char event_buf[4096] __attribute__((aligned(8)));
+> +	void *fetch_buf = NULL;
+> +	size_t fetch_buf_size = 0;
+> +	struct pollfd pfd;
+> +	int err = 0;
+> +
+> +	pfd.fd = ctx->fan_fd;
+> +	pfd.events = POLLIN;
+> +
+> +	while (1) {
+> +		struct fanotify_event_metadata *meta;
+> +		ssize_t len, remaining;
+> +
+> +		len = read(ctx->fan_fd, event_buf, sizeof(event_buf));
+
+Can we wrap it up into `lib/backends/fanotify.c` as well?
+
+I think mount.erofs shouldn't care the loop,
+struct fanotify_event_metadata and
+FAN_EVENT_NEXT for example.
+
+Otherwise it looks good to me.
+
+Thanks,
+Gao Xiang
 
