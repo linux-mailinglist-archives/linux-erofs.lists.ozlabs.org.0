@@ -1,95 +1,57 @@
-Return-Path: <linux-erofs+bounces-3171-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3172-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DYvJGILzmmnkgYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3171-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Apr 2026 08:23:30 +0200
+	id WGp4EA0NzmmnkgYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3172-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Apr 2026 08:30:37 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0D513846A1
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Apr 2026 08:23:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 234473847B7
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Apr 2026 08:30:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fmWy70NgHz2ySk;
-	Thu, 02 Apr 2026 17:23:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fmX6H3zKkz2ySk;
+	Thu, 02 Apr 2026 17:30:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::1230" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775111006;
-	cv=pass; b=ZA+Gsfu2gyZY4B0UvUJMXbE5JOxK1UmxgPluDGhT32v6Qkrhj1vnmo9CL2dx3Y/CebOM2ASzy8ged1u97ZMb/xZfrw4YYsg3mEOGeL7AZrFMAqgEVmzu3dXesZs7+O6qaTG0kF075c4OKmRc/mt4cNN0nvNRgxc1fVhGilfZjBRDogpBv2xtRyy11aW5rq6YVbpwCdJ2EdRwvUCgk8/D7T0VqMQYICEE5buR25QDj3tGYTbN0MA05LbNmzeTp1JZAuGdQE0uYltBqi9dM7DNx0mxpzrW3v/DjLlhV0Otx+dtgK5tj3aFyVQMuHSLqagYeKZfpTOSiUkBXA4MHNnnpw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1775111006; c=relaxed/relaxed;
-	bh=LiO+++X2XWJCNONNUVesJ9wp7nfMnqRsXWPIn4UAtw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NCX6JE00/HzSdOt4kobBmx6G0dm11V4Z8TYOQf3X5BbSyjxRAYoTnQazbwwrKJUuy96u093xxs4lusxD+PWji+vbVUL0rvVKIojOG4jh87u3UFBhTdOR5BIgVkLOSmSYuMKGFKuMnoh0RP/BKw5ygLMy6XjdPcIlJVet33BnyukZNfED40f6cYBSLDcvQ/f2CgebGImuLfrccH7lO9vNMFQcWxWbhnY0xMNztt5UaQAMDvry3KmdsPnSRzNjJJLmxBeUuwgfd3BJLZLmN1PJHLPn8G2wDBAPFQhZHbRVzQ3lAMdYhVdSx3OsmzmaOw+LV5fo+aDlpSlU26QE55nnAQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rtqlo7U3; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1230; helo=mail-dl1-x1230.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.225
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775111431;
+	cv=none; b=macTBRNSLUq+oE72TqflGBlFsotdVgYpGCIwkV9/TU2UFY/bfFvhLZd4fX8xpktRxjj6ChC8K8S37Sk9GTkWD4lWOsv4uLgt9kb3HIP5BY5dU6hue3cs+3HgqBriThhmDgcdzmPYegpVdM3EtOHDPYK3WUSxY+pgHsdC3yzkilwpxMbR60NlqrCNW66Hg5YtkkPR7s1o67NSa7YiNdEXM37i7FsIWRXb2NJNf+Kk7dfZaXCqzXf6w6NCncnCyPO3QybXafTeJXKsGEmB6jAqnHhVgruoWw0pJStQ4Sp+0+6kb9O4/NXu7xxEZF3A4oV6oKK1z+M+FzeIXnL1xwxVqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1775111431; c=relaxed/relaxed;
+	bh=/bo9Dh7jJLUy4gPfm1B9bqTRBrHfNHsD4CcMfMudaWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=imN9mYk9m3bq97iMKjB74mkOoYJxPQy5KArSHkQE6XbHuX/rDStZY2jpxWmQRsZ6+xiadr+rkylr7tPUtf1xh6cd5kBkZXz6efA06j7T6QZ8izTKGbSHIHs/GlY1YlZZt8ymK6NGW7yotatlckfiHLCoyZ4cVFt7YSn8xkioXmGlBbY0JcszicETXSsrpv4jt5gYXFo55bnpDkzVnrN7fItABLP7SBBe8grDhNFGqoM/mUDC8GMWF0RMdTXNKkAa4SFmx08KGj59X4VTVBwJJ0JGccXOe3GjeuCVsohDzGVE/yArUtqHaWn6YIw2GbUpHUXteIzO914Fd6nfB8SVOQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=SBvZ1WjT; dkim-atps=neutral; spf=pass (client-ip=113.46.200.225; helo=canpmsgout10.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=rtqlo7U3;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=SBvZ1WjT;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1230; helo=mail-dl1-x1230.google.com; envelope-from=deepakpathik2005@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-dl1-x1230.google.com (mail-dl1-x1230.google.com [IPv6:2607:f8b0:4864:20::1230])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.225; helo=canpmsgout10.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fmWy60WsSz2xm5
-	for <linux-erofs@lists.ozlabs.org>; Thu, 02 Apr 2026 17:23:25 +1100 (AEDT)
-Received: by mail-dl1-x1230.google.com with SMTP id a92af1059eb24-12a80c36350so684115c88.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 01 Apr 2026 23:23:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775111003; cv=none;
-        d=google.com; s=arc-20240605;
-        b=EzjANtS2zU8lGRysbdThUHpbZfBVTTJpVidQmiTLx1aX4gQGaAn9LD3CNesH8JorM2
-         bNNEiyAmrqmj1Deopg6WXAIaaVnlpDaXe3mmCiCTeL/jhBP7iLp8bBPo5VckS7C4fB8f
-         408+u+kz7SKCZSSE4kyVlErU0MPi1gBDLm3YZ0GaZ0K/inzv+w6q5r2pU/j8e0kOk98n
-         Te53Q6XwBAzGh8FeIiVA5gEXVojXHXbRxCFIg/FsbB/64cSTSWZXL3DJ8x0jQzPMPsTh
-         nHBqz8yRYOjli4com69KaKBDim4KWbdpuVXgEnQ2tXtrBwtcuzMsF91l1DDIU1ExPAbj
-         svFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=LiO+++X2XWJCNONNUVesJ9wp7nfMnqRsXWPIn4UAtw4=;
-        fh=LZpQ+M6X/sV6F7y3n84UylZ8eAXCy7Q6Ia5ljS5i3u8=;
-        b=QeZs03wQVbNfbgq+wX7hXs5Ou4FgH8drdNU48mbcSunZ3KbcLOAt+UPqQAkA3+b39h
-         FbptstgoB7wSSDZMh/pSS3GZ0BYOyRCD2YBP2g/L6Hz6iyPUtVXwPZNyamkXzczz+xSX
-         P98cyAa/+3bUP8L3Fg5O7lsKgLy4A/1on4ZC9NUfqo71CZvFpAN3YvIZBe1NMIbDk4RS
-         f36B1Kb/qiE8DaMBU7P3BDEp2BDx4vJHlEhMVm723bsiht0E0Hsdio+6XejU1vHGUjrG
-         /gyoSqtXOQs5c6E2JQ1T5mKd8sa3Uoh0SwgTR064O3hE2qak6TTBKFMH6arAviMMaO7w
-         Qqdg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775111003; x=1775715803; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LiO+++X2XWJCNONNUVesJ9wp7nfMnqRsXWPIn4UAtw4=;
-        b=rtqlo7U3cWQ2VaztnVbMy4U9xmqQs8LUd/Akd4STPnfM76Hwj82vfRCZ1llfUBEYzB
-         aYYSkQUYfPLuVHDs/BEPt6yhe4ngxChIiatnwkUzF/gy5ldlp8IsOn8HujcIOJ0Q4soI
-         DoQ9ZIkoPE/ki/1CoMAn80Xzz18ChlgphzvhthG2Is0gKbzLcrdnrdnkU0expKFxUD1+
-         CpSey6wpxdZYFR3F+Rpm4J4go39SLFA8JY/2pyGPaW10eUQbaRgJjjhz6/mttBZHyyk5
-         rzF9eSaZy0/JKug4l5A3a8Or8NxpLB7ABY3E9n2Xq9uIEIJ9aFssjUrW32NfRtaIbIWb
-         FmeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775111003; x=1775715803;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LiO+++X2XWJCNONNUVesJ9wp7nfMnqRsXWPIn4UAtw4=;
-        b=kaWigIsuhwykY+5+m7Y3NM3tB4OzhEwyLug4KySexvn8PcicKoRC3rz3C3hhoUox0M
-         1JL3CsaFhXSZ778zhEerjOgTvwtOmIpdVA8BXxxWePpwWR1HTLuNiH393J0ji6lK5GII
-         1SbxHWgFH/U764g05BCsxs8jbekfxvvQaZfHxv+aD3JwZDb7tlha+ZjCNwTGhCPm0t+j
-         4XBYA2aSOhboCk37cwt6uLSjLb9FZaXkG+fvQQOaL5+31l5IrX8EcLQbcAy+jrPBeJXU
-         j87yADtZoQhbzmRgvKpIrpnEg2cAZT0k8lrw1G5IIE16uwOEjqkyhWgdD4GrEjVR/Rql
-         q5Hw==
-X-Gm-Message-State: AOJu0YyBkswmA0G2QYPNbn1Rr6d0NjuJ3igC0VbLomaGpvzIVZH0PAwV
-	eJPLXcHUJOII7aTZSTDkJQAQfhrCT4SlndeGGRNAUntfemsHA0c2MGALbsOG1024Bg3rc112lPO
-	Zm7mg2zYKA4JxWWBu826qks9Mdf4fEuvnmVH+x0Q=
-X-Gm-Gg: ATEYQzwbhnYiL+b5nBUKme7XTU4X9TUFLsPtMJ1bcE6z1+UMPfGSeOfdodY+KiIrbci
-	CqK2l+ELO5Jj8FqdW+k1wmfW7c8JoXb3ycTdPZP456vaOPuDDVq9Co9gbjQPY03G1w7Z5eP11jN
-	4NGq67/6UGq2n2e9r7aksh/x4dwe2Eg35SZdXGPBN3cRXOpJJIO9sYz8A/1gfmj4cAln2Vpr4v5
-	AOJzTB/YpI7ndfTFBo9A/3c/MtWOUY7CpoL27Vtis14Rl3arBYOWkBDckOOH9zWUQByFJwMC7UL
-	XUpBg5E=
-X-Received: by 2002:a05:7022:48e:b0:128:bae0:e043 with SMTP id
- a92af1059eb24-12be650ede3mr3028568c88.31.1775111002817; Wed, 01 Apr 2026
- 23:23:22 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fmX6B1gfpz2xm5
+	for <linux-erofs@lists.ozlabs.org>; Thu, 02 Apr 2026 17:30:23 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=/bo9Dh7jJLUy4gPfm1B9bqTRBrHfNHsD4CcMfMudaWM=;
+	b=SBvZ1WjTRyh+SA/DLeB3C+bteM1yZ1kB95eotIp52dcVPPh0ATMIZOxfgFIwujf1WYtmceH0l
+	ROaEU4VdfGJmtEwTzkok5uyXYHMmk3JPxNpeCKy8ffzUHZXeeg78oTZQiSC1K/lYM0a96RB71Uw
+	ObUp6GsmgdueeyfxU219v2I=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fmWyy2ccxz1K9Ws
+	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Apr 2026 14:24:10 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id 65FDD4048B
+	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Apr 2026 14:30:18 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 2 Apr 2026 14:30:17 +0800
+Message-ID: <a785627f-dbc5-4809-a5d1-e438626541f9@huawei.com>
+Date: Thu, 2 Apr 2026 14:30:17 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,219 +63,1235 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260401194000.1-deepakpathik2005@gmail.com> <CAGSu4WN88r1+zZw8G7Y3S2oQ1MV3J9w+oWX-FeRQC=bYu8Ntdw@mail.gmail.com>
-In-Reply-To: <CAGSu4WN88r1+zZw8G7Y3S2oQ1MV3J9w+oWX-FeRQC=bYu8Ntdw@mail.gmail.com>
-From: Deepak Pathik <deepakpathik2005@gmail.com>
-Date: Thu, 2 Apr 2026 11:53:11 +0530
-X-Gm-Features: AQROBzBp_MavaJpEtW3ook0U9m_fEWQHSbuzJ4kYTzBcrI1rDXvObaOfUmusC38
-Message-ID: <CAHf8aCVgzvcAg1m_xxQunCE97Ney5NvN+zjtoVtDP+DGpCcFkw@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: lib: fix fd leak in erofs_metamgr_init()
-To: Utkal Singh <singhutkal015@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, hsiangkao@linux.alibaba.com, 
-	xiang@kernel.org
-Content-Type: multipart/alternative; boundary="000000000000c28969064e743c20"
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] erofs-utils: lib: switch to GPL-2.0+ OR MIT dual
+ license
+Content-Language: en-US
+To: <linux-erofs@lists.ozlabs.org>
+References: <20260402060907.2268323-1-hsiangkao@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20260402060907.2268323-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3171-lists,linux-erofs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:singhutkal015@gmail.com,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[deepakpathik2005@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3172-lists,linux-erofs=lfdr.de];
+	RCPT_COUNT_ONE(0.00)[1];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FROM_HAS_DN(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: B0D513846A1
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	HAS_XOIP(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 234473847B7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---000000000000c28969064e743c20
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Utkal,
 
-Thanks for the review. You're right on both points =E2=80=94 v2 will use
-erofs_io_close() and fix the indentation.
+On 2026/4/2 14:09, Gao Xiang wrote:
+> Apache 2.0 is still too strict for some 3rd-party integration.
+> 
+> Let's switch to GPL-2.0+ OR MIT dual license since we're absolutely
+> not working on secret rocket science, so licenses should not be a
+> bottleneck to innovation in the Cloud Native and AI era.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Thanks, Deepak Pathik
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
-On Thu, Apr 2, 2026 at 9:58=E2=80=AFAM Utkal Singh <singhutkal015@gmail.com=
-> wrote:
+Thanks,
+Hongbo
 
-> On Thu, 02 Apr 2026 01:10, Deepak Pathik wrote:
-> > +if (!m2gr->bmgr) {
-> > +close(m2gr->vf.fd);
->
-> erofs_io_close() does more than close(fd) =E2=80=94 it dispatches through
-> vf->ops->close(vf) if ops is set, and resets vf->fd to -1 afterward.
-> Using raw close() here skips both, which is incorrect.
->
-> Also, the if block is missing tab indentation.
->
-> Suggested fix:
->
-> if (!m2gr->bmgr) {
-> erofs_io_close(&m2gr->vf);
-> return -ENOMEM;
-> }
->
-> On Thu, 2 Apr 2026 at 01:10, Deepak Pathik <deepakpathik2005@gmail.com>
-> wrote:
-> >
-> > In erofs_metamgr_init(), erofs_tmpfile() returns a file
-> > descriptor stored in m2gr->vf.fd. If the subsequent
-> > erofs_buffer_init() call fails, the function returns -ENOMEM
-> > without closing this file descriptor.
-> >
-> > The caller erofs_metadata_init() handles this failure at
-> > err_free, which only frees the m2gr struct. The fd is
-> > therefore leaked with no remaining reference to close it.
-> >
-> > The success path correctly cleans up via erofs_metamgr_exit(),
-> > which calls erofs_io_close(&m2gr->vf). Mirror that behaviour
-> > on the error path by closing the fd before returning.
-> >
-> > Signed-off-by: Deepak Pathik <deepakpathik2005@gmail.com>
-> > ---
-> >  lib/metabox.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/lib/metabox.c b/lib/metabox.c
-> > index 12706aa..d55e787 100644
-> > --- a/lib/metabox.c
-> > +++ b/lib/metabox.c
-> > @@ -32,8 +32,10 @@ static int erofs_metamgr_init(struct erofs_sb_info
-> *sbi,
-> >
-> >  m2gr->vf =3D (struct erofs_vfile){ .fd =3D ret };
-> >         m2gr->bmgr =3D erofs_buffer_init(sbi, 0, &m2gr->vf);
-> > - if (!m2gr->bmgr)
-> > +if (!m2gr->bmgr) {
-> > +close(m2gr->vf.fd);
-> >                 return -ENOMEM;
-> > +}
-> >         return 0;
-> >  }
-> > --
-> > 2.50.1
-> >
-> >
-> >
->
-
---000000000000c28969064e743c20
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><p class=3D"gmail-font-claude-response-body gmail-break-wo=
-rds gmail-whitespace-normal gmail-leading-[1.7]">Hi Utkal,</p>
-<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
-ace-pre-wrap gmail-leading-[1.7]">Thanks for the review. You&#39;re right o=
-n both points =E2=80=94 v2 will use
-erofs_io_close() and fix the indentation.</p>
-<p class=3D"gmail-font-claude-response-body gmail-break-words gmail-whitesp=
-ace-pre-wrap gmail-leading-[1.7]">Thanks,
-Deepak Pathik</p></div><br><div class=3D"gmail_quote gmail_quote_container"=
-><div dir=3D"ltr" class=3D"gmail_attr">On Thu, Apr 2, 2026 at 9:58=E2=80=AF=
-AM Utkal Singh &lt;<a href=3D"mailto:singhutkal015@gmail.com">singhutkal015=
-@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">On Thu, 02 Apr 2026 01:10, Deepak Pathik wrote:<br>
-&gt; +if (!m2gr-&gt;bmgr) {<br>
-&gt; +close(m2gr-&gt;vf.fd);<br>
-<br>
-erofs_io_close() does more than close(fd) =E2=80=94 it dispatches through<b=
-r>
-vf-&gt;ops-&gt;close(vf) if ops is set, and resets vf-&gt;fd to -1 afterwar=
-d.<br>
-Using raw close() here skips both, which is incorrect.<br>
-<br>
-Also, the if block is missing tab indentation.<br>
-<br>
-Suggested fix:<br>
-<br>
-if (!m2gr-&gt;bmgr) {<br>
-erofs_io_close(&amp;m2gr-&gt;vf);<br>
-return -ENOMEM;<br>
-}<br>
-<br>
-On Thu, 2 Apr 2026 at 01:10, Deepak Pathik &lt;<a href=3D"mailto:deepakpath=
-ik2005@gmail.com" target=3D"_blank">deepakpathik2005@gmail.com</a>&gt; wrot=
-e:<br>
-&gt;<br>
-&gt; In erofs_metamgr_init(), erofs_tmpfile() returns a file<br>
-&gt; descriptor stored in m2gr-&gt;vf.fd. If the subsequent<br>
-&gt; erofs_buffer_init() call fails, the function returns -ENOMEM<br>
-&gt; without closing this file descriptor.<br>
-&gt;<br>
-&gt; The caller erofs_metadata_init() handles this failure at<br>
-&gt; err_free, which only frees the m2gr struct. The fd is<br>
-&gt; therefore leaked with no remaining reference to close it.<br>
-&gt;<br>
-&gt; The success path correctly cleans up via erofs_metamgr_exit(),<br>
-&gt; which calls erofs_io_close(&amp;m2gr-&gt;vf). Mirror that behaviour<br=
->
-&gt; on the error path by closing the fd before returning.<br>
-&gt;<br>
-&gt; Signed-off-by: Deepak Pathik &lt;<a href=3D"mailto:deepakpathik2005@gm=
-ail.com" target=3D"_blank">deepakpathik2005@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 lib/metabox.c | 4 +++-<br>
-&gt;=C2=A0 1 file changed, 3 insertions(+), 1 deletion(-)<br>
-&gt;<br>
-&gt; diff --git a/lib/metabox.c b/lib/metabox.c<br>
-&gt; index 12706aa..d55e787 100644<br>
-&gt; --- a/lib/metabox.c<br>
-&gt; +++ b/lib/metabox.c<br>
-&gt; @@ -32,8 +32,10 @@ static int erofs_metamgr_init(struct erofs_sb_info =
-*sbi,<br>
-&gt;<br>
-&gt;=C2=A0 m2gr-&gt;vf =3D (struct erofs_vfile){ .fd =3D ret };<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0m2gr-&gt;bmgr =3D erofs_buffer_init(s=
-bi, 0, &amp;m2gr-&gt;vf);<br>
-&gt; - if (!m2gr-&gt;bmgr)<br>
-&gt; +if (!m2gr-&gt;bmgr) {<br>
-&gt; +close(m2gr-&gt;vf.fd);<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -E=
-NOMEM;<br>
-&gt; +}<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt;=C2=A0 }<br>
-&gt; --<br>
-&gt; 2.50.1<br>
-&gt;<br>
-&gt;<br>
-&gt;<br>
-</blockquote></div>
-
---000000000000c28969064e743c20--
+> ---
+>   COPYING                        |   6 +-
+>   LICENSES/Apache-2.0            | 186 ---------------------------------
+>   include/erofs/atomic.h         |   2 +-
+>   include/erofs/bitops.h         |   2 +-
+>   include/erofs/blobchunk.h      |   2 +-
+>   include/erofs/block_list.h     |   2 +-
+>   include/erofs/compress_hints.h |   2 +-
+>   include/erofs/config.h         |   2 +-
+>   include/erofs/decompress.h     |   2 +-
+>   include/erofs/dedupe.h         |   2 +-
+>   include/erofs/defs.h           |   2 +-
+>   include/erofs/dir.h            |   2 +-
+>   include/erofs/diskbuf.h        |   2 +-
+>   include/erofs/err.h            |   2 +-
+>   include/erofs/exclude.h        |   2 +-
+>   include/erofs/importer.h       |   2 +-
+>   include/erofs/inode.h          |   2 +-
+>   include/erofs/internal.h       |   2 +-
+>   include/erofs/io.h             |   2 +-
+>   include/erofs/list.h           |   2 +-
+>   include/erofs/lock.h           |   2 +-
+>   include/erofs/print.h          |   2 +-
+>   include/erofs/tar.h            |   2 +-
+>   include/erofs/trace.h          |   2 +-
+>   include/erofs/workqueue.h      |   2 +-
+>   include/erofs/xattr.h          |   2 +-
+>   lib/Makefile.am                |   2 +-
+>   lib/backends/fanotify.c        |   2 +-
+>   lib/backends/nbd.c             |   2 +-
+>   lib/base64.c                   |   2 +-
+>   lib/bitops.c                   |   2 +-
+>   lib/blobchunk.c                |   2 +-
+>   lib/block_list.c               |   2 +-
+>   lib/cache.c                    |   2 +-
+>   lib/compress.c                 |   2 +-
+>   lib/compress_hints.c           |   2 +-
+>   lib/compressor.c               |   2 +-
+>   lib/compressor.h               |   2 +-
+>   lib/compressor_deflate.c       |   2 +-
+>   lib/compressor_libdeflate.c    |   2 +-
+>   lib/compressor_liblzma.c       |   2 +-
+>   lib/compressor_libzstd.c       |   2 +-
+>   lib/compressor_lz4.c           |   2 +-
+>   lib/compressor_lz4hc.c         |   2 +-
+>   lib/config.c                   |   2 +-
+>   lib/data.c                     |   2 +-
+>   lib/decompress.c               |   2 +-
+>   lib/dedupe.c                   |   2 +-
+>   lib/dedupe_ext.c               |   2 +-
+>   lib/dir.c                      |   2 +-
+>   lib/diskbuf.c                  |   2 +-
+>   lib/exclude.c                  |   2 +-
+>   lib/fragments.c                |   2 +-
+>   lib/global.c                   |   2 +-
+>   lib/gzran.c                    |   2 +-
+>   lib/importer.c                 |   2 +-
+>   lib/inode.c                    |   2 +-
+>   lib/io.c                       |   2 +-
+>   lib/kite_deflate.c             |   2 +-
+>   lib/liberofs_cache.h           |   2 +-
+>   lib/liberofs_compress.h        |   2 +-
+>   lib/liberofs_dockerconfig.h    |   2 +-
+>   lib/liberofs_fanotify.h        |   2 +-
+>   lib/liberofs_fragments.h       |   2 +-
+>   lib/liberofs_gzran.h           |   2 +-
+>   lib/liberofs_metabox.h         |   2 +-
+>   lib/liberofs_nbd.h             |   2 +-
+>   lib/liberofs_oci.h             |   2 +-
+>   lib/liberofs_private.h         |   2 +-
+>   lib/liberofs_rebuild.h         |   2 +-
+>   lib/liberofs_s3.h              |   2 +-
+>   lib/liberofs_uuid.h            |   2 +-
+>   lib/metabox.c                  |   2 +-
+>   lib/namei.c                    |   2 +-
+>   lib/rebuild.c                  |   2 +-
+>   lib/remotes/docker_config.c    |   2 +-
+>   lib/remotes/oci.c              |   2 +-
+>   lib/remotes/s3.c               |   2 +-
+>   lib/rolling_hash.h             |   2 +-
+>   lib/sha256.h                   |   2 +-
+>   lib/super.c                    |   2 +-
+>   lib/tar.c                      |   2 +-
+>   lib/uuid.c                     |   2 +-
+>   lib/uuid_unparse.c             |   2 +-
+>   lib/vmdk.c                     |   2 +-
+>   lib/workqueue.c                |   2 +-
+>   lib/xattr.c                    |   2 +-
+>   lib/zmap.c                     |   2 +-
+>   88 files changed, 89 insertions(+), 275 deletions(-)
+>   delete mode 100644 LICENSES/Apache-2.0
+> 
+> diff --git a/COPYING b/COPYING
+> index 8767cae10b22..e781cc21ff15 100644
+> --- a/COPYING
+> +++ b/COPYING
+> @@ -1,7 +1,7 @@
+>   erofs-utils uses two different license patterns:
+>   
+>    - most liberofs files in `lib` and `include` directories
+> -   use GPL-2.0+ OR Apache-2.0 dual license;
+> +   use GPL-2.0+ OR MIT dual license;
+>   
+>    - all other files use GPL-2.0+ license, unless
+>      explicitly stated otherwise.
+> @@ -9,7 +9,7 @@ erofs-utils uses two different license patterns:
+>   Relevant licenses can be found in the LICENSES directory.
+>   
+>   This model is selected to emphasize that
+> -files in `lib` and `include` directory are designed to be included into
+> -3rd-party applications, while all other files, are intended to be used
+> +files in `lib` and `include` directories are designed to be included in
+> +3rd-party applications, while all other files are intended to be used
+>   "as is", as part of their intended scenarios, with no intention to
+>   support 3rd-party integration use cases.
+> diff --git a/LICENSES/Apache-2.0 b/LICENSES/Apache-2.0
+> deleted file mode 100644
+> index f6c1877fae13..000000000000
+> --- a/LICENSES/Apache-2.0
+> +++ /dev/null
+> @@ -1,186 +0,0 @@
+> -Valid-License-Identifier: Apache-2.0
+> -SPDX-URL: https://spdx.org/licenses/Apache-2.0.html
+> -Usage-Guide:
+> -  The Apache-2.0 may only be used for dual-licensed files where the other
+> -  license is GPL2 compatible. If you end up using this it MUST be used
+> -  together with a GPL2 compatible license using "OR".
+> -  To use the Apache License version 2.0 put the following SPDX tag/value
+> -  pair into a comment according to the placement guidelines in the
+> -  licensing rules documentation:
+> -    SPDX-License-Identifier: Apache-2.0
+> -License-Text:
+> -
+> -Apache License
+> -
+> -Version 2.0, January 2004
+> -
+> -http://www.apache.org/licenses/
+> -
+> -TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+> -
+> -1. Definitions.
+> -
+> -"License" shall mean the terms and conditions for use, reproduction, and
+> -distribution as defined by Sections 1 through 9 of this document.
+> -
+> -"Licensor" shall mean the copyright owner or entity authorized by the
+> -copyright owner that is granting the License.
+> -
+> -"Legal Entity" shall mean the union of the acting entity and all other
+> -entities that control, are controlled by, or are under common control with
+> -that entity. For the purposes of this definition, "control" means (i) the
+> -power, direct or indirect, to cause the direction or management of such
+> -entity, whether by contract or otherwise, or (ii) ownership of fifty
+> -percent (50%) or more of the outstanding shares, or (iii) beneficial
+> -ownership of such entity.
+> -
+> -"You" (or "Your") shall mean an individual or Legal Entity exercising
+> -permissions granted by this License.
+> -
+> -"Source" form shall mean the preferred form for making modifications,
+> -including but not limited to software source code, documentation source,
+> -and configuration files.
+> -
+> -"Object" form shall mean any form resulting from mechanical transformation
+> -or translation of a Source form, including but not limited to compiled
+> -object code, generated documentation, and conversions to other media types.
+> -
+> -"Work" shall mean the work of authorship, whether in Source or Object form,
+> -made available under the License, as indicated by a copyright notice that
+> -is included in or attached to the work (an example is provided in the
+> -Appendix below).
+> -
+> -"Derivative Works" shall mean any work, whether in Source or Object form,
+> -that is based on (or derived from) the Work and for which the editorial
+> -revisions, annotations, elaborations, or other modifications represent, as
+> -a whole, an original work of authorship. For the purposes of this License,
+> -Derivative Works shall not include works that remain separable from, or
+> -merely link (or bind by name) to the interfaces of, the Work and Derivative
+> -Works thereof.
+> -
+> -"Contribution" shall mean any work of authorship, including the original
+> -version of the Work and any modifications or additions to that Work or
+> -Derivative Works thereof, that is intentionally submitted to Licensor for
+> -inclusion in the Work by the copyright owner or by an individual or Legal
+> -Entity authorized to submit on behalf of the copyright owner. For the
+> -purposes of this definition, "submitted" means any form of electronic,
+> -verbal, or written communication sent to the Licensor or its
+> -representatives, including but not limited to communication on electronic
+> -mailing lists, source code control systems, and issue tracking systems that
+> -are managed by, or on behalf of, the Licensor for the purpose of discussing
+> -and improving the Work, but excluding communication that is conspicuously
+> -marked or otherwise designated in writing by the copyright owner as "Not a
+> -Contribution."
+> -
+> -"Contributor" shall mean Licensor and any individual or Legal Entity on
+> -behalf of whom a Contribution has been received by Licensor and
+> -subsequently incorporated within the Work.
+> -
+> -2. Grant of Copyright License. Subject to the terms and conditions of this
+> -   License, each Contributor hereby grants to You a perpetual, worldwide,
+> -   non-exclusive, no-charge, royalty-free, irrevocable copyright license to
+> -   reproduce, prepare Derivative Works of, publicly display, publicly
+> -   perform, sublicense, and distribute the Work and such Derivative Works
+> -   in Source or Object form.
+> -
+> -3. Grant of Patent License. Subject to the terms and conditions of this
+> -   License, each Contributor hereby grants to You a perpetual, worldwide,
+> -   non-exclusive, no-charge, royalty-free, irrevocable (except as stated in
+> -   this section) patent license to make, have made, use, offer to sell,
+> -   sell, import, and otherwise transfer the Work, where such license
+> -   applies only to those patent claims licensable by such Contributor that
+> -   are necessarily infringed by their Contribution(s) alone or by
+> -   combination of their Contribution(s) with the Work to which such
+> -   Contribution(s) was submitted. If You institute patent litigation
+> -   against any entity (including a cross-claim or counterclaim in a
+> -   lawsuit) alleging that the Work or a Contribution incorporated within
+> -   the Work constitutes direct or contributory patent infringement, then
+> -   any patent licenses granted to You under this License for that Work
+> -   shall terminate as of the date such litigation is filed.
+> -
+> -4. Redistribution. You may reproduce and distribute copies of the Work or
+> -   Derivative Works thereof in any medium, with or without modifications,
+> -   and in Source or Object form, provided that You meet the following
+> -   conditions:
+> -
+> -   a. You must give any other recipients of the Work or Derivative Works a
+> -      copy of this License; and
+> -
+> -   b. You must cause any modified files to carry prominent notices stating
+> -      that You changed the files; and
+> -
+> -   c. You must retain, in the Source form of any Derivative Works that You
+> -      distribute, all copyright, patent, trademark, and attribution notices
+> -      from the Source form of the Work, excluding those notices that do not
+> -      pertain to any part of the Derivative Works; and
+> -
+> -   d. If the Work includes a "NOTICE" text file as part of its
+> -      distribution, then any Derivative Works that You distribute must
+> -      include a readable copy of the attribution notices contained within
+> -      such NOTICE file, excluding those notices that do not pertain to any
+> -      part of the Derivative Works, in at least one of the following
+> -      places: within a NOTICE text file distributed as part of the
+> -      Derivative Works; within the Source form or documentation, if
+> -      provided along with the Derivative Works; or, within a display
+> -      generated by the Derivative Works, if and wherever such third-party
+> -      notices normally appear. The contents of the NOTICE file are for
+> -      informational purposes only and do not modify the License. You may
+> -      add Your own attribution notices within Derivative Works that You
+> -      distribute, alongside or as an addendum to the NOTICE text from the
+> -      Work, provided that such additional attribution notices cannot be
+> -      construed as modifying the License.
+> -
+> -    You may add Your own copyright statement to Your modifications and may
+> -    provide additional or different license terms and conditions for use,
+> -    reproduction, or distribution of Your modifications, or for any such
+> -    Derivative Works as a whole, provided Your use, reproduction, and
+> -    distribution of the Work otherwise complies with the conditions stated
+> -    in this License.
+> -
+> -5. Submission of Contributions. Unless You explicitly state otherwise, any
+> -   Contribution intentionally submitted for inclusion in the Work by You to
+> -   the Licensor shall be under the terms and conditions of this License,
+> -   without any additional terms or conditions. Notwithstanding the above,
+> -   nothing herein shall supersede or modify the terms of any separate
+> -   license agreement you may have executed with Licensor regarding such
+> -   Contributions.
+> -
+> -6. Trademarks. This License does not grant permission to use the trade
+> -   names, trademarks, service marks, or product names of the Licensor,
+> -   except as required for reasonable and customary use in describing the
+> -   origin of the Work and reproducing the content of the NOTICE file.
+> -
+> -7. Disclaimer of Warranty. Unless required by applicable law or agreed to
+> -   in writing, Licensor provides the Work (and each Contributor provides
+> -   its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+> -   OF ANY KIND, either express or implied, including, without limitation,
+> -   any warranties or conditions of TITLE, NON-INFRINGEMENT,
+> -   MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely
+> -   responsible for determining the appropriateness of using or
+> -   redistributing the Work and assume any risks associated with Your
+> -   exercise of permissions under this License.
+> -
+> -8. Limitation of Liability. In no event and under no legal theory, whether
+> -   in tort (including negligence), contract, or otherwise, unless required
+> -   by applicable law (such as deliberate and grossly negligent acts) or
+> -   agreed to in writing, shall any Contributor be liable to You for
+> -   damages, including any direct, indirect, special, incidental, or
+> -   consequential damages of any character arising as a result of this
+> -   License or out of the use or inability to use the Work (including but
+> -   not limited to damages for loss of goodwill, work stoppage, computer
+> -   failure or malfunction, or any and all other commercial damages or
+> -   losses), even if such Contributor has been advised of the possibility of
+> -   such damages.
+> -
+> -9. Accepting Warranty or Additional Liability. While redistributing the
+> -   Work or Derivative Works thereof, You may choose to offer, and charge a
+> -   fee for, acceptance of support, warranty, indemnity, or other liability
+> -   obligations and/or rights consistent with this License. However, in
+> -   accepting such obligations, You may act only on Your own behalf and on
+> -   Your sole responsibility, not on behalf of any other Contributor, and
+> -   only if You agree to indemnify, defend, and hold each Contributor
+> -   harmless for any liability incurred by, or claims asserted against, such
+> -   Contributor by reason of your accepting any such warranty or additional
+> -   liability.
+> -
+> -END OF TERMS AND CONDITIONS
+> diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+> index 142590bd6c79..3aa19f6ae369 100644
+> --- a/include/erofs/atomic.h
+> +++ b/include/erofs/atomic.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2024 Alibaba Cloud
+>    */
+> diff --git a/include/erofs/bitops.h b/include/erofs/bitops.h
+> index 058642f5b190..f407cc95292e 100644
+> --- a/include/erofs/bitops.h
+> +++ b/include/erofs/bitops.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_BITOPS_H
+>   #define __EROFS_BITOPS_H
+>   
+> diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
+> index 48fca63c6c15..1761fdd82432 100644
+> --- a/include/erofs/blobchunk.h
+> +++ b/include/erofs/blobchunk.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * erofs-utils/lib/blobchunk.h
+>    *
+> diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
+> index 9d06c9c47d2e..156a5a433ded 100644
+> --- a/include/erofs/block_list.h
+> +++ b/include/erofs/block_list.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C), 2021, Coolpad Group Limited.
+>    * Created by Yue Hu <huyue2@yulong.com>
+> diff --git a/include/erofs/compress_hints.h b/include/erofs/compress_hints.h
+> index 6ccc03d213ea..3ab7bb4b67f1 100644
+> --- a/include/erofs/compress_hints.h
+> +++ b/include/erofs/compress_hints.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C), 2008-2021, OPPO Mobile Comm Corp., Ltd.
+>    * Created by Huang Jianan <huangjianan@oppo.com>
+> diff --git a/include/erofs/config.h b/include/erofs/config.h
+> index bb303c48a0db..95d7e9f16065 100644
+> --- a/include/erofs/config.h
+> +++ b/include/erofs/config.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/decompress.h b/include/erofs/decompress.h
+> index 0d5548327b02..edc017c2b8e4 100644
+> --- a/include/erofs/decompress.h
+> +++ b/include/erofs/decompress.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
+>    * Created by Huang Jianan <huangjianan@oppo.com>
+> diff --git a/include/erofs/dedupe.h b/include/erofs/dedupe.h
+> index f9caa6113d15..267d9b9f12c8 100644
+> --- a/include/erofs/dedupe.h
+> +++ b/include/erofs/dedupe.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2022 Alibaba Cloud
+>    */
+> diff --git a/include/erofs/defs.h b/include/erofs/defs.h
+> index 71ca11b54ef8..ff87df9d3d51 100644
+> --- a/include/erofs/defs.h
+> +++ b/include/erofs/defs.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/dir.h b/include/erofs/dir.h
+> index 5460ac48512f..4e0614dfbbce 100644
+> --- a/include/erofs/dir.h
+> +++ b/include/erofs/dir.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_DIR_H
+>   #define __EROFS_DIR_H
+>   
+> diff --git a/include/erofs/diskbuf.h b/include/erofs/diskbuf.h
+> index 29d9fe2cf52e..122890b2f919 100644
+> --- a/include/erofs/diskbuf.h
+> +++ b/include/erofs/diskbuf.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_DISKBUF_H
+>   #define __EROFS_DISKBUF_H
+>   
+> diff --git a/include/erofs/err.h b/include/erofs/err.h
+> index 59c8c9cc9ae3..7dacc917a4c1 100644
+> --- a/include/erofs/err.h
+> +++ b/include/erofs/err.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/exclude.h b/include/erofs/exclude.h
+> index 3f17032b48db..0af39a0a5b05 100644
+> --- a/include/erofs/exclude.h
+> +++ b/include/erofs/exclude.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Created by Li Guifu <bluce.lee@aliyun.com>
+>    */
+> diff --git a/include/erofs/importer.h b/include/erofs/importer.h
+> index 920488453c34..07e40b47954d 100644
+> --- a/include/erofs/importer.h
+> +++ b/include/erofs/importer.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+> index ba62ece9a7cc..bf089e83590b 100644
+> --- a/include/erofs/inode.h
+> +++ b/include/erofs/inode.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index 671880f2db3c..c780228c7bfe 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/io.h b/include/erofs/io.h
+> index 9533efc2d20a..96309fde9646 100644
+> --- a/include/erofs/io.h
+> +++ b/include/erofs/io.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/list.h b/include/erofs/list.h
+> index a7e30ccc4258..e9208887ee80 100644
+> --- a/include/erofs/list.h
+> +++ b/include/erofs/list.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/lock.h b/include/erofs/lock.h
+> index c6e30937aac4..884f23ea739e 100644
+> --- a/include/erofs/lock.h
+> +++ b/include/erofs/lock.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LOCK_H
+>   #define __EROFS_LOCK_H
+>   
+> diff --git a/include/erofs/print.h b/include/erofs/print.h
+> index a896d75117de..fa979a3a2d46 100644
+> --- a/include/erofs/print.h
+> +++ b/include/erofs/print.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+> index cdaef315442d..a8166336d220 100644
+> --- a/include/erofs/tar.h
+> +++ b/include/erofs/tar.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_TAR_H
+>   #define __EROFS_TAR_H
+>   
+> diff --git a/include/erofs/trace.h b/include/erofs/trace.h
+> index 398e3318355d..fe6734073580 100644
+> --- a/include/erofs/trace.h
+> +++ b/include/erofs/trace.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2020 Gao Xiang <hsiangkao@aol.com>
+>    */
+> diff --git a/include/erofs/workqueue.h b/include/erofs/workqueue.h
+> index 36037c381c4a..064246c2bfe4 100644
+> --- a/include/erofs/workqueue.h
+> +++ b/include/erofs/workqueue.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_WORKQUEUE_H
+>   #define __EROFS_WORKQUEUE_H
+>   
+> diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+> index 96546364f316..235688649592 100644
+> --- a/include/erofs/xattr.h
+> +++ b/include/erofs/xattr.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_XATTR_H
+>   #define __EROFS_XATTR_H
+>   
+> diff --git a/lib/Makefile.am b/lib/Makefile.am
+> index 5f8812f48c93..27bf71094bad 100644
+> --- a/lib/Makefile.am
+> +++ b/lib/Makefile.am
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +# SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   
+>   noinst_LTLIBRARIES = liberofs.la
+>   noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+> diff --git a/lib/backends/fanotify.c b/lib/backends/fanotify.c
+> index bbe131ac11c2..cf8b61667705 100644
+> --- a/lib/backends/fanotify.c
+> +++ b/lib/backends/fanotify.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #define _GNU_SOURCE
+>   #include <errno.h>
+>   #include <fcntl.h>
+> diff --git a/lib/backends/nbd.c b/lib/backends/nbd.c
+> index da2733477f8e..c488053d99d3 100644
+> --- a/lib/backends/nbd.c
+> +++ b/lib/backends/nbd.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/base64.c b/lib/base64.c
+> index a45f7b6f2a1a..623d83cb9f2f 100644
+> --- a/lib/base64.c
+> +++ b/lib/base64.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "liberofs_base64.h"
+>   #include <string.h>
+>   
+> diff --git a/lib/bitops.c b/lib/bitops.c
+> index bb0c9eeb917a..da012b233ac2 100644
+> --- a/lib/bitops.c
+> +++ b/lib/bitops.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * erofs-utils/lib/bitops.c
+>    *
+> diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+> index 96c161b27091..e39bf6800059 100644
+> --- a/lib/blobchunk.c
+> +++ b/lib/blobchunk.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * erofs-utils/lib/blobchunk.c
+>    *
+> diff --git a/lib/block_list.c b/lib/block_list.c
+> index f8dc9138bd92..e6b28424ad36 100644
+> --- a/lib/block_list.c
+> +++ b/lib/block_list.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C), 2021, Coolpad Group Limited.
+>    * Created by Yue Hu <huyue2@yulong.com>
+> diff --git a/lib/cache.c b/lib/cache.c
+> index 4c7c3863275b..f964e4737767 100644
+> --- a/lib/cache.c
+> +++ b/lib/cache.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/compress.c b/lib/compress.c
+> index 4a0d890ae87d..62d2672cb665 100644
+> --- a/lib/compress.c
+> +++ b/lib/compress.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/compress_hints.c b/lib/compress_hints.c
+> index 322ec97f474a..a4ff0038ebb5 100644
+> --- a/lib/compress_hints.c
+> +++ b/lib/compress_hints.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C), 2008-2021, OPPO Mobile Comm Corp., Ltd.
+>    * Created by Huang Jianan <huangjianan@oppo.com>
+> diff --git a/lib/compressor.c b/lib/compressor.c
+> index cf55abcf5359..7593b336ffc8 100644
+> --- a/lib/compressor.c
+> +++ b/lib/compressor.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/compressor.h b/lib/compressor.h
+> index 86b45a759874..7b7ef37f8218 100644
+> --- a/lib/compressor.h
+> +++ b/lib/compressor.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
+> index f567d2c731af..9521aec6914d 100644
+> --- a/lib/compressor_deflate.c
+> +++ b/lib/compressor_deflate.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2023, Alibaba Cloud
+>    * Copyright (C) 2023, Gao Xiang <xiang@kernel.org>
+> diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
+> index 18f5f7b4048c..da39e354974c 100644
+> --- a/lib/compressor_libdeflate.c
+> +++ b/lib/compressor_libdeflate.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "erofs/internal.h"
+>   #include "erofs/print.h"
+>   #include "erofs/config.h"
+> diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
+> index 49a90a23525a..ac5d02ea00a2 100644
+> --- a/lib/compressor_liblzma.c
+> +++ b/lib/compressor_liblzma.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2021 Gao Xiang <xiang@kernel.org>
+>    */
+> diff --git a/lib/compressor_libzstd.c b/lib/compressor_libzstd.c
+> index 6330f445ffa6..06f16c272e80 100644
+> --- a/lib/compressor_libzstd.c
+> +++ b/lib/compressor_libzstd.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "erofs/internal.h"
+>   #include "erofs/print.h"
+>   #include "erofs/config.h"
+> diff --git a/lib/compressor_lz4.c b/lib/compressor_lz4.c
+> index f3d88b09fa4a..5f3530a7e6f0 100644
+> --- a/lib/compressor_lz4.c
+> +++ b/lib/compressor_lz4.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/compressor_lz4hc.c b/lib/compressor_lz4hc.c
+> index 9955c0d717ac..073e33073a3d 100644
+> --- a/lib/compressor_lz4hc.c
+> +++ b/lib/compressor_lz4hc.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/config.c b/lib/config.c
+> index ab7eb01e1914..b7dbced071f7 100644
+> --- a/lib/config.c
+> +++ b/lib/config.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/data.c b/lib/data.c
+> index 6fd1389cc09f..1bb9269cb836 100644
+> --- a/lib/data.c
+> +++ b/lib/data.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2020 Gao Xiang <hsiangkao@aol.com>
+>    * Compression support by Huang Jianan <huangjianan@oppo.com>
+> diff --git a/lib/decompress.c b/lib/decompress.c
+> index e66693c5883e..d23135e0cd43 100644
+> --- a/lib/decompress.c
+> +++ b/lib/decompress.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C), 2008-2020, OPPO Mobile Comm Corp., Ltd.
+>    * Created by Huang Jianan <huangjianan@oppo.com>
+> diff --git a/lib/dedupe.c b/lib/dedupe.c
+> index bdd890cc2e82..91ea31cc3ec4 100644
+> --- a/lib/dedupe.c
+> +++ b/lib/dedupe.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2022 Alibaba Cloud
+>    */
+> diff --git a/lib/dedupe_ext.c b/lib/dedupe_ext.c
+> index d7a9b737e428..ae00bbe5e03d 100644
+> --- a/lib/dedupe_ext.c
+> +++ b/lib/dedupe_ext.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "erofs/dedupe.h"
+>   #include "liberofs_xxhash.h"
+>   #include <stdlib.h>
+> diff --git a/lib/dir.c b/lib/dir.c
+> index 98edb8e1695c..bf611d9b9678 100644
+> --- a/lib/dir.c
+> +++ b/lib/dir.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include <stdlib.h>
+>   #include <sys/stat.h>
+>   #include "erofs/print.h"
+> diff --git a/lib/diskbuf.c b/lib/diskbuf.c
+> index 0bf42da6a8af..b32a39adf67a 100644
+> --- a/lib/diskbuf.c
+> +++ b/lib/diskbuf.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "erofs/diskbuf.h"
+>   #include "erofs/internal.h"
+>   #include "erofs/print.h"
+> diff --git a/lib/exclude.c b/lib/exclude.c
+> index 5f6107b24a60..6beb46bc2def 100644
+> --- a/lib/exclude.c
+> +++ b/lib/exclude.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Created by Li Guifu <bluce.lee@aliyun.com>
+>    */
+> diff --git a/lib/fragments.c b/lib/fragments.c
+> index 0f07e33b3679..13afce3be537 100644
+> --- a/lib/fragments.c
+> +++ b/lib/fragments.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C), 2022, Coolpad Group Limited.
+>    * Created by Yue Hu <huyue2@coolpad.com>
+> diff --git a/lib/global.c b/lib/global.c
+> index c3d8aec875e9..938aa0a79422 100644
+> --- a/lib/global.c
+> +++ b/lib/global.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/gzran.c b/lib/gzran.c
+> index b861c581e408..3973c1f37a75 100644
+> --- a/lib/gzran.c
+> +++ b/lib/gzran.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/importer.c b/lib/importer.c
+> index 26c86a0b0098..c404b0f7fadb 100644
+> --- a/lib/importer.c
+> +++ b/lib/importer.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 2cfc6c58bda8..c932981a47b7 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018-2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/io.c b/lib/io.c
+> index 0c5eb2c29989..3ba45ccf8cbd 100644
+> --- a/lib/io.c
+> +++ b/lib/io.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2018 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
+> index 29e44b3b4a92..c1d3c6db7f48 100644
+> --- a/lib/kite_deflate.c
+> +++ b/lib/kite_deflate.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * erofs-utils/lib/kite_deflate.c
+>    *
+> diff --git a/lib/liberofs_cache.h b/lib/liberofs_cache.h
+> index baac609fb49f..ddaca5497390 100644
+> --- a/lib/liberofs_cache.h
+> +++ b/lib/liberofs_cache.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2018 HUAWEI, Inc.
+>    *             http://www.huawei.com
+> diff --git a/lib/liberofs_compress.h b/lib/liberofs_compress.h
+> index 4b9dd42f1318..da6eb1a00d9d 100644
+> --- a/lib/liberofs_compress.h
+> +++ b/lib/liberofs_compress.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2019 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/liberofs_dockerconfig.h b/lib/liberofs_dockerconfig.h
+> index 1580e1c329e5..6752926a8f58 100644
+> --- a/lib/liberofs_dockerconfig.h
+> +++ b/lib/liberofs_dockerconfig.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2026 Tencent, Inc.
+>    *             http://www.tencent.com/
+> diff --git a/lib/liberofs_fanotify.h b/lib/liberofs_fanotify.h
+> index 965090ff2f22..6ecc0e26bcbc 100644
+> --- a/lib/liberofs_fanotify.h
+> +++ b/lib/liberofs_fanotify.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LIB_LIBEROFS_FANOTIFY_H
+>   #define __EROFS_LIB_LIBEROFS_FANOTIFY_H
+>   
+> diff --git a/lib/liberofs_fragments.h b/lib/liberofs_fragments.h
+> index 11833ebc938d..cf549367bc5d 100644
+> --- a/lib/liberofs_fragments.h
+> +++ b/lib/liberofs_fragments.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2022, Coolpad Group Limited.
+>    * Copyright (C) 2025 Alibaba Cloud
+> diff --git a/lib/liberofs_gzran.h b/lib/liberofs_gzran.h
+> index 443fe1558ac5..fa86cc3a7839 100644
+> --- a/lib/liberofs_gzran.h
+> +++ b/lib/liberofs_gzran.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/liberofs_metabox.h b/lib/liberofs_metabox.h
+> index bf4051cf18e2..f966c205d9a2 100644
+> --- a/lib/liberofs_metabox.h
+> +++ b/lib/liberofs_metabox.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LIB_LIBEROFS_METABOX_H
+>   #define __EROFS_LIB_LIBEROFS_METABOX_H
+>   
+> diff --git a/lib/liberofs_nbd.h b/lib/liberofs_nbd.h
+> index 78c8af511bec..ec7adbf728d2 100644
+> --- a/lib/liberofs_nbd.h
+> +++ b/lib/liberofs_nbd.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2025 Alibaba Cloud
+>    */
+> diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+> index 3b3d66dd449d..8eec3f720cd1 100644
+> --- a/lib/liberofs_oci.h
+> +++ b/lib/liberofs_oci.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2025 Tencent, Inc.
+>    *             http://www.tencent.com/
+> diff --git a/lib/liberofs_private.h b/lib/liberofs_private.h
+> index ebd9e7034860..64bcae83d84c 100644
+> --- a/lib/liberofs_private.h
+> +++ b/lib/liberofs_private.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   
+>   #ifdef HAVE_LIBSELINUX
+>   #include <selinux/selinux.h>
+> diff --git a/lib/liberofs_rebuild.h b/lib/liberofs_rebuild.h
+> index 69802fb9542c..6459dbd42a64 100644
+> --- a/lib/liberofs_rebuild.h
+> +++ b/lib/liberofs_rebuild.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LIB_LIBEROFS_REBUILD_H
+>   #define __EROFS_LIB_LIBEROFS_REBUILD_H
+>   
+> diff --git a/lib/liberofs_s3.h b/lib/liberofs_s3.h
+> index f4886cd4ecf8..c81834785c5f 100644
+> --- a/lib/liberofs_s3.h
+> +++ b/lib/liberofs_s3.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2025 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/liberofs_uuid.h b/lib/liberofs_uuid.h
+> index 63b358a854d4..e8bb1be94fde 100644
+> --- a/lib/liberofs_uuid.h
+> +++ b/lib/liberofs_uuid.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LIB_UUID_H
+>   #define __EROFS_LIB_UUID_H
+>   
+> diff --git a/lib/metabox.c b/lib/metabox.c
+> index 12706aafdb36..d5ce9e3243b8 100644
+> --- a/lib/metabox.c
+> +++ b/lib/metabox.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include <stdlib.h>
+>   #include "erofs/inode.h"
+>   #include "erofs/importer.h"
+> diff --git a/lib/namei.c b/lib/namei.c
+> index 896e348bc3ee..f19e4b13d69a 100644
+> --- a/lib/namei.c
+> +++ b/lib/namei.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Created by Li Guifu <blucerlee@gmail.com>
+>    */
+> diff --git a/lib/rebuild.c b/lib/rebuild.c
+> index f89a17c44193..7ab2b499923c 100644
+> --- a/lib/rebuild.c
+> +++ b/lib/rebuild.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #define _GNU_SOURCE
+>   #include <unistd.h>
+>   #include <stdlib.h>
+> diff --git a/lib/remotes/docker_config.c b/lib/remotes/docker_config.c
+> index 00db1bb6dc1d..8e236fca1e33 100644
+> --- a/lib/remotes/docker_config.c
+> +++ b/lib/remotes/docker_config.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2026 Tencent, Inc.
+>    *             http://www.tencent.com/
+> diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+> index f96be13387a7..80a1e38b1531 100644
+> --- a/lib/remotes/oci.c
+> +++ b/lib/remotes/oci.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 Tencent, Inc.
+>    *             http://www.tencent.com/
+> diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
+> index 768232ad0b66..1385e16018cd 100644
+> --- a/lib/remotes/s3.c
+> +++ b/lib/remotes/s3.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2025 HUAWEI, Inc.
+>    *             http://www.huawei.com/
+> diff --git a/lib/rolling_hash.h b/lib/rolling_hash.h
+> index 448db34edc1b..cfabfca87109 100644
+> --- a/lib/rolling_hash.h
+> +++ b/lib/rolling_hash.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   /*
+>    * Copyright (C) 2022 Alibaba Cloud
+>    */
+> diff --git a/lib/sha256.h b/lib/sha256.h
+> index 851b80c722d3..6bcf03c26805 100644
+> --- a/lib/sha256.h
+> +++ b/lib/sha256.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
+>   #ifndef __EROFS_LIB_SHA256_H
+>   #define __EROFS_LIB_SHA256_H
+>   
+> diff --git a/lib/super.c b/lib/super.c
+> index 088c9a01fc2f..6ad27c054333 100644
+> --- a/lib/super.c
+> +++ b/lib/super.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Created by Li Guifu <blucerlee@gmail.com>
+>    */
+> diff --git a/lib/tar.c b/lib/tar.c
+> index 599e41342255..87a6a619dd76 100644
+> --- a/lib/tar.c
+> +++ b/lib/tar.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include <unistd.h>
+>   #include <stdlib.h>
+>   #include <string.h>
+> diff --git a/lib/uuid.c b/lib/uuid.c
+> index 1fae857f2c8d..3b1bd38e63a9 100644
+> --- a/lib/uuid.c
+> +++ b/lib/uuid.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
+>    */
+> diff --git a/lib/uuid_unparse.c b/lib/uuid_unparse.c
+> index 3255c4bdd7a5..890acda8ce96 100644
+> --- a/lib/uuid_unparse.c
+> +++ b/lib/uuid_unparse.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2023 Norbert Lange <nolange79@gmail.com>
+>    */
+> diff --git a/lib/vmdk.c b/lib/vmdk.c
+> index 8080c515bf75..316a8ffc94b2 100644
+> --- a/lib/vmdk.c
+> +++ b/lib/vmdk.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include "erofs/internal.h"
+>   
+>   static int erofs_vmdk_desc_add_extent(FILE *f, u64 sectors,
+> diff --git a/lib/workqueue.c b/lib/workqueue.c
+> index 1f3fa7ca34ed..8c78d7920fe9 100644
+> --- a/lib/workqueue.c
+> +++ b/lib/workqueue.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   #include <pthread.h>
+>   #include <stdlib.h>
+>   #include "erofs/print.h"
+> diff --git a/lib/xattr.c b/lib/xattr.c
+> index 565070a698dc..b11cd3b681ae 100644
+> --- a/lib/xattr.c
+> +++ b/lib/xattr.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * Copyright (C) 2019 Li Guifu <blucerlee@gmail.com>
+>    *                    Gao Xiang <xiang@kernel.org>
+> diff --git a/lib/zmap.c b/lib/zmap.c
+> index 4a6507726ba8..5b44b60ed586 100644
+> --- a/lib/zmap.c
+> +++ b/lib/zmap.c
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>   /*
+>    * (a large amount of code was adapted from Linux kernel. )
+>    *
 
