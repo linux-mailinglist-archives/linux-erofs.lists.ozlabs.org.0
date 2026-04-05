@@ -1,92 +1,64 @@
-Return-Path: <linux-erofs+bounces-3205-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3206-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IKBDOPkB0mmiSQcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3205-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 08:32:25 +0200
+	id YNqzLwg30mkTUQcAu9opvQ
+	(envelope-from <linux-erofs+bounces-3206-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 12:18:48 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CF6539D81C
-	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 08:32:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E72639E086
+	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 12:18:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fpN112Fksz2ybQ;
-	Sun, 05 Apr 2026 16:32:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fpT2B6Jd6z2ybQ;
+	Sun, 05 Apr 2026 20:18:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::531"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775370741;
-	cv=none; b=YcGy1jwOkIhs3uhKlZjwr9ModdNjzjhfdin4nWufT3YE2XRo0wGLBe+N+tdH596fv6S6u1u4a4uLyZ4u4U83vi1HyNIYoSWRUA38AvZepAci1YHQzeJ+uCM3P2lpCuUNyVHh3DJHwOQgaaL+S+2uWHuJPxdklI37xnHBHGnUfCCZZHvhVFMthwpdTLC8cnH9luQjqAzNPlHSnqODGGCiJuE9SiHF2xO7TkfQXATvhP9u2joLeroNRiwLWYg44ih6I9jrXWeaU7Piy9acFnDcW7UyY2dsACcn/lxOmPscWmZMPiF/7dmE+JcVg1VwltdweKTdGmRUDHGCkstoXEjHmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1775370741; c=relaxed/relaxed;
-	bh=rGverVw3ruaa27eKzcrp33L0r+CJsGIyeXbu41LAjpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EEF9hmS1nxhTfyBiIB2iJ2Vzmo5luSZ9FL7J3WG0b1mWnta/RjsiMqHw9NJI9cXT/K/c8zvCcLfpN8kLMYPpqzmIXEFtE1HlpdWLod6b74cXrZKaIgcDdJzOJ78uQxeayzs+IgN09syny3J8FuvmzEKRUM8qZJsER6QrYrl+mBsdKkVHgR84b2Tu38L1dsdmZt7vDWcQrTmCaigSA6lHjZlGhjvhDUbMtd7KzIq6oxuNkuFdpvSj8aAC6QLSrnb49FsK3rH171nBIKMETiA+0tSbg8EjkuzRl4tjelboX77O09n7mpzg02vPkiJ55PYquHzRoLazKU2cE/h74FTi5A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=k5ONQxTZ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::531; helo=mail-pg1-x531.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775384322;
+	cv=pass; b=aQONu+7fgnH3Vh39HHvQJUxEk3EzIF5RqNZCWltnldXPXhoUDDyXbyEyOfou8HZyA0kBEK8XfoL8RXJEPH2evrNPWyK/3vTQnRyiXiGqJm46R7du95uN7l9T0k+sIJXf7X8kRyXHQGPqFyQlGpcpyTTatilXMSjIF/OsKonnnIBzrSniWaZGcDP8PP259JfjY4xL4WHOPbUfK5opeAX6OGeP8Bxe4Jnb0vf8UG9evdJcCIAFmutHFGJ/hPIATHuZSLGkYUKbBM3jvrpwKCSLL0EbQMmDyPPQZKNV6tAUnLZSWmNPFXjf5EurawsGGll1UzXA3OniU2ujeKXQ7PY3rw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1775384322; c=relaxed/relaxed;
+	bh=BAKoaqPo5rwODH20zC5iNUFEjL3huyiGubNChUwGQm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=etXjjMdriek9yafmcv9ryfdiNgNyzcPOcu544x+2QpQkMkIPfu0Da4OvP1K8Xs7p6PMYvyjEb4gDMpRT5HxvMfh+whB6yN+jS93NWlquiYuR/nXFD7T3Ju8M58g9gYUtYVMwbdEV9u3P/gam27I3bmQdEvRaKAdOywUgZtr7SEpxlac/TraH0RLJ5Kvq+/zGnZ0FNweaF5seOtsj6lC1stCGJmFUnvG495gVQ8PeO6lRrCpOYonzlR8u90rCpXfoQ/SMW/I3gCp3bnXcc9Z/UpZi4URtxoyhZscsQF2i3iqamsTJ5wG78v0k5WurNCVBaXjqdqR7vkascze2cM8pEA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=o5NGMgjG; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=k5ONQxTZ;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=o5NGMgjG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::531; helo=mail-pg1-x531.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fpN100qm9z2xSB
-	for <linux-erofs@lists.ozlabs.org>; Sun, 05 Apr 2026 16:32:18 +1000 (AEST)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-c06cb8004e8so1068575a12.0
-        for <linux-erofs@lists.ozlabs.org>; Sat, 04 Apr 2026 23:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775370736; x=1775975536; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rGverVw3ruaa27eKzcrp33L0r+CJsGIyeXbu41LAjpw=;
-        b=k5ONQxTZypkMjq+9/nGOugxYQ7h15xB+E3dFrCANQHMVTcA8uQmLXWggBXctxsSROQ
-         fYFY/w+tCIboc92Tpe+9IrSeIKFbzYcfMZdDFboblsf/92iaNMiGdWMPbe+K3vu+QLq1
-         RFeDVnROCSxbv4I7QqVCP0MKkHCYf30BYxHOSNXjdyEieSeGx8xFYlUcH6jYG+mP/41I
-         LkJBPw2dCPvOPtfL6u7jC9QeAhTcCkl80pn/fUDScUd2eeWzLuok446Md4vDjxKY02jt
-         LhX1fixALtxQbH/IXKowRY42tQE9ytzykmX3q/cJYHGFpZgfeLOBAnMlnBMjJ1CXggaG
-         7U3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775370736; x=1775975536;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rGverVw3ruaa27eKzcrp33L0r+CJsGIyeXbu41LAjpw=;
-        b=OA70Ji+/lI8pbMBSQN0hSdes3zAVtrVtpDor4FgwXFtjJbAEeCLbUWni969ZY39LFz
-         bqaWIFMM4ABv+FMPpgOQ1EmW971gziWPVTLKd9VB+t2WxkLTTv6SW4d/I3StttiC1si3
-         dFJLKw9rfY0mtGiyHm0Y8l3yYM8JEaYsoA8L/4ChHWV7vy2NuJICI64WZZAdiG4JzWdF
-         Tv3lGDlifUiXqv7IUVguX3FqdRw4npK6eioXn7A5wxPq4I0rHcIy0Ps2geyFadGhl/Tr
-         2VQZwqm51Lo3ishK3mAttEFeUs7/WVIQw3FsbPFSA38t3UOslHnmFb1ggT1gsedpO7e2
-         RtpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlmwcJwnxWDU1whBybiyfAFUod8e0YRe0kqAnEnkm6ZVeBREetZ6IG5SpE/1JWAiMBeYoeaSe77Stp+w==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxO0ZumXPmdOx/FknULGayPdUI1KRKS96X04bW3mOKsf9108yuR
-	bILwsd63KawYG+36RC3WibyT3RzIbKR1WczD5G0GtSVto6IA0jS386Yg
-X-Gm-Gg: AeBDiesl8+3WvjjtIphjn4Lcnfe0EXoQ/kv/1mFFiMOyPp4gdxBOYQscGyuf7n/0OGh
-	wH9rOHR6NVmhcyJG+vbUwS2EpYrzuvT2uKTGknHzuynh/OOEr3pmgmz6L62zK71PcxRMi2kSjmp
-	oTZRoYVZF7s67CVu6VC8jazv6UomLkBFc2BmwGn9oR7/NjiXRMnd5etotoTZHaKXQqPVS9a1+gl
-	Fg4bnYQlc531VU7UbtaqdXSK4SowFVK7qFga8U/hgM1+f9toazkUqU1YOCvBYjEm5uEDRRbU6iK
-	TdGwN0BnAyej4Q9nHI1xe1VQEZ/3+f4KObWLmxNeLF8XQAlswnZqyCx3lDOHYehOkUzHkq1/iX1
-	koYqUic2+UU7TADBthmw1YCt+dsT2KKhIsOUeU8heiUV2OynMmsfRorjLytFZKhlo8OTfhtarAW
-	VpyCoTXrRx++vqJmLOx7KaZvihQYV3G/nIWZls32EM7dN7DzuBnnvW5tA5
-X-Received: by 2002:a17:902:d512:b0:2b0:5a4c:726a with SMTP id d9443c01a7336-2b28188fe18mr89553505ad.43.1775370736513;
-        Sat, 04 Apr 2026 23:32:16 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.151.61])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274978fd7sm131808425ad.39.2026.04.04.23.32.14
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 04 Apr 2026 23:32:16 -0700 (PDT)
-From: Nithurshen <nithurshen.dev@gmail.com>
-To: nithurshen.dev@gmail.com
-Cc: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org,
-	stopire@gmail.com
-Subject: [PATCH v2] erofs-utils: s3: fix memory leak in s3erofs_create_object_iterator
-Date: Sun,  5 Apr 2026 12:02:08 +0530
-Message-ID: <20260405063208.4617-1-nithurshen.dev@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260404082737.87032-1-nithurshen.dev@gmail.com>
-References: <20260404082737.87032-1-nithurshen.dev@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fpT2904DYz2xLt
+	for <linux-erofs@lists.ozlabs.org>; Sun, 05 Apr 2026 20:18:40 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; t=1775384315; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=Gn/gzncJcEnBvCok+o46A0JereU2O4DDdCuXnZLQ5h/y51YZfnHWtXtU6OqnUORtAvimxpLyyfa3XguVjNdy2ltj/A06YStxeUcCvH2YZtqRC+odJA7kPSYN2z6VnkQfzL4AEI4OXhJ6XmHeRFl17GiqdHZNwthreQriAz2f2So=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1775384315; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=BAKoaqPo5rwODH20zC5iNUFEjL3huyiGubNChUwGQm0=; 
+	b=Wn2keLsc5vL0zZ+0Wrvy5qnRm4708FBB1ZWe4QpiF5KY8VM41LKZDZ7nKfUM+d7DfobHIg5sYuVe9wqijk648p2OC+9ABM/WvxWPSGNant0m1ml9tlgN28oQclGVjnMfTVAcTCGM0/zJhl5sBoCOLNuNtRkoPDdUBeQ77MKEY9I=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=vnsh.in;
+	spf=pass  smtp.mailfrom=ch@vnsh.in;
+	dmarc=pass header.from=<ch@vnsh.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775384315;
+	s=zoho; d=vnsh.in; i=ch@vnsh.in;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=BAKoaqPo5rwODH20zC5iNUFEjL3huyiGubNChUwGQm0=;
+	b=o5NGMgjGutxsViXdHuQGRG3MSdEvlfUog7qKf6ELTgOE3CKLjUhoIslae8BqM59t
+	U2TBHVqyt6yz24MAHkmPoYL7lGW3BnR3Qfoy6KciNXDTWm8jnXcRZWUjtPGD3waLcUV
+	+slN73b+3z5A4zK9ab6CYwAe+ktV75HzlUKIrFfE=
+Received: by mx.zoho.in with SMTPS id 1775384312353851.4880744044425;
+	Sun, 5 Apr 2026 15:48:32 +0530 (IST)
+From: Vansh Choudhary <ch@vnsh.in>
+To: linux-erofs@lists.ozlabs.org
+Cc: Vansh Choudhary <ch@vnsh.in>
+Subject: [PATCH] erofs-utils: tar: fix negative GNU base-256 number parsing
+Date: Sun,  5 Apr 2026 10:18:30 +0000
+Message-ID: <20260405101830.34127-1-ch@vnsh.in>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -99,81 +71,92 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-3205-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:stopire@gmail.com,m:nithurshendev@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,lists.ozlabs.org,kernel.org,gmail.com];
-	FREEMAIL_TO(0.00)[gmail.com];
+	DMARC_NA(0.00)[vnsh.in];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3206-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	TO_DN_NONE(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[vnsh.in:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 1CF6539D81C
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 8E72639E086
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In s3erofs_create_object_iterator(), if the parsed prefix length
-exceeds S3EROFS_PATH_MAX, the function aborts and returns an
--EINVAL error pointer. However, the 'iter' structure was already
-allocated via calloc() and left unfreed, causing a memory leak.
+GNU base-256 fields use a 0xff prefix for negative values, but
+tarerofs_parsenum() currently accumulates them in signed long long.
+That does not sign-extend negative values correctly and can also
+trigger signed-overflow undefined behavior while shifting.
 
-This commit adds the missing free(iter) call in the error path to
-prevent leaking memory when excessively long S3 bucket paths are
-provided.
+Handle positive and negative GNU base-256 fields separately and do the
+byte accumulation in unsigned long long instead.
 
-Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
+This fixes GNU base-256 decoding for negative tar metadata values such
+as mtime, uid, gid and device numbers.
+
+Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
+Signed-off-by: Vansh Choudhary <ch@vnsh.in>
 ---
- lib/remotes/s3.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/tar.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
-index 768232a..abfa5dc 100644
---- a/lib/remotes/s3.c
-+++ b/lib/remotes/s3.c
-@@ -911,8 +911,10 @@ s3erofs_create_object_iterator(struct erofs_s3 *s3, const char *path,
- 		iter->bucket = NULL;
- 		iter->prefix = strdup(path + 1);
- 	} else {
--		if (++prefix - path > S3EROFS_PATH_MAX)
-+		if (++prefix - path > S3EROFS_PATH_MAX) {
-+			free(iter);
- 			return ERR_PTR(-EINVAL);
-+		}
- 		iter->bucket = strndup(path, prefix - path);
- 		iter->prefix = strdup(prefix);
+diff --git a/lib/tar.c b/lib/tar.c
+index 871779a..05d1a74 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -328,17 +328,26 @@ static long long tarerofs_otoi(const char *ptr, int len)
+ 
+ static long long tarerofs_parsenum(const char *ptr, int len)
+ {
++	const u8 *p = (const u8 *)ptr;
++
+ 	errno = 0;
+ 	/*
+ 	 * For fields containing numbers or timestamps that are out of range
+ 	 * for the basic format, the GNU format uses a base-256 representation
+ 	 * instead of an ASCII octal number.
+ 	 */
+-	if (*(char *)ptr == '\200' || *(char *)ptr == '\377') {
+-		long long res = 0;
++	if (*(char *)ptr == '\200') {
++		unsigned long long res = 0;
+ 
+ 		while (--len)
+-			res = (res << 8) | (u8)*(++ptr);
++			res = (res << 8) | *(++p);
++		return res;
++	}
++	if (*(char *)ptr == '\377') {
++		unsigned long long res = -1ULL;
++
++		while (len--)
++			res = (res << 8) | *(p++);
+ 		return res;
  	}
+ 	return tarerofs_otoi(ptr, len);
 -- 
-2.52.0
+2.43.0
 
 
