@@ -1,85 +1,57 @@
-Return-Path: <linux-erofs+bounces-3207-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3208-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id NoI1LltP0mlOWAcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3207-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 14:02:35 +0200
+	id YJEREaRz1GmyuAcAu9opvQ
+	(envelope-from <linux-erofs+bounces-3208-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 07 Apr 2026 05:01:56 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6EC739E359
-	for <lists+linux-erofs@lfdr.de>; Sun, 05 Apr 2026 14:02:33 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDD663A94B2
+	for <lists+linux-erofs@lfdr.de>; Tue, 07 Apr 2026 05:01:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fpWKx5S5Mz2ybQ;
-	Sun, 05 Apr 2026 22:02:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fqWFC1N2kz2ydq;
+	Tue, 07 Apr 2026 13:01:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::62a"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775390549;
-	cv=none; b=hq7wKDPDD+Nr3PRuofzHdGgWD8h+1Ox0JuivO/oDF7YZVPz51NXm9pKVzj1XWlShCMa+4s/5bTLvfIQqpQQ5IOCD4pWkmEVZmK6b3f7aIaWx3BNYFMpVHK+en1mXfr8IWKVcmsYJ8gYPVMdyHX5Y4QKhnYJMZSdX4cPWxCbG7oQOvR5xtDR5ioNIyIwLt526f6X1erOz4EkhcF9Ah8Qs5SMmFM/8LRRKw0YT/Y1KhL4orkxWfrUSbpKQz6M319PpSToCFalrzLaZNuWgPNPDGRzmQB821pFfBk+Y2TtzwJ3iX1+f2wzldhjBQ+GSr12El+Mk3DXHrcxplItBQR3deQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775530911;
+	cv=none; b=GdHz5BrkqlXR3rYPS3i7cAS9+wBc4uyWvcPNhD106N+MSL/jKqsP6L3B7xlgUoqqf0tT1ORr7oVCXOxWggeT/YgEBZHJFCD/88ZMGwEbCx14dg4jIqoATeLNB1gtzx4Tw3QCVUHuoMYeEKKDhRXm9iEDURMn1snU7uR9wfcS+RmH+maZh5npEwsl/TSSNVsECeA8LwLiBt2njIzKAx2PHyjF4vhzziDSadL5S9F5iid9yBh8nWkRnRcR3oiSBHs1KdmVb+6VkXBqshtkkCg10xJGvldhCXmYtOjOlQXxT9/rSCxaAjOAO3lVx0BqcSN+CQ+0v30uAQDauLVHVT483w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1775390549; c=relaxed/relaxed;
-	bh=7WA49VcQWC9mjQ7bi25unHUi9qKN8LUQE4uWigLXSA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SY0GmnYjVceLj/vYJTsTow3Qds7B6k4+YNUhduXVUH9BwSoPc7LVOX3JP/bcSz8cp4h0U1qPU4RyMTpaIbV6z61ZM3Q1EqrR86UTUjklpZSO2SSL/M2kFzTaw+zSrhJJhxZMqbTx6zjFotsKiSkPtCK7f3ypXDkXo5nZaum3PRG+1u2VKvAz7NUoqd6DrzZCDVy5I+/8kVU3crWax0xQO2r0Wtn1YgxEwOKiT7VN0//FfJEIPWc53wOLy9gAnwdzuub3LyO2p4qeErO1+SGSFSQarbM4zPX1wntBBXhHUmZxHHCrshvWOYSiEsesO4U7TAFr8GQ+kOGqIe6clJ8cSQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P50FwLlJ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1775530911; c=relaxed/relaxed;
+	bh=wdiDY3ug5VJyz5aABp3FVkIBuAvMJjN78schmqcc56U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T31XjDiwh3xHIUWWKJ3TAAaPyijmRhzdQpObVELYxJOjURH27q/OOEyxoPryHiT8/6shqNf6FCXJ9FgT3WASYE5qwa4UfpD7cg/cfdXGtln1CVnKFhrG/fCFHCwsYbTZlDFhzXdg8UAhpwZCnfHVZQHb10imEEYCgwgUwjDVsU1022IIJRpW98dpDeO59XeCf0c3OANA/VIXW7srIZnUgnjlviOuO+o8Pxj3c2galYtAdLC8eK+BqnJhIcJq85cPDyPHdDBkHiY/CAL2MUkS7odh3Um2+pCwVEVyK/DhY92ukOzk1CDyUP/qsZ/dAqDgwoS3lbbo745FBl7SHdmEZA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wa6WnolF; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=P50FwLlJ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wa6WnolF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fpWKw0DLWz2ySV
-	for <linux-erofs@lists.ozlabs.org>; Sun, 05 Apr 2026 22:02:27 +1000 (AEST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-2ad4d639db3so13234145ad.0
-        for <linux-erofs@lists.ozlabs.org>; Sun, 05 Apr 2026 05:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775390540; x=1775995340; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7WA49VcQWC9mjQ7bi25unHUi9qKN8LUQE4uWigLXSA0=;
-        b=P50FwLlJC9ByzHhWHC5sGSSArUpe1hGudSg8SGs5sojyJe2Fbe/HuPyjGJATUIaBKJ
-         Yld9xvjEUZYSrwefJDFvs3lFomO0P/5o9XqfsuhpkFm8mvnByhCPR09dr/+ch4fKca5Y
-         RTK3+ykvWPYNKhZKw7rS65JD2kqMX0ad4DWIBKmSuv+E38hop2FcOk9+WBg9bs87k1Mp
-         XRTJw4oln1ZaFzYU7V+HZ1sJzjhMR75KyYQyBflk6f8SNMUmQDFMwtji/HwrZvbwqlZ4
-         XyzAPjlOQavaEBrDhsr7gAtoNEQRTnZqOfn0PN1zH+RZK8zkMJn/WyGw1TrU6HfORysQ
-         h0bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775390540; x=1775995340;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7WA49VcQWC9mjQ7bi25unHUi9qKN8LUQE4uWigLXSA0=;
-        b=Rj89vyAfOqOZdrPY8r2m/hu0iVKp83xsPGr496v5lcjsupo201xUonEXHglGR9zRTv
-         YoEyxy8j+9WRXBxn74FXLoDWAx4q7fcZgRJiTnM/FQ5/DUpD9zPxeFMVktF1gmZqZ/5w
-         3R/Zqe0kzKG02I3WLJgt+8xyJzm6+Xs3k9Qq1Tl6ElBjAnYmmUzdbTCRANvshyG5BZBE
-         rkI6+p/z+0BucQsBATzM20m/IxNYM7P6jrQknQ7VEqKq7O/Lf49ubx5MUxT3Uib7tNcB
-         uqY+BjdzcYQnFRIOwAclqfboz0TfsLjztfWwDVKsVPcNnJej8gyDmXkjhpCsHUQSkl7W
-         5mVQ==
-X-Gm-Message-State: AOJu0YzXbbaGlLWHAUlwriANTNKPHMCw5vHOhH0xZ+x8jFG26aOdv+UN
-	Jc7/OUkl2zIg3d3lMSxOH5sTGDG30dWJuYdrgexfTlfA4DoGdomMFR/3lGEZWw==
-X-Gm-Gg: AeBDievTGenZHjtMla8RQnsvvKsCw9FITh+3c8GJA59qSQJTp5pK7eivpPJ2yLMqwvB
-	31aG9z8puw9tdzv/5VNLCJYTnxprYKWFKED9yOObUxEFQ7G2f3KixFHPtJ6/g9OXYOHj235bYMu
-	l8QHlZ7I0WvIRstH+0QNjVqwFo9qv66u7x4PolrfRaW8w3CcJOcOsaalvS94vgGaJr4IMES0elb
-	/DEoOsZhmxTjmn1RFv3RQbioqQB0BrGbml26du6i8Chln9/DFgwLuIywdbvMaOWR2KtYQgvVz/x
-	AVWPB298CjUFIQiBBSyuS9Gb76AA0OIIr/6r159EN7Y1Kd3qVnLSeFjfVNOhJbsFcevGQbz68DD
-	nYLPOpclxc7WezJBlXWL8plA5EbC5WnHK9FBdzfv+ZKzTLRs7KzU8w3udxXIjd+tOk6Fo8suyc0
-	CN2Xckmrw3LSiBf/CmH0LgP3SNHyQxxACb2IMXBc8=
-X-Received: by 2002:a17:902:da83:b0:2b2:5314:e96a with SMTP id d9443c01a7336-2b2818de2c2mr93941485ad.34.1775390539895;
-        Sun, 05 Apr 2026 05:02:19 -0700 (PDT)
-Received: from LAPTOP-TNA2GCLL ([2409:4081:891f:f789:ede7:e6d4:7443:f10d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274779b48sm147453495ad.25.2026.04.05.05.02.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2026 05:02:19 -0700 (PDT)
-From: Ajay Rajera <newajay.11r@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fqWF71KZFz2xQs
+	for <linux-erofs@lists.ozlabs.org>; Tue, 07 Apr 2026 13:01:44 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1775530900; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=wdiDY3ug5VJyz5aABp3FVkIBuAvMJjN78schmqcc56U=;
+	b=wa6WnolF9kg9rCsvNt5L4+CxmdI8Q0Ko2Y1UVp/kQ/x72+QkKvh69EmlPeWZg2HAyek5eYBuR2PKiW4jpzr3xQ8dS3U2zkwgNAJb2YyagB9tG80fklxK5omf8X9FO4aEEOK+HcrLfr6QoDprteN04pHS8THjUFSpdZbLrd21gYo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X0aPESZ_1775530893;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X0aPESZ_1775530893 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 07 Apr 2026 11:01:37 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	Ajay Rajera <newajay.11r@gmail.com>
-Subject: [PATCH] erofs-utils: mount: fix unhandled realloc failure in flag parsing
-Date: Sun,  5 Apr 2026 17:32:12 +0530
-Message-ID: <20260405120213.136-1-newajay.11r@gmail.com>
-X-Mailer: git-send-email 2.51.0.windows.1
+Cc: Nithurshen <nithurshen.dev@gmail.com>,
+	Gao Xiang <xiang@kernel.org>
+Subject: [PATCH v6 experimental-tests] erofs-utils: tests: test FUSE error handling on corrupted inodes
+Date: Tue,  7 Apr 2026 11:01:32 +0800
+Message-ID: <20260407030132.2606768-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20260403003452.4626-1-nithurshen.dev@gmail.com>
+References: <20260403003452.4626-1-nithurshen.dev@gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -92,88 +64,208 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-1.70 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3207-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TAGGED_FROM(0.00)[bounces-3208-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_THREE(0.00)[3];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: C6EC739E359
+X-Rspamd-Queue-Id: CDD663A94B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-erofsmount_parse_flagopts() correctly returns -ENOMEM when realloc()
-fails while extending the mount options string. However, the caller
-erofsmount_parse_options() directly assigns the return value to
-mountcfg.flags without checking for negative error codes.
+From: Nithurshen <nithurshen.dev@gmail.com>
 
-On realloc() failure, mountcfg.flags is set to -ENOMEM (-12), which
-in two's complement silently activates nearly every mount flag bit
-(MS_NOSUID, MS_NODEV, MS_NOEXEC, etc.). Instead of aborting with a
-clear error, the program continues with a corrupted flags bitmask,
-leading to unexpected mount behavior.
+This patch introduces a regression test to verify that the FUSE daemon
+gracefully handles corrupted inodes without crashing or violating the
+FUSE protocol.
 
-Fix by capturing the return value in a local variable first and
-propagating the error to the caller before modifying mountcfg.flags.
+Recently, a bug was identified where erofs_read_inode_from_disk()
+would fail, but erofsfuse_getattr() lacked a return statement
+after sending an error reply. This caused a fall-through, sending
+a second reply via fuse_reply_attr() and triggering a libfuse
+segmentation fault.
 
-Signed-off-by: Ajay Rajera <newajay.11r@gmail.com>
+To prevent future regressions, this test:
+1. Creates a valid EROFS image.
+2. Uses dump.erofs to dynamically determine the root directory's
+   inode NID and metadata block address.
+3. Deterministically corrupts the root inode by injecting 32 bytes
+   of 0xFF, invalidating its layout while leaving the superblock intact.
+4. Mounts the image in the foreground to capture daemon stderr.
+5. Runs `stat` on the root directory to trigger the inode read failure.
+6. Evaluates the stderr log to ensure no segfaults, aborts, or
+   "multiple replies" warnings are emitted by libfuse.
+
+Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
+Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
- mount/main.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+I will apply this refined version.
 
-diff --git a/mount/main.c b/mount/main.c
-index 5fdda81..449b35b 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -303,12 +303,17 @@ static int erofsmount_parse_options(int argc, char **argv)
- 			}
- 			cfg.c_dbg_lvl = i;
- 			break;
--		case 'o':
-+		case 'o': {
-+			long flags;
+ tests/Makefile.am   |  4 ++
+ tests/erofs/029     | 93 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/029.out |  2 +
+ 3 files changed, 99 insertions(+)
+ create mode 100755 tests/erofs/029
+ create mode 100644 tests/erofs/029.out
+
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 226955cdccbd..d8ac067805e8 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -22,6 +22,7 @@ TESTS_ENVIRONMENT = \
+ 	fi; \
+ 	[ -z $$MKFS_EROFS_PROG ] && export MKFS_EROFS_PROG=../mkfs/mkfs.erofs; \
+ 	[ -z $$FSCK_EROFS_PROG ] && export FSCK_EROFS_PROG=../fsck/fsck.erofs; \
++	[ -z $$DUMP_EROFS_PROG ] && export DUMP_EROFS_PROG=../dump/dump.erofs; \
+ 	[ -z $$EROFSFUSE_PROG ] && export EROFSFUSE_PROG=../fuse/erofsfuse;
+ 
+ if ENABLE_LZ4
+@@ -122,6 +123,9 @@ TESTS += erofs/027
+ # 028 - test inode page cache sharing functionality
+ TESTS += erofs/028
+ 
++# 029 - test FUSE daemon and kernel error handling on corrupted inodes
++TESTS += erofs/029
 +
- 			mountcfg.full_options = optarg;
--			mountcfg.flags =
--				erofsmount_parse_flagopts(optarg, mountcfg.flags,
-+			flags = erofsmount_parse_flagopts(optarg, mountcfg.flags,
- 							  &mountcfg.options);
-+			if (flags < 0)
-+				return flags;
-+			mountcfg.flags = flags;
- 			break;
-+		}
- 		case 't':
- 			dot = strchr(optarg, '.');
- 			if (dot) {
+ # NEW TEST CASE HERE
+ # TESTS += erofs/999
+ 
+diff --git a/tests/erofs/029 b/tests/erofs/029
+new file mode 100755
+index 000000000000..82fdd5d01892
+--- /dev/null
++++ b/tests/erofs/029
+@@ -0,0 +1,93 @@
++#!/bin/sh
++# SPDX-License-Identifier: MIT
++#
++# Test FUSE daemon and kernel error handling on corrupted inodes
++#
++seq=`basename $0`
++seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
++
++# get standard environment, filters and checks
++. "${srcdir}/common/rc"
++
++_cleanup()
++{
++	cd /
++	rm -rf $tmp.*
++	# Ensure we kill our background daemon if it's still alive
++	[ -n "$fuse_pid" ] && kill -9 $fuse_pid 2>/dev/null
++}
++
++_require_erofs
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++# real QA test starts here
++echo "QA output created by $seq"
++
++if [ -z "$SCRATCH_DEV" ]; then
++	SCRATCH_DEV=$tmp/erofs_$seq.img
++	rm -f $SCRATCH_DEV
++fi
++
++localdir="$tmp/$seq"
++rm -rf $localdir
++mkdir -p $localdir
++
++echo "test data" > $localdir/testfile
++
++_scratch_mkfs -T0 --all-time -Enosbcrc $localdir >> $seqres.full 2>&1 || _fail "failed to mkfs"
++
++sbdump=$($DUMP_EROFS_PROG $SCRATCH_DEV)
++meta_blkaddr=$(printf "$sbdump" | grep -i "meta_blkaddr" | grep -oE '[0-9]+' | head -n 1)
++[ -n "$meta_blkaddr" ] && _fail "failed get get meta_blkaddr"
++blocksize=$(printf "$sbdump" | grep -i "block size" | grep -oE '[0-9]+' | head -n 1)
++[ -n "$blocksize" ] && _fail "failed to get block size"
++
++victim=$($DUMP_EROFS_PROG --path=/ $SCRATCH_DEV | grep -iE 'nid\s*[:=]?\s*[0-9]+' -o | grep -oE '[0-9]+' | head -n 1)
++[ -z "$victim" ] && _fail "failed to find root NID"
++
++seeko=$((meta_blkaddr*blocksize+victim*32))
++
++# Deterministically corrupt the root inode's layout by writing 32 bytes of 0xFF
++awk 'BEGIN { for(i=0;i<32;i++) printf "\377" }' | \
++	dd of=$SCRATCH_DEV bs=1 seek=$seeko count=32 conv=notrunc >> $seqres.full 2>&1
++
++if [ "$FSTYP" = "erofsfuse" ]; then
++	[ -z "$EROFSFUSE_PROG" ] && _notrun "erofsfuse is not available"
++	# Run erofsfuse in the foreground to capture libfuse's internal stderr
++	$EROFSFUSE_PROG -f $SCRATCH_DEV $SCRATCH_MNT > $tmp/erofsfuse.log 2>&1 &
++	fuse_pid=$!
++	# Wait for the mount to establish
++	sleep 1
++elif ! _try_scratch_mount >> $seqres.full 2>&1; then
++	echo Silence is golden
++	status=0
++	exit 0
++fi
++
++# Attempt to stat the root directory to directly trigger getattr without a lookup
++timeout 5 stat $SCRATCH_MNT >> $seqres.full 2>&1
++res=$?
++[ $res -eq 124 ] && _fail "stat command timed out (kernel hung?)"
++[ $res -eq 0 ] && _fail "stat unexpectedly succeeded on a corrupted image"
++
++if [ "$FSTYP" = "erofsfuse" ]; then
++	_scratch_unmount >> $seqres.full 2>&1
++	# Wait for the daemon to cleanly exit, or kill it if stuck
++	kill $fuse_pid 2>/dev/null
++	wait $fuse_pid 2>/dev/null
++	cat $tmp/erofsfuse.log >> $seqres.full
++
++	if grep -q -i "multiple replies" $tmp/erofsfuse.log; then
++		_fail "Bug detected: libfuse reported multiple replies to request"
++	elif grep -q -i "segmentation fault\|aborted" $tmp/erofsfuse.log; then
++		_fail "Bug detected: FUSE daemon crashed"
++	fi
++else
++	_scratch_unmount >> $seqres.full 2>&1
++fi
++
++echo Silence is golden
++status=0
++exit 0
+diff --git a/tests/erofs/029.out b/tests/erofs/029.out
+new file mode 100644
+index 000000000000..8ee6db49fd4d
+--- /dev/null
++++ b/tests/erofs/029.out
+@@ -0,0 +1,2 @@
++QA output created by 029
++Silence is golden
 -- 
-2.51.0.windows.1
+2.43.5
 
 
