@@ -1,85 +1,88 @@
-Return-Path: <linux-erofs+bounces-3232-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3233-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YIeJIPVn12lVNwgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3232-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 10:48:53 +0200
+	id KM62EVNs12myNggAu9opvQ
+	(envelope-from <linux-erofs+bounces-3233-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 11:07:31 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E5C93C7F36
-	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 10:48:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01F673C833B
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 11:07:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4frtrd5P89z2ygf;
-	Thu, 09 Apr 2026 18:48:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4frvG71Lcvz2yfl;
+	Thu, 09 Apr 2026 19:07:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775724529;
-	cv=none; b=McwIATBA7s/5HpFworVrrXtaUnww5uf+EhV28cSjMAVrhKpLR2vZ9b7N27bXt/ameuh8V0zQOuvl6OC/A3gBeQSYPRVkbIcQdI5FdLc62PJj+6/8fQ0LOsJmHFOfu4kLr6tnLkocQWZdXIpE7651MflZVPDa7kQtU270mwCFW4utgzt7+GtoFb0rhkUW8cOA+P1UwW0HJVm6tAj/s5y/46RqBmxHBmUW2OifyFfCh6vogRQYc7J25u00ByaTdOZTWwF1sCwFY/VyX6k2BrH9hXbZzX82/y/+z92Z0ufTVxwOkTbHBwvDdFMMF7o6OBJo53/vRZhr/9RzY63hhn7cFg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::1331"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775725647;
+	cv=none; b=lSi2riQyP2bqTDHfmoLS0YZQ6Pb2aXeKH84yZ7+0CVIAE/cYb5MHUFgvMlA6+a137ToNgUXULVvo3h0a9Qmmn6jjeaLR3Io6glWJeDN8SUXS9k9GcHbqndLn/pn6VN7ipV54OGk0p1HNLSXqFObaZNanescWv0rfa2Nrs0usBdhIn0AfO4KQRqUE+Fm6CRUI/FB1W6F9wJaYgOKLfbuyZzEvWwSKZ5E0+jKsKqIJiKikn71kBt8StyHtp1H5oERRns0rIuHC1p0D/YfyQECbQvrWaTkifK8ouKujPsdnQq2fcm5wzTepLkLv4jtxvqNkoruue46nBvHQInm5TjxGBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1775724529; c=relaxed/relaxed;
-	bh=M1kfEtt1SV5bQ+RR5bpRiOIPtz7eRieNLD2e0q7KW6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVHzeSGNFXtSVHO+3Q0QI66X3tDq83Yu/1VecxB+sNkzc8N7NCEcbyu1jUifyPkTjHnK+iOBXHePZLB0JrTTxxH6CJybN5QWjlnOEMAq/wBKdBdAWVun71haN0Pj4Vur/RBAnK62fi/+O3Cd06TWjVxYpxFMAT9hfN3J1bPZ9GYrqO4un0nwEyVnPbEoL1nEATCuweF6m3A94pAalf6NlP+pITXnYsBnUBLHQVCeCn8uwz1ULVWABr+XqwcRXZTMpOaJH7t5rFBZsMPvNaZ4xkpnIHEZZ4cFDDqNuTSTebgH4HoL9bsYbx4ZD1rX8UsHfqXJleYC0Len1/G2F6G1Zw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=iwpKbdRC; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+	t=1775725647; c=relaxed/relaxed;
+	bh=/MerAG82bEFjUY/I2bNLi9ah5RIt0MNOaJcxGOlzIJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aBTO/a60ixI6RHWQvjC4icMjmtyayn3CZ8c8LSqBBg61bVPVd/JoY6oqitE8XOUL98JonzgNiWe40NEQaf7iFwl7HrUatsiBHEbz2zHuLOFqCy7/YaR/bWscXUIjkRXy1phjOuTru4OBXoRSWKTQlIXQX8Eogv63e8nCFc1hpl/UCA7Hies4YIhyn97s3c1XNmXBPmfNfeBryoUtlEl5DX9L5offFbw1Dg9RK+qHcCN5WRhx1itUVRTsdDTgv5xyEJ1QwzOsn/PHZpd2mZz4mLpzQeq0JFq3LP7/W/YLR/x29uAEMnjurzZgBuctGkzfnIF70TWSy+0f4Yx45sYGVQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kg/W3B4H; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1331; helo=mail-dy1-x1331.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=iwpKbdRC;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kg/W3B4H;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=newajay.11r@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1331; helo=mail-dy1-x1331.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-dy1-x1331.google.com (mail-dy1-x1331.google.com [IPv6:2607:f8b0:4864:20::1331])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4frtrc04j5z2yT0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 09 Apr 2026 18:48:46 +1000 (AEST)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-82ce09b4197so341914b3a.2
-        for <linux-erofs@lists.ozlabs.org>; Thu, 09 Apr 2026 01:48:46 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4frvG60fyYz2xTh
+	for <linux-erofs@lists.ozlabs.org>; Thu, 09 Apr 2026 19:07:25 +1000 (AEST)
+Received: by mail-dy1-x1331.google.com with SMTP id 5a478bee46e88-2cd339aeab4so608480eec.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 09 Apr 2026 02:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775724524; x=1776329324; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M1kfEtt1SV5bQ+RR5bpRiOIPtz7eRieNLD2e0q7KW6c=;
-        b=iwpKbdRCfxl6i1tXn9F54rgxo5dFbWCR0OGQtKtF+UnZTAtOz536lZZ09NwZzOdMkB
-         dnXBJGvBZuL8B6HFAUu2SW3TFbYjJB4hKICtEkI2TKJEaD1qYfHgDdhpFkD9sImOEVaA
-         IvmhnO4Lh7O2fzJ/kHrZ7HWJNkGHGl2y6TxqjSt00pj6Mg6oBsyVjMHBZkOjhQ2WN6QE
-         Zid+vsJA0A87ar7tOIpv1MBJKNsiCDKuOPTVzUJWMsUHB2sDftHfxiR5Cxz0DdmXXRJ7
-         L7bsQRD0xU6OlfVkxm+9eUEpsyFmFVcayjZAiNDlnMqBVgFLKPMeZdyW/v3Gffz1qRdU
-         +7Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775724524; x=1776329324;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775725641; x=1776330441; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M1kfEtt1SV5bQ+RR5bpRiOIPtz7eRieNLD2e0q7KW6c=;
-        b=LtAqeGAjjUdoZBVrciNeehZA0tBhLeeTj5KFMmPxbRuNNQYq3XMc97sPi/sgLg/MpV
-         YJ1nxCVpgy5U/KgKkUeJcdoccxYloPFS3ZQO3vBQjoLD3Myq1GslTYv7anTiuZhccB08
-         OCGt/UVOg6KyZ79vILtcd23JbyXErf0PTPcpsz8X2h56Ce8Z15GZ2XDFKCUsaXQEthxH
-         X1Xdkkd5Ttb1h1QcwrFP4oum1pUDYTT4NOqcl3LeZsejCocgDGql183foSEfa0i+hIf+
-         xqDZTi9e92hJCsqjEezAe7iqDKWOYS1Cvli/zwQhPlZv/6B9e0S0mfvJI/o1jL7jbaYG
-         IQzQ==
-X-Gm-Message-State: AOJu0Yyu7S4l/XXxAIHvRfg1zubbK7qafB2gq3aId4u7X9SA0UP3w+Wp
-	gbOCbrrCsEyWMylD4JzT8IJok5idRlz27W56twVIW3U39gZZA2PuHtLWE7gO7w==
-X-Gm-Gg: AeBDieszb8lokKAQuHlxK8q0/9xpANAdIIG7OUDCOTuQReqvqjZivmELee5pKBRrHqp
-	7WXJTFzoCDelaTb78pHUaqcPpSoTSnZE5ufPMrwY/Rxv6oDiDZH7aNark4HPTXpeZh1C4Sa268w
-	/g9GSxkW8hw6hIgtkfLLfMFa9l17aTFR4sJHG48NTUrupuHtixcJVLsVAaUuYECc6GDn4fBjf1+
-	XNizqr/7H/GSY4Adp4a0HfNoGFiOjGci5z1KkLO+7O0FV3EsD7bMdVFRSAbGXYcP5uJ95UO/scs
-	7vsbluiRH0xE4Kvg9suCr+io7+cuZzAzX+yQ1O2EpAQQ9vKZLgES34FVpnP7/bZ45ABBBGtrG4Q
-	rJ04KsrUXNPWHrtJTw+x0Uz0EkA4pUN9dsEwTRUIiQgHJnDimj7CAeAZ+u3qKFhHnK1Fai3D/cF
-	byGgEhgMB4GcrW8WUFG2KWLxOHwijioGxVEAAbyg==
-X-Received: by 2002:a05:6a00:4fc6:b0:81e:f1c3:89df with SMTP id d2e1a72fcca58-82d0dbc0dbcmr23511147b3a.50.1775724524144;
-        Thu, 09 Apr 2026 01:48:44 -0700 (PDT)
-Received: from LAPTOP-TNA2GCLL ([2409:4043:603:7a13:1035:6b92:bc06:68b2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9c6ad8asm23765823b3a.40.2026.04.09.01.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2026 01:48:43 -0700 (PDT)
-From: Ajay Rajera <newajay.11r@gmail.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	Ajay Rajera <newajay.11r@gmail.com>
-Subject: [PATCH] erofs-utils: support --blobdev with block map
-Date: Thu,  9 Apr 2026 14:18:34 +0530
-Message-ID: <20260409084834.147-1-newajay.11r@gmail.com>
-X-Mailer: git-send-email 2.51.0.windows.1
+        bh=/MerAG82bEFjUY/I2bNLi9ah5RIt0MNOaJcxGOlzIJk=;
+        b=kg/W3B4Hcgw388rgpH8b3kO2O+wF3i/962XPums46aE5ZBp2GFL1wqG+pGdTq+R7jM
+         W5wwhvY71/C9UTWgAIsMxJH8VrJiOW484peX0Tz82ynEZM2hfksikJBhzyJneKUE23nI
+         jJ01eaQ7NxmnUQfcuCVA7w5zYDc9uTIRosgRGr8WnQR/FDrtiRgo7D7C0dXz0Yv3i2c4
+         3AtmwRoyb0nWEFuAQN1gqGF9fj1vWOFRfx1EPKbjwf0f2xXuhgxLLC+EiNKn36VsllpQ
+         VSRTF+qrAWNhePD3Xo3QBj2v02dOxX/DBWBsnlOExEyX5po+KcQPx4iHDdD9236k7j+2
+         9E3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775725641; x=1776330441;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/MerAG82bEFjUY/I2bNLi9ah5RIt0MNOaJcxGOlzIJk=;
+        b=EmvZylHAbUPZeJ5qkSXnUza9gdsA1UdLfnfa0ub6iJU95RJPAE8sCkSag+4ymQZOiG
+         X2itLfnR49EmLIjJWpigGsZSmROwX4M4a0BuMxdTIweAYRiGTHBHJd42d88YHYBI1Vrb
+         kFoK3SG2Eh2O1Qr+ANoBP4e3cRBAtIrNi67Wn5X1wkij2PmuWNFRYJSZMZNHEScCpbXI
+         A3oCzi+mWtp6KZwfvurrdH71eih5kFTme1JaiKOf+Cw9ijmnuFz+OpYHHXjA9ePZrKU8
+         YnTb4iBrATHqpGRQvLDyxmq5BgiEkl0PcY4U1MPv2kLXhEO0SqDvoqUML1S19myUGPL/
+         /kCA==
+X-Gm-Message-State: AOJu0YyMQOJ9aQ1rkSC+pmnvEbj3me65Y3BWLMyLjMJj5D7JL5ujckJ5
+	pwr31Jao4lTSjxDtcEh5MfAOibLNp4JnjVW+2N89W7iT2dW6LASevKFhlnJYhvy5
+X-Gm-Gg: AeBDietWGdHiSW643z+Eiby+s23FVv5xsh3a5q3uRqB1XimynjkP5Edy485/4k2IX19
+	+t1pFK3I3rTDKlKddrFQs6cfUMf11Xx7Q7cNrelx15tVBTlqMvRRcsiGq46xojJSGGhJzlIUNcb
+	GQuX3w2rAohPBSjfYk5H5lQVdMx1lVJ+w1Mzu5+YImN9eC2qFGTxo3RfRGoe+JgqAu9DN4h64ij
+	/aQWYjreU3h4ymIGHtoMpB8BKB2UERbNTPFMgTpWxq0r6RPUtXCHq9pdCt3xkvPiJGOb1B1mOf1
+	S4Urpd6Tz2fV6cM2HsbiZcNdYZlkockz/crQo8mc+I5YyySDCGx4mcS997KKG4C2asa5a9W/yT3
+	k+WEKYEicQydDVAEwgUxM7I558lN47m+lP34sS+qoPBe3x8Hfg3hM6tt4EXC8RuGBW216U11mAr
+	Ym4ZAJRn+NriK+RqREvwKUYePD2Kasi18a5yUYONaTXRaoXf3uo1UVg2gc
+X-Received: by 2002:a05:7300:3254:b0:2c1:7fd3:4504 with SMTP id 5a478bee46e88-2d40bf15e13mr1394698eec.3.1775725640798;
+        Thu, 09 Apr 2026 02:07:20 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.151.61])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2d2bc2c40b1sm7268778eec.3.2026.04.09.02.07.18
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 09 Apr 2026 02:07:20 -0700 (PDT)
+From: Nithurshen <nithurshen.dev@gmail.com>
+To: newajay.11r@gmail.com
+Cc: linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH] erofs-utils: support --blobdev with block map
+Date: Thu,  9 Apr 2026 14:37:13 +0530
+Message-ID: <20260409090713.51262-1-nithurshen.dev@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260409084834.147-1-newajay.11r@gmail.com>
+References: <20260409084834.147-1-newajay.11r@gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -100,158 +103,58 @@ X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3232-lists,linux-erofs=lfdr.de];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_THREE(0.00)[3];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-0.997];
+	FORGED_RECIPIENTS(0.00)[m:newajay.11r@gmail.com,m:linux-erofs@lists.ozlabs.org,m:newajay11r@gmail.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3233-lists,linux-erofs=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[newajay11r@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 4E5C93C7F36
+X-Rspamd-Queue-Id: 01F673C833B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add support for using --blobdev with the FORCE_INODE_BLOCK_MAP
-chunk format. Previously this combination returned -EINVAL with
-a TODO noting it could be implemented via deviceslot mapped_blkaddr.
+Hi Ajay,
 
-This implements it by utilizing the deviceslot unified addressing
-(uniaddr) to map external blob device blocks into a contiguous
-address space, bypassing the need for 8-byte chunk indexes.
+Thanks for looking into this, but this patch is redundant. I already
+addressed this exact TODO item last month.
 
-For block map format, chunk addresses are encoded as:
-  blkaddr = devs[0].uniaddr + erofs_blknr(data_offset)
+My initial patch was sent on March 7th. After discussing the
+implementation with the maintainers, specifically addressing Yifan
+Zhao's feedback regarding the 32-bit address limits for block map
+entries and the necessary fix to reset m_deviceid in erofs_map_dev(),
+I submitted a finalized v2 on March 9th.
 
-At mount time, the kernel's erofs_map_dev() resolves these unified
-addresses back to the correct external device transparently.
+Additionally, following Gao Xiang's guidance, I have already written
+and submitted the corresponding test case to theexperimental-tests
+branch as of March 19th.
 
-Changes:
-- mkfs/main.c: remove the error blocking blobdev + block map
-- lib/super.c: initialize uniaddr with primarydevice_blocks
-- lib/blobchunk.c: encode unified addresses in 4-byte block maps
-- lib/data.c: fix erofs_map_dev() to set m_deviceid when resolving
-  unified addresses, so userspace tools (fsck, dump) work correctly
+I strongly suggest checking the recent mailing list archives or the
+pending patch queue before picking up a TODO item to avoid stepping
+on ongoing work and duplicating effort.
 
-Signed-off-by: Ajay Rajera <newajay.11r@gmail.com>
----
- lib/blobchunk.c | 19 +++++++++++++++++--
- lib/data.c      |  1 +
- lib/super.c     |  5 +++++
- mkfs/main.c     |  9 ++++++---
- 4 files changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 96c161b..e666d2b 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -95,7 +95,14 @@ static struct erofs_blobchunk *erofs_blob_getchunk(struct erofs_sb_info *sbi,
- 		chunk->device_id = 1;
- 	else
- 		chunk->device_id = 0;
--	chunk->blkaddr = erofs_blknr(sbi, blkpos);
-+	
-+	/* For block map with blobdev, use unified addressing */
-+	if (sbi->extra_devices && cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
-+		chunk->blkaddr = sbi->devs[0].uniaddr + erofs_blknr(sbi, blkpos);
-+		chunk->device_id = 0;  /* unified address space */
-+	} else {
-+		chunk->blkaddr = erofs_blknr(sbi, blkpos);
-+	}
- 
- 	erofs_dbg("Writing chunk (%llu bytes) to %llu", chunksize | 0ULL,
- 		  chunk->blkaddr | 0ULL);
-@@ -324,7 +331,7 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
- 	chunksize = 1ULL << chunkbits;
- 	count = DIV_ROUND_UP(inode->i_size, chunksize);
- 
--	if (sbi->extra_devices)
-+	if (sbi->extra_devices && cfg.c_force_chunkformat != FORCE_INODE_BLOCK_MAP)
- 		inode->u.chunkformat |= EROFS_CHUNK_FORMAT_INDEXES;
- 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
- 		unit = sizeof(struct erofs_inode_chunk_index);
-@@ -498,6 +505,14 @@ int tarerofs_write_chunkes(struct erofs_inode *inode, erofs_off_t data_offset)
- 		unit = sizeof(struct erofs_inode_chunk_index);
- 		DBG_BUGON(erofs_blkoff(sbi, data_offset));
- 		blkaddr = erofs_blknr(sbi, data_offset);
-+	} else if (cfg.c_blobdev_path && 
-+		   cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
-+		/* Block map with blobdev: use unified addressing via deviceslot */
-+		device_id = 0;  /* unified address space, no device_id needed */
-+		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
-+		DBG_BUGON(erofs_blkoff(sbi, data_offset));
-+		/* Map to unified address space using device's uniaddr base */
-+		blkaddr = sbi->devs[0].uniaddr + erofs_blknr(sbi, data_offset);
- 	} else {
- 		device_id = 0;
- 		unit = EROFS_BLOCK_MAP_ENTRY_SIZE;
-diff --git a/lib/data.c b/lib/data.c
-index 6fd1389..5aeb0c1 100644
---- a/lib/data.c
-+++ b/lib/data.c
-@@ -184,6 +184,7 @@ int erofs_map_dev(struct erofs_sb_info *sbi, struct erofs_map_dev *map)
- 			if (map->m_pa >= startoff &&
- 			    map->m_pa < startoff + length) {
- 				map->m_pa -= startoff;
-+				map->m_deviceid = id + 1;
- 				break;
- 			}
- 		}
-diff --git a/lib/super.c b/lib/super.c
-index 088c9a0..55d5dd1 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -393,6 +393,11 @@ int erofs_mkfs_init_devices(struct erofs_sb_info *sbi, unsigned int devices)
- 	sbi->bh_devt = bh;
- 	sbi->devt_slotoff = erofs_btell(bh, false) / EROFS_DEVT_SLOT_SIZE;
- 	sbi->extra_devices = devices;
-+	
-+	/* Initialize uniaddr for block map with blobdev support */
-+	if (devices > 0)
-+		sbi->devs[0].uniaddr = sbi->primarydevice_blocks;
-+	
- 	erofs_sb_set_device_table(sbi);
- 	return 0;
- }
-diff --git a/mkfs/main.c b/mkfs/main.c
-index b84d1b4..3cccd60 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1565,11 +1565,14 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
- 		return -EINVAL;
- 	}
- 
--	/* TODO: can be implemented with (deviceslot) mapped_blkaddr */
-+	/* Blobdev with block map uses deviceslot unified addressing */
- 	if (cfg.c_blobdev_path &&
- 	    cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
--		erofs_err("--blobdev cannot work with block map currently");
--		return -EINVAL;
-+		/* Block map format can work with blobdev using unified addressing */
-+		if (!g_sbi.extra_devices) {
-+			erofs_err("--blobdev requires device table setup");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	if (optind >= argc) {
--- 
-2.51.0.windows.1
-
+Regards,
+Nithurshen
 
