@@ -1,49 +1,81 @@
-Return-Path: <linux-erofs+bounces-3245-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3246-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gB94GvW112lURwgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3245-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 16:21:41 +0200
+	id yHfeIlm512l0SAgAu9opvQ
+	(envelope-from <linux-erofs+bounces-3246-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 16:36:09 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D66E53CBEAF
-	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 16:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ABC1D3CC159
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Apr 2026 16:36:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fs2Dc6kcQz2yfS;
-	Fri, 10 Apr 2026 00:21:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fs2YK6g4Yz2yfS;
+	Fri, 10 Apr 2026 00:36:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775744496;
-	cv=none; b=RMbs7we8z9Z7hSdW6n90thHunmX5ro/OU7RbNkB6OEbjAssOrPtHU6dY8aWPAbI/qXD3lTdULmas0QCMlRR71luwZSIR3w0nmkklT7QN0WRJiODIbWbp4SI8GEszPMK8zaj/Oc1S7K+grp01UO+PsN/5fzh5t4HPqFwiMPs16Fzgm1mauaaaSOZXcycMs9YbnCKq0iHGUIC9JbmXLitrfcd+s0KmV1E/kQ9CTSvufTy986ACLx2ISDyP+Jg5j01eDIgwFRFIfTsYvxA6qdr0qL+z1afIYn5G4nopaciwuuaYLP6H3FJfsxQMJi+R+/w2EGj8jFLr/1/YcmCQGMKdFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1775744496; c=relaxed/relaxed;
-	bh=aTxGI8l0r04nOEb3UC/ArkCWhXNCZAZID+kdMOdexuI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DORdZTeq+GOKcnYvs5EGArOyCPDmjFtPMBiyxicpZqK4NEZJn+/XFhKIR7kQWB8mhZBWqx8hEqanhihYA/WpinOFXp0YMn2wUptbXaxlR+nUnA/3xqSxqpu9p3AF7pkQfeFTeEcUZF3ealfxY4rxvq/33CgJtBDfBAUHQOBPwPgkSKfXGBRWQCQVVDC6BAHnQMj3A1jr0gPniyyC+ue6BnkBzxyhFcZEnZFwf+jbxZpl3Ffcb7beZ/Em6MOT7bvOShJhaiGI0YA+Cj6DyhYaAnRennWtkKn+4Fw2Syk6aOLfWf1/Pfxbzu0UhTdznpjTBzitBrfztVqqBu+b9Mfzbg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KlsQT2qx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c101::7" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1775745365;
+	cv=pass; b=OM6O1FsF0Fh1GDdLvFFV3W9UwS3qF+N9m2N+NU3ro6FgZPWzjF/0ovSRdFRE5bpeWsL5Ld2AI/4C3SzOgHsqFLV0WhcAPYd/YvdKtP8YrMepi/B9y/0SZg17Sl/x7U75lpAe4a2oiyR6qAhmXSHjTFOg5yfAKGhqiM+e55sy9jPFVW6TanPbid+v0DeJYkbzpS9UQZgLYeZ88kKEYQDISr3Xd7EFALWf3x0sob/f8U3X9Nyk7okE5neClyOyzquRvXQTm9K5bdcavWbjWmGMoVnjcHyZfk1GND7LW1MLJ/tSduipUPtLs39vHDi7/HszVJCddjRD4UTBbRuaX9tBhw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1775745365; c=relaxed/relaxed;
+	bh=s6VKg82eGZwW7YdI2dW4jsgO/IZhFBPTBb7i49DoRuY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=chhgKOJd2B0NobW7qCVweuqz+ij4WtpibNLlAp6Z37Kw1QYMRfSxfKQivADmyAlugqLheUmYVdTE2s8Aswy3+ZQV7fUCm8jgosWkiu918dRse3Q+TA15t+ShVg9qzPuKO505utz6wwmyh/jQgf3ThY6UiHNNKi9XmycnUqC3V3uJ908prz6NZZb27H2xxGG985Ksm5Wr/RDVzAiyIeEi7wJWqOsswRKf8DpxPvfZ6ZEiNNcegrRA11S68cL5hw58pyEoXcIQY4OZ+ELkYjZ85oHbr+i4mVHM+OO9Vu4Pw7wWaWjVq5Pq4C4UTsg2BsOXEPAa4dQ6ReucZIqDiCf0tQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=a55wSAzW; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c101::7; helo=bl0pr03cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KlsQT2qx;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=a55wSAzW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c101::7; helo=bl0pr03cu003.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazlp170120007.outbound.protection.outlook.com [IPv6:2a01:111:f403:c101::7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fs2DZ110Zz2yS9
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Apr 2026 00:21:32 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1775744488; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=aTxGI8l0r04nOEb3UC/ArkCWhXNCZAZID+kdMOdexuI=;
-	b=KlsQT2qxCY2RoienJFh0CdEMjeZj2tv9Agx2CjDzvNag53GTZEg/Y2chZeqv0kgKZluAammNm8KjeDstf1wFuHw5II5shXN5saeSxCcqGa3v+yNUHPy0HepQTyw8gqqfMQpe9k+BiLFtVHc3ZbbZa5hNKvMvyxJHMBRtHUCq/yE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X0ibMHm_1775744485;
-Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X0ibMHm_1775744485 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Apr 2026 22:21:26 +0800
-Message-ID: <d82bf7e2-a076-468f-89d1-754210c1e190@linux.alibaba.com>
-Date: Thu, 9 Apr 2026 22:21:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fs2YG3Kplz2yS9
+	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Apr 2026 00:36:01 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HkMcMsReimNMra7YdqLJ9F61wm8hykO/NudvHvDfdRtkSyt0nikcHgdtd0Pd5zqW+pWlhWup/2/XuvmT7eHGcC3o4uAA4l4ru5h9m1qX5VPvI30xkfgetE+D8MksSMdsLD8bseJ06jyNJDfsP9qGCSQT70lxesrTZH67PKUsWD/rQNaPMhviay1awWu8Xk1YbU8nnro4rq6Hphy3lW/tMmWX6ZLhjqG2kWiacKgkWnOW19axkYfeEMHTZgCKZF6L9yGudCfcYZ+lEpytVsalh2CcH8WeF7Us3qKN323hcSMDVm/mA8E0DfS333PwCGR1qSqaa8jHalcSmvU/+tEpZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s6VKg82eGZwW7YdI2dW4jsgO/IZhFBPTBb7i49DoRuY=;
+ b=byVhmx1a+oiibuokXWV8dwHC9mLMhijNphKlL/pIE/WMqmDYOGbhzZ3YGfKAZOvaO9nwAtARzrPx6g/UPO045+hFqj0XGoDApR4B6LsDDB/6E+NOsa4X5/t+Yzkm0P9v/aA8p6bpLXC722MXGbmd66k3G5wDhaPaT1kUtpr5LlCrssjEzzoDQenWZTg2OqB7mvvSO/TadhhjZtjiphq9YmQVnLA8se07CY1/HY19G71s7Ut0zstdSiCrzGyx4wgP2Lm8273i716vvZgNsB7qizj46gAhUnr1Uxlc/eQf3dYyfQRDQX01Tx6UWB86TWxUO8rIa0mqyjTpbZZrCJVqcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s6VKg82eGZwW7YdI2dW4jsgO/IZhFBPTBb7i49DoRuY=;
+ b=a55wSAzWnM0+5naB12hm8Xxcn4+cg7cW6puR05t8JWkFJkbLZ/WWp1BqS2AzbXsGIPlcbjtFxMUlRcfJzZLuoPn7r7N+aDipr6+onTi7htLYHhl7RPLGCg7F6QZ3Z6k6CIpFxUjqQ+hymMw9V1LUJkyENQHHxRGc1q6S2UitxW8XYLnCnWHKrzM5NSICvGQ2/v4XcqZvUmvkCjz1j6IDGXMyc8cb1XW7Al8lyPBOcSCBrmC1z1Vwm6+GEYuQY3aRw4CsUi/+N1BJBjNw28/amV5jEB3ZYds2o2w5jerImti+YT4jhFrWcH5/4cVY/qwYGbR6RQ7loDpE4wen5oktKQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
+ by IA0PR12MB8863.namprd12.prod.outlook.com (2603:10b6:208:488::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 9 Apr
+ 2026 14:35:33 +0000
+Received: from DS0PR12MB8502.namprd12.prod.outlook.com
+ ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
+ ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9769.018; Thu, 9 Apr 2026
+ 14:35:33 +0000
+Message-ID: <8cf20051-dfa5-4ed3-a52d-6556734830c0@nvidia.com>
+Date: Thu, 9 Apr 2026 10:35:31 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs-utils: fix erofs_sys_lsetxattr() returning positive
+ errno
+To: Zhan Xusheng <zhanxusheng1024@gmail.com>,
+ Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, Zhan Xusheng <zhanxusheng@xiaomi.com>
+References: <20260407092141.11697-1-zhanxusheng@xiaomi.com>
+Content-Language: en-CA
+From: Lucas Karpinski <lkarpinski@nvidia.com>
+In-Reply-To: <20260407092141.11697-1-zhanxusheng@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR11CA0086.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::27) To DS0PR12MB8502.namprd12.prod.outlook.com
+ (2603:10b6:8:15b::16)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,98 +87,139 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: fix unsigned underflow in
- z_erofs_lz4_handle_overlap()
-To: Junrui Luo <moonafterrain@outlook.com>, linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>,
- stable@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
- Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
- <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
- Chunhai Guo <guochunhai@vivo.com>
-References: <SYBPR01MB788118F7F3CBCD0B894B5460AF582@SYBPR01MB7881.ausprd01.prod.outlook.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <SYBPR01MB788118F7F3CBCD0B894B5460AF582@SYBPR01MB7881.ausprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|IA0PR12MB8863:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef6bcbce-599e-4062-5a61-08de964541c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	d3ggF0JESG0VMhaYQ3GcRlXK6I8gRCcKJZQMXoTL/vArMiSPFvKQfJy/CHYAzkvMl+tBeMAdq8X2HfugrjjHapYaf7fcWP5tXDlvjd1jxA/7K/8kbZLOPWD8JbV2l+m5fVbnvzxkY/Wk/2WiddmnLlFL9OjoxnZkwWIKAHR2AQGqbctm8T1AMTbM6NljLFGPnjFzFc6WQk2MW/rDMbq1DLzStlyfz3xkJYOhUzGE4L4k+EGjmueOr1IOI5rP6asvk6gnvtPhOV3k2cPwJCh6Y5fdJRl+m10plbidDEXVX9K2W+Fxc/jRK34Xs0Hj5rjrfICExE/8IhMSvy+vxSlaOG+ENVtPB/5sZT8lUMkIGTJntqydQT63c/NXYszI6aMNu6GpCfB2B+DqqC8cgJDzZm+3IoaBxohZqPFLi54DKGhM6D/BU/cO7rJcemMVPJp4oZt1+cYblCCowKjBKgP7TPtpkUoWW4I/qdODV99mjDdiW4poY8J1A+adWzOAxP8QiNA04+aZh2yyNR0T4MGxJqj4/dPBNYXtIsLQoybO7ZcMKgO5yuyhnYSZR0UUhzu/puTLT+tMdrmHcyh3ldg8qpS//tc53lpxdp/br2TKNskM5PQrw+QPmnyXd73Vv0iB+yGVgkYGtwBAzpipBkwP4siAIeSpSBJcs1kHZu6o5d7uewUwdYCaw8S0wq0S133B1xHMFTlUafoMdblGNC4WQvAxONewXgqbZhmtyL9lVxs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UFhGK2ZOTlRLMmhra0pmYVYveGZxamFlT2dPZ2tBRkRLOGJCS1Z1Y0JmN3FV?=
+ =?utf-8?B?VEMzeWloNFQ5a0dGUkFRbkhCaW4zbVY1dWxacTBOaDVmRHFHSU9kU2c1Sy9X?=
+ =?utf-8?B?TDRpcjJJT0d3NHYwejRrcFBmQSttYitiOFJLMTdyR1dFM3I0aGxtSXhTOURS?=
+ =?utf-8?B?ckM3L0JUYTZMNTRIaXptQlFhWTJaY2YrWHVFcTJtQytzRTdxMEFHcVVzbUMw?=
+ =?utf-8?B?VzhIbXIxU1haaEpqNENiakZ1NFY3aWVHNG9seW4zVzRqSDhUMTk1QlpYMUFa?=
+ =?utf-8?B?c21CcFhFRzZEejFJL01Wc2N4ck5jSE4xUDBIOWxDckJZRGdEbkEyMDJpMDFD?=
+ =?utf-8?B?Sjk0R082MGZSU2JSTEI1S0xWQ0lPMVN6dW1Cc3Z5ZkpzM1Rpb0RNb1dodFAx?=
+ =?utf-8?B?RW11a1F0Ui9vb0xLU0VpTXY2eHpXcVJRaHlnNjZFVVFObEp2c1dSMXZTVG56?=
+ =?utf-8?B?aVp3T2RyWVRicWRMeGg5RkNYRjlyWWROVVB3dFFzZDlGRTdNZ0k3L2RHSlNM?=
+ =?utf-8?B?RVJKR3huUzJQMDk4TzREdldINml1VUpha1Nlb0M1Um5pc3NndnluU2RIblF6?=
+ =?utf-8?B?WWlnWitSdzJxeC8rSkY5Q2xFZTlWNXFWMlU5REJ3OElOWmJGcTVKWjdzd1l0?=
+ =?utf-8?B?Rm1RQVRTMEQzYU40YTlKQmlodHhTdTEwVWgyaytGZndqMnZQbVpzYmk3ZDBs?=
+ =?utf-8?B?bzFkeDNyQVh0bHhIekhCazk4OVU4RFBHWnhmT2lGdjRxSG5HSXcyZFdRR3Mr?=
+ =?utf-8?B?OWVEWk1DZ2JrRDU3SHVUU1MzT0kwamJxekxWcytoeXhvcUVkNHZkSnRGK0kx?=
+ =?utf-8?B?ekdSb2l0Wnd4WVB6N3BST0pUK1R2ZmN6UFhkR2dtTVNyeVMrd0tJaTJCK0Ix?=
+ =?utf-8?B?a2FOSDl0ZldjRHhUL0lVWVZGT04rQTNmZHpCQy9ndWM4Mi8vWU92S1FoTGtm?=
+ =?utf-8?B?Q3BzcFdETTd5cDlteVNqU2N0UUk2VStBcWIvY2h6RVVKZGRmZSs1OVl0RDd2?=
+ =?utf-8?B?M3hwNndNSVpSQS9TaVN3SnFRQkROV2lZNXo2YWkyaFg2enc0Zms4TkJQQTlP?=
+ =?utf-8?B?Mkt0VGlzUERlaDQ2NWovdWNsSTdmczBBZ1NLZDU4MElZczM0V290amwySUZy?=
+ =?utf-8?B?MjU2Qi9kV2M1MUVaN2RadldOaGlXYmc3Mm9VN2pSTkc0NFlLSWx6VHdrT3RR?=
+ =?utf-8?B?S2t2bCt3aDRyY2lrSHMwWjNBQUZoTDMzMXo1SDRicTM5UXM0dUxHL0Z1UGRp?=
+ =?utf-8?B?L2QycmxDbnBDMWVLY2U3Z2loWEdTK1oxK3FJSUVXMFRXbUw5YzRaa2xiZm9y?=
+ =?utf-8?B?TFRWUDJCb2dZUysyajFVRE1wZWlHcFh6Mkd6NitvYW42d0cxS0hmbHBSL3dm?=
+ =?utf-8?B?NlN0N29mQ0pFWW4rbi9aMnVtSDlLRlN3VVBUNkI4azVjVnpaR29rNlh3eW9x?=
+ =?utf-8?B?QTR4Qm1hSWQ1Q0hCZG9qd205dHI1QURPcEpKRmJXUWlXN3RsamJMNHhpVkIx?=
+ =?utf-8?B?cWhEUkpuSlh4U3JjUFV5N0o0Wk1aNG5OZThEamhPdHNHdXlLTkZRSTByU1Nx?=
+ =?utf-8?B?UEkwaERGNUNJanFyVHVEWDcvRWlvb1NYYlduUHN6TVBuK1JjdEFUczN5NnBv?=
+ =?utf-8?B?TGwrQ29EM0FoY01JTFFFUFJ4MkMrOGRXWGVNZ3VwTTVKU0FLaEF2UHdCTzBJ?=
+ =?utf-8?B?VzQrbUdDSllvSy9YNUl6M0dZbUVFZnVTVUhyaDdjcWxQbytLb0F2QXNweitu?=
+ =?utf-8?B?Zm0vVlJrdDFFa3RNRGpMZ3krOXJrRHRwRWRXaXJ0Y0FyTDVyNkhlSnpKVFQ5?=
+ =?utf-8?B?YzRKdHFaSklLYXc5UnZBWHBMQ0k0NVRDL0ZnQ2JDTGZPMTRhY094UUhwZVU4?=
+ =?utf-8?B?NDQ5N2hEdVI3ei93WUc1OG1ZTUxXcFVWZ2xlU2FMZmpubU5QS1dZM2E3ZWxo?=
+ =?utf-8?B?YnpHZHp2emJqWHEyQm90ZDZ1Z2luRjlKYWlZYlFnZ3VTSWVhcWVlQ2JDb0o2?=
+ =?utf-8?B?QVhSbDhMRStWTmcrK1NkM2lqbDN5UTcxdW0xbXBHYlVqN21mOG5hLzJPVDNZ?=
+ =?utf-8?B?VDFsRUNBbWtxRkJpYUhGSmFheGlTbm51UXg5MURlN3VWUmE3YXFtdGpiWXQv?=
+ =?utf-8?B?dFRUSDNDM3MwT1RFTWZNVGVoMGRFL3Q5d3Z2bGRyc2s0RnN5MmVYWUF1bjA1?=
+ =?utf-8?B?TXhBazlOUzFvYTJmdyszTkpvelBBckR6VURGUGpKT2V4dDc0M3ByWWpWeEVK?=
+ =?utf-8?B?bHNmOFpMOXdibmxyUmdLME4velhzKzMxalVVb0pSdlZhOEowZ2tQdVV1OGdL?=
+ =?utf-8?B?WU1LZkRNWUkvWDAra0V5cFlmTERVRmczV09EdGpOSEgzSlFEQ3AxQT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef6bcbce-599e-4062-5a61-08de964541c5
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2026 14:35:33.5606
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YHNBOQ+2bhTSXYCnQsJod8l+3Iw0ucNruOh5wh4MAZerTxQ8JB8SqQsFtFMB2DZPOJqVWG/aOf1r1ff0ykMCeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8863
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+X-Spamd-Result: default: False [-2.20 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com,lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FORGED_RECIPIENTS(0.00)[m:moonafterrain@outlook.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:danisjiang@gmail.com,m:stable@vger.kernel.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3246-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com,linux.alibaba.com];
+	FORGED_SENDER(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zhanxusheng1024@gmail.com,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:zhanxusheng@xiaomi.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3245-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.993];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,kernel.org,linux.alibaba.com,google.com,huawei.com,vivo.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	NEURAL_HAM(-0.00)[-0.998];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,outlook.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid]
-X-Rspamd-Queue-Id: D66E53CBEAF
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:mid,xiaomi.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: ABC1D3CC159
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On 2026-04-07 5:21 a.m., Zhan Xusheng wrote:
+> erofs_sys_lsetxattr() returns bare `errno` (a positive value) on
+> failure, unlike its sibling erofs_sys_lgetxattr() which correctly
+> returns `-errno`.
+> 
+> Fix by returning -errno, consistent with erofs_sys_lgetxattr().
+> 
+> Fixes: e0d85fc5a282 ("erofs-utils: lib: introduce erofs_sys_lsetxattr()")
+> Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
+> ---
+>  lib/xattr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/xattr.c b/lib/xattr.c
+> index 565070a..af1b9ca 100644
+> --- a/lib/xattr.c
+> +++ b/lib/xattr.c
+> @@ -123,7 +123,7 @@ ssize_t erofs_sys_lsetxattr(const char *path, const char *name,
+>  	errno = ENODATA;
+>  #endif
+>  	if (ret < 0)
+> -		return errno;
+> +		return -errno;
+>  	return ret;
+>  }
+>  
+For consistency with erofs_sys_lgetxattr():
+-		return errno;
++		ret = -errno;
 
-
-On 2026/4/9 21:59, Junrui Luo wrote:
-> Some crafted images can have illegal (!partial_decoding &&
-> m_llen < m_plen) extents, and the LZ4 inplace decompression path
-> can be wrongly hit, but it cannot handle (outpages < inpages)
-> properly: "outpages - inpages" wraps to a large value and
-> the subsequent rq->out[] access reads past the decompressed_pages
-> array.
-> 
-> However, such crafted cases can correctly result in a corruption
-> report in the normal LZ4 non-inplace path.
-> 
-> Let's add an additional check to fix this for backporting.
-> 
-> Reproducible image (base64-encoded gzipped blob):
-> 
-> H4sIAJGR12kCA+3SPUoDQRgG4MkmkkZk8QRbRFIIi9hbpEjrHQI5ghfwCN5BLCzTGtLbBI+g
-> dilSJo1CnIm7GEXFxhT6PDDwfrs73/ywIQD/1ePD4r7Ou6ETsrq4mu7XcWfj++Pb58nJU/9i
-> PNtbjhan04/9GtX4qVYc814WDqt6FaX5s+ZwXXeq52lndT6IuVvlblytLMvh4Gzwaf90nsvz
-> 2DF/21+20T/ldgp5s1jXRaN4t/8izsy/OUB6e/Qa79r+JwAAAAAAAL52vQVuGQAAAP6+my1w
-> ywAAAAAAAADwu14ATsEYtgBQAAA=
-> 
-> $ mount -t erofs -o cache_strategy=disabled foo.erofs /mnt
-> $ dd if=/mnt/data of=/dev/null bs=4096 count=1
-> 
-> Fixes: 598162d05080 ("erofs: support decompress big pcluster for lz4 backend")
-> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
-
-Thanks for catching this:
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
+Regards,
+Lucas
 
