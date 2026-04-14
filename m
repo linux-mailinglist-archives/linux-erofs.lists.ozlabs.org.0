@@ -1,49 +1,89 @@
-Return-Path: <linux-erofs+bounces-3293-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3294-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GIR8LfxM3mkzqAkAu9opvQ
-	(envelope-from <linux-erofs+bounces-3293-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2026 16:19:40 +0200
+	id iG2uH1VT3mlIqQkAu9opvQ
+	(envelope-from <linux-erofs+bounces-3294-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2026 16:46:45 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D96C63FB0BC
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2026 16:19:39 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2012B3FB76C
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Apr 2026 16:46:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fw5y12Mftz2yVL;
-	Wed, 15 Apr 2026 00:19:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fw6YF0GGYz2yVL;
+	Wed, 15 Apr 2026 00:46:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776176377;
-	cv=none; b=Eiz3zA8YZgWrY6nLrFFK4APusBsAxdGgXSJtD1X9plngr08kisKpeGLzwTfIbayE0+mzkbGi1NqprGJyFeNNAorgI/B9NMPt412rR65UY96z/9SXB3+zerw9p3NnsQ8xNzyNm89vDi7zFLn5sE6mu6yX7FUU8Pn4CjTKmuLDMy6uelTtQxsy70UtfTe/Gg5V/eA44MMcKw1w5YPOmf/xbub4i5IZxbGPaLHvwtK8763MhvYzv5cuyeYTHi0edCi+dSX4HIsuhLGm941qs+0tTc/3YjbhFWR3QALlwa3wcWEQ/K780XmlVoufMocJ6b7iEFHVpl3AySI7u1RzCIJ7Pw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776178000;
+	cv=none; b=KNrV4LDgXS5TNw7VEcICrUGRbB9UaOzk36MJhniDTglBg4pxOv8208oEphSqwdoyFCvp+idlgXU4g/VET4Bmz9OzpULkJ4eS30a6GZ0LLdo/jVNh9VNFnLRYKiAxb/AmITXc2tKDMdlRq5FCHw9K5cyVTLaBhbBNwngwO4iDoS/OpwGLBcBtOxKn+uWdZIn21D4y9CWcTzIfMsZlZ9WHiGjZYIiCPrBRJRk/Hp5NctDR45qm+YHT1TVCZhHk/Va+cSDXKmaMQZax4gfZ4kFSWeWQooOjpt8kWLBt+CRHTKkTQ/YTMluMLvszb/8iQx+ylexQkPkHS5+4TqgtXr0qHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1776176377; c=relaxed/relaxed;
-	bh=otoATAnx7qhArAffWjEtTUnGtqcy79ewhelw1QrtjLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jY55pGKILrLb1i79sqB7zxv/GrVhfd2Psm+eZAocfcMxGVRe2WDBel9IxZZ93K9VH7kuOmwBuKWTOcQxU47a32t6Cak/E2MiasQ3Dk7V/pt0jAYQKaTrubgadECEg/ZWeambsczPdmr+7YV6F4RK/eXieoolWFb/8s9Ka8c4Oz5UNFqNzbl61GwDfSryZgKH+qYsZZ+xqWGSVWTBtaRE4tpOtR9FmOaWpep2J9LYfKMVRJTBCA/6D5dyyePHcQweZg/Hpo8UsazpJOfZ0E/HsSDGlFmtn7E/BaBnI8IAblnkFaHAqARhTtX0uyf12lbt4XwcB1PXmQinGeDHIxEKfQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nSRaf9Om; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1776178000; c=relaxed/relaxed;
+	bh=Qn+attenAv4h4gLzPzMkd1HSx4vnLXMwC3Fo6bP+YXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EwOyqri9VUwiv1HaEE2USuOxJqolTRN/FpZWxTW65/vi2L2kVLtzT28l7CnyVKqYBy1sAceBS7NTWIClDRJnIz7G1aa9r42ZXafQMZpYw3Vm/iug0XPyvsE+LMiQNII38Ih3BA5Gt4W0nysZ8h5fWR9GkzOcpQmXO75UEnEGFnhOBMqAVnj2LLYYmz6+FDh9cF/Win0BF7IkfEbmoToOUCrdeA5qU9U2vu+MLXtqRJ3PalWivnM9F6TdqbudPyjftpKv8mBeVql8eykq/6omW1YMcahhzKM7QXUQIpyM+0Kf2BX6D9OGn1BjwJvCgr4KTAuszsDQvw2Ris5NX23AVQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CWl84O4v; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=zhanxusheng1024@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nSRaf9Om;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=CWl84O4v;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=zhanxusheng1024@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fw5xz3SBfz2ySS
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2026 00:19:34 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1776176369; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=otoATAnx7qhArAffWjEtTUnGtqcy79ewhelw1QrtjLQ=;
-	b=nSRaf9Oma1Vo22LCTII7I5RoK9syBthhrEJXlat0N3UJB807w1lR2zraAMy76x9JGZVYMB/LqLdSrPLGXaZ4sFG9vkz1TXSCv/s0ujAuGkhPG+EuifEo7f8+8b0wJNPooaYm/esvNaVS3yNtzA5EAXUIekG0vMN15PBWwSkH6vQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X11g4Jr_1776176366;
-Received: from 30.41.54.139(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X11g4Jr_1776176366 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 14 Apr 2026 22:19:27 +0800
-Message-ID: <fb13fd1a-e929-4c7b-a8cd-ca0cc80d0ab0@linux.alibaba.com>
-Date: Tue, 14 Apr 2026 22:19:26 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fw6YC6crnz2xMY
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2026 00:46:39 +1000 (AEST)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-82f1bfc9b8fso1586549b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 14 Apr 2026 07:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776177996; x=1776782796; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qn+attenAv4h4gLzPzMkd1HSx4vnLXMwC3Fo6bP+YXo=;
+        b=CWl84O4v1G80ZOZVKGW6XEoNZHSCzuk39QC3XwmTBunpWBecfFgFWLTyQN0At1UkOJ
+         CTarc880fqnK5AynTxPwDoxiDmcXRa4UoU4uuJgqvRMWf0MTMHPkPmYZmISyXak0vvF1
+         wxqQpHJ3AJTuX5aIBbJTEjnBSPngV0f14OQ3qote47OxeGSgQfIWY66O68cETCS5pyPL
+         nM+LL83ZVJB56CdOh0QPu2BxeFwCf4zPdlYepXgmEI5e9MLQ+GVQSmlX33wuYsgJsMB0
+         5zr2JVnrdgpdplIvUzeI7IbdYk16Pr6kiXevKfNCp5+PHCwtD0A5WoKVbO3GSAzun53b
+         vTKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776177996; x=1776782796;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Qn+attenAv4h4gLzPzMkd1HSx4vnLXMwC3Fo6bP+YXo=;
+        b=dRQZCD+vZ3CNu7sVpRAUSyIT3FPW1qumF9GhA3BfkhiEMyvZX5KyTPg/Vz0wYHqCCt
+         mp29AGDFy1tRSQ0ccAemmT38kpLyJlWDjoaByrZ8hykC0fElLdATDUw0QmU4RutPuI2d
+         nyX6LXXACYxd5vYzaU41lH/UQmNnTgo+UnLQrbw/GuxOihvAA9A0c+kqsz6xsmq3IFZ5
+         SNHwGAxF7XF04/oX6LhbPk4TlB2BRJ5UAu1TKLNtZ7hAGbvIEq5rvKR/SIkMEMUHAkyv
+         wjIN6G5ShAa5/PReQjbcf6jdKvgFql6pVqAObYHHA4iEu2KQOIkO3d9Lv0uxmuK8DM3n
+         G6xw==
+X-Gm-Message-State: AOJu0YwBkJOq4eBfWOwps/vuyRwqzIvx2lMm/yy5X26zAxOe6oWUx2SR
+	txqOaqKwt6TmxkssIzpUD8HvxdBx5uuKVEVXFAB7X7Shl0Ppm3qMb/Xi
+X-Gm-Gg: AeBDievYUbaccAPQJQ4sSjRW/fGBYKyPJfGTCo55zb2TTDmXPWA08K8Ww7ZncorWJIo
+	GWlzChkh5LGMCJ15sW8nXCegZZAlp3xycDyOsW/wOwSJscZVSz7b2TDntfuNk50Z5PKQhfH4zH2
+	7pNVaEQD1+azY1LXCn6E/LFY+FCGOoXD+Hjzocrj/HO8iicbwWjI7fINZgi0RVEnWulqqMBjPHW
+	IMVTHne7/dfIGV2cb+zGuJ02ShpKSgZnXDHe3pL3jTZ5C7ZmvtKRL+GurudBPDPpw4QvNPGWoHT
+	NXLr5X9dLplwaypj/pNtz7s8YjIVAn10myint94eMZ1+6ESjpybL04zRroDH3kJy8KNN/R0p1WP
+	hjUxtgmwSnpUKmIjBtGz6QZXAyjuk6KeO9y5m+F63k5I03QRF4udKpxKU1YXGFZeO3LW2clBXEQ
+	IcPtHI6jeBrT2W80EXE/XfN8X+w0/KkzVJ/jI4xw72QFfmR5c=
+X-Received: by 2002:a05:6a00:1bcd:b0:82c:e60c:f376 with SMTP id d2e1a72fcca58-82f0c3630b6mr17592346b3a.47.1776177996085;
+        Tue, 14 Apr 2026 07:46:36 -0700 (PDT)
+Received: from DESKTOP-MOQC9AF.mioffice.cn ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f0c30ee3fsm15488124b3a.12.2026.04.14.07.46.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2026 07:46:35 -0700 (PDT)
+From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH erofs-utils 0/2] tar: fix parsing issues for pax and GNU extensions
+Date: Tue, 14 Apr 2026 22:46:32 +0800
+Message-ID: <20260414144632.46859-1-zhanxusheng@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <fb13fd1a-e929-4c7b-a8cd-ca0cc80d0ab0@linux.alibaba.com>
+References: <fb13fd1a-e929-4c7b-a8cd-ca0cc80d0ab0@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,99 +95,57 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs-utils: tar: fix out-of-bounds access when
- trimming pax path
-To: Zhan Xusheng <zhanxusheng1024@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, Zhan Xusheng <zhanxusheng@xiaomi.com>
-References: <20260414141313.46575-1-zhanxusheng@xiaomi.com>
- <20260414141313.46575-2-zhanxusheng@xiaomi.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260414141313.46575-2-zhanxusheng@xiaomi.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3293-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhanxusheng1024@gmail.com,m:linux-erofs@lists.ozlabs.org,m:zhanxusheng@xiaomi.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3294-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER(0.00)[zhanxusheng1024@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[zhanxusheng1024@gmail.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.989];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid]
-X-Rspamd-Queue-Id: D96C63FB0BC
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[xiaomi.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 2012B3FB76C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
+Hi Gao,
 
-On 2026/4/14 22:13, Zhan Xusheng wrote:
-> When a PAX extended header contains a path consisting entirely of '/'
-> characters (e.g., "path=/"), the trailing-slash trimming loop in
-> tarerofs_parse_pax_header() decrements j to 0, then accesses
-> eh->path[-1] which is an out-of-bounds heap read.
-> 
-> The tar header path trimming had a similar issue fixed by commit
-> dcd06f421003 ("erofs-utils: mkfs: tar: fix SIGSEGV on `/` entry"),
-> but the PAX header path trimming was not addressed.
-> 
-> Add a j > 0 guard to the while condition.
-> 
-> Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
-> Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
+Thanks!
 
-That was addressed by others before: I think I will add
-your `Signed-off-by:` into the original patch.
+The issue was identified during manual code review. I occasionally
+use LLMs to help polish commit messages or double-check wording.
 
-BTW, are you using LLM to discover bugs too?
+Thanks for adding my Signed-off-by.
 
-Thanks,
-Gao Xiang
-
-> ---
->   lib/tar.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/lib/tar.c b/lib/tar.c
-> index eca29f5..3d92f48 100644
-> --- a/lib/tar.c
-> +++ b/lib/tar.c
-> @@ -509,7 +509,7 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
->   				int j = p - 1 - value;
->   				free(eh->path);
->   				eh->path = strdup(value);
-> -				while (eh->path[j - 1] == '/')
-> +				while (j > 0 && eh->path[j - 1] == '/')
->   					eh->path[--j] = '\0';
->   			} else if (!strncmp(kv, "linkpath=",
->   					sizeof("linkpath=") - 1)) {
-
+Best regards,
+Zhan Xusheng
 
