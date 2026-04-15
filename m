@@ -1,83 +1,76 @@
-Return-Path: <linux-erofs+bounces-3310-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3312-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +H/EGDGT32kiWQAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3310-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 15:31:29 +0200
+	id vhapEAyc32lTWwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3312-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 16:09:16 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81FA9404CC9
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 15:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CDC4140523D
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 16:09:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fwhqy0BzVz2xTh;
-	Wed, 15 Apr 2026 23:31:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fwjgV2cPHz2yvY;
+	Thu, 16 Apr 2026 00:09:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c112::7" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776259885;
-	cv=pass; b=DhUll7LU8VDwyhjFoSRKObOWPs+GS+TvGMBZe2XiFE5A2Y477z6wes2thMJUOuiHrAB1LIXvI3LILe6JUCY3OVxjsC+lbR08yfVyp9TPhu1PdxBQA3SMsZQE2DePjChHEqt3hjEjl8JlTWbmtSwUVJeGkB8m86J6hi3p/1m/6WR8A18kh3D1VX3Kl8XrfL6t0DvtyJFZXuH4/lLG/KBwDB/cCsAKAW4Jk0yX6HzDvi2cAWU4i66YfKcs3T87TvvrHjVnl2xa4QEAI+0ruiDwdM0o2Ap1BfWU2f8Ih3Hy30OayDjoQSwLHKTHv8O6v8NPlXkBnfytmYjrPTe4sOtZNg==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c10c::1" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776262150;
+	cv=pass; b=l1skODgYOgJ+7lZB5PZ360ISRQ5G0yVlji0pJbEo0uYqwgHfoaxNh4g+hnlMyokWAUtqVoied+8H5dr33G4FQ9qQvEb0E5a7MbHtwC63mOd96PGSzF4JJJUmfTXddyxqBHHg6nZnOMxFgtxuXwcGUdQ7BDTYTF0yJIWdGMTP+FPlkcoTq7JGLuHvha88dz8Q2oX8CP01JuooEJG8ypClv+GF2KrQuKTDe31YOoTHqN3RgPl0MAtBNMJ+8Mp69CfSRumRxypkvrVho9aPhn9wXzNtnAYjayIeopbEOQFB8dTAaDykNF48fHAidOaGAJK+N36AuehPOXk5pLKZjUbh0g==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1776259885; c=relaxed/relaxed;
-	bh=3Sz0LUPAnrk8tdgtyupZbc8+HSIaFYh2i4juwY4GAAA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Xhiq9gaWeHnzGTjKp/d2H9fijP+GQPX4JABnPq93PSuArZUmsmZfowO/iv48v5Qoat+eQ8PkTYd9bhPR4F5feRUHsiwFC0j6BIozr8Bp7XXDjnXWoXwYxu2bYZvRRzKpFDa8ym/osh1d7WVoPbiMKfYWgVZjeUwg02cozkGifqUCrXft8GMECzvOszwAwx4Dt/O1sWhl26A/BgYS6PA9N/i7+09IuFBbwXJQfZ0+q9Bx2PZ+1VbF6uFCNygbv9gFSJwYCtZekK1P9ahz/nRn89qqkeZT+2WfD+cqZCMTXiSRnzNSwgp5K9ACZ3p2KRq1qQpQoIpG7F5reO1/3HNGgA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=GWyyo647; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c112::7; helo=cy3pr05cu001.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+	t=1776262150; c=relaxed/relaxed;
+	bh=kx2TYbaxJOisUmytoxmkBi69RON3GLC0gqeokSwSdX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fUJNYqIKXEe7doPC/S1r/7hnqYWSX7PeNAz0E64LM/ua0zM3FsGOACQclkWH2HtLuUi4b3NzqvqgYikyAveS2vVKS2X1/W/tRsY2GXQOYuI6eDwYb738mVH6PGQDhP5WwOCmdrXynVXxjD1uDrbU5fYZQ3x0p4iW6gRgDoqUEhB6KCWeA5FmLx66AYW3vdhQ7SGWAFjMAdK0Pvcyuqk2yOSwRmnNrmrXHzmNxr6VB8zf/oGd6Xu9ehJ7b/o1/3A3NNQDIlSr1v4EINAvvJb11Yh++N8/EI1NB4llv+MQ9TNlj9K0MJ3Ro8d+lORjuqBdXuhL5OwqbNkVB+d2lETy+Q==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RIpKxBv0; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c10c::1; helo=sa9pr02cu001.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=GWyyo647;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RIpKxBv0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c112::7; helo=cy3pr05cu001.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazlp170130007.outbound.protection.outlook.com [IPv6:2a01:111:f403:c112::7])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c10c::1; helo=sa9pr02cu001.outbound.protection.outlook.com; envelope-from=lkarpinski@nvidia.com; receiver=lists.ozlabs.org)
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazlp170130001.outbound.protection.outlook.com [IPv6:2a01:111:f403:c10c::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fwhqv5l8zz2yvG
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2026 23:31:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fwjgT3h7qz2yvv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Apr 2026 00:09:09 +1000 (AEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AXPOrTAamr96eBLpVKBjmjyg7BXwtD5KmlHJYDAuwwK3Jy6O3veHyojSjMaWoVcl72mElfRuDg6mn2HgKDlQE6rwXGz5w7zu5w1Ajx5h8nFw9yq45rlvOHRUuRTOxzx6xhoJUXJGb5QDRCUgbHQ8r9Je8QcQpLXWTUZhFZ8MxS/E1NrPrI6dJ0/fAgFI9SErE7OPYZJl2hNuS/lGMs4QCYH8FhuOWbkv8uXdeFMV6V1ZewI+djoPEv+QXea0skKNoYQ0LFbYtcQmQPAlmQYxdIWrde8zFFOEDZ61HmFXZ0sR+InxXin/4KFWOTEKbXp8Bxw6+Slu2A8vACRkLmSGzg==
+ b=rippnff93nAaj74Ayirh9rehXKCLilcp7fV/k/FnlRAFIMlP28Kg2HGvundHGf97g3EkyJZQoJH/82WNB3jJcerwsgEhIK4Si3CAh42r+I5t3KLAp0lQ80hmPoeA1QPn3CQS8oOFPiC6UyX9CP/lldFqbDgUz3tOm8m0dZ45Q5Nr+fqH+kmuzXSGav8QOVyr9WDOiWblg03sGARUNm2r4yk8o/06TK+s9q7WYr9xhUydzVnunZ9nzp03ZnDGqHoIcsyfMUNiUh4xIgastvSOv++38YnKb5yFOxU60M0FXvfk8HdqQJKtarjbYVc2IqgOd/QOtSS4qLTbIT+N/nyRrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Sz0LUPAnrk8tdgtyupZbc8+HSIaFYh2i4juwY4GAAA=;
- b=qB7Xacl5kqsbKcQi3/nnSOiBl1eZDAB1whgyW9G1jd5yEgcxGWR4iPE/wZgYtai/ko629YzCDq6UosJZdW02oGQTfQE8uF+aec9GU+Yo+MHGzz44iW6l1R9l5kePaQ303o3yiOjxDSizV14rV8BPMAZop1ex2sQ+9jOxWlD6NANfucufL7DyS3Flg/oELBbAdX1E8CE7i+iRF9gPHF9jE2XmIb/4pBScBtuir1nte8DK6aNdZyALOwU/A1GwCcTvwiFnPQ1vmaXIrr2q2qK8utTkjCPHCJES7Awl2v7OLGJy1WvDvnRuTGEOr+02tj14Hpz/VUyuGm7eU2iQjmKY6w==
+ bh=kx2TYbaxJOisUmytoxmkBi69RON3GLC0gqeokSwSdX4=;
+ b=Atpp3xraxNSi0DkXyYCNNuKM8QFxLCbjnmJ+clenBeeamWjvDDbFFd+vebENgPvOT7MIlSPrIhtL6NV12KljvGARXDUNkuKGRncNJ0pbMagob9XDtMAJ8festvwvLcUdUbvHPlahfUeUFtlL83ZzoSjbq5VmhOP3gMJIGDHY8gujawNwRZiorQPLzze2IsfhXHAv9hBHIv3iDlbZoBpb9XhNkcllnYEhTSp4D5Z+PzuWnPXiAMmTCsLHwZArc9dKPaIH3z5HnEC0tEJafa47zvxgnf0XAYpkUme9AzlZRDk7vyoRsrY8MVv7uisLYdEfq15Ak183531OflXQBAj/bA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Sz0LUPAnrk8tdgtyupZbc8+HSIaFYh2i4juwY4GAAA=;
- b=GWyyo647het/PTz3oPeEAyJgjcN5J4NNuGFb1JyCpZcZ7ZbCZ9shMavL7KvM2OYZ8PfRJmrUq2iTu9s3WW1Wi8dUOXi2pvpHypQgqkp5N7SLWK0Y3Pi1hRa5EbtJkXrZfUNwmSM4gIld7leMnVkBpare6uV7NZ+XOIYTIWq0Mk/jRlLS/sCZK2g66a9SHWWG/FYPQTSwiCKqlbR1mgE6nWCEzJudNq9dgUJ+EAttxUAhlqKJEcMS15lnjIVMJsWdA1lOZ4izXybyn1PSxwc0jHR64DKE1eJiNyV3bO2Aw+TNx/PoJkRMyuCVwpXrp0q6STRskaiFgtEZ9oVrJ30Xwg==
+ bh=kx2TYbaxJOisUmytoxmkBi69RON3GLC0gqeokSwSdX4=;
+ b=RIpKxBv06F58fL5qFxBMbEBItjn7vi71IAt0/4tB/d9eOgvI+TCWkoBxOvJaAlP53FLUDYhzGLriF8BB4hK1ap5k951cH9ao7CP1fLi7htCC+dSwh1s9nUoKrMDixITQXIOUiBCTiUEPf/lgAlW+rqo1pH7fUEjKAp9iZOv5w6BpEwu1pOK058RE/p/tDLziZLUsa447NNxqpyC9D0TRn/kyWXWKeVjqL8mnSkZeSxcPjkj8wSfbquhququ+yENGLVN3yqZfyOlEEwJHeil7e5MxFXQcgyjtcS1X2ekJVd6nQDgXr/dAKw9TKjSQjCJRbm1D7ovDnjE/kE/WuJfFOg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16)
- by CH3PR12MB7642.namprd12.prod.outlook.com (2603:10b6:610:14a::14) with
+ by SA1PR12MB8968.namprd12.prod.outlook.com (2603:10b6:806:388::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Wed, 15 Apr
- 2026 13:30:53 +0000
+ 2026 14:08:39 +0000
 Received: from DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a]) by DS0PR12MB8502.namprd12.prod.outlook.com
  ([fe80::3533:c307:cf11:3d1a%5]) with mapi id 15.20.9769.046; Wed, 15 Apr 2026
- 13:30:53 +0000
-Message-ID: <1199c33b-9015-4ac9-ac2a-198f7235f8ff@nvidia.com>
-Date: Wed, 15 Apr 2026 09:30:50 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] erofs-utils: mfks: add rebuild FULLDATA for
- combined EROFS images
-To: Gao Xiang <hsiangkao@linux.alibaba.com>,
- "zhaoyifan (H)" <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: jcalmels@nvidia.com
-References: <20260414-merge-fs-v3-0-266bd1367fd2@nvidia.com>
- <20260414-merge-fs-v3-3-266bd1367fd2@nvidia.com>
- <3d420aa9-b123-4ba8-be3c-0b395dabb070@huawei.com>
- <cc8eda08-ba1d-4c0c-b4df-16ebc65dcbea@linux.alibaba.com>
-Content-Language: en-CA
+ 14:08:39 +0000
 From: Lucas Karpinski <lkarpinski@nvidia.com>
-In-Reply-To: <cc8eda08-ba1d-4c0c-b4df-16ebc65dcbea@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+To: linux-erofs@lists.ozlabs.org
+Cc: jcalmels@nvidia.com,
+	Lucas Karpinski <lkarpinski@nvidia.com>
+Subject: [PATCH v4 0/2] erofs-utils: implement the FULLDATA rebuild mode
+Date: Wed, 15 Apr 2026 10:08:08 -0400
+Message-ID: <20260415-merge-fs-v4-0-4c6860a62255@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20260220-merge-fs-e6231a3a3a1c
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0335.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::10) To DS0PR12MB8502.namprd12.prod.outlook.com
+X-ClientProxiedBy: BL1PR13CA0430.namprd13.prod.outlook.com
+ (2603:10b6:208:2c3::15) To DS0PR12MB8502.namprd12.prod.outlook.com
  (2603:10b6:8:15b::16)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -91,160 +84,145 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|CH3PR12MB7642:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a6bab26-1a0e-4041-0b49-08de9af3377d
+X-MS-TrafficTypeDiagnostic: DS0PR12MB8502:EE_|SA1PR12MB8968:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4c24b196-a873-43a0-66cf-08de9af87e46
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|56012099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|1800799024|366016|376014|56012099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	gnaV4GT6Cv/FJ1Fm3uaRYYdFA8LFZpRwAF3n5BfuVDhdK4uyt4njfif3YB/R+O2AfTXy+deQ4ufwvRHPq3Zlqb+o6rJNM7Tab16dPVDn0OXTr8laxvBekG9aVTcTtQ7YLWrZD7e64StXEkknpNlXeMsUWzhBaJZFX4WooMlkHxfRa7oFNtKgh/Jq28mP2SHT4Y+ywPr5oJ5R0So/h5W2APVIQIGKG7o5quDHm1+UfLwBMK7t/d1d+pwWYeYUngxpsoZKz+MUbiB9AIKO8q3O11iGIsHuPUJJkUip/rUyNeJhP2nyMVDHKorQLcibtIXaigeJrqeoT7DRT947To9JN6gxHNmXzVz0j1eTK8jYRXLyFRiuSzsE0wo1z7xUOeNZBRy3QPHuDnXgW3J6yaGIrAirlgmW5gQWMlEJX3N5nKDb9xjvGQ4dclB37c47bTfcqe4KnGTvLPzuYkDhl0U/0ntD7qmz56kB3Awq72c+V3OE5nSQUWleSlJiPwuHTH2d0x/CyaYM7/fz7pnYv0eCCweAVMnl0iHHB8fNqfN463AdcnMe1AGdXQybR4TNL34Af3Sj5D8i/VMGTYvee0bcVtuDpjb5vScr3+IQAX00nxvB/wG4ZMVBoPZdBu0T8NL9B8wDHykaprSEau4mMJowDCnCy2exO0z40iEHnXZiMquxQtv0yOy1Tr7rfvylNkdlFczXk+exn7IPsswLP6k/TbmINlxtYPJJeebaLoqBzVs=
+	BdxyEXjzKWPG2A2ckV1ynm7iC7DyI8NfP5skCslcDvBngwNRfNBLBr/az4mBasjO4AAyU+5qUwp6aKCmILJ++CnXPqAJ74I4iQjwIGW4iFf0s80p8J1DxlB9OjP5M7+nInnBJ6KLkuAAIOmx1KCxhhaAefm+pF0BWAfIqLOBDGTwNC+LYIeY94ESv8dePbAOhW9D2UZuVLOwMV+dFrzdmpA6ZQVlbkmErrQc3JyjBmc6xY9/5myBsz2DE1DsgRXks+HvN/SgQYq6uXzpq78GePpGjJO+67w+epWAeuqpsClt8XJn/5EONgSb9Nb/yzQQdtcS7JnBJzmip4Z2TDx2skYd1/I8KSosG5rh6BdEouH6Y5mXd0hy35AyJHqqLI/U5eqv51sMpaLvKiKep9RKAgNwOz0tswk3HOM3OTUqye+yNZm1M/R2hY6QsG2TT7FztY0BtY5UbOz6cOUhsuJBhBQBK04w4LMxZv6TFYoLjKDwdaW+3scOTfUEBmIT5XtGtZlq0Efh3N+8iIv5Q/lSHqMvTrL5wkidpk++wv0DhVSZvxdTNGhZTtnPUvg/dUR5XCeJQ4dRTlfOkvx0RvW68G6QRez5NryOulMPAxzrh9jmPcHi/KCHo0jqmnQmneTRNyZ3NM02E6I9oh35lxvpvl9+4Wqh4N8Vp4DxEKIVrE4v1awt5jTIS0DObkQGBp67oa+yViVD3ov34wBBTkfHwfc6GsLMxAXvx7nDFHTh6Ig=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8502.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y1R4cjlZZ29wRmdEWFlnSjZQNEJYeXFpUzU2RFc0WGZHR1FoaDFHZHRSYVJE?=
- =?utf-8?B?ayt1SEhXZ1pCR2hRQ1ZDbmFyWk96aXhpZFpKTjM2R2t1c3U5MHJRWEFRY3Yr?=
- =?utf-8?B?Wlh6NklBNXNxN0p0akM0T21FR0V5U0JvTVYyTVQ0TkZEQ3pKTlE1RjJyTGs5?=
- =?utf-8?B?bWVvYWVCR1lodWVmWjQ0OHJUQlh5bUdqaG4rMnZQWWVnOGRSWkI3aFV4QTBw?=
- =?utf-8?B?M0drNHpTcDRaaCsvSTZJbjJWQkZMcHVnbkk0ZXJudFRGbVVWOGhlT1VHbzli?=
- =?utf-8?B?WlA0U1N4bTFsUVM4OFBBTzE4S1MrWUJVTEMxMDQxZmFoWEFLenJCRDFtZG9l?=
- =?utf-8?B?REhXL1NNMzV1WXNqVnFOTjRnZmI3QnlQL1Z6bk80SWtJNE5QNjBxNGtEN0t0?=
- =?utf-8?B?UFhYa29kMjNKTVFKL2QzUGQrWWJhbXZXdklYeDlZQzZzOWkvWUJkVUJubnlO?=
- =?utf-8?B?RmxqV3oxWWR1dTdrZGRlQlVsTEg3U2dEcXNFRFRqdnMrMTNmaUIyWThyQ3VD?=
- =?utf-8?B?QlNZWGV5ci91cGYwdm9jWU5YV3IxU0RUZm5MUFZzaklWOTU5TnVvaHV5SHYw?=
- =?utf-8?B?YkFKT2xMelltdkcxSEwrQ3l3a3RuV2IxczlpOHRnbjIvL2FwUkZncEZ0b0VX?=
- =?utf-8?B?ZmVYWFEyY2NwbVVFcjdhZ3F5b1Q5aEUvVTYyaFFEM2dlS2JrNmpjVWdrb1hq?=
- =?utf-8?B?NU8rOHRMM0VxazYvWUl5ajBnd2ovL0NUQTBrQ3VZdVlYUnpYK1ZnUnBPak1T?=
- =?utf-8?B?ZWprZEpGSUxhMGVmR1FKRW5tVk5uc1RnVkhPRUxNOElsbkJkMGl5N283azRB?=
- =?utf-8?B?WTVPZ29na2VJZFV1L005b2RUMFdDTUpzNlBHQUZ3WmY1YnNYRklhNGltR0pj?=
- =?utf-8?B?Z1llV2Z4eTlNcjlJWHpGbXl1MzhNVVZVWG5nQjhZQ3JSdW5iOHZLdnorSTJx?=
- =?utf-8?B?T2RBQ2RDN09uSHpwOWdSV3ppNm10L21WMUZHQ2F0WEo4WnF6ZXJWQlUwQUdK?=
- =?utf-8?B?emlrOUpKUjM4RWpXQjE0TysyUWEydm9hYVVUR1hrYWFxcTRHSGRxZTlwVXlV?=
- =?utf-8?B?V2hxcmw2MWpkWUx4c3lsay8vME9yeW8zVlV4ZVg4ZEoyUWV0ODcwOS9jUG4r?=
- =?utf-8?B?MDkycXhTQ2d0Mm5LUlV6WlBOVy9vWDh0SGVpc290ZWYrdmcxKzk1WEMzREFW?=
- =?utf-8?B?UG95RysvSnlQZHd5Vk9VSVJGZjJQNmJpVk9qV0w5akxzVjRZd2hmc0p6azBR?=
- =?utf-8?B?dXAxS0lQcGRCc28xM1EyQVliUEg2QXVHRzNsN1ZNT2FmenFKYU9GNlRSd0tX?=
- =?utf-8?B?RkFFSE9oY3N2UmFNVTdWd1JvRlZEK1VtT1Z5RnBkR3Vrb2MzdUd4VG80K3Fn?=
- =?utf-8?B?aDFyTmdxZUtkSmMyNGxuVmNLUXpNOW5RODBQdytiZDQ1dUt0dHdaaUdiTzFw?=
- =?utf-8?B?Mmd6NmlsOTYxbi8zdUh2c3Y1NWRUYjE3M3g0b2ZGR2psTXJ4eG1DZEVuZVM4?=
- =?utf-8?B?NFBwM2xkamxDWS9FT1JDNU8yN1ViZFduS0FadERuNzZOMGU2SCt6cXNkSU9o?=
- =?utf-8?B?NGFlbXpJQkFqR0RuWVpKZ2ZoRTRrd2hTTm01OTBSU0tDM2tQSEprdzRZRDZw?=
- =?utf-8?B?QUNYVlJ3cFVNcGxkVVd2MmorTUtWaFNkWG1oNE9rY2tRY1BKazY3NHMza1pQ?=
- =?utf-8?B?NFhLNkJCS0tmcUUzRWNKTnNycGdMTW5OcHZBcGZzcWlHaWxiMHBwNEdWTytx?=
- =?utf-8?B?bGIvc1hOUi8zd245TWI5ZWdza2lnRXgyemg3TzdXNHRFckZzcERhSlU3NWVS?=
- =?utf-8?B?ZUcxdU5ENnZ2ek1QeGVFMUlMZE5RN0NRSllueHRNVGhlZmJHSTd0Zzh6cGNL?=
- =?utf-8?B?R1VQMTM1VHovQ3RhYlc0Z0J1S3Y4eElTcG93am10QWF6QWduY1MrbFptRDRu?=
- =?utf-8?B?NmNCeGh0eVBBUmdzYU1EVUx1WVZ3dWIrYm42SW14WHVMZjRuT2xUbjE4Rjhq?=
- =?utf-8?B?Y0wwWlBObktYSzUwREdBU3VWclNheCt2MFhaYmJ1cTQyeTNjb21QMUZnMnpL?=
- =?utf-8?B?U3NndVc1R1Y5UUVFT2p2YUVuaTY0b2J6YTNzaG11dEtDUVNSMFFCT2xYRFVK?=
- =?utf-8?B?M2xxZFNqeWNoY09MZ0sxSW9XTXpmRW5ZdmllalNaVjRXRUhXM0R3am5PQ3Ey?=
- =?utf-8?B?MWpPU2pQTm1mRDBUZE5zM2laZGFUWVFUUGN4dklMSms3dnRiWC9yN01LVkFN?=
- =?utf-8?B?akVhMTFvbHZtUXdUTnRtd3AvQ1hITmw4WVFyNEoxelJ1bGNLb0FvbklFZC9h?=
- =?utf-8?B?azJnVGxJNDY5cGFLQWdxb2Y3RzFJdTljSXZySDR1dk5La1JWZEFVQT09?=
+	=?utf-8?B?N1dYTGIzWi92eWd0U3VWa2Y5NkduM28zOFhDaWtac2ZCMXpac1AyMnBmcnlR?=
+ =?utf-8?B?dTZYSmNVMHBjZWRrVjhTOGFibDdRRk1kNm1oZXpETDhKSmVRU3BpZzVCZEkr?=
+ =?utf-8?B?U3hZbVE0dnEvRklCaldvWlIwdnpydFphRWVPeFdrdVFwd1Z1SlU3OVJRZWNZ?=
+ =?utf-8?B?UEd2c2NvTk1BcTB1NW1GNTNndEtSZVc5KzJtbGRnQkl1amt0WlBYZkVCRjdR?=
+ =?utf-8?B?UHJ6V2xpeGIxZTJhWjlIRjU1NHMyc2IwUGQrQWs1Y1hlOWR6RTZnR0RPSWFm?=
+ =?utf-8?B?cU5tc0NxdGpXMnYzR0FjWlA2TnZIREFUc1BMR21YRFBEZTVBT0NJdmMwYlhJ?=
+ =?utf-8?B?Y2s3azBqRGhFd0cvUVhPUEorUlFHUVZ4S1J0cFpaOTdlM0FKU2FpaUJ2clUv?=
+ =?utf-8?B?bnVNOWgvRmJUdEhsUUFpeFgxekVGS1pIVXBXVHhLanQ5OW01a2UwblBlSGhv?=
+ =?utf-8?B?MXRBM0pSUWFzR3p5TTRkUy9FQzBzR2VrZUI2V1I0aHNDOFFra3MxaGJGZks2?=
+ =?utf-8?B?SXY0UEExQ3dCRENGdGR5V1FCSll6aitHZ1N1bWlrUnhqWDZtUWo2cWliYW03?=
+ =?utf-8?B?OEtuWGVEaUNCYzl1OSs5ejF0RXFTM0d3Y0NtcGR1MHErbUNVRjNGMFJlbFQr?=
+ =?utf-8?B?bmMxdklBUkcrUHN6bUZvUHphQWcyTWNYYUo4eVgvZ0tjRzk4MTJzUmRkRytt?=
+ =?utf-8?B?alJYNDlRbkpmc3k1RDlyNE0ydDdZZlRMaVNHOXc2Y1paNmxpVWJtT2ZNbmVn?=
+ =?utf-8?B?azJnNU45cFRHRXZnRWNQUERiOXY1TTFjaUxObXVxT3ozSis0MkxTSk9SaWkw?=
+ =?utf-8?B?Y2t3VjlCc3pydVlBSFE0MHlTUmd0NkpyODM3Rm5oc1RHZUtEL3lMMGdWcnA2?=
+ =?utf-8?B?b21TT3NsYUhObzlJRnVoZTZHa2t5MUZGWVdhOVF1Qkw5Q1czMFQyYzVTdUNZ?=
+ =?utf-8?B?NWd0dExLL3kyQzQ4cGhyTVBsZ1ZDZXF3Y0t4V3h1ak1pL2gvRmNjdTBTTHJt?=
+ =?utf-8?B?UEpNb1hXZ3Z4NVNRek1BcnlUWTJIa0xlRzlFTk4wRW9Ld0NkOW12dWdPdUVm?=
+ =?utf-8?B?QWYzYWE3MmtlUnpjekpLUFhWSzRHQUE2NTlKRUx0RWVLRUliRmJ6Vm5MMkZJ?=
+ =?utf-8?B?MWFSRmtMcDFaSUpZRnkwNHRHQW1mT0h4VEVQN0Rtc3hXMmtxdkx4N3BHY0U0?=
+ =?utf-8?B?emdrQlR1dDd2dndOR2ZicmZkY2NMV1Y1U0RKdi95T2liejcrdm45V0dGN1Vk?=
+ =?utf-8?B?ZUY3aEFjOHZUcWE2OUlLMWlQcFovTERDOVo1ckZQc0t3SXpSMXBtSW5PdXRN?=
+ =?utf-8?B?MCtSTlQ2dkVkM2pyL1hNcUd5T0RXK0xHcUxETUp6WmcrUGZMRk41SjRkTVk5?=
+ =?utf-8?B?eUFmOGhtdE9RTkxpMkNjRVhSM3dZZmZxcEo1Lzd1MGJLRFlHS0xCYkJ0VFhU?=
+ =?utf-8?B?bU5lTlZ4N3ltcnpXVGxBQ0g2b1ZFUGxYeUZXb0pLSGd6c0JOQ0lvVHg2MTF6?=
+ =?utf-8?B?TnR5QlpQZm9nYk92ZW1Zc3AzSld4UjJjL0JvczlBOE42M2hkak5EYjBpSTFG?=
+ =?utf-8?B?ZHY2eVJ1QjRvRnIrNStCRC9XZ0NFN040bVdlVmNCeGxwWnRBWFU1V1hFZUEx?=
+ =?utf-8?B?WGxlYzZNQ1EzUi9adjAyTDhEQTFjR2NsRmtPZ01yZGU2TkpUcERnWVkxMjdB?=
+ =?utf-8?B?V0ViY2FVTzVyZmpqb0UxS1hrVEFJVldNS1JhQlkxRTYyV0hybUNIcnZSTGli?=
+ =?utf-8?B?VWRTUk5qNGI2dlpqNzVNWVBEZWg3OFpNNkUwdVhoK3Z6Vkl5YUMycXdtU2JH?=
+ =?utf-8?B?a3g4MGlXeWd1TVJPWmorcDhXSWpzdVozWlBrVXhXZkxCTitMTVR5T29xUXhG?=
+ =?utf-8?B?dTk0akJaODFHUFREdXVtVFFCUU5MUUxJVFdicHVKMERGSStyTXhhQnJzN3lv?=
+ =?utf-8?B?VjN4VEpjY1VIMW5yUTVzVm5qVENHZGZkZk8zdVVlb1h6Q1dWRUQvbnZESlNy?=
+ =?utf-8?B?bWVCejR5NHJsZ1cvclltNzBja09KM2FSU0hRanB5b3cvd2R0b2RVM1E3NEhu?=
+ =?utf-8?B?akFVVlEwQk5NclVGSWRsQ1kvSTE4NkErV2hGMzJyaitQYU5UZ2tPeHptU0JG?=
+ =?utf-8?B?Y2c3bUw1ZldsVEtneVJwQlFsUkhlWm1IOGFDbEx2VU9CaVc0VUVHVmI4eE5w?=
+ =?utf-8?B?RGtTc3gvOXl3bmQvQzFCa2JyVUpOcjNtb0ZJNVgxR2RXdlhhNVhNYmN0RWEv?=
+ =?utf-8?B?Y1dDS1NBbzEvdXErNWNZblpZaitqQkcrSVJydGQranFKRG80TStxSGtHeXB6?=
+ =?utf-8?B?bDFFNkF1WnpuS3FSWTBsWkJUUkZHaUR0bVVQSDFhWkp5Q0dOa3JGQT09?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a6bab26-1a0e-4041-0b49-08de9af3377d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c24b196-a873-43a0-66cf-08de9af87e46
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8502.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2026 13:30:53.4379
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2026 14:08:39.6235
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mMB7QnGiRgNQYBVnrFfNax25ddn0O9QCXNLEkeqLWAoPftqkHbDw454Kq6AZmAIElebnTjzGwHPt6/VadGJ2Ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7642
+X-MS-Exchange-CrossTenant-UserPrincipalName: JNwkzIbb5LWnNPNGPIFF7TF10cSZ7HeZ5TEcrzzxOHLALMYFDjw/UasRIx34dwmKjXUrMGeSNeE7HG7w82U+Fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8968
 X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=disabled
-	version=4.0.1
+	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
 	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-3312-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3310-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:jcalmels@nvidia.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[lkarpinski@nvidia.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[3];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,Nvidia.com:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 81FA9404CC9
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,Nvidia.com:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: CDC4140523D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-04-15 3:47 a.m., Gao Xiang wrote:
-> 
-> 
-> On 2026/4/15 11:35, zhaoyifan (H) wrote:
->> This patch incorrectly handles inline inode:
->>
->> Reproduce in erofs-utils directory:
->>      mkfs/mkfs.erofs 1.erofs man/
->>      mkfs/mkfs.erofs 2.erofs docs/
->>      mkfs/mkfs.erofs --clean=data merged.erofs 1.erofs 2.erofs
->>
->> Then PERFORMANCE.md in merged.erofs contains incorrect data after
->> offset 0x2000.
->>
->> Fixed with following diff:
->>
->> diff --git a/lib/inode.c b/lib/inode.c
->>    index bd10e26..36dce56 100644
->>    --- a/lib/inode.c
->>    +++ b/lib/inode.c
->>    @@ -683,6 +683,13 @@ static int erofs_write_unencoded_data(struct
->> erofs_inode *inode,
->>
->>          /* read the tail-end data */
->>          if (inode->idata_size) {
->>    +             /*
->>    +              * If inode->idata is already present, the caller has
->> prepared
->>    +              * the tail data and nothing more needs to be done here.
->>    +              */
->>    +             if (inode->idata)
->>    +                     return 0;
-> 
-> Yes, it should be fixed as:
->     /*
->      * Read the tail-end data if inode->idata is NULL; if the tail data
->      * has been prepared then nothing more needs to be done here.
->      */
->     if (inode->idata_size && !inode->idata) {
->     }
-> 
-> ...
-> 
->>> +#include "liberofs_cache.h"
->> Unnecessary include `liberofs_cache.h`
-> 
-> That would be nice to be addressed too.
-> 
-> 
-> I've applied [PATCH 1 and 2], could you send v4 to address this?
-> 
-> Thanks,
-> Gao Xiang
+Currently, erofs-utils supports backing blobs for multi-image setups.  This
+implements the FULLDATA import which allows for the merging of multiple
+source images into a single self-contained erofs image.
 
-Thanks for the catch Zhao and ACK will add the changes.
+To optimize the rebuild process, erofs_io_xcopy() is used to leverage the
+copy_file_range(2) if available. This bypasses userspace buffering and
+enables kernel side data transfers.
+ 
+Verification: Built same image with default rebuild and rebuild with
+FULLDATA. Then ran F-i-f/tdiff comparing the two.
+
+changes in v4:
+- fixed inline inodes.
+- removed unneeded header.
+- spelling mistakes & spurious new line.
+
+changes in v3:
+- adhere to uniaddress semantics.
+- take advantage of existing infrastructure which allows us to drop a
+  significant amount of complexity + code.
+
+changes in v2:
+- reworked erofs_rebuild_load_trees_full into
+  erofs_mkfs_rebuild_load_trees.
+- removed --merge option (use --clean=data instead).
+- updated man.
+
+Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
+---
+Lucas Karpinski (2):
+      erofs-utils: mkfs: add rebuild FULLDATA for combined EROFS images
+      erofs-utils: manpage: update to reflect fulldata support
+
+ include/erofs/internal.h |  3 +++
+ lib/inode.c              | 38 ++++++++++++++++++++++-----
+ lib/rebuild.c            | 68 ++++++++++++++++++++++++++++++++++++++++++++++++
+ man/mkfs.erofs.1         |  7 ++++-
+ mkfs/main.c              |  7 +++--
+ 5 files changed, 114 insertions(+), 9 deletions(-)
+---
+base-commit: fa1aa7d3c22a3ee26956cea24156735f96ee8f9c
+change-id: 20260220-merge-fs-e6231a3a3a1c
+
+Best regards,
+-- 
+Lucas Karpinski <lkarpinski@nvidia.com>
 
