@@ -1,57 +1,49 @@
-Return-Path: <linux-erofs+bounces-3307-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3308-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id P/uPCH0H32nWNwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3307-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 05:35:25 +0200
+	id C0e9AbFC32nLRAAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3308-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 09:48:01 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A31E40000E
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 05:35:22 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55092401884
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Apr 2026 09:47:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fwRc65nFxz2yvL;
-	Wed, 15 Apr 2026 13:35:18 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fwYCb11GZz2yvL;
+	Wed, 15 Apr 2026 17:47:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776224118;
-	cv=none; b=n2BpdynVQoB/Wb6wpmJrlUIReoX7PuS3zGrfdte69JmqWKa+06hOO4lwLlHjbGsBsZ3/qVvOHhJmBTpyLFvrocsXUYsFQtwjf/Bg+ucONWpUHxnKX4uTYtXkxuqMmZGk/B7Q9+AnHanD3la6r5oViaA0qqu3mtu+g2kjICJZXraUzL8ff6IDblr3zNClFtg+jBqdxCJ63CavppOzaje5UwEqsLiXao67hbg8pH++C/Q71TANhMBlQ7uR8LkMg6cnb488YHkDXnMEqY8UAQIFVCxuCZZMcSomK0TlCx3iTyIn+zaSDwnIptRwbJDnRb0Ubryz5q/KaRALggatLtPzRg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776239275;
+	cv=none; b=NMNCZl+eppiI/6lVehdzdc3ajxtyCQrd33LgnFGQgL7/A0GsHO8Ri6PwrYpJ0gmDVgqLcQSkprc45zHscP7MXyymiV17GyrpZoyf5mQ+t3R0SH2LbRvjoh/oVjRNtpy26koVAT2tht6m0zTvv3x4Q7aUuQ8L2TPKWi05+B2hnbhoJ93h48lADaaMMbj9J+wQifcM+3Gfdo88n7zrRUcKzpy7R2kHlkzZuPWC+uZ4gxXQOk73xhjR5p0JbbvzxUEwzzZQp0uFqxZZprGKAG6B1/N4KBbe5TpQ0lcgJch4c6Psm0isyvCv3hbeDqb24OZjWBl1kd/WFowM010vADyWrQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1776224118; c=relaxed/relaxed;
-	bh=2j/TKbuPgDBJrRUeZwZMIb7BqVtTe5v4Gx1EF0/FiI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oIxzMOkJ+GQTm55eErjV0gec8ci+AMiX2eEYZcV3ZL1785a7hhBKUEzRMQOQ7eR8ruHIX2FrNJSAMmWFV3CFNziPEDK/kg2pJBvs9u0g0O3HER/yd9SEsYHB4ZcDq6QwJ3PuT8rk/cyUlSizgfoEqYYDaMdsc8XdvZuwMJScb8Bap0QEL079XUEg8ex2xMi+JwAzkVnWcz+JLXu8jcWHc9qEItqj/OEE3App/Hva8ASSU3h508CZYM1jWiAudGaNow7gsMpTQA1SCkBosKIDGVNw6LKkhu8zM8UT2jsX90A8BIcsy263g9UL2MJ2TSjft0bWfgNimlN2XDniLwjNdQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=y4Hy9aWX; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1776239275; c=relaxed/relaxed;
+	bh=mqcFLVh0uZ3Bls1K6e7Ku75MvUv8IagPJc/SLA+nBnU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LOJYAJFtXk1iO+bBqsSpUOrLbx0iVSLAv7YjCpi8Y9RYMP+MWCJ0WviRksycqTxb8dyRSdt7XDEEeT9NntDdya02eANbLEcroqknDQpEBRnUAN9ayeJbmLEYVoFMPX799W3yseO3FpLwWmZA40szm9nP5pXdeZ+gccBsTScaDO4VS4nAXJ6uFTuI9XhVO76jrMWhcqEwPJwK8crZ3elRnjQtrdHSPXrM6crdDZsTAx+vtXICuEyf6qFFfpVrIj9JhOh/Ji5kJRIMn5Y8fc1js/us7mqaftrdz/DkckDRiNTj6TS1y+kB4cAp/iQJ1NE4+uy2YMbCVJgNDqk8e2p8UQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sPEaroRu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=y4Hy9aWX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sPEaroRu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fwRc33RSdz2yth
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2026 13:35:13 +1000 (AEST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=2j/TKbuPgDBJrRUeZwZMIb7BqVtTe5v4Gx1EF0/FiI0=;
-	b=y4Hy9aWXXvEWM0svRDs6DiCF5rtFIkNFD3cXmjJgtrwSGGDj8bdpTYFE4o6iEr3lXcgp0bXp5
-	BNKMIV6Rr9VWda1S8SRyWRQMKZmE3sZuNM7HN1c3zv0SLYafWrvH7YbHEJl+JsWFu2HYd6QFJTU
-	Njl2qvc58CmrGGRH2/bCycw=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fwRSl5cY4zpT03;
-	Wed, 15 Apr 2026 11:28:55 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id D122140569;
-	Wed, 15 Apr 2026 11:35:07 +0800 (CST)
-Received: from [100.102.28.251] (100.102.28.251) by
- kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Wed, 15 Apr 2026 11:35:07 +0800
-Message-ID: <3d420aa9-b123-4ba8-be3c-0b395dabb070@huawei.com>
-Date: Wed, 15 Apr 2026 11:35:06 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fwYCX13xdz2yrM
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Apr 2026 17:47:50 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1776239266; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=mqcFLVh0uZ3Bls1K6e7Ku75MvUv8IagPJc/SLA+nBnU=;
+	b=sPEaroRuxE3bpTdqPKBW+8GYB1kdW3W0nOUlfdfqKPSHEYZ6LDIpWQhoohgRkjOip85c2d6h9MmuWof3+IqIxJrLOB7K2TfYrghXySwrEUCK18h6x0w0zovQF5nxnaL3IbRaBWr3yfLWb+Mj8Hsgw+SLGe8MQgnr7TvwaNuszYA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X13t8vd_1776239263;
+Received: from 30.221.132.134(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X13t8vd_1776239263 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Apr 2026 15:47:44 +0800
+Message-ID: <cc8eda08-ba1d-4c0c-b4df-16ebc65dcbea@linux.alibaba.com>
+Date: Wed, 15 Apr 2026 15:47:42 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -66,348 +58,103 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 3/4] erofs-utils: mfks: add rebuild FULLDATA for
  combined EROFS images
-To: Lucas Karpinski <lkarpinski@nvidia.com>, <linux-erofs@lists.ozlabs.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-CC: <jcalmels@nvidia.com>
+To: "zhaoyifan (H)" <zhaoyifan28@huawei.com>,
+ Lucas Karpinski <lkarpinski@nvidia.com>, linux-erofs@lists.ozlabs.org
+Cc: jcalmels@nvidia.com
 References: <20260414-merge-fs-v3-0-266bd1367fd2@nvidia.com>
  <20260414-merge-fs-v3-3-266bd1367fd2@nvidia.com>
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-In-Reply-To: <20260414-merge-fs-v3-3-266bd1367fd2@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+ <3d420aa9-b123-4ba8-be3c-0b395dabb070@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <3d420aa9-b123-4ba8-be3c-0b395dabb070@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [100.102.28.251]
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3308-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3307-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:lkarpinski@nvidia.com,m:linux-erofs@lists.ozlabs.org,m:jcalmels@nvidia.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:lkarpinski@nvidia.com,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,m:jcalmels@nvidia.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[4];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	HAS_XOIP(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: 5A31E40000E
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[performance.md:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 55092401884
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This patch incorrectly handles inline inode:
-
-Reproduce in erofs-utils directory:
-     mkfs/mkfs.erofs 1.erofs man/
-     mkfs/mkfs.erofs 2.erofs docs/
-     mkfs/mkfs.erofs --clean=data merged.erofs 1.erofs 2.erofs
-
-Then PERFORMANCE.md in merged.erofs contains incorrect data after offset 
-0x2000.
-
-Fixed with following diff:
-
-diff --git a/lib/inode.c b/lib/inode.c
-   index bd10e26..36dce56 100644
-   --- a/lib/inode.c
-   +++ b/lib/inode.c
-   @@ -683,6 +683,13 @@ static int erofs_write_unencoded_data(struct 
-erofs_inode *inode,
-
-         /* read the tail-end data */
-         if (inode->idata_size) {
-   +             /*
-   +              * If inode->idata is already present, the caller has 
-prepared
-   +              * the tail data and nothing more needs to be done here.
-   +              */
-   +             if (inode->idata)
-   +                     return 0;
-   +
-                 inode->idata = malloc(inode->idata_size);
-                 if (!inode->idata)
-                         return -ENOMEM;
 
 
-On 2026/4/15 3:10, Lucas Karpinski wrote:
-> This patch introduces experimental support for merging multiple source
-> images in mkfs. Each regular file record the source image path and its byte
-> offset. During the blob mkfs opens the blob and pulls the payload in via
-> erofs_io_xcopy.
->
-> This does not yet support chunk-based files or compressed images.
->
-> Signed-off-by: Lucas Karpinski <lkarpinski@nvidia.com>
-> ---
->   include/erofs/internal.h |  3 +++
->   lib/inode.c              | 31 ++++++++++++++++++---
->   lib/rebuild.c            | 70 ++++++++++++++++++++++++++++++++++++++++++++++++
->   mkfs/main.c              |  7 +++--
->   4 files changed, 105 insertions(+), 6 deletions(-)
->
-> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> index c780228c..450e2647 100644
-> --- a/include/erofs/internal.h
-> +++ b/include/erofs/internal.h
-> @@ -208,6 +208,7 @@ struct erofs_diskbuf;
->   #define EROFS_INODE_DATA_SOURCE_LOCALPATH	1
->   #define EROFS_INODE_DATA_SOURCE_DISKBUF		2
->   #define EROFS_INODE_DATA_SOURCE_RESVSP		3
-> +#define EROFS_INODE_DATA_SOURCE_REBUILD_BLOB	4
->   
->   #define EROFS_I_BLKADDR_DEV_ID_BIT		48
->   
-> @@ -253,6 +254,8 @@ struct erofs_inode {
->   		char *i_link;
->   		struct erofs_diskbuf *i_diskbuf;
->   	};
-> +	char *rebuild_blobpath;
-> +	erofs_off_t rebuild_src_dataoff;
->   	unsigned char datalayout;
->   	unsigned char inode_isize;
->   	/* inline tail-end packing size */
+On 2026/4/15 11:35, zhaoyifan (H) wrote:
+> This patch incorrectly handles inline inode:
+> 
+> Reproduce in erofs-utils directory:
+>      mkfs/mkfs.erofs 1.erofs man/
+>      mkfs/mkfs.erofs 2.erofs docs/
+>      mkfs/mkfs.erofs --clean=data merged.erofs 1.erofs 2.erofs
+> 
+> Then PERFORMANCE.md in merged.erofs contains incorrect data after offset 0x2000.
+> 
+> Fixed with following diff:
+> 
 > diff --git a/lib/inode.c b/lib/inode.c
-> index 2f78d9b8..bd10e267 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -158,6 +158,8 @@ unsigned int erofs_iput(struct erofs_inode *inode)
->   	if (inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF) {
->   		erofs_diskbuf_close(inode->i_diskbuf);
->   		free(inode->i_diskbuf);
-> +	} else if (inode->datasource == EROFS_INODE_DATA_SOURCE_REBUILD_BLOB) {
-> +		free(inode->rebuild_blobpath);
->   	} else {
->   		free(inode->i_link);
->   	}
-> @@ -697,7 +699,10 @@ static int erofs_write_unencoded_data(struct erofs_inode *inode,
->   
->   int erofs_write_unencoded_file(struct erofs_inode *inode, int fd, u64 fpos)
->   {
-> -	if (cfg.c_chunkbits) {
-> +	struct erofs_vfile vf = { .fd = fd };
-> +
-> +	if (cfg.c_chunkbits &&
-> +	    inode->datasource != EROFS_INODE_DATA_SOURCE_REBUILD_BLOB) {
->   		inode->u.chunkbits = cfg.c_chunkbits;
->   		/* chunk indexes when explicitly specified */
->   		inode->u.chunkformat = 0;
-> @@ -706,10 +711,15 @@ int erofs_write_unencoded_file(struct erofs_inode *inode, int fd, u64 fpos)
->   		return erofs_blob_write_chunked_file(inode, fd, fpos);
->   	}
->   
-> +	if (inode->datasource == EROFS_INODE_DATA_SOURCE_REBUILD_BLOB) {
-> +		if (erofs_io_lseek(&vf, fpos, SEEK_SET) != (off_t)fpos)
-> +			return -EIO;
-> +		return erofs_write_unencoded_data(inode, &vf, fpos, true, false);
-> +	}
-> +
->   	inode->datalayout = EROFS_INODE_FLAT_INLINE;
->   	/* fallback to all data uncompressed */
-> -	return erofs_write_unencoded_data(inode,
-> -			&(struct erofs_vfile){ .fd = fd }, fpos,
-> +	return erofs_write_unencoded_data(inode, &vf, fpos,
->   			inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF, false);
->   }
->   
-> @@ -1508,6 +1518,12 @@ out:
->   		free(inode->i_diskbuf);
->   		inode->i_diskbuf = NULL;
->   		inode->datasource = EROFS_INODE_DATA_SOURCE_NONE;
-> +	} else if (inode->datasource == EROFS_INODE_DATA_SOURCE_REBUILD_BLOB) {
-> +		free(inode->rebuild_blobpath);
-> +		inode->rebuild_blobpath = NULL;
-> +		inode->datasource = EROFS_INODE_DATA_SOURCE_NONE;
-> +		DBG_BUGON(ctx->fd < 0);
-> +		close(ctx->fd);
->   	} else {
->   		DBG_BUGON(ctx->fd < 0);
->   		close(ctx->fd);
-> @@ -2014,6 +2030,12 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
->   			if (ctx.fd < 0)
->   				return -errno;
->   			break;
-> +		case EROFS_INODE_DATA_SOURCE_REBUILD_BLOB:
-> +			ctx.fd = open(inode->rebuild_blobpath, O_RDONLY | O_BINARY);
-> +			if (ctx.fd < 0)
-> +				return -errno;
-> +			ctx.fpos = inode->rebuild_src_dataoff;
-> +			break;
->   		default:
->   			goto out;
->   		}
-> @@ -2022,7 +2044,8 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
->   		if (ret < 0)
->   			return ret;
->   
-> -		if (inode->sbi->available_compr_algs &&
-> +		if (inode->datasource != EROFS_INODE_DATA_SOURCE_REBUILD_BLOB &&
-> +		    inode->sbi->available_compr_algs &&
->   		    erofs_file_is_compressible(im, inode)) {
->   			ctx.ictx = erofs_prepare_compressed_file(im, inode);
->   			if (IS_ERR(ctx.ictx))
-> diff --git a/lib/rebuild.c b/lib/rebuild.c
-> index 7ab2b499..3785afd0 100644
-> --- a/lib/rebuild.c
-> +++ b/lib/rebuild.c
-> @@ -14,8 +14,10 @@
->   #include "erofs/xattr.h"
->   #include "erofs/blobchunk.h"
->   #include "erofs/internal.h"
-> +#include "erofs/io.h"
->   #include "liberofs_rebuild.h"
->   #include "liberofs_uuid.h"
-> +#include "liberofs_cache.h"
+>    index bd10e26..36dce56 100644
+>    --- a/lib/inode.c
+>    +++ b/lib/inode.c
+>    @@ -683,6 +683,13 @@ static int erofs_write_unencoded_data(struct erofs_inode *inode,
+> 
+>          /* read the tail-end data */
+>          if (inode->idata_size) {
+>    +             /*
+>    +              * If inode->idata is already present, the caller has prepared
+>    +              * the tail data and nothing more needs to be done here.
+>    +              */
+>    +             if (inode->idata)
+>    +                     return 0;
 
-Unnecessary include `liberofs_cache.h`
+Yes, it should be fixed as:
+	/*
+	 * Read the tail-end data if inode->idata is NULL; if the tail data
+	 * has been prepared then nothing more needs to be done here.
+	 */
+	if (inode->idata_size && !inode->idata) {
+	}
 
+...
+
+>> +#include "liberofs_cache.h"
+> Unnecessary include `liberofs_cache.h`
+
+That would be nice to be addressed too.
+
+
+I've applied [PATCH 1 and 2], could you send v4 to address this?
 
 Thanks,
-
-Yifan Zhao
-
->   
->   #ifdef HAVE_LINUX_AUFS_TYPE_H
->   #include <linux/aufs_type.h>
-> @@ -221,6 +223,71 @@ err:
->   	return ret;
->   }
->   
-> +static int erofs_rebuild_write_full_data(struct erofs_inode *inode)
-> +{
-> +	struct erofs_sb_info *src_sbi = inode->sbi;
-> +	int err = 0;
-> +
-> +	if (inode->datalayout == EROFS_INODE_FLAT_PLAIN) {
-> +		if (inode->u.i_blkaddr == EROFS_NULL_ADDR) {
-> +			if (inode->i_size)
-> +				return -EFSCORRUPTED;
-> +			return 0;
-> +		}
-> +		inode->rebuild_blobpath = strdup(src_sbi->devname);
-> +		if (!inode->rebuild_blobpath)
-> +			return -ENOMEM;
-> +		inode->rebuild_src_dataoff =
-> +			erofs_pos(src_sbi, erofs_inode_dev_baddr(inode));
-> +		inode->datasource = EROFS_INODE_DATA_SOURCE_REBUILD_BLOB;
-> +	} else if (inode->datalayout == EROFS_INODE_FLAT_INLINE) {
-> +		erofs_blk_t nblocks = erofs_blknr(src_sbi, inode->i_size);
-> +		unsigned int inline_size = inode->i_size % erofs_blksiz(src_sbi);
-> +
-> +		if (nblocks > 0 && inode->u.i_blkaddr != EROFS_NULL_ADDR) {
-> +			inode->rebuild_blobpath = strdup(src_sbi->devname);
-> +			if (!inode->rebuild_blobpath)
-> +				return -ENOMEM;
-> +			inode->rebuild_src_dataoff =
-> +				erofs_pos(src_sbi,
-> +					  erofs_inode_dev_baddr(inode));
-> +			inode->datasource = EROFS_INODE_DATA_SOURCE_REBUILD_BLOB;
-> +		}
-> +
-> +		inode->idata_size = inline_size;
-> +		if (inline_size > 0) {
-> +			struct erofs_vfile vf;
-> +			erofs_off_t tail_offset = erofs_pos(src_sbi, nblocks);
-> +
-> +			inode->idata = malloc(inline_size);
-> +			if (!inode->idata)
-> +				return -ENOMEM;
-> +			err = erofs_iopen(&vf, inode);
-> +			if (err) {
-> +				free(inode->idata);
-> +				inode->idata = NULL;
-> +				return err;
-> +			}
-> +			err = erofs_pread(&vf, inode->idata, inline_size,
-> +					  tail_offset);
-> +			if (err) {
-> +				free(inode->idata);
-> +				inode->idata = NULL;
-> +				return err;
-> +			}
-> +		}
-> +	} else if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
-> +		erofs_err("chunk-based files not yet supported: %s",
-> +			  inode->i_srcpath);
-> +		err = -EOPNOTSUPP;
-> +	} else if (is_inode_layout_compression(inode)) {
-> +		erofs_err("compressed files not yet supported: %s",
-> +			  inode->i_srcpath);
-> +		err = -EOPNOTSUPP;
-> +	}
-> +	return err;
-> +}
-> +
->   static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
->   				      struct erofs_inode *inode,
->   				      enum erofs_rebuild_datamode datamode)
-> @@ -265,6 +332,8 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
->   			err = erofs_rebuild_write_blob_index(dst_sb, inode);
->   		else if (datamode == EROFS_REBUILD_DATA_RESVSP)
->   			inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
-> +		else if (datamode == EROFS_REBUILD_DATA_FULL)
-> +			err = erofs_rebuild_write_full_data(inode);
->   		else
->   			err = -EOPNOTSUPP;
->   		break;
-> @@ -553,3 +622,4 @@ int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
->   	};
->   	return erofs_iterate_dir(&ctx.ctx, false);
->   }
-> +
-> diff --git a/mkfs/main.c b/mkfs/main.c
-> index 6867478b..d75c97b2 100644
-> --- a/mkfs/main.c
-> +++ b/mkfs/main.c
-> @@ -1756,7 +1756,7 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
->   		extra_devices += src->extra_devices;
->   	}
->   
-> -	if (datamode != EROFS_REBUILD_DATA_BLOB_INDEX)
-> +	if (datamode == EROFS_REBUILD_DATA_RESVSP)
->   		return 0;
->   
->   	/* Each blob has either no extra device or only one device for TarFS */
-> @@ -1766,6 +1766,9 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
->   		return -EOPNOTSUPP;
->   	}
->   
-> +	if (datamode == EROFS_REBUILD_DATA_FULL)
-> +		return 0;
-> +
->   	ret = erofs_mkfs_init_devices(&g_sbi, rebuild_src_count);
->   	if (ret)
->   		return ret;
-> @@ -1788,7 +1791,7 @@ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
->   			memcpy(devs[idx].tag, tag, sizeof(devs[0].tag));
->   		else
->   			/* convert UUID of the source image to a hex string */
-> -			erofs_uuid_unparse_as_tag(src->uuid, (char *)g_sbi.devs[idx].tag);
-> +			erofs_uuid_unparse_as_tag(src->uuid, (char *)devs[idx].tag);
->   	}
->   	return 0;
->   }
->
+Gao Xiang
 
