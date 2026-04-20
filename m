@@ -1,55 +1,49 @@
-Return-Path: <linux-erofs+bounces-3332-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3333-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id o+XsJpah5WmGmQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3332-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 05:46:30 +0200
+	id UONOAADi5WnfowEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3333-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 10:21:20 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F4AD4269A1
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 05:46:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77BFC428115
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 10:21:18 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fzWcf4d9Wz2ySf;
-	Mon, 20 Apr 2026 13:46:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fzdjm116Jz2yqT;
+	Mon, 20 Apr 2026 18:21:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776656786;
-	cv=none; b=hAQYsFwxD+K9dcL0HbxvN2SwwPOjyxVeDDPBtpF9/6FxEoQbmH5ldQODMebLgWNs59qTSnkcWZBYPg+UcHBwdNnTwPnm2ij6L6QIoK6yrnt4NpRAxeNY6g5vyp6t1h/OMa4C0scbsn+QZPhcvwRGId61ve6Ma8OYwVPzPIhVKEjNdTYSbQNUFeh3q7X4Me0MDxMXXFbA6K75GhJ5yiCNfs+BK2AkgUg5qeA8udL7S+H1CA3ZqpDRycZZzfngd2oa9PwWlRS1W1LQRoHWH7ZrmCtfiZ7JSKQXOQUDtOk04k9xtoMswNyf3DJyowxYp0oAEaRubyceU/ZT89iZl25FYg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776673276;
+	cv=none; b=AetIDDu0bQLKOVAEP/PI5paahqan3yNz3Vt4YuEiEvtYbsACY86wquDpYDnw3fcwonbqKy8rec5quoQpx1KmrtQ/rjdsi6GYr9qe1IaxGGceHrknLU93ZglLLpFjITsdn6D1qs9H0HqSKvXvCMbs7eTD3LmkzHep2p+eJK1MJSzEkaf7+g4OJUog6UvWjbY7AupbtJvh40DOoPE+FSHj8UkooET5FEoAvMeRQoGy7CLG1WoGofN0ozmbzCekqfmMKOGgZcZmUWZNp4LVpiD1XyXDL21wXtz+zk/Cx7ra1j4vm92P9D4DuS9j7pp+wmfkLHINxlJGAHFi5qhkCmGTxQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1776656786; c=relaxed/relaxed;
-	bh=C109QfEFhqbV1nVa29ooezzco+8hIG296HCXJnwniwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YCYWeNs6gqRPTBCtG8BTOMZMyGAuhrbDqyiU00tENlrpBSgYjR5deu1aIgncfR/HsyiqkTAU7Q45dUjfjLXegoZnQtvdMhMWLimOp+O2qPH6MUbHtsuxapyYv07Wg9Z57wIRVIHIKc7gBiPbA+JdFSy3LvrssKMpeP4LsnUc7mACuh1Dv0jw1YBa71oQJY0UYK+Z3cG7xe8lSiIFKb5TzjNiEp5CjdnFc2K/zM2qBTUELiDHF0yYEBZCfquzqs88URF/4+7iNkToBNWtYosC0xYzB6fXlLWAHp+KxLjFp91S3ol3KLCgGfRicIj2lpMUWH9rd9ZwQwvPMHgAznRmkw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gIRhIJ8l; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1776673276; c=relaxed/relaxed;
+	bh=dG0iEpQkyBcPtKIdH71WBVSGudWH9LQTlowpsJ5NxD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmvLfbrXqexoDgv+SBkfcG84JELphMfSv1z94pjop8X9mFJ8BwGH/36m/rFIvpHZgrPx7YEj6hrEQ9pYpzPIBPS+uoKAG1xXC2vfjRqp7Xa17vBQTKOtiao/CG5DRXQnGR6XV22PauwyXBNCrPReMov011K4yi/uLRYbarbcvrNGwgEwaH4mK4tY0QXcthxHmeWIBaBtAjbAYnbvH6ZjNwbCys2QvdwCb85C0cbz5KciHU3g89hLcIyKIk/WaPSvB+5MnVQZbxGQZDvNhlsVEuOuZYVp/SOb5HKd+ENQ95T3gPOc2sHHfhyhA63fQeN04gBT/wZSA9csRjiciiLUlw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CUnBOehr; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gIRhIJ8l;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CUnBOehr;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fzWcc4JR2z2xnl
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Apr 2026 13:46:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fzdjj3B2Xz2ySf
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Apr 2026 18:21:10 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1776656778; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=C109QfEFhqbV1nVa29ooezzco+8hIG296HCXJnwniwg=;
-	b=gIRhIJ8ltU1hGqr5O9cuPDs7EEFp3bFXvpMFB1r7UsEpqiCXMXaJ1bw2ES1MMEtJi30+huHEkkRBtGggErTLEWmmwCwtJwUNxHoVLPYhsfp8KDTxKQpeGhcA5QrpxquwnJk9RLbBu7xfatuoAuVX9NXMahAHoNw2/O6QZu6gIk4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X1GxfIW_1776656773;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X1GxfIW_1776656773 cluster:ay36)
+	t=1776673261; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=dG0iEpQkyBcPtKIdH71WBVSGudWH9LQTlowpsJ5NxD4=;
+	b=CUnBOehrM2eBYmpwrqM7hp4nHEJjAp9zmVtk3K8Z3i8BeDOjVx1YTxSPmppM1GHDF5mHzh36vL9Din3if6ZEZs2mJbuJbkX6Cm+fWsdkOA8zM8RJg+EZmtAPkcHrLJ+dSbmsdoJqpk2lKTkLpZ5if5qTZqh90LJs3b9oF5sGbJc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R221e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X1JCOZQ_1776673259;
+Received: from 30.221.130.173(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X1JCOZQ_1776673259 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 20 Apr 2026 11:46:17 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: fix offset truncation when shifting pgoff on 32-bit platforms
-Date: Mon, 20 Apr 2026 11:46:12 +0800
-Message-ID: <20260420034612.1899973-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Mon, 20 Apr 2026 16:21:00 +0800
+Message-ID: <3d2e0a50-abc7-4479-9437-d44066d891d5@linux.alibaba.com>
+Date: Mon, 20 Apr 2026 16:20:59 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -61,85 +55,80 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH experimental-tests] erofs-utils: tests: add test for
+ rebuild fulldata
+To: Lucas Karpinski <lkarpinski@nvidia.com>, linux-erofs@lists.ozlabs.org
+Cc: jcalmels@nvidia.com
+References: <20260417-b4-fulldata-test-v1-1-234654bdb930@nvidia.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260417-b4-fulldata-test-v1-1-234654bdb930@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-7.70 / 15.00];
+X-Spamd-Result: default: False [-9.20 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3332-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3333-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:lkarpinski@nvidia.com,m:linux-erofs@lists.ozlabs.org,m:jcalmels@nvidia.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 3F4AD4269A1
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 77BFC428115
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 32-bit platforms, pgoff_t is 32 bits wide, so left-shifting
-large arbitrary pgoff_t values by PAGE_SHIFT performs 32-bit arithmetic
-and silently truncates the result for pages beyond the 4 GiB boundary.
+Hi Lucas,
 
-Cast the page index to loff_t before shifting to produce a correct
-64-bit byte offset.
+On 2026/4/18 04:06, Lucas Karpinski wrote:
+> Add a regression test for building a self-contained image out of two other
+> erofs images.
+> 
+> 1. Create img1 & img2 with various file types and sizes.
+> 2. Rebuild a new self-contained image of img1 & img2.
+> 3. Delete img1 & img2 to prove that this isn't use the blob based rebuild
+>     path.
+> 4. Mount the new self-contained image and compare the checksum to the
+>     original folders.
 
-Fixes: 386292919c25 ("erofs: introduce readmore decompression strategy")
-Fixes: 307210c262a2 ("erofs: verify metadata accesses for file-backed mounts")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/data.c  | 2 +-
- fs/erofs/zdata.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks for the patch. I wonder if it's possible to:
+  1) Use a common dataset as the base layer (see other existing tests);
+  2) Mount two overlayfs to get the incremental layers;
+     - one to generate some artifacial dirs, files;
+     - the other to change/delete some files, or delete dirs, new another
+       dirs;
+  3) Test typical metadata (whiteout, opaque), and data with:
+     a) fsmerged erofs;
+     b) overlayfs mount;
+     fssum those two mounts.
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 132a27deb2f3..b2c12c5856ac 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -39,7 +39,7 @@ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
- 	 * However, the data access range must be verified here in advance.
- 	 */
- 	if (buf->file) {
--		fpos = index << PAGE_SHIFT;
-+		fpos = (loff_t)index << PAGE_SHIFT;
- 		err = rw_verify_area(READ, buf->file, &fpos, PAGE_SIZE);
- 		if (err < 0)
- 			return ERR_PTR(err);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 8a0b15511931..43bb5a6a9924 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1872,7 +1872,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_frontend *f,
- 
- 		if (cur < PAGE_SIZE)
- 			break;
--		cur = (index << PAGE_SHIFT) - 1;
-+		cur = ((loff_t)index << PAGE_SHIFT) - 1;
- 	}
- }
- 
--- 
-2.43.5
-
+Thanks,
+Gao Xiang
 
