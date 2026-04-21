@@ -1,64 +1,49 @@
-Return-Path: <linux-erofs+bounces-3340-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3341-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IG2LI6l75mkHxAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3340-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 21:16:57 +0200
+	id IHmKDgrb5mnH1QEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3341-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Apr 2026 04:03:54 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97E9D43336C
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Apr 2026 21:16:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E70A2435602
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Apr 2026 04:03:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fzwGC4RYVz2yqT;
-	Tue, 21 Apr 2026 05:16:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4g05Hm4bM9z2xc8;
+	Tue, 21 Apr 2026 12:03:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776712611;
-	cv=pass; b=FlqRbypSJeSoe2ktz3AnSl2UYsdWP3e4Zr/NJvlgtEBCnBCwyiIqEY59VnK6aWQnT8xVMZL6rE6v6goOpQim/3Q6FHJMR5uEKadXUo7/ZlPIBAoRnnmKs45ROr7dky3rjjUGaSbxJr0l2wxRPuCndD4w8QUfSfS0+AsD1iZWz1PVlm9SegChk2Ev5N/K8OMnLCELHE95BZXogLD6HU/Ju3gt33IEObBDYVDncCidwOdOxVOCUpewokDd5UzmJ8OOYxFA+YbdAJW7aadFU++o3VvzKNygMjzydSH1+tJe+1aINLqOxwyujhcbWCgKV6fwrwXucylyGgOjKVPCevEMhg==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1776712611; c=relaxed/relaxed;
-	bh=wHPhsJ56NziDuRq0Cg7GMkLz2qfAutJ9HvJRIZaOIgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LU8hPRVrTtkqhlAsZWOmRtUI6OPlmiav/x8pW686MOYkCqnqkwgMEc1V0/yIBC4UaQLaFwmAbCmYrXnnKOvu82FkVZQnbIt2poHvsFm/VIA/jB+s6iEDZfYY8ON4SonBHfKemxc0RsKol7Map1PM8e30m2evZd8XfFx/WXh3wXDP5u4L95k5Or6FIa6bNNTARiFE+PfwHzmsX6qzpktZZOtg6YXsxGvaKh2qG5jwZv67R2jyZi1qMKYALS49lKHRwDSSsFaRy0w0UiUm/ZINb63muIm1pPns8/qeVKxbb4M3zkqozhH1yUYeVu9JdUOviGZ399oiISA790MkCcyFYw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=agDrJjnr; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1776737028;
+	cv=none; b=HOdjymzuK8wTAYsOxLfRdIBlNHGSqGa/7yTd6tJZXAX89+4cqrICvhEl2Kp5mFdflDf7QVBl4n7IWmNR3caG7N3JvF9Bo4aEX29FkAu9q6jwPDTdStCqb4o22IH36YTCUqn8rN1gd3lUBjLp0PlXpQmplEtfG8GEsh2fCVwvnuNW22yK9CKKPSC0IjouL6PDkqDQ+CrFNg2ZQ+HXZOinjDX3axCjMRREuOHje3roN69qEBb0th/QcL2J5jHn/bsOP+rgXm+9HlDydtfS1Q801Vwh6LAEZNu01b2fBSYGIS2HfKjgjBfVAMMIDIYjqeKRJpYoleI98E/JRqhp38hoWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1776737028; c=relaxed/relaxed;
+	bh=PT9p61QumOTma43BB/QkhxMPjLowSNcnP2HWwqiAW7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cueBy8aKUjs6XyOHsqXqlRAxST3vFcMzumunnV9UTxBklGRH2M421e7m78M/YBG9WsRH/DL5xEW+E4dAe02hjOxu9L9A2AKeOWzwKwz9WV3M2l+JGYe5i+GC8M1HDPGwW2UsexJvKj2uBXpMZ9paPzGoqMw+fKABZ6NTy5p5wzKufxOWUadZTLjBEr+YD9ZL0aD+sdGYl5MtXw+SB3b9iUcyMOFYF4VeACpFuk/ZyOOm47Nuc5UbkpHU9JN0P0t6jqq6PYKRwnLZh8Au+3ktWQlfXSHF23vZQ1CipeQGVuKyFmYhUn0DMAGJJ5tx+kmr/bm5+eYoIYqF4Pa+TqWNeg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=e3IRNHOk; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=agDrJjnr;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=e3IRNHOk;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
-Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fzwGB5Mhhz2ypw
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Apr 2026 05:16:50 +1000 (AEST)
-ARC-Seal: i=1; a=rsa-sha256; t=1776712606; cv=none; 
-	d=zohomail.in; s=zohoarc; 
-	b=LfMFaeBDkQxJAuN7naxtd6pM+4LyA3l7gvnOMKVzRmXBOscWgBvD+JC4N8W1NYPmRvnxE0fhvb5vLqnnUWhQHx8Tm0wXHKdo7cn9EmRO+9HNsfZNYyiH9yvA0Kg7y9TSQAaaLhrueCR6WRuC/pv8lps0LZW4kT6AsZcfQi5Uv9Y=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
-	t=1776712606; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wHPhsJ56NziDuRq0Cg7GMkLz2qfAutJ9HvJRIZaOIgM=; 
-	b=MqnNOa/1JaWrXxpALj5K1GDTitLMcDZIPjXHyQ7eW21UfeASAptoI8T2s6LFDE+YjJMhA4dKDD5FFspTzgHtOmMfa0A/yj/10ksjBHOb+cUGDi7U5RQd1jUIPJzo1quWSgz6G36eKL9xWEYoMlIsF+RsORnIK+PtP+f8XX5CTV0=
-ARC-Authentication-Results: i=1; mx.zohomail.in;
-	dkim=pass  header.i=vnsh.in;
-	spf=pass  smtp.mailfrom=ch@vnsh.in;
-	dmarc=pass header.from=<ch@vnsh.in>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776712606;
-	s=zoho; d=vnsh.in; i=ch@vnsh.in;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wHPhsJ56NziDuRq0Cg7GMkLz2qfAutJ9HvJRIZaOIgM=;
-	b=agDrJjnr00oRrlvTFM9691vXjWLvxNsoO77tcZE1A66toWJVBJI9mc16VBBN7fC9
-	msEf5OVbbCAgU4yom+USBGlCHE4VryIkOk37n2UQbjgZNOiHE4PH6Dz88gqeeMKvieb
-	S6wB4OoD2zVpbSnBJpNF/0FmPlDvikVbb4qnAg0s=
-Received: by mx.zoho.in with SMTPS id 1776712604445807.7006698145101;
-	Tue, 21 Apr 2026 00:46:44 +0530 (IST)
-From: Vansh Choudhary <ch@vnsh.in>
-To: linux-erofs@lists.ozlabs.org
-Cc: Vansh Choudhary <ch@vnsh.in>
-Subject: [PATCH] erofs-utils: lib: restore path on erofs_rebuild_get_dentry() errors
-Date: Tue, 21 Apr 2026 00:46:43 +0530
-Message-ID: <20260420191643.73204-1-ch@vnsh.in>
-X-Mailer: git-send-email 2.43.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4g05Hj5TD6z2xT6
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Apr 2026 12:03:43 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1776737018; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=PT9p61QumOTma43BB/QkhxMPjLowSNcnP2HWwqiAW7s=;
+	b=e3IRNHOkOAFEoQWlXpszyWRrZV/9e3p96YW1ze0U1t3KrvmMfKxpj8C6JwtNmYWCpyqCe6bJ26Qag/hNuIC7Egnd/Si9T8dQtiUbvTcfEJ5Hx8sNlBq7/OJ//xEBExS7GyS3AmXTB8Rs22SGyM9Vdk9o6FL4TkDAxqnx1MXhXos=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X1RNrF5_1776737016;
+Received: from 30.221.132.26(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X1RNrF5_1776737016 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 21 Apr 2026 10:03:36 +0800
+Message-ID: <78d564f5-5511-4c67-b6b4-6670b3babbbf@linux.alibaba.com>
+Date: Tue, 21 Apr 2026 10:03:34 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -70,82 +55,95 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 7.0-6.12] erofs: ensure all folios are managed in
+ erofs_try_to_free_all_cached_folios()
+To: Sasha Levin <sashal@kernel.org>, patches@lists.linux.dev,
+ stable@vger.kernel.org
+Cc: Zhan Xusheng <zhanxusheng@xiaomi.com>, Chunhai Guo <guochunhai@vivo.com>,
+ xiang@kernel.org, chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20260420132314.1023554-1-sashal@kernel.org>
+ <20260420132314.1023554-198-sashal@kernel.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260420132314.1023554-198-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[vnsh.in];
+	TAGGED_FROM(0.00)[bounces-3341-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:sashal@kernel.org,m:patches@lists.linux.dev,m:stable@vger.kernel.org,m:zhanxusheng@xiaomi.com,m:guochunhai@vivo.com,m:xiang@kernel.org,m:chao@kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-3340-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[vnsh.in:+];
-	NEURAL_HAM(-0.00)[-0.996];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 97E9D43336C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:email]
+X-Rspamd-Queue-Id: E70A2435602
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-erofs_rebuild_get_dentry() temporarily writes '\0' over each '/'
-in the caller's path to NUL-terminate segments, but two error
-returns skip the restoration and leave the path truncated.
 
-Restore the slash before those returns.
 
-Fixes: 73e321a0fb3b ("erofs-utils: lib: consolidate erofs_rebuild_get_dentry()")
-Signed-off-by: Vansh Choudhary <ch@vnsh.in>
----
- lib/rebuild.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 2026/4/20 21:19, Sasha Levin wrote:
+> From: Zhan Xusheng <zhanxusheng@xiaomi.com>
+> 
+> [ Upstream commit 5de6951fedb29700ace53b283ccb951c8f712d12 ]
+> 
+> folio_trylock() in erofs_try_to_free_all_cached_folios() may
+> successfully acquire the folio lock, but the subsequent check
+> for erofs_folio_is_managed() can skip unlocking when the folio
+> is not managed by EROFS.
+> 
+> As Gao Xiang pointed out, this condition should not happen in
+> practice because compressed_bvecs[] only holds valid cached folios
+> at this point — any non-managed folio would have already been
+> detached by z_erofs_cache_release_folio() under folio lock.
+> 
+> Fix this by adding DBG_BUGON() to catch unexpected folios
+> and ensure folio_unlock() is always called.
+> 
+> Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Reviewed-by: Chunhai Guo <guochunhai@vivo.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+> 
+> LLM Generated explanations, may be completely bogus:
+> 
+> Now I have a complete picture. Let me compile my analysis.
 
-diff --git a/lib/rebuild.c b/lib/rebuild.c
-index 74bbeda..14013cf 100644
---- a/lib/rebuild.c
-+++ b/lib/rebuild.c
-@@ -123,8 +123,10 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- 			d = erofs_d_lookup(pwd, s);
- 			if (d) {
- 				if (d->type != EROFS_FT_DIR) {
--					if (slash)
-+					if (slash) {
-+						*slash = '/';
- 						return ERR_PTR(-ENOTDIR);
-+					}
- 				} else if (to_head) {
- 					list_del(&d->d_child);
- 					list_add(&d->d_child, &pwd->i_subdirs);
-@@ -132,8 +134,10 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- 				pwd = d->inode;
- 			} else if (slash) {
- 				d = erofs_rebuild_mkdir(pwd, s);
--				if (IS_ERR(d))
-+				if (IS_ERR(d)) {
-+					*slash = '/';
- 					return d;
-+				}
- 			} else {
- 				d = erofs_d_alloc(pwd, s);
- 				if (IS_ERR(d))
--- 
-2.43.0
+This is NOT a bugfix, but I don't mind if such random
+patch backports to stable kernels.
 
+Thanks,
+Gao Xiang
 
