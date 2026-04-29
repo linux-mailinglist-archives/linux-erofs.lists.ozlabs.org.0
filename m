@@ -1,97 +1,66 @@
-Return-Path: <linux-erofs+bounces-3365-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3367-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IIyQCdu68Wl1kAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3365-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:01:31 +0200
+	id AHXoH7bE8WkbkQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3367-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:43:34 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41E1B490E1E
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:01:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6D84914BF
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:43:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4g58rW2zKHz2ySf;
-	Wed, 29 Apr 2026 18:01:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4g59nF0JGWz2ySW;
+	Wed, 29 Apr 2026 18:43:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::333" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777449675;
-	cv=pass; b=KV+ZJTuOLkRLJCJE5FNrn2R2+oqlLrDYgd4oSi6Aw5uiFXVyswpWKUgNe0UcKrIRqw+4Eo4Z5Ycdn920OpgTOif7/pE55sbh7bso9keHHxPghJ1FtdHPeUiJiNso0SPj2gT4ZUlVo9Ksm/kQOv0QyX/Z7ocWZmYxYB5xIShWMb6bAHCh3JF0J7utPLQoBalzQUYC4L0DmA23X3C9N/laRY1fsJblpYPpuv5OR+Ne8JceQz7WpRzgZ3TjblVivhiBXOW2qei6zXUTpjkw9VLqswDZqSSLR9XnTL6ZwJXs7emBUYxUS7gxjr7X63lFH3WX9OCI6m6AsMNXD6XgTZFo1A==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=103.117.158.51 arc.chain=zohomail.in
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777452208;
+	cv=pass; b=IM3yr4hjRfNEPArY+ZOV61irHAStduOtyIPuV+jQCeNwHicdd09h3zq8ICKwvHx8eDLdAMT0RXro8/eEmNdAdkRi8VTWTTALdqi5MnxFmDzHym6Ki0VJpxmtit57TFcUAJcp3iknEIKbDKmp4XSSKdyYRlyr+/Y1sy9yzQwGkz/APs+0DkWu9JPt8VScALCpmkdtF3MgbLIYBZM/PfoXl7D12cKeMh1//SSzrJIlCgVyDceuRSutrfTnQTGpzs5OPSG9qTLI7Vz8/mYF1LN+LinXZSUXbbT4/6SLJHRaMoceIsQOa0sCXWL2fvG2WvEoqHadonQCQkoTcNn72pOtnA==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1777449675; c=relaxed/relaxed;
-	bh=i1HkGv08ixkw/NtnH/a+YIiHYWuD41eetNV6JArImdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RcKfQtGotvz65ZU/AN9GJT0Dc3QhTA+kjHbmPrxr8AtKymjvQIrtKhpURzp6gvjMlmLUTaUSGuWwqsfdt7IH3FXy75Y0dzJLOKBEIzRce8K45vYHvoDwV4rYuP0LkV0oGJQeiSWHAM8Kfkq6UQZ+L957S6UCZy6we/PQJxaiur/vURdLXtbM6G/xSqGNFy2VekdDiTl1bCqHi7ubDWpUQheK4OLVUOV8C/C8jhjuEkTzXGiMKRfMwqNMUq75rLvmMNuRY8bUk1r8trZXgBdA3EHc3PVv1xs/Wm95KpbBi+lz/Y3gHmCVO4hNkQXhX5HuKXcs6aZS+obDCl9OMuNh/w==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dsIQwHfl; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::333; helo=mail-wm1-x333.google.com; envelope-from=niuzhiguo84@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1777452208; c=relaxed/relaxed;
+	bh=S9cnjeOA+5FPoko9S7SlEwgDVh12VYYlZRkVqJFz88k=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XAMlHrKuka1zAJWx89ZCl2efNNQeZCWtcQqmjT5ZFtRLJ2r3s7nltHF3XBA7rjjNjzRZFdcroYbEjXjZzSMHczDXM7U4m7tAe7fBL2yfshU8B09oxNq1d5gnNCYSTiKz30KAA/GN9lN3HqDSBJGLVFbV1VUUVwvZ3cLPFL3FfAlfGAwxruHDyBOcheJthbJvJE7/zf3FdYPqZMMklwoqpmcwDcfwgwbNmcATo5z1AiVLLl7NEkgB1JwSfxCVqjSO025BvHj9TOvg3c5qiwyfaAe+q9sLYDscpyk/gmjtGEywc1NtQR7GD6DA7tSHVqOHZuiTX53rPqOFVkq3bMkKQQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in; dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=XKkhi7gP; dkim-atps=neutral; spf=pass (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org) smtp.mailfrom=vnsh.in
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=vnsh.in
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=dsIQwHfl;
+	dkim=pass (1024-bit key; unprotected) header.d=vnsh.in header.i=ch@vnsh.in header.a=rsa-sha256 header.s=zoho header.b=XKkhi7gP;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::333; helo=mail-wm1-x333.google.com; envelope-from=niuzhiguo84@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vnsh.in (client-ip=103.117.158.51; helo=sender-of-o51.zoho.in; envelope-from=ch@vnsh.in; receiver=lists.ozlabs.org)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4g58rQ2dt6z2ySW
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2026 18:01:09 +1000 (AEST)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-48962cd0864so13945755e9.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2026 01:01:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777449666; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FU1dNZ4LkZmJbunkEeNVmqMQYQM5iZmbVMVMDKZnaBFNLsh1g0ija0IyxXC1hU6Qns
-         DNKC56MkUqAXeh+Wcr82KIO61uJ++hoVJmB+IMpmC7vfkijdCcFg9OZzpPdipLnYrQV0
-         a+9O+PEgmDdyP2W5JctYjCW+gxY2qzYQx16Ae0Vnsdx5JCqY7rTJG38aKiCNNjW7F3H0
-         Ne37/sl6nVcYWuA4YYVbJpAFEoHvv/aLU6EoPDnCMvSVldUxoKW4V87qDY1+gOtAfdy+
-         3Y7HhipWQJ0/IQLu3eHKZrHw4/+dJO6+wPEoCwvsBY2V8crsrxM0iqWd1/gRQv0cIE4t
-         Fhdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=i1HkGv08ixkw/NtnH/a+YIiHYWuD41eetNV6JArImdM=;
-        fh=vncB/LX0K2R1jgcpedCt5Hlx81V8Ss4RygwjSGPeAsE=;
-        b=IQ+/G1/eE0zKCWJ3eKD4r2dBfBTmMEe/QIXMZk6hoopz1uZR8y6U5U7RBP745+6VOn
-         MW8RZt0iSEE3CVDZF5oUwPV09m2PKq3c9mvb5PpW1nxTm48XivXjCQR7DMqYEYWSRgrY
-         tD4+Kgw7s39pHz5sCJtkeKEf/5Smo0Fun/Ezt2LEkITORlojgkKPgGrzO5bxAuLnuwqQ
-         WscVqCmVGi3lwcvm1Gu0gCLPy61F7eTHva/9Z9PDrvvCZMyLx6JaR10vYGaIjizApkZn
-         onK0gzdBhMuRx+sKO5bYOBhpDwK9d2eJapnuUSJ5tdOhRt8aeACVPtkCH7mcFFB5arnH
-         HMXQ==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777449666; x=1778054466; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i1HkGv08ixkw/NtnH/a+YIiHYWuD41eetNV6JArImdM=;
-        b=dsIQwHflOyt+6sJ3Kb8iiL68E0zarffG4AsvIS4pvZwfs4NMZtSHunasDFdxDRR2zi
-         p5hLE4ao9sEFFGrrmDZNNolrtTHmO0wEbYzc9213IYskuC6FyjlrjmUUTphWu2U1YTet
-         pryfw9Vn62oumnI6Wm6sz8ufYUKOUQ3/yvr56a+qb9jH+BnHaeu/TkSukTgQFZRp0whj
-         dtTU4l00xKm6KjLwD4Om8q+lBd7S8mXYn7ApeKfitfXlJAbPlU0YoNZ/e839nuzjR1Sb
-         4w0TS92Sz5iLhw47x5pirfS5dQR2tyC56DEQLf6Ytz6qTmT7z0KjRUiSauuaW1xefxbS
-         OUfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777449666; x=1778054466;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=i1HkGv08ixkw/NtnH/a+YIiHYWuD41eetNV6JArImdM=;
-        b=cBeIE5iUyCg6L5VmrxxY2SZpxCMSZcIE33YsCWWDn0MY2ihclAhsc9+Fsgc8mSSZ/F
-         D9e6u7a4dkBEKNArExB4e7PO4TTx2wwway+qxKfdZcMe3xmSsRFWb8YQteCdc60ah1Cu
-         imik8qb18xiuI/S/4lOqSAXKPuFNsBEFb851eKy5TRYVOzhfR8vPjMyYBHb+Ev0dp12a
-         iJvXhmaS5stTGHBK8nNNctHml1wHnranmMU2IqUzxuq+a32pPDgYit6HUprsxr2TA3lp
-         Frx3xjphhGP86j7W4TZ1mPTQ4qDazRwWv40Bg7j+RHzbajht+gAt5d5wcLi/W05mualu
-         urMg==
-X-Forwarded-Encrypted: i=1; AFNElJ+kdj76p2yH1i8SM+OdbQzQ3u5w8h8mrw2q6xTpotQPrriT3qEnOfroac80Mq9Z6RhG74F6V/uen1rLWw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YydYSjbsJyaIoDMQ2jjJr1zMMYSJt23FJctzryvfZM4kF66yq6P
-	vkID4+gqNwHuq3OvbQa+j4rRwwptNCgWkkH7jqutoPs+jXylLcMzngT67ORMJ7GlPtc/3dlpNEW
-	FohSnzZGLfhacn7WwVhEctW+03EtFCFQ=
-X-Gm-Gg: AeBDievt+2TLz3/Ug5yz2JRRenANNcCAf9CUSA3qmkrcSEmEsxBIkqTspWAG2vN7WaY
-	C3NK270NTQ3NS70+aE5jD7T7AFDFPTxkgmpgpl2pXzKI/HsSS4DUoViJB+7sIo9mI738gAnJCiq
-	4qo+g/9z+KVR7buLyCSTKudisqB20FzWU6gJbLxe38i3LWBnCeSBXUzWUsQ3Mz9KLxc3aCYLA2y
-	0gVfQAvRZxkYvIlKoG46gTM9DI65icaoRwdZ+qdPHLwuQR0UA50oMH3ds2XBaRUoIZJZIuW4K+r
-	m4k0CxbO4whL4bS2POA=
-X-Received: by 2002:a05:600c:1d1c:b0:486:fc61:541d with SMTP id
- 5b1f17b1804b1-48a76f612b1mr64267715e9.2.1777449665542; Wed, 29 Apr 2026
- 01:01:05 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4g59nB69Dfz2yD6
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2026 18:43:26 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; t=1777452202; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=O/kT3g/WgUHN1C+qaw2KpR9/dVaWGXtXXVttxziu0p3CQR69GP5vgVV+lP8jMF9xaeqe0fYCgkLqKwGoeScvBPcuQLP6lJy/dyW93WoLLjyCFUtNv/kh6puAlG7i5swsPyfwf1mNoy0tQMvfCltqFagN0QDrAbyVM51xuVvkn1Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1777452202; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=S9cnjeOA+5FPoko9S7SlEwgDVh12VYYlZRkVqJFz88k=; 
+	b=d+j5EpTdywqZPD1jSJ+D4vn2n8x4X7Qje0ZPYCu6fSWq5jlMKPJclba5siGWjVGzuhUA979mqI2Qoc/6eNYB/BfLvMeAZNswQeLMnJ6+hu801y5xGn5QQQokvkemEYJ8dkKWilinCW24AvkkQpQ64iaU9FUkQzpRGs6YMNiu2JE=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=vnsh.in;
+	spf=pass  smtp.mailfrom=ch@vnsh.in;
+	dmarc=pass header.from=<ch@vnsh.in>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777452202;
+	s=zoho; d=vnsh.in; i=ch@vnsh.in;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=S9cnjeOA+5FPoko9S7SlEwgDVh12VYYlZRkVqJFz88k=;
+	b=XKkhi7gPRCsCq/qSAFT3YKahVLbhh8dOo3SLW7T8UbfaaXChNAPG+54N9MuIFNE1
+	yM4vPn4uLMDItTY0dGMFrgqU8rKTgoS/H+Xffl2YQBMXjBIdPRmr6bRnSXQwv8yGoLY
+	WAz5DUb02O88zXSAXwuu5cJNwAPsD6e9k49i5/Ak=
+Received: by mx.zoho.in with SMTPS id 1777452199963113.4652072774378;
+	Wed, 29 Apr 2026 14:13:19 +0530 (IST)
+From: Vansh Choudhary <ch@vnsh.in>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: tests: add test for malformed PAX mtime parsing
+Date: Wed, 29 Apr 2026 14:13:19 +0530
+Message-ID: <20260429084319.41980-1-ch@vnsh.in>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <f2afe93e-245c-4856-b277-634271f596a0@linux.alibaba.com>
+References: <f2afe93e-245c-4856-b277-634271f596a0@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,208 +72,143 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
-In-Reply-To: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Wed, 29 Apr 2026 16:00:53 +0800
-X-Gm-Features: AVHnY4IachfcyydJSm9-L7_wLKWLfNNiO5uSMQ6WowBPtvNl5INastPneA0OMf8
-Message-ID: <CAHJ8P3LZk0jETzbetQzvbxx8XL-6nSVd6pUBK-SVOUK4gKPe_Q@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in z_erofs_drop_inline_pcluster
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Cc: hsiangkao@linux.alibaba.com, ke.wang@unisoc.com, 
-	linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 41E1B490E1E
+X-Rspamd-Queue-Id: 2D6D84914BF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[vnsh.in:s=zoho];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhiguo.niu@unisoc.com,m:hsiangkao@linux.alibaba.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[niuzhiguo84@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RSPAMD_URIBL_FAIL(0.00)[unisoc.com:query timed out];
-	ASN_FAIL(0.00)[117.38.213.112.asn.rspamd.com:query timed out];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-3365-lists,linux-erofs=lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-0.992];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[niuzhiguo84@gmail.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3367-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_ONE(0.00)[1];
+	DMARC_NA(0.00)[vnsh.in];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[vnsh.in:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ch@vnsh.in,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_NONE(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RSPAMD_EMAILBL_FAIL(0.00)[zhiguo.niu.unisoc.com:query timed out];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,unisoc.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 
-version:
-erofs-utils: 1.8.3
-lz4:1.10.0
-Android:17
+This is a regression test for "erofs-utils: lib: tar: fix
+fractional PAX mtime parsing".
 
-cmd:
-mkfs.erofs -z lz4hc,9 --compress-hints
-./output/META/erofs_default_compress_hints.txt -d9 -b 4096
---mount-point product --fs-config-file
-./output/META/product_filesystem_config.txt --file-contexts
-./output/META/framework_file_contexts.bin -T 1230768000 -U
-ad34a95d-293d-5e91-9234-c253209e9c71 -E dedupe,ztailpacking
-./output/PRODUCT/tmp ./output/PRODUCT2/ 1>mkfs.log 2>&1
-./fsck.erofs --extract -d9 output/PRODUCT/2sofiximage
+Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+---
+ tests/Makefile.am   |  3 +++
+ tests/erofs/031     | 60 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/erofs/031.out |  2 ++
+ 3 files changed, 65 insertions(+)
+ create mode 100755 tests/erofs/031
+ create mode 100644 tests/erofs/031.out
 
-error case:
-mkfs 2 source files: libmsc.so.salsa, libmsc.so
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index cd1971a..36fbe92 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -129,6 +129,9 @@ TESTS += erofs/029
+ # 030 - regression test for NULL dentry on hardlink-to-root tar entry
+ TESTS += erofs/030
+ 
++# 031 - regression test for malformed PAX mtime acceptance
++TESTS += erofs/031
++
+ # NEW TEST CASE HERE
+ # TESTS += erofs/999
+ 
+diff --git a/tests/erofs/031 b/tests/erofs/031
+new file mode 100755
+index 0000000..8644291
+--- /dev/null
++++ b/tests/erofs/031
+@@ -0,0 +1,60 @@
++#!/bin/sh
++# SPDX-License-Identifier: MIT
++#
++# Regression test for malformed PAX mtime acceptance in mkfs.erofs --tar
++#
++seq=`basename $0`
++seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
++
++# get standard environment, filters and checks
++. "${srcdir}/common/rc"
++
++cleanup()
++{
++	cd /
++	rm -rf $tmp.*
++}
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++# real QA test starts here
++echo "QA output created by $seq"
++
++if [ -z $SCRATCH_DEV ]; then
++	SCRATCH_DEV=$tmp/erofs_$seq.img
++	rm -f $SCRATCH_DEV
++fi
++
++localdir="$tmp/$seq"
++rm -rf $localdir
++mkdir -p $localdir
++
++footar="$localdir/foo.tar"
++
++# build a PAX archive whose extended header carries a single record:
++# "22 mtime=10.123456789\n" at payload offset 512.
++: > $localdir/a
++(cd $localdir && tar --format=pax \
++	--pax-option='delete=atime,delete=ctime,mtime:=10.123456789' \
++	-cf $footar a) || _fail "failed to build input tar"
++
++# verify the PAX payload before patching, so the test fails clearly if
++# tar's output ever diverges from the expected layout.
++hdr=`dd if=$footar bs=1 skip=512 count=22 2>/dev/null`
++[ "$hdr" = "22 mtime=10.123456789" ] || \
++	_fail "unexpected PAX payload: $hdr"
++
++# overwrite the trailing '9' (offset 532) with 'x' so the record reads
++# "22 mtime=10.12345678x". sscanf("%d") would silently accept 12345678
++# and ignore the trailing 'x'; the fixed parser rejects it as -EIO.
++printf 'x' | dd of=$footar bs=1 seek=532 count=1 conv=notrunc 2>/dev/null
++
++$MKFS_EROFS_PROG --tar $SCRATCH_DEV $footar >> $seqres.full 2>&1
++rc=$?
++[ $rc -ge 128 ] && _fail "mkfs.erofs crashed on malformed PAX mtime (rc=$rc)"
++[ $rc -eq 0 ] && _fail "mkfs.erofs unexpectedly accepted malformed PAX mtime"
++
++echo Silence is golden
++status=0
++exit 0
+diff --git a/tests/erofs/031.out b/tests/erofs/031.out
+new file mode 100644
+index 0000000..b3d0bb0
+--- /dev/null
++++ b/tests/erofs/031.out
+@@ -0,0 +1,2 @@
++QA output created by 031
++Silence is golden
+-- 
+2.43.0
 
-erofs: failed to full decompress -3066 in[4096, 0] out[6121]
-dump extent:
-1192:  7765862.. 7770924 |    5062 :    9687040..   9691136 |    4096
-1193:  7770924.. 7777021 |    6097 :    9691136..   9695232 |    4096
-1194:  7777021.. 7784118 |    7097 :    9695232..   9699328 |    4096
-1195:  7784118.. 7789918 |    5800 :    9699328..   9703424 |    4096
-1196:  7789918.. 7797526 |    7608 :    9703424..   9707520 |    4096
-1197:  7797526.. 7803647 |    6121 :    9707520..   9711616 |    4096
-1198:  7803647.. 7806972 |    3325 :    9711616..   9715712 |    4096
-mkfs debug log:
-compacted_2b=3D1904  compacted_4b_initial=3D2 compacted_4b_end=3D0
-write di_clusterof=3D2815 type=3D1 di_u.blkaddr=3D2371 d1=3D0 clusterofs=3D=
-2815
-//last pcluster
-last 8 bytes in compacted pack:
-6bfe0016 00000938
-after drop inline operation:
-0bfe0016 00000938
-
-good case :
-mkfs 1 source file:libmsc.so.salsa
-dump extent:
-1192:  7765862.. 7770924 |    5062 :    4886528..   4890624 |    4096
-1193:  7770924.. 7777021 |    6097 :    4890624..   4894720 |    4096
-1194:  7777021.. 7784118 |    7097 :    4894720..   4898816 |    4096
-1195:  7784118.. 7789918 |    5800 :    4898816..   4902912 |    4096
-1196:  7789918.. 7797526 |    7608 :    4902912..   4907008 |    4096
-1197:  7797526.. 7805695 |    8169 :    4907008..   4911104 |    4096
-1198:  7805695.. 7806972 |    1277 :    4911104..   4915200 |    4096
-mkfs debug log:
-compacted_2b=3D1904  compacted_4b_initial=3D0 compacted_4b_end=3D2
-write di_clusterof=3D2815 type=3D1 di_u.blkaddr=3D1199 d1=3D0 clusterofs=3D=
-2815
-//last pcluster
-last 8 bytes in compacted pack:
-1aff2001 000004ae
-after drop inline operation:
-0aff2001 000004ae
-
-Zhiguo Niu <zhiguo.niu@unisoc.com> =E4=BA=8E2026=E5=B9=B44=E6=9C=8829=E6=97=
-=A5=E5=91=A8=E4=B8=89 16:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> With ztailpacking enabled, the current process assumes that a compacted_4=
-b_end
-> always exists in the compacted pack. However, in some specific files, the
-> compacted pack may not have a compacted_4b_end. This leads to an incorrec=
-t
-> modification of the last compacted_2B entry, resulting in incorrect modif=
-ication
-> of its clusterofs. In subsequent fsck operations, incorrect parameters wi=
-ll
-> affect the decompression of the penultimate pcluster.
->
-> This patch determines whether the last entry of the current compacted pac=
-k
-> belongs to compacted 2B or 4B and then updates the correct bits according=
-ly.
->
-> Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression a=
-pproach")
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> ---
->  lib/compress.c | 38 +++++++++++++++++++++++++++-----------
->  1 file changed, 27 insertions(+), 11 deletions(-)
->
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 62d2672..0eb464b 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -1223,19 +1223,35 @@ void z_erofs_drop_inline_pcluster(struct erofs_in=
-ode *inode)
->
->                 di->di_advise =3D cpu_to_le16(type);
->         } else if (inode->datalayout =3D=3D EROFS_INODE_COMPRESSED_COMPAC=
-T) {
-> -               /* handle the last compacted 4B pack */
-> +               /* handle the last compacted pack */
->                 unsigned int eofs, base, pos, v, lo;
->                 u8 *out;
-> -
-> -               eofs =3D inode->extent_isize -
-> -                       (4 << (BLK_ROUND_UP(sbi, inode->i_size) & 1));
-> -               base =3D round_down(eofs, 8);
-> -               pos =3D 16 /* encodebits */ * ((eofs - base) / 4);
-> -               out =3D inode->compressmeta + base;
-> -               lo =3D erofs_blkoff(sbi, get_unaligned_le32(out + pos / 8=
-));
-> -               v =3D (type << sbi->blkszbits) | lo;
-> -               out[pos / 8] =3D v & 0xff;
-> -               out[pos / 8 + 1] =3D v >> 8;
-> +               unsigned int compacted_4b_initial, compacted_2b, compacte=
-d_4b_end;
-> +               unsigned int totalidx =3D BLK_ROUND_UP(sbi, inode->i_size=
-);
-> +               const erofs_off_t ebase =3D sizeof(struct z_erofs_map_hea=
-der) +
-> +                       round_up(erofs_iloc(inode) + inode->inode_isize +
-> +                                       inode->xattr_isize, 8);
-> +
-> +               compacted_4b_initial =3D ((32 - ebase % 32) / 4) & 7;
-> +               compacted_2b =3D 0;
-> +               if ((le16_to_cpu(h->h_advise) & Z_EROFS_ADVISE_COMPACTED_=
-2B) &&
-> +                       compacted_4b_initial < totalidx)
-> +                       compacted_2b =3D rounddown(totalidx - compacted_4=
-b_initial, 16);
-> +               compacted_4b_end =3D totalidx - compacted_4b_initial - co=
-mpacted_2b;
-> +               if (!compacted_2b || compacted_4b_end) {
-> +                       eofs =3D inode->extent_isize - (4 << (totalidx & =
-1));
-> +                       base =3D round_down(eofs, 8);
-> +                       pos =3D 16 /* encodebits */ * ((eofs - base) / 4)=
-;
-> +                       out =3D inode->compressmeta + base;
-> +                       lo =3D erofs_blkoff(sbi, get_unaligned_le32(out +=
- pos / 8));
-> +                       v =3D (type << sbi->blkszbits) | lo;
-> +                       out[pos / 8] =3D v & 0xff;
-> +                       out[pos / 8 + 1] =3D v >> 8;
-> +               } else {
-> +                       eofs =3D inode->extent_isize - (4 + 1);
-> +                       out =3D inode->compressmeta + eofs;
-> +                       *out =3D (*out & 0x3f) | (type << 6);
-> +               }
->         } else {
->                 DBG_BUGON(1);
->                 return;
-> --
-> 1.9.1
->
 
