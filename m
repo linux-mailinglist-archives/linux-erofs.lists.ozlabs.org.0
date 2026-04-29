@@ -1,49 +1,60 @@
-Return-Path: <linux-erofs+bounces-3364-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3366-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YJBnG/Vh8GnDSQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3364-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Apr 2026 09:29:57 +0200
+	id 4OcNEfq/8WkbkQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3366-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:23:22 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84B8C47EDF7
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Apr 2026 09:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C2546491244
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Apr 2026 10:23:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4g4XBn3s1xz2xld;
-	Tue, 28 Apr 2026 17:29:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4g59Kx5Q9Lz2ySf;
+	Wed, 29 Apr 2026 18:23:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777361393;
-	cv=none; b=n9gZ5dkmoAuxzYk4+rp3cNOnc2bEbf1HeB9ksp4kvPuYsVS0S6x1Z8pgYqdW3I9W8mFdltUo6MXmxwGIFTar/S0Fc2S7DexvLUQVesQSoz9/D7F6s6GPOpTnJbLTxhGG3+CRbeOSjDLkPZlQ8sAx9zQkOApcBpwqP9AVxteXMO7iGo4DpL59rHEBaia5Vxm7zQmUeTA6pO39fTAK6bFKY9TEG7wHjLs8qf5O3JOJO0UMgC1pyY31wCQm60YdiJ/FB4DgBxdeMcMWFlNxa9Bq9XWtdoxcfW2vM8Sr8glMBKQh/3qHLj13zAxD9Ag5yiSK2yDVJp84/lOkC/Jmw/uaTw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=222.66.158.135
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777450997;
+	cv=none; b=OfTIeux04glWUNepAxrZ2Sxm5Q9nUqZT1mU66HDD+KoWjmtciH+tdwFSRhJYhskvn8W/l0wgSE3ApL3fCXfL2QTgy92AHNTfNI4XmzNlkV4vUzXr1iUJ7WEQ0YvEYYuwa/n9w3UJ9LtLgVnyfxMXK/qYwB9kU0auA6b75YQ1w9zI6QxpXIde7JBMbSqjDUpYdUKzGJ5n0IJOGfzBVWs+7L9MMqf4rzoE6DgDsepx8tQ7h+NEwZaLP1+Vau6XhBROahUIpynv6Bu4u6IOQW2IBxe2ysUWVcD+hF4z6mdSARA+P46LO6BhUZEufXszl7yKwlrHOVebqCaLSDa16CsBIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1777361393; c=relaxed/relaxed;
-	bh=7e5ZR4uyeEBbnr39YNz57npi3uySWbbJxaEkGaqcIp8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Z5mkbknBKCEoxZhpPawCUxZFeZRUrD4csx6mBM5cWuGI1PmemzGTArhhSAJrT+AVNg3kQuRn2Lvq5C3WARlTCheMH4up4BeUChfgR632lyZuNCDfb9jr5tmGVJsO/Df60mhYUu7uyt+amxwkEJ0R2Z1Rb7JUGTdmZhdBjNqwbl5g+YjNbUoqndZ+8VI4DPQ+x6HK5H0/Fhx834mV3VFxfBH4znh2K8Sl3xjUzvEo0nRZo1fj9BUUrQ3+nabqA791H5MvKYIDKQTPGJJPDjfu7errnL4JszCE7okW8DBs1T1DsxSxiD+IcpZW5okm2GIsqXQIR1xwPg9xthJUBsj0QQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRIzI5mx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1777450997; c=relaxed/relaxed;
+	bh=erMdAkk//4FIKnol/gaYF5mdQ1a0G/RcxiKGXNU+OMU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XMhs5erv2uHAePMHCpzdSmrKdYttNSupFWJmlulJOcR7OvwwSfUPc03r9bazIjquipRwAbtcJS16QtMINkQio1xpiB39AEeLS/KbeMM8N43Aj4+j8QJ4R4CcH6kdxCl61HffXbbSyy6RESnlF6tcp1Do8OzkSHnnjG5Da2kRi687zD14nyt3/t+cM5+/A+BKTs6jYsun6xZMcnfcdJdHVzYcWl51ZRGekOx653hJA6AcWlKdQmwgK8PySs1V1HwBaAPo2+PzfKQRmlaWJfID6hy392B4eNeeCGZ5AXkc7MRi//MB1vrmVDX/qvjy6CQGlhE5VcRLwTNmD8dwSPUwkA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; dkim=pass (2048-bit key; unprotected) header.d=unisoc.com header.i=@unisoc.com header.a=rsa-sha256 header.s=default header.b=aAisdaeV; dkim-atps=neutral; spf=pass (client-ip=222.66.158.135; helo=shsqr01.spreadtrum.com; envelope-from=zhiguo.niu@unisoc.com; receiver=lists.ozlabs.org) smtp.mailfrom=unisoc.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRIzI5mx;
+	dkim=pass (2048-bit key; unprotected) header.d=unisoc.com header.i=@unisoc.com header.a=rsa-sha256 header.s=default header.b=aAisdaeV;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=unisoc.com (client-ip=222.66.158.135; helo=shsqr01.spreadtrum.com; envelope-from=zhiguo.niu@unisoc.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1360 seconds by postgrey-1.37 at boromir; Wed, 29 Apr 2026 18:23:13 AEST
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4g4XBl4BCvz2xYw
-	for <linux-erofs@lists.ozlabs.org>; Tue, 28 Apr 2026 17:29:49 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1777361385; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=7e5ZR4uyeEBbnr39YNz57npi3uySWbbJxaEkGaqcIp8=;
-	b=qRIzI5mxhhwc1BPxVvskhtYyj3lJ5HcYEDs65gqU2TmvX2FCk30u0sbfjIeEEwvyAfL3azWKGgx3nGXfQVaTV9ZQNgfy1jqaZbCYthrBQ9w9p+D8Iz+Iw+3NMzZp42HgxxYUJyVka8u3YCXClPhJwBFrGZtyUrFtiRKbhzeHlqY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X1tlCom_1777361384;
-Received: from 30.221.131.100(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X1tlCom_1777361384 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 28 Apr 2026 15:29:44 +0800
-Message-ID: <f2afe93e-245c-4856-b277-634271f596a0@linux.alibaba.com>
-Date: Tue, 28 Apr 2026 15:29:43 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4g59Ks5XHFz2ySW
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2026 18:23:08 +1000 (AEST)
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+	by SHSQR01.spreadtrum.com with ESMTP id 63T80XoP096162
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Apr 2026 16:00:33 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 63T7wJHV074988;
+	Wed, 29 Apr 2026 15:58:19 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (BJMBX02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4g58jm0DQKz2L0psS;
+	Wed, 29 Apr 2026 15:55:24 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Wed, 29 Apr 2026 15:58:17 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <hsiangkao@linux.alibaba.com>
+CC: <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in z_erofs_drop_inline_pcluster
+Date: Wed, 29 Apr 2026 15:59:25 +0800
+Message-ID: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,176 +66,131 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: lib: tar: fix fractional PAX mtime parsing
-To: Vansh Choudhary <ch@vnsh.in>, linux-erofs@lists.ozlabs.org
-References: <20260329173639.54997-1-ch@vnsh.in>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260329173639.54997-1-ch@vnsh.in>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain
+X-Originating-IP: [10.0.73.87]
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 63T7wJHV074988
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unisoc.com;
+	s=default; t=1777449537;
+	bh=erMdAkk//4FIKnol/gaYF5mdQ1a0G/RcxiKGXNU+OMU=;
+	h=From:To:CC:Subject:Date;
+	b=aAisdaeVg4ks5j+K952UCWzU8LLkIVh5YABCGJ2FbknaI6bXmBtrO/W0CgutN6j2k
+	 gpX1MzaRQjiErv43F46EdNZISl3i+mFv3S/+IlK+MUIjQ2dtMveUMM0iok0jq9tus0
+	 SD9vvtgQATpDRKwqb3Uuq4k92PoGMujckijal74QKV8lgdyr6u/CKSSWJeTxxFY0Bs
+	 KG4jyBQbtkADnaYPKjp4oot9+tWCOLdqAJ38nK9Xq7onUfXwPxs6Ap1RGhZh+y/i8z
+	 hhbQyzkxvvHNK5clHoo/liuZoRCv40NqehI5Gqfyvwax7uGDhE9S2jM5oEWbCX35Hy
+	 ASV3p6WCCbsdA==
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 84B8C47EDF7
+X-Rspamd-Queue-Id: C2546491244
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[unisoc.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[unisoc.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_TWO(0.00)[2];
-	TAGGED_FROM(0.00)[bounces-3364-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:ch@vnsh.in,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,unisoc.com,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3366-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:niuzhiguo84@gmail.com,m:zhiguo.niu@unisoc.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[zhiguo.niu@unisoc.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[unisoc.com:+];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[zhiguo.niu@unisoc.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
+	HAS_XOIP(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.947];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[unisoc.com:email,unisoc.com:dkim,unisoc.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 
-Hi Vansh,
+With ztailpacking enabled, the current process assumes that a compacted_4b_end
+always exists in the compacted pack. However, in some specific files, the
+compacted pack may not have a compacted_4b_end. This leads to an incorrect
+modification of the last compacted_2B entry, resulting in incorrect modification
+of its clusterofs. In subsequent fsck operations, incorrect parameters will
+affect the decompression of the penultimate pcluster.
 
-On 2026/3/30 01:36, Vansh Choudhary wrote:
-> The fractional part of PAX mtime values was parsed as a plain integer,
-> so "123.5" ended up with 5ns instead of 500000000ns.
-> 
-> Scale the fractional part according to its decimal width before storing
-> it as nanoseconds. Also normalize negative fractional timestamps and
-> reject malformed mtime values with missing digits or trailing junk.
-> 
-> Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
-> Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+This patch determines whether the last entry of the current compacted pack
+belongs to compacted 2B or 4B and then updates the correct bits accordingly.
 
-I try to apply as below, does it look good to you?
-
-Also as before, could you write a regression test for this?
-
-Your patches are also scattered, could you collect them
-all and resend them as a patchset if I'm still missing any?
-
-Thanks,
-Gao Xiang
-
- From 4cd618eaeebb7a5acf5e82074fb1c9d619995f72 Mon Sep 17 00:00:00 2001
-From: Vansh Choudhary <ch@vnsh.in>
-Date: Sun, 29 Mar 2026 17:36:39 +0000
-Subject: [PATCH] erofs-utils: lib: tar: fix fractional PAX mtime parsing
-
-The fractional part of PAX mtime values was parsed as a plain integer,
-so "123.5" ended up with 5ns instead of 500000000ns.
-
-Scale the fractional part according to its decimal width before storing
-it as nanoseconds. Also normalize negative fractional timestamps and
-reject malformed mtime values with missing digits or trailing junk.
-
-Fixes: 95d315fd7958 ("erofs-utils: introduce tarerofs")
-Signed-off-by: Vansh Choudhary <ch@vnsh.in>
+Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression approach")
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 ---
-  include/erofs/defs.h |  9 +++++++++
-  lib/tar.c            | 29 ++++++++++++++++++++++++++---
-  2 files changed, 35 insertions(+), 3 deletions(-)
+ lib/compress.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/include/erofs/defs.h b/include/erofs/defs.h
-index 5724c2794ab0..9f3d0f9c35bc 100644
---- a/include/erofs/defs.h
-+++ b/include/erofs/defs.h
-@@ -387,6 +387,15 @@ unsigned long __roundup_pow_of_two(unsigned long n)
-  #define __erofs_stringify_1(x...)	#x
-  #define __erofs_stringify(x...)		__erofs_stringify_1(x)
-
-+#define check_sub_overflow(a, b, d) ({		\
-+	typeof(a) __a = (a);			\
-+	typeof(b) __b = (b);			\
-+	typeof(d) __d = (d);			\
-+	(void) (&__a == &__b);			\
-+	(void) (&__a == __d);			\
-+	__builtin_sub_overflow(__a, __b, __d);	\
-+})
+diff --git a/lib/compress.c b/lib/compress.c
+index 62d2672..0eb464b 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -1223,19 +1223,35 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+ 
+ 		di->di_advise = cpu_to_le16(type);
+ 	} else if (inode->datalayout == EROFS_INODE_COMPRESSED_COMPACT) {
+-		/* handle the last compacted 4B pack */
++		/* handle the last compacted pack */
+ 		unsigned int eofs, base, pos, v, lo;
+ 		u8 *out;
+-
+-		eofs = inode->extent_isize -
+-			(4 << (BLK_ROUND_UP(sbi, inode->i_size) & 1));
+-		base = round_down(eofs, 8);
+-		pos = 16 /* encodebits */ * ((eofs - base) / 4);
+-		out = inode->compressmeta + base;
+-		lo = erofs_blkoff(sbi, get_unaligned_le32(out + pos / 8));
+-		v = (type << sbi->blkszbits) | lo;
+-		out[pos / 8] = v & 0xff;
+-		out[pos / 8 + 1] = v >> 8;
++		unsigned int compacted_4b_initial, compacted_2b, compacted_4b_end;
++		unsigned int totalidx = BLK_ROUND_UP(sbi, inode->i_size);
++		const erofs_off_t ebase = sizeof(struct z_erofs_map_header) +
++			round_up(erofs_iloc(inode) + inode->inode_isize +
++					inode->xattr_isize, 8);
 +
-  #ifdef __cplusplus
-  }
-  #endif
-diff --git a/lib/tar.c b/lib/tar.c
-index 16e9c22fbdc8..3755c1f5450d 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -2,6 +2,7 @@
-  #include <unistd.h>
-  #include <stdlib.h>
-  #include <string.h>
-+#include <limits.h>
-  #include <sys/stat.h>
-  #include "erofs/print.h"
-  #include "erofs/diskbuf.h"
-@@ -525,6 +526,9 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
-  				eh->link = strdup(value);
-  			} else if (!strncmp(kv, "mtime=",
-  					sizeof("mtime=") - 1)) {
-+				unsigned int ns = 0;
-+				int digits = 0;
-+
-  				ret = sscanf(value, "%lld %n", &lln, &n);
-  				if(ret < 1) {
-  					ret = -EIO;
-@@ -532,12 +536,31 @@ int tarerofs_parse_pax_header(struct erofs_iostream *ios,
-  				}
-  				eh->st.st_mtime = lln;
-  				if (value[n] == '.') {
--					ret = sscanf(value + n + 1, "%d", &n);
--					if (ret < 1) {
-+					while (value[n + 1] >= '0' &&
-+					       value[n + 1] <= '9') {
-+						if (digits < 9)
-+							ns = ns * 10 + value[n + 1] - '0';
-+						++digits;
-+						++n;
-+					}
-+					if (!digits || value[n + 1] != '\0') {
-  						ret = -EIO;
-  						goto out;
-  					}
--					ST_MTIM_NSEC_SET(&eh->st, n);
-+					while (digits++ < 9)
-+						ns *= 10;
-+					if (ns && value[0] == '-') {
-+						if (check_sub_overflow(eh->st.st_mtime, (time_t)1,
-+								       &eh->st.st_mtime)) {
-+							ret = -EIO;
-+							goto out;
-+						}
-+						ns = 1000000000 - ns;
-+					}
-+					ST_MTIM_NSEC_SET(&eh->st, ns);
-+				} else if (value[n] != '\0') {
-+					ret = -EIO;
-+					goto out;
-  				} else {
-  					ST_MTIM_NSEC_SET(&eh->st, 0);
-  				}
---
-2.43.5
-
-
++		compacted_4b_initial = ((32 - ebase % 32) / 4) & 7;
++		compacted_2b = 0;
++		if ((le16_to_cpu(h->h_advise) & Z_EROFS_ADVISE_COMPACTED_2B) &&
++			compacted_4b_initial < totalidx)
++			compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
++		compacted_4b_end = totalidx - compacted_4b_initial - compacted_2b;
++		if (!compacted_2b || compacted_4b_end) {
++			eofs = inode->extent_isize - (4 << (totalidx & 1));
++			base = round_down(eofs, 8);
++			pos = 16 /* encodebits */ * ((eofs - base) / 4);
++			out = inode->compressmeta + base;
++			lo = erofs_blkoff(sbi, get_unaligned_le32(out + pos / 8));
++			v = (type << sbi->blkszbits) | lo;
++			out[pos / 8] = v & 0xff;
++			out[pos / 8 + 1] = v >> 8;
++		} else {
++			eofs = inode->extent_isize - (4 + 1);
++			out = inode->compressmeta + eofs;
++			*out = (*out & 0x3f) | (type << 6);
++		}
+ 	} else {
+ 		DBG_BUGON(1);
+ 		return;
+-- 
+1.9.1
 
 
