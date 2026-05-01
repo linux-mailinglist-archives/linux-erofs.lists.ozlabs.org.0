@@ -1,55 +1,55 @@
-Return-Path: <linux-erofs+bounces-3370-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3371-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YNGxOgCe9GmfCwIAu9opvQ
-	(envelope-from <linux-erofs+bounces-3370-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 01 May 2026 14:35:12 +0200
+	id MMa+J+Oq9GmBDQIAu9opvQ
+	(envelope-from <linux-erofs+bounces-3371-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 01 May 2026 15:30:11 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DC8B4AC6F7
-	for <lists+linux-erofs@lfdr.de>; Fri, 01 May 2026 14:35:11 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D8FA4ACBB6
+	for <lists+linux-erofs@lfdr.de>; Fri, 01 May 2026 15:30:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4g6Vqd1gcHz309S;
-	Fri, 01 May 2026 22:35:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4g6X3165BMz2xnZ;
+	Fri, 01 May 2026 23:30:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777638909;
-	cv=none; b=TeOKr8AcDFTDJ5cH55E/RBsLfsfZccQUP8LzChkoAITVyHiNby5LpNnL32DccTUXflu4qgfgEiot/XMSff9ONGuRb3M7giWskj/JJN0TJvzCYfj/k7OPZNS0xVMqRO2iTcbVu5b0AgF/cIao0Kw+vTM3/CvZBg6IFIhPHo3G3Vxi79Ahc7ady3Z4TbQ1FYdSbvYpM/fCPvUObW9j2prSSflXUCr34VK+jOQ4IPESfnN99rd8dFIjAzXNf+huwWb0t2rOLpgtheS4KF/mTL19IUPto6R7qM8MJA+K7rltNHKDi1mrCKU+q0E92XyUHFZwVmQCahz8KKRmjZqUR6QtUQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777642205;
+	cv=none; b=dCX0aEEOXLyp/2f4OdvVNyUlJekwn2mKLuL7iXyQ5k9nZNPBSM4KpBTue9bEhhAARPhseF3H5IEJBzrbrD7FzBuGDrSwreyPN/YCcZKBsN1wySd/Pfefb1udMb3CfU3torp4N02IB3Gp6SdOQzOOuWRNFHBN5rlpCyB9Deq/RH5pfZXxXf0I5Vm4aRGrUiHaBgqgpt8yHglsS/vcVvOGadlEz8zRn3tSQRk8MvOCuV/cKjR4nCGSvNkaVdcitwNvIJnKGmANvqArFvk6ls7STc9u+wmPOLnuI2bPecimC6Zf7axKOfrttPflbmN4KMQo3YkAqzsNpzpBGsi1t3McgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1777638909; c=relaxed/relaxed;
-	bh=azQXaKXybCHrONQX5W4YggknOC8F4pIUdlVMzegOE2s=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=OPb9ha7xLkhIsbv5z/BFSxAxGN3ClBZ8kW4YVhTHsYEb/Wm0/3B/A8z24BjWYGS2rgET+b2FLSfp+xjXaBK/Bx1zoxBp7BnQBb81JNVxGThPPhly6/bfN03by296aY5rb0sra9CJ8bjDtLQc9+TIigiyFUn8Agc/mZoHVuoo6DcL4JDq1vFZu+lei6clOgg034zwoxxyq7M5JHKSbhmqOFocv8QAFuRQneQb6araltdNVdVwurEr+0/j5rJuKU3EhaYRH2+umisq4XjwN1reTisK3RCkLOyKv1/eA/5ksV77TmyKQLARjJb2IyASwjhGOohXhyLgZw0pGZcJD5QEzg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=1znK2l1/; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	t=1777642205; c=relaxed/relaxed;
+	bh=mDVy7Azey5O5hWWVi+FB7TD4gdYy17O7zVYrZSYIVQQ=;
+	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=k66h8kfRW4MQor6iyTqjFghA7OQkuPyZ4ttTR1RTdyCmCJANIvpkX3KAheyGRjel9C9ICU4PH9iwrIxjAyHLrX1vEFrZEtGU4SHw4DNAaTJ5eBSSgB5wXJBBP+0w6sJNeQP6pmcesBx11wwXKGjZwCKBp3V5Sf58839xpYsghk23NF0S0Y0oQwgCXvzyHW6EWnxxE5Y4cz3BU3qzXd7RgfNc49QoRBKUwi9WuQGAGBvORfRZJAxExo/yttVh9waffpZkLbtUQUKUG2kE2IkOLtsQyQ6wdiWk71LwZGHDDed093x2noZDgZO0tx480Kup9dQDFPlUCsa9843almF3Hg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=CLbhuLfX; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=1znK2l1/;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=CLbhuLfX;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
 Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4g6Vqc2hlpz2xWY
-	for <linux-erofs@lists.ozlabs.org>; Fri, 01 May 2026 22:35:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4g6X2z5Bfvz2xC3
+	for <linux-erofs@lists.ozlabs.org>; Fri, 01 May 2026 23:30:03 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 311D444507;
-	Fri,  1 May 2026 12:35:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F2BC2BCB4;
-	Fri,  1 May 2026 12:35:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id A5FA74081E;
+	Fri,  1 May 2026 13:30:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2B4C2BCB4;
+	Fri,  1 May 2026 13:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1777638905;
-	bh=uWujSkS65OCZCs8cEp7HzeMVkNPZQiKkazq0ytU2mz4=;
+	s=korg; t=1777642200;
+	bh=ASEsIyCct01k+hukQ4D0eMR904jmoKlLNFnUmR1FdDI=;
 	h=Subject:To:Cc:From:Date:From;
-	b=1znK2l1/tYlISpshGLD6rcx7Vamkn4psI7hL9prwWsUT4gGlt/F8uZQnfWqyy4Lax
-	 BK5LQ4YbHvn4sVGz0Sa8B/necU0RaL9V0r27/anTnadajiSQYRyJ+O4iLxTKL1mvYG
-	 57KqIhjNDJrfcC9x2zDGOv6XRe0CvNRtYZg7xnVU=
-Subject: Patch "fs: prepare for adding LSM blob to backing_file" has been added to the 6.18-stable tree
+	b=CLbhuLfXtnizDDfjCC0MU9bfCvYSQEiPvuPyz4RdgdzIsepxARGwz/lCpVbmv+ss0
+	 OUfxj1xe330daLcQ0dXTeurh6266XUnSJUWMs9JWLIE8N93mcn6EDd0Pvs/B95WMVf
+	 7unTGt0aeIsU3/bRiEzoC580qXorJgI9EoF6cyfA=
+Subject: Patch "fs: prepare for adding LSM blob to backing_file" has been added to the 7.0-stable tree
 To: amir73il@gmail.com,gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org,paul@paul-moore.com,serge@hallyn.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 01 May 2026 14:34:54 +0200
-Message-ID: <2026050153-effects-jumbo-f71c@gregkh>
+Date: Fri, 01 May 2026 15:29:48 +0200
+Message-ID: <2026050148-hacking-static-797f@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -69,7 +69,7 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 1DC8B4AC6F7
+X-Rspamd-Queue-Id: 7D8FA4ACBB6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [2.30 / 15.00];
@@ -78,14 +78,14 @@ X-Spamd-Result: default: False [2.30 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com,linuxfoundation.org,lists.ozlabs.org,paul-moore.com,hallyn.com];
-	TAGGED_FROM(0.00)[bounces-3370-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3371-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:linux-erofs@lists.ozlabs.org,m:paul@paul-moore.com,m:serge@hallyn.com,m:stable-commits@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -104,20 +104,20 @@ X-Spamd-Result: default: False [2.30 / 15.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:dkim,linuxfoundation.org:email,hallyn.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,ozlabs.org:email]
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hallyn.com:email]
 
 
 This is a note to let you know that I've just added the patch titled
 
     fs: prepare for adding LSM blob to backing_file
 
-to the 6.18-stable tree which can be found at:
+to the 7.0-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      fs-prepare-for-adding-lsm-blob-to-backing_file.patch
-and it can be found in the queue-6.18 subdirectory.
+and it can be found in the queue-7.0 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -200,10 +200,12 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 +
  	return &ff->file;
  }
- 
+ EXPORT_SYMBOL_GPL(alloc_empty_backing_file);
 
 
 Patches currently in stable-queue which might be from amir73il@gmail.com are
 
-queue-6.18/fs-prepare-for-adding-lsm-blob-to-backing_file.patch
+queue-7.0/fs-prepare-for-adding-lsm-blob-to-backing_file.patch
+queue-7.0/selinux-fix-overlayfs-mmap-and-mprotect-access-checks.patch
+queue-7.0/lsm-add-backing_file-lsm-hooks.patch
 
