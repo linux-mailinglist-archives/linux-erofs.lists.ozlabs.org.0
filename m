@@ -1,49 +1,68 @@
-Return-Path: <linux-erofs+bounces-3376-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3377-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aHVfDqm3+Gn1zAIAu9opvQ
-	(envelope-from <linux-erofs+bounces-3376-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 04 May 2026 17:13:45 +0200
+	id WPr5Nds2+Wki6wIAu9opvQ
+	(envelope-from <linux-erofs+bounces-3377-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 05 May 2026 02:16:27 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BE604C082E
-	for <lists+linux-erofs@lfdr.de>; Mon, 04 May 2026 17:13:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 094F64C52EC
+	for <lists+linux-erofs@lfdr.de>; Tue, 05 May 2026 02:16:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4g8QC768QQz2yZ3;
-	Tue, 05 May 2026 01:13:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4g8fFN2yszz2xnZ;
+	Tue, 05 May 2026 10:16:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777907619;
-	cv=none; b=kSv/aZGwBPXlzYbzJLrWU5vpKWXWOM3O1jx0wCW7Mr3vyA3pRK335al2R4f6UuT/Qbt6cwndFEzAzI9HVE7lypCXohIE8mO7eLY4DHCXtH9Oil8E95/au5L+3sNcDlCoLyknKuxargcZQVRRiSzjs4gW0ACB0S8tPqitmCp0RB/KWK2Ws1cr7WyLGq8yiKSiukbMepsggtKoMwmOH1AzyPCDSK3/pJdzlw6KK/yZDzmEhOw8vMkDA9Hy/6TecpSvHrtk178S8hPhT3JYSPji4CskDi1gZx4l6QxbptyMrNEgrArXkOd7AWliPGdZotVYktdsK/rKjOyexH3qhEDeVw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1777940184;
+	cv=none; b=YDZvtkATiOQQp+KNpGWeWwabH6LFhZXDO8QaYQEUL7xY2sSNgdcIOS6fQZ13PFoS8tSHn3PHEIttGbbeWhQGHCmt87sU95VUi5xC6wPdMYiLNIPDLOrFQ1clgc5aVX4wCgwjSYUrY8M3rtUJ+k4Z2jerSpK5yXyrPW8ce2dvWl2/qSpUN5j0oqCfAMpz6qiut7muhdWyKLixALptTDwyzjXilVTOXVWyY3BrocrEn0aqJZfs2XR++pmh9bRE2HEtISAYJjrRWstmg1ZeXClU/zBfOlFLnYrN/aXGJHu1KXesjlSoUKbgY2or/Xa9jXRkEyynzdPhX9hZja+m6fzltA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1777907619; c=relaxed/relaxed;
-	bh=9AVAKeaFxmwdz50wEsCt0Kt1fBDQv/txcVtcMG9NNx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TLpfV9vTjVGowLz95D8bD0Q9IP1JezIrB+2nOX85/jZj7Zv1oJ8LD6b0QfY2tm7+rdlqCSfAedc+eyWbYNRS5tOk65ztblAv/DLQ+8/glP8rRRUIavQ+YGk9kI5shLbEOXeov41vvMyrzdJPguBqr+yWNLaFpMFycElSLcRXz4Qz8TNBGl25bNu6K9/2bu3E5J7nV6bqcw4TB5JzM5hgJBLWHNlbebna2kikSRDZPVA2jRn+n5ea826pRf1SGP8alcF7aqIjoK4cE3SXmCv3Eii51wJuCZJVl5ZYiTiCqKudyxNpQ0dwptvytQe+VpB76AK3c5hhDfopWVWrD+Ivgw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HVN40wOs; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1777940184; c=relaxed/relaxed;
+	bh=JXOa5+RvJ5VSXJ8Gbp12a/oKjNiTswoWwTm8zXltLrc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dLJlC9sIHoZfnX0Wh7FLIheiPdRdky3L+cv1npRyg4oHtjkk3r1mEWzc0Ngq/ggpNVMUo12/26Mb7mZUPob54FwWxVxPXZVHdB1A5zyVhH8qbg2tfe9hHsykED2oSrQNESXa6qWXJUOWFahZjfr5HGyECY3lFXXDJz33nThetUR1C2F3KDTxalkzPykQjgpS/uZ2OD85xbtORgHJVcHRZV1eOxSSBhAVCbOJJ2STPlnSqAkoscCK+SLae/YjG+k1bf5QO/sKuU4hCist6MM62vdbMpDAJN9tmJfaowCZ4bq8xFJRFgHmFFDMAMpjxifnz5YWuqmVyIrlyexEXGGWSw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hFcwqZYQ; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HVN40wOs;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hFcwqZYQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4g8QC45pZXz2xfB
-	for <linux-erofs@lists.ozlabs.org>; Tue, 05 May 2026 01:13:35 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1777907610; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=9AVAKeaFxmwdz50wEsCt0Kt1fBDQv/txcVtcMG9NNx8=;
-	b=HVN40wOsirKx1trkvdRVQs8xr9heocA1qeaH5xWMIj2WOOq3UDo045AiT0wKQ5EBA13/Iv05QwCyilx94WLQqCsE/MOLWpYUztMeXRssWGUydWET7iiGvwyWXefrti7fi0O4uHgbzqDRIZuKk+q1BNNcLIx9nGPuiuLIFbv3YnY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X2CxnaR_1777907604;
-Received: from 30.69.177.140(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X2CxnaR_1777907604 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 04 May 2026 23:13:28 +0800
-Message-ID: <38546371-df53-4fa2-adf1-26ab2dd71542@linux.alibaba.com>
-Date: Mon, 4 May 2026 17:13:23 +0200
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4g8fFM3ky4z2xMV
+	for <linux-erofs@lists.ozlabs.org>; Tue, 05 May 2026 10:16:23 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 5590060055;
+	Tue,  5 May 2026 00:16:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17732C2BCB8;
+	Tue,  5 May 2026 00:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777940180;
+	bh=r0FoTB4Qm9DDsZd69wtvRoYlFr/kq/fGjIA+u/xIp20=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hFcwqZYQUU+L9w79KOPcaSF3BPDokKxZ9bZ7uSRsV2edkXlsp3qWA2+t2Br9PFZlj
+	 Gb3B5WP7GW/LfTPYrxVffumt8KX6Aw4P/uVM0HWBw3ODz6Uu1bAk/UKaiHBoz8kcP0
+	 BUVQiyGp9lTkLGQ3dSsb2tNG1aFt+rSPKhp+s+I33ahlXcrYVxG/zgXvphGfSN3YLR
+	 vfXzLZO7geW7V8wFtjoyoqz+tEFgFxqHCqKccrdH4RD9H5q3uN3me80GC3MCv9gXlc
+	 gIDfe8Azs06yWEykLDXr0DJ3gq3P0bxLVWulZAu/JAPZ0sFJPjRApkc18aLf2KB1JD
+	 0rAVGsu2SrDRA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Amir Goldstein <amir73il@gmail.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.12.y] fs: prepare for adding LSM blob to backing_file
+Date: Mon,  4 May 2026 20:16:14 -0400
+Message-ID: <20260505001614.127730-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <2026050104-spotter-moody-9d29@gregkh>
+References: <2026050104-spotter-moody-9d29@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,105 +74,126 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Rebuild mode for tail-pack layouts
-To: xtex <xtex@envs.net>, linux-erofs@lists.ozlabs.org
-References: <Jk-rGy7vS2y1kZoygWQp8w@envs.net>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <Jk-rGy7vS2y1kZoygWQp8w@envs.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 5BE604C082E
+X-Rspamd-Queue-Id: 094F64C52EC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_TWO(0.00)[2];
-	TAGGED_FROM(0.00)[bounces-3376-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:xtex@envs.net,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3377-lists,linux-erofs=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.ozlabs.org,hallyn.com,paul-moore.com,kernel.org];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_SENDER(0.00)[sashal@kernel.org,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:amir73il@gmail.com,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:serge@hallyn.com,m:paul@paul-moore.com,m:sashal@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[paul-moore.com:email,ozlabs.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 
-Hi xtex,
+From: Amir Goldstein <amir73il@gmail.com>
 
-On 2026/4/30 20:09, xtex wrote:
-> Hi!
-> 
-> In erofs_rebuild_write_blob_index (rebuild.c), only EROFS_INODE_CHUNK_BASED
-> and FLAT_PLAIN are implemented, so when generating a metadata index with
-> rebuild mode, the sources cannot use tail-pack nor inline data layout.
-> However, disabling tail-packing can lead to great disk-space waste in many
-> cases, especially when the file-system consists of a lot of small files.
-> 
-> Thus I attempted to implement FLAT_INLINE for it, only to realize that the
-> current chunk entry formats can only represent physical addresses that are
-> block-aligned while tail-pack extent is not.
-> 
-> I wonder what do you think about adding a new chunk entry format? And how
-> should it be named?
-> 
-> I would suggest the following structure:
-> struct erofs_inode_chunk_index_tp {
-> 	__le16 startblk_hi;	/* starting block number MSB */
-> 	__le16 device_id;	/* back-end storage id (with bits masked)
-> */
-> 	__le32 startblk_lo;	/* starting block number of this chunk */
-> 	/* new fields below */
-> 	__le16 startblk_off;	/* starting block offset */
-> 	__le16 reserved;
-> } __packed;
-> The 16b offset should be enough unless we are to support block size > 64K.
-> The reserved field is added for alignment.
+[ Upstream commit 880bd496ec72a6dcb00cb70c430ef752ba242ae7 ]
 
-Sorry about the late response.
+In preparation to adding LSM blob to backing_file struct, factor out
+helpers init_backing_file() and backing_file_free().
 
-Thanks for the question.
+Cc: stable@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-unionfs@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+[PM: use the term "LSM blob", fix comment style to match file]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+[ Used kfree() instead of kmem_cache_free(bfilp_cachep, ff) ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/file_table.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-FLAT_INLINE can be used for index rebuilding, which can work with
-uniaddr (or mapped_blkaddr) since the blkaddr will be mapped
-into the relative address based on the blob starting with
-mapped_blkaddr:
-
-https://erofs.docs.kernel.org/en/latest/ondisk/chunked_format.html#device-table
-
-But I agree the expression in the page above is a bit
-ambigious through.
-
-Thanks,
-Gao Xiang
-
-
-> 
-> Best wishes.
-> 
+diff --git a/fs/file_table.c b/fs/file_table.c
+index cf3422edf737c..f7661a7087464 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -60,6 +60,12 @@ struct path *backing_file_user_path(struct file *f)
+ }
+ EXPORT_SYMBOL_GPL(backing_file_user_path);
+ 
++static inline void backing_file_free(struct backing_file *ff)
++{
++	path_put(&ff->user_path);
++	kfree(ff);
++}
++
+ static inline void file_free(struct file *f)
+ {
+ 	security_file_free(f);
+@@ -67,8 +73,7 @@ static inline void file_free(struct file *f)
+ 		percpu_counter_dec(&nr_files);
+ 	put_cred(f->f_cred);
+ 	if (unlikely(f->f_mode & FMODE_BACKING)) {
+-		path_put(backing_file_user_path(f));
+-		kfree(backing_file(f));
++		backing_file_free(backing_file(f));
+ 	} else {
+ 		kmem_cache_free(filp_cachep, f);
+ 	}
+@@ -255,6 +260,12 @@ struct file *alloc_empty_file_noaccount(int flags, const struct cred *cred)
+ 	return f;
+ }
+ 
++static int init_backing_file(struct backing_file *ff)
++{
++	memset(&ff->user_path, 0, sizeof(ff->user_path));
++	return 0;
++}
++
+ /*
+  * Variant of alloc_empty_file() that allocates a backing_file container
+  * and doesn't check and modify nr_files.
+@@ -277,7 +288,14 @@ struct file *alloc_empty_backing_file(int flags, const struct cred *cred)
+ 		return ERR_PTR(error);
+ 	}
+ 
++	/* The f_mode flags must be set before fput(). */
+ 	ff->file.f_mode |= FMODE_BACKING | FMODE_NOACCOUNT;
++	error = init_backing_file(ff);
++	if (unlikely(error)) {
++		fput(&ff->file);
++		return ERR_PTR(error);
++	}
++
+ 	return &ff->file;
+ }
+ 
+-- 
+2.53.0
 
 
