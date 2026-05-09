@@ -1,65 +1,74 @@
-Return-Path: <linux-erofs+bounces-3389-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3390-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 5W81NXIG/2lg1QAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3389-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 12:03:30 +0200
+	id 8EgiE8hE/2mo4AAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3390-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 16:29:28 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBDEC4FF145
-	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 12:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2218B500094
+	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 16:29:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gCM4r6lwRz2xqv;
-	Sat, 09 May 2026 20:03:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gCSzm3vvRz2xqv;
+	Sun, 10 May 2026 00:29:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778321004;
-	cv=none; b=j5m0bA8DBzoyrsW9oB4I98Z4/w5bKHEpM1PotzK/eB+RRQwTfkaDAfuM47htUN5FFslT8HcsDp/rS/FujZZiRM2KxkpX7Id7AQALcaevuGu1ert8ItdLBWkr/N5n87rwNRDNhcgIKwyMjPWmY7v/KPD+cXaT1wY61zVtnlB4muUkIrHaO7x6OYj7WtXUlZWiDqQJTkKh/tenMoqHZJjyyGTmh8FvDoSvFy+ufAZAiYWsXfcsASD4WipGxB6QY9R/l9GiLgsia8YEOyWrY/KpdTL0PHEkQ/P+L3N1KZopAod+65ze6CJ4QVDOGeLF+eDzzc3oTROVftzvdb7wNa9oBg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=157.180.15.194
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778336964;
+	cv=none; b=SOfZTiuyGR0B9yQPNA9Wr4iUeE0JC/gLEbc/y4KoyF/STpw8RcifZWNCrZgbSrL8t4hSXwVIgMB2izaIiaC2hYFFCzrp/9sQhq+JpryXpLS8J1iVOaXAydyZ4VRoBvCGE2gN+sEPmyQrW1DNIRKVEiIi/rofyR+9u2826jRB3GK/PCDiC9as3+n/z7pySl5gDIfnEjrTEc+zdhahqUabUlIcSQhkM8qreKrBlFiAqxSv/qjsylHhGyQubgHDdkmnWnQqukYCOPQ5AnixbdsxKKaNsbO7r4lv04leDGSB/9HqH9PIv97jAoCXkeBouBmxay+5X2lr+swRNDPgEsWmiw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778321004; c=relaxed/relaxed;
-	bh=/i1oaAfXGx5tNgdr9HS6UH8t+Dlwxq2oAYBBfgl+nCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YhdhZeVEhPejhm2bE+3zVwcl4mrqbuymsgsnNsooAz9rjen1pp8i3lAZuQnzSaSOE5/r7EIwoDUs5lShVv1C3gqXAQiMgeKr/fLFUpJ2Kiw1yGD1Md3S30SdJlKUWcuoE6Km8I0DEab/L+Z5GfH9GNlYgg/joTqAY92dueI9y+QKmouix03zJfSd+M5IhZttpM92AaQ96iJo+RaLZX80K1h41uh+IBLi8nZKEdmE1J7uqrwg8Djg61heU2Ysocgr4zYRmkpDVhFWS9Z+GLolOVhmnDnrz85R0BbSjJZhbb8PUrFellWHqIzSGhMR4wy5NTA4zBNL0DchxJcE9PNV6A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JMvBmFFh; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1778336964; c=relaxed/relaxed;
+	bh=0mSbgHixmfxSCxbmEllLPYhX9vdiPNagI1vOIlCn6qA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XhgUYcHYrNDImK5DiiY393Vyt8IWscpHpRH8wmGSbxbT/CwMFgN2RpGvbYpzJHTWtPZHU9PSG1WuYjVEiNfFaRrEILiGu2FH0hnCaisQEOwC0MYaEahk38FXkCwGLRTAQ9C8TriRwnZ9Q1RndF0U8U11CxaS0jJyN7I56q1XTQL3zH7G+35cFUQV4F4WF+DX4M/ilMmY0+4fQDiS1XnR9PlBReUMI0prpZv4wCqq9kPeaMkKdHLnPCguZ/vqgNGHQotbXNY4OcmcjairHDDVUhQSbkYtvpYfysuSgsHj3pzujfAE4qWwyxP9CCHiCSWLTITV6s72AMdR8OUcj/wSvg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=WowBxIN1; dkim-atps=neutral; spf=pass (client-ip=157.180.15.194; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org) smtp.mailfrom=envs.net
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JMvBmFFh;
+	dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=WowBxIN1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=envs.net (client-ip=157.180.15.194; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org)
+Received: from mail.envs.net (mail.envs.net [157.180.15.194])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gCM4q6fX6z2xf8
-	for <linux-erofs@lists.ozlabs.org>; Sat, 09 May 2026 20:03:23 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E83BD6024D;
-	Sat,  9 May 2026 10:03:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACB7C2BCB2;
-	Sat,  9 May 2026 10:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778321000;
-	bh=PcKIOonsa92S8kn3TnBvXbr3wHVIDuGBmZ8z3hwk/q0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JMvBmFFhr10XSWkIuoDUUJ0mj6xSgGWyWZwxm4de7qGE6YiGT7phR62nt1Z+brm+E
-	 4i67EVt27s1bhB4lasg7Q/OvRlX2Rc3Hq4oORtn0YKmEcaZ2UrF0Sh6JIzhYUwSBfe
-	 W7XwkAih242DYydOGr8s5QCxfaRHph+vR4pT5kI5L5i8Q0CXbyaZpf0ijyDVvmCoiF
-	 dBEUFykrCBJ/v6Zi5lwLYtVdDzr6wSbwM+ihN2oR1BnK/wwnzifPWUYQ2CtYpclGVc
-	 u4C7MUzeifFqYzJ25hmXi6zn0DTIAPoOn3YOzgq77aFuhYONW+0R3mGW9FFl2W68oU
-	 nkfQDyqYySgRw==
-Date: Sat, 9 May 2026 18:03:15 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Bingwu Zhang <xtex@envs.net>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gCSzl45Pnz2xf8
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 May 2026 00:29:22 +1000 (AEST)
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id 6DAE71C00D5;
+	Sat,  9 May 2026 14:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1778336959; bh=0mSbgHixmfxSCxbmEllLPYhX9vdiPNagI1vOIlCn6qA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=WowBxIN1/1O65M88RuJOoobODtmO3+fyIDrgxC7jrOfFSbLauMh4LugA6UkFgaPOE
+	 DPUJwaHXo7YwVLgYmE3bojre/JAXEfmFBpBTRePXCVPCoFovt/imow2hILr9RqGqHq
+	 U7ArHystApRGvADv2uv9j71f+3LJhs7ccfL5ZSVuU73Y9u84SSEpM2bxopMI3g4pxT
+	 Q49TQLVE51IIbbRrdx23eFRB0TFZZg3lvyOtY+zerILz1xuFW4GT0bbISv/xQp+Knm
+	 wpwqLfKZPyB/aR8zvpet8naI9EJdkWjED71v8xNEbZN5P6dewvYaT/R4iScf7xHaIl
+	 /1CKfssNvnNxA49SYt7V3GeZ8gGzWA1MmJ00P+ZejEj1zQlczevB+sNaY+EmY9rh3p
+	 QSTMwTs2ydCxG3PMoQYBS5K8eG+qnYQAyBCqEyVLr25ibNXVjtOsdPNqJRGYroChPV
+	 X3Fm8L2Cod9aifbIal8XpApllDbca0piXQYnK1o6CUuAmeoS2dogDR5rAt276CM5XT
+	 +ES7lX9aMX04umDm+w1zT9Y8qHmOKNZ+RcTzF9Qo1JhgRP4QXugBOuh6FK/2PEFrgy
+	 2sNBfds3OSawZH5IflTrijgypYedN6ELYCDW/8xWU8j+8Tp7WYVCbtIwJFKfHkmRns
+	 bAlZS9/YE0cpMI+azkCZArYg=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FLeEMuZdUIVD; Sat,  9 May 2026 14:29:17 +0000 (UTC)
+Received: from xtex1.localnet (unknown [89.251.11.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Sat,  9 May 2026 14:29:16 +0000 (UTC)
+From: Bingwu Zhang <xtex@envs.net>
+To: linux-erofs@lists.ozlabs.org, Gao Xiang <hsiangkao@linux.alibaba.com>
 Subject: Re: Rebuild mode for tail-pack layouts
-Message-ID: <af8GY7GTdIO4G829@debian>
-Mail-Followup-To: Bingwu Zhang <xtex@envs.net>,
-	linux-erofs@lists.ozlabs.org,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <Jk-rGy7vS2y1kZoygWQp8w@envs.net>
- <38546371-df53-4fa2-adf1-26ab2dd71542@linux.alibaba.com>
- <CgjAP5WSSE2vLMZi0oabUw@envs.net>
+Date: Sat, 09 May 2026 22:29:11 +0800
+Message-ID: <5qBWw8PlSaWgKruL4DxpGw@envs.net>
+In-Reply-To: <af8GY7GTdIO4G829@debian>
+References:
+ <Jk-rGy7vS2y1kZoygWQp8w@envs.net> <CgjAP5WSSE2vLMZi0oabUw@envs.net>
+ <af8GY7GTdIO4G829@debian>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -71,140 +80,161 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CgjAP5WSSE2vLMZi0oabUw@envs.net>
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: DBDEC4FF145
+X-Rspamd-Queue-Id: 2218B500094
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.70 / 15.00];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[envs.net,quarantine];
+	R_DKIM_ALLOW(-0.20)[envs.net:s=modoboa];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3389-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:xtex@envs.net,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[xiang@kernel.org,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-3390-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[envs.net:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[xiang@kernel.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[xtex@envs.net,linux-erofs@lists.ozlabs.org];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
-On Sat, May 09, 2026 at 04:37:43PM +0800, Bingwu Zhang wrote:
-> Hi,
-> 
-> On Monday, May 4, 2026 11:13:23 PM China Standard Time Gao Xiang wrote:
-> > Hi xtex,
-> > 
-> > On 2026/4/30 20:09, xtex wrote:
-> > > Hi!
-> > > 
-> > > In erofs_rebuild_write_blob_index (rebuild.c), only
-> > > EROFS_INODE_CHUNK_BASED
-> > > and FLAT_PLAIN are implemented, so when generating a metadata index with
-> > > rebuild mode, the sources cannot use tail-pack nor inline data layout.
-> > > However, disabling tail-packing can lead to great disk-space waste in many
-> > > cases, especially when the file-system consists of a lot of small files.
-> > > 
-> > > Thus I attempted to implement FLAT_INLINE for it, only to realize that the
-> > > current chunk entry formats can only represent physical addresses that are
-> > > block-aligned while tail-pack extent is not.
-> > > 
-> > > I wonder what do you think about adding a new chunk entry format? And how
-> > > should it be named?
-> > > 
-> > > I would suggest the following structure:
-> > > struct erofs_inode_chunk_index_tp {
-> > > 
-> > > 	__le16 startblk_hi;	/* starting block number MSB */
-> > > 	__le16 device_id;	/* back-end storage id (with bits masked)
-> > > 
-> > > */
-> > > 
-> > > 	__le32 startblk_lo;	/* starting block number of this chunk */
-> > > 	/* new fields below */
-> > > 	__le16 startblk_off;	/* starting block offset */
-> > > 	__le16 reserved;
-> > > 
-> > > } __packed;
-> > > The 16b offset should be enough unless we are to support block size > 64K.
-> > > The reserved field is added for alignment.
-> > 
-> > Sorry about the late response.
-> > 
-> > Thanks for the question.
-> > 
-> > FLAT_INLINE can be used for index rebuilding, which can work with
-> > uniaddr (or mapped_blkaddr) since the blkaddr will be mapped
-> > into the relative address based on the blob starting with
-> > mapped_blkaddr:
-> > 
-> > https://erofs.docs.kernel.org/en/latest/ondisk/chunked_format.html#device-ta
-> > ble
-> > 
-> > But I agree the expression in the page above is a bit
-> > ambigious through.
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > > Best wishes.
-> 
-> Sorry for the late response and thanks for your answer.
-> 
-> I am sorry about that I didn't get it.
-> In __erofs_map_blocks:
-> > map->m_pa = erofs_pos(sbi, startblk);
-> and
-> > #define erofs_pos(sbi, nr)      ((erofs_off_t)(nr) << (sbi)->blkszbits)
-> It seems like that the mapped PA is always block-aligned? However, the last 
-> chunk of inline data is not?
+On Saturday, May 9, 2026 6:03:15=E2=80=AFPM China Standard Time Gao Xiang w=
+rote:
+> On Sat, May 09, 2026 at 04:37:43PM +0800, Bingwu Zhang wrote:
+> > Hi,
+> >=20
+> > On Monday, May 4, 2026 11:13:23=E2=80=AFPM China Standard Time Gao Xian=
+g wrote:
+> > > Hi xtex,
+> > >=20
+> > > On 2026/4/30 20:09, xtex wrote:
+> > > > Hi!
+> > > >=20
+> > > > In erofs_rebuild_write_blob_index (rebuild.c), only
+> > > > EROFS_INODE_CHUNK_BASED
+> > > > and FLAT_PLAIN are implemented, so when generating a metadata index
+> > > > with
+> > > > rebuild mode, the sources cannot use tail-pack nor inline data layo=
+ut.
+> > > > However, disabling tail-packing can lead to great disk-space waste =
+in
+> > > > many
+> > > > cases, especially when the file-system consists of a lot of small
+> > > > files.
+> > > >=20
+> > > > Thus I attempted to implement FLAT_INLINE for it, only to realize t=
+hat
+> > > > the
+> > > > current chunk entry formats can only represent physical addresses t=
+hat
+> > > > are
+> > > > block-aligned while tail-pack extent is not.
+> > > >=20
+> > > > I wonder what do you think about adding a new chunk entry format? A=
+nd
+> > > > how
+> > > > should it be named?
+> > > >=20
+> > > > I would suggest the following structure:
+> > > > struct erofs_inode_chunk_index_tp {
+> > > >=20
+> > > > 	__le16 startblk_hi;	/* starting block number MSB */
+> > > > 	__le16 device_id;	/* back-end storage id (with bits masked)
+> > > >=20
+> > > > */
+> > > >=20
+> > > > 	__le32 startblk_lo;	/* starting block number of this chunk */
+> > > > 	/* new fields below */
+> > > > 	__le16 startblk_off;	/* starting block offset */
+> > > > 	__le16 reserved;
+> > > >=20
+> > > > } __packed;
+> > > > The 16b offset should be enough unless we are to support block size=
+ >
+> > > > 64K.
+> > > > The reserved field is added for alignment.
+> > >=20
+> > > Sorry about the late response.
+> > >=20
+> > > Thanks for the question.
+> > >=20
+> > > FLAT_INLINE can be used for index rebuilding, which can work with
+> > > uniaddr (or mapped_blkaddr) since the blkaddr will be mapped
+> > > into the relative address based on the blob starting with
+> > > mapped_blkaddr:
+> > >=20
+> > > https://erofs.docs.kernel.org/en/latest/ondisk/chunked_format.html#de=
+vic
+> > > e-ta ble
+> > >=20
+> > > But I agree the expression in the page above is a bit
+> > > ambigious through.
+> > >=20
+> > > Thanks,
+> > > Gao Xiang
+> > >=20
+> > > > Best wishes.
+> >=20
+> > Sorry for the late response and thanks for your answer.
+> >=20
+> > I am sorry about that I didn't get it.
+> >=20
+> > In __erofs_map_blocks:
+> > > map->m_pa =3D erofs_pos(sbi, startblk);
+> >=20
+> > and
+> >=20
+> > > #define erofs_pos(sbi, nr)      ((erofs_off_t)(nr) << (sbi)->blkszbit=
+s)
+> >=20
+> > It seems like that the mapped PA is always block-aligned? However, the
+> > last
+> > chunk of inline data is not?
+>=20
+> Yes, sorry I didn't express explicitly.
+>=20
+> I mean the main data except the trailing inline data part
+> can be remapped into another external blob.
+>=20
+> But inline data should be kept with the metadata; otherwise it
+> won't be called _inline data_ anymore.
+>=20
+> Or do you have a case we have to redirect the inline data?
+>=20
+> Thanks,
+> Gao Xiang
+>=20
+> > Best wishes.
 
-Yes, sorry I didn't express explicitly.
+Ah! Thanks for your explanation. I initially thought that copying inline da=
+ta=20
+would increase the size of the metadata. Thanks!
 
-I mean the main data except the trailing inline data part
-can be remapped into another external blob.
+Best wishes.
 
-But inline data should be kept with the metadata; otherwise it
-won't be called _inline data_ anymore.
+=2D-=20
+xtex (a.k.a. Bingwu Zhang) @ Sat, 09 May 2026 14:27:41 +0000
 
-Or do you have a case we have to redirect the inline data?
 
-Thanks,
-Gao Xiang
 
-> 
-> Best wishes.
-> 
-> -- 
-> xtex (a.k.a. Bingwu Zhang) @ Sat, 09 May 2026 08:24:53 +0000
-> 
-> 
-> 
-> 
 
