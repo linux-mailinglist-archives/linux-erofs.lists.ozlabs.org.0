@@ -1,74 +1,49 @@
-Return-Path: <linux-erofs+bounces-3390-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3391-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8EgiE8hE/2mo4AAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3390-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 16:29:28 +0200
+	id 0DmYCLZUAWpvVQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3391-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 06:01:58 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2218B500094
-	for <lists+linux-erofs@lfdr.de>; Sat, 09 May 2026 16:29:27 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81F4E507C60
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 06:01:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gCSzm3vvRz2xqv;
-	Sun, 10 May 2026 00:29:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gDQyn2j8Zz2xQB;
+	Mon, 11 May 2026 14:01:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=157.180.15.194
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778336964;
-	cv=none; b=SOfZTiuyGR0B9yQPNA9Wr4iUeE0JC/gLEbc/y4KoyF/STpw8RcifZWNCrZgbSrL8t4hSXwVIgMB2izaIiaC2hYFFCzrp/9sQhq+JpryXpLS8J1iVOaXAydyZ4VRoBvCGE2gN+sEPmyQrW1DNIRKVEiIi/rofyR+9u2826jRB3GK/PCDiC9as3+n/z7pySl5gDIfnEjrTEc+zdhahqUabUlIcSQhkM8qreKrBlFiAqxSv/qjsylHhGyQubgHDdkmnWnQqukYCOPQ5AnixbdsxKKaNsbO7r4lv04leDGSB/9HqH9PIv97jAoCXkeBouBmxay+5X2lr+swRNDPgEsWmiw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778472113;
+	cv=none; b=IowzkMDhy9SKc3Uc6b2iwQKGDnkoZoeimeGlBrcqhmcNEm879uZ+8Y3GzPq1eT3KXvntgUFP2gi2Kv+L2HdkHesJ6DCBpqdZnjuVNeWbXsRFkMg2yeqF+wWtwxoWTPBrpJvPTwq0r2niuR4hDeHefvHC3BxTCzeSa7a9xubi4b9nzGFY4mjRrCem4tFyQaGFXTNdGP6jH7yWS0CVR4nXZfpyLdi0TUmPLsHTjo2/Xf4wmW6aCWqM6Jxg4oBY05nZH66fK8QH4s7Ws87YYwvpYFE+BGcaeF+Q5EZf/bJqMMWDYaZYvPd9ii15ByhoN/3xFgDlg6K1LrIvPS7fW0edAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778336964; c=relaxed/relaxed;
-	bh=0mSbgHixmfxSCxbmEllLPYhX9vdiPNagI1vOIlCn6qA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XhgUYcHYrNDImK5DiiY393Vyt8IWscpHpRH8wmGSbxbT/CwMFgN2RpGvbYpzJHTWtPZHU9PSG1WuYjVEiNfFaRrEILiGu2FH0hnCaisQEOwC0MYaEahk38FXkCwGLRTAQ9C8TriRwnZ9Q1RndF0U8U11CxaS0jJyN7I56q1XTQL3zH7G+35cFUQV4F4WF+DX4M/ilMmY0+4fQDiS1XnR9PlBReUMI0prpZv4wCqq9kPeaMkKdHLnPCguZ/vqgNGHQotbXNY4OcmcjairHDDVUhQSbkYtvpYfysuSgsHj3pzujfAE4qWwyxP9CCHiCSWLTITV6s72AMdR8OUcj/wSvg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=WowBxIN1; dkim-atps=neutral; spf=pass (client-ip=157.180.15.194; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org) smtp.mailfrom=envs.net
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
+	t=1778472113; c=relaxed/relaxed;
+	bh=rE+Q6UPWWQ1oC/sAQGNy8A9SUWlnTwUNv8DAOK0GVa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zttw+joz987fKrUAguD73VtvA408fj9BI6GUq2Lr4JHY+9IOvYInPAnHhT5C4idditLcam5JcVHT3x+eplpOpF8ZusxKUkvfdXHnRUb0Ep6GDyli+2Pf4JxWoBHJQqbslpSkwKKYs8kmr+vssC/NcosbkjwPESZHsGN0eS4WNSc5ZBfZzqUOtjV6z81NNzwjH+kL1c5EhjuIyeqB2XKzPPWIcUqcOdBC6pW6Lio9uoVt9a70T+Kbb8kVQlP+FKiawpw/dMUDm60jCpbzW35QzymX3+SKn2WIQNNiHI7G69DfWOQGMFTyqIb8cRcktTgYoud2+g3H5poTFbjF7O+2vw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FGhWidfj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=WowBxIN1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FGhWidfj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=envs.net (client-ip=157.180.15.194; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org)
-Received: from mail.envs.net (mail.envs.net [157.180.15.194])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gCSzl45Pnz2xf8
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 May 2026 00:29:22 +1000 (AEST)
-Received: from localhost (mail.envs.net [127.0.0.1])
-	by mail.envs.net (Postfix) with ESMTP id 6DAE71C00D5;
-	Sat,  9 May 2026 14:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
-	t=1778336959; bh=0mSbgHixmfxSCxbmEllLPYhX9vdiPNagI1vOIlCn6qA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=WowBxIN1/1O65M88RuJOoobODtmO3+fyIDrgxC7jrOfFSbLauMh4LugA6UkFgaPOE
-	 DPUJwaHXo7YwVLgYmE3bojre/JAXEfmFBpBTRePXCVPCoFovt/imow2hILr9RqGqHq
-	 U7ArHystApRGvADv2uv9j71f+3LJhs7ccfL5ZSVuU73Y9u84SSEpM2bxopMI3g4pxT
-	 Q49TQLVE51IIbbRrdx23eFRB0TFZZg3lvyOtY+zerILz1xuFW4GT0bbISv/xQp+Knm
-	 wpwqLfKZPyB/aR8zvpet8naI9EJdkWjED71v8xNEbZN5P6dewvYaT/R4iScf7xHaIl
-	 /1CKfssNvnNxA49SYt7V3GeZ8gGzWA1MmJ00P+ZejEj1zQlczevB+sNaY+EmY9rh3p
-	 QSTMwTs2ydCxG3PMoQYBS5K8eG+qnYQAyBCqEyVLr25ibNXVjtOsdPNqJRGYroChPV
-	 X3Fm8L2Cod9aifbIal8XpApllDbca0piXQYnK1o6CUuAmeoS2dogDR5rAt276CM5XT
-	 +ES7lX9aMX04umDm+w1zT9Y8qHmOKNZ+RcTzF9Qo1JhgRP4QXugBOuh6FK/2PEFrgy
-	 2sNBfds3OSawZH5IflTrijgypYedN6ELYCDW/8xWU8j+8Tp7WYVCbtIwJFKfHkmRns
-	 bAlZS9/YE0cpMI+azkCZArYg=
-X-Virus-Scanned: Debian amavisd-new at mail.envs.net
-Received: from mail.envs.net ([127.0.0.1])
-	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FLeEMuZdUIVD; Sat,  9 May 2026 14:29:17 +0000 (UTC)
-Received: from xtex1.localnet (unknown [89.251.11.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.envs.net (Postfix) with ESMTPSA;
-	Sat,  9 May 2026 14:29:16 +0000 (UTC)
-From: Bingwu Zhang <xtex@envs.net>
-To: linux-erofs@lists.ozlabs.org, Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: Rebuild mode for tail-pack layouts
-Date: Sat, 09 May 2026 22:29:11 +0800
-Message-ID: <5qBWw8PlSaWgKruL4DxpGw@envs.net>
-In-Reply-To: <af8GY7GTdIO4G829@debian>
-References:
- <Jk-rGy7vS2y1kZoygWQp8w@envs.net> <CgjAP5WSSE2vLMZi0oabUw@envs.net>
- <af8GY7GTdIO4G829@debian>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gDQyl0GkPz2xHF
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 14:01:48 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1778472103; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=rE+Q6UPWWQ1oC/sAQGNy8A9SUWlnTwUNv8DAOK0GVa8=;
+	b=FGhWidfjVFHZV2HWuQgcCOXNb89NJm63Y/MEy/eLS9fzNDxQ/DNQ/n2ckrDFdaOb3RPtRKF2OxnGFoBmXz6SrcSCyX3TtnklYZzidrrKrPQrwZRnU6Fa5o+MnzBvE2gZvJkxudbBnUwPpC7zmrbwgykK+ZI9e/7v6Kz5O0p0QXI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X2e5vNy_1778472101;
+Received: from 30.221.132.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X2e5vNy_1778472101 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 11 May 2026 12:01:42 +0800
+Message-ID: <e4701c42-1ed5-40a6-8f5d-927c40e3856b@linux.alibaba.com>
+Date: Mon, 11 May 2026 12:01:41 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -80,161 +55,82 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in
+ z_erofs_drop_inline_pcluster
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: niuzhiguo84@gmail.com, ke.wang@unisoc.com, linux-erofs@lists.ozlabs.org
+References: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 2218B500094
+X-Rspamd-Queue-Id: 81F4E507C60
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[envs.net,quarantine];
-	R_DKIM_ALLOW(-0.20)[envs.net:s=modoboa];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3390-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[envs.net:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TAGGED_FROM(0.00)[bounces-3391-lists,linux-erofs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:zhiguo.niu@unisoc.com,m:niuzhiguo84@gmail.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,unisoc.com,lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[xtex@envs.net,linux-erofs@lists.ozlabs.org];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[unisoc.com:email,linux.alibaba.com:mid,linux.alibaba.com:dkim]
 X-Rspamd-Action: no action
 
-On Saturday, May 9, 2026 6:03:15=E2=80=AFPM China Standard Time Gao Xiang w=
-rote:
-> On Sat, May 09, 2026 at 04:37:43PM +0800, Bingwu Zhang wrote:
-> > Hi,
-> >=20
-> > On Monday, May 4, 2026 11:13:23=E2=80=AFPM China Standard Time Gao Xian=
-g wrote:
-> > > Hi xtex,
-> > >=20
-> > > On 2026/4/30 20:09, xtex wrote:
-> > > > Hi!
-> > > >=20
-> > > > In erofs_rebuild_write_blob_index (rebuild.c), only
-> > > > EROFS_INODE_CHUNK_BASED
-> > > > and FLAT_PLAIN are implemented, so when generating a metadata index
-> > > > with
-> > > > rebuild mode, the sources cannot use tail-pack nor inline data layo=
-ut.
-> > > > However, disabling tail-packing can lead to great disk-space waste =
-in
-> > > > many
-> > > > cases, especially when the file-system consists of a lot of small
-> > > > files.
-> > > >=20
-> > > > Thus I attempted to implement FLAT_INLINE for it, only to realize t=
-hat
-> > > > the
-> > > > current chunk entry formats can only represent physical addresses t=
-hat
-> > > > are
-> > > > block-aligned while tail-pack extent is not.
-> > > >=20
-> > > > I wonder what do you think about adding a new chunk entry format? A=
-nd
-> > > > how
-> > > > should it be named?
-> > > >=20
-> > > > I would suggest the following structure:
-> > > > struct erofs_inode_chunk_index_tp {
-> > > >=20
-> > > > 	__le16 startblk_hi;	/* starting block number MSB */
-> > > > 	__le16 device_id;	/* back-end storage id (with bits masked)
-> > > >=20
-> > > > */
-> > > >=20
-> > > > 	__le32 startblk_lo;	/* starting block number of this chunk */
-> > > > 	/* new fields below */
-> > > > 	__le16 startblk_off;	/* starting block offset */
-> > > > 	__le16 reserved;
-> > > >=20
-> > > > } __packed;
-> > > > The 16b offset should be enough unless we are to support block size=
- >
-> > > > 64K.
-> > > > The reserved field is added for alignment.
-> > >=20
-> > > Sorry about the late response.
-> > >=20
-> > > Thanks for the question.
-> > >=20
-> > > FLAT_INLINE can be used for index rebuilding, which can work with
-> > > uniaddr (or mapped_blkaddr) since the blkaddr will be mapped
-> > > into the relative address based on the blob starting with
-> > > mapped_blkaddr:
-> > >=20
-> > > https://erofs.docs.kernel.org/en/latest/ondisk/chunked_format.html#de=
-vic
-> > > e-ta ble
-> > >=20
-> > > But I agree the expression in the page above is a bit
-> > > ambigious through.
-> > >=20
-> > > Thanks,
-> > > Gao Xiang
-> > >=20
-> > > > Best wishes.
-> >=20
-> > Sorry for the late response and thanks for your answer.
-> >=20
-> > I am sorry about that I didn't get it.
-> >=20
-> > In __erofs_map_blocks:
-> > > map->m_pa =3D erofs_pos(sbi, startblk);
-> >=20
-> > and
-> >=20
-> > > #define erofs_pos(sbi, nr)      ((erofs_off_t)(nr) << (sbi)->blkszbit=
-s)
-> >=20
-> > It seems like that the mapped PA is always block-aligned? However, the
-> > last
-> > chunk of inline data is not?
->=20
-> Yes, sorry I didn't express explicitly.
->=20
-> I mean the main data except the trailing inline data part
-> can be remapped into another external blob.
->=20
-> But inline data should be kept with the metadata; otherwise it
-> won't be called _inline data_ anymore.
->=20
-> Or do you have a case we have to redirect the inline data?
->=20
-> Thanks,
-> Gao Xiang
->=20
-> > Best wishes.
+Hi Zhiguo,
 
-Ah! Thanks for your explanation. I initially thought that copying inline da=
-ta=20
-would increase the size of the metadata. Thanks!
+On 2026/4/29 15:59, Zhiguo Niu wrote:
+> With ztailpacking enabled, the current process assumes that a compacted_4b_end
+> always exists in the compacted pack. However, in some specific files, the
+> compacted pack may not have a compacted_4b_end. This leads to an incorrect
+> modification of the last compacted_2B entry, resulting in incorrect modification
+> of its clusterofs. In subsequent fsck operations, incorrect parameters will
+> affect the decompression of the penultimate pcluster.
+> 
+> This patch determines whether the last entry of the current compacted pack
+> belongs to compacted 2B or 4B and then updates the correct bits accordingly.
+> 
+> Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression approach")
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 
-Best wishes.
+Sorry for late response.
 
-=2D-=20
-xtex (a.k.a. Bingwu Zhang) @ Sat, 09 May 2026 14:27:41 +0000
+I do think the issue is valid, but either the previous
+solution or the proposed one is ugly.
 
+I wonder if there exists a better way to fixup the last lcluster
+type into plain instead: I've thought about for a while but without
+any valid suggestion.
 
-
+Thanks,
+Gao Xiang
 
