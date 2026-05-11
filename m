@@ -1,97 +1,106 @@
-Return-Path: <linux-erofs+bounces-3394-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3395-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gCE8HWGLAWp4dQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3394-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 09:55:13 +0200
+	id ENf5HmqaAWpxfwEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3395-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 10:59:22 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04B6A509A47
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 09:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E2B0A50A771
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 10:59:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gDX7v1kVZz2xlh;
-	Mon, 11 May 2026 17:55:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gDYYw3SHLz2xlh;
+	Mon, 11 May 2026 18:59:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::42f" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778486107;
-	cv=pass; b=P016KM2XXZr+ljRrgqm6/n+HtZ2aRfImZ5EUx3S3KrqfTFmz7dwyetkFbu14qmpKExYWP9uHDSHMBprK/dF9G+iSrPV81J/HtP5Dq+rEG+4iAm5ntCrN7VNdfcxUAf7rB3bV/ARoa6j/xd+DqM5MnR2+8O4nfNKJNE0gJt3tAltppLx72zNtVegyZyN36v6mszXCT2YHqGClXM7wVeoiH2etlbxzcnUPccvWqxgnn77saQKP6omcjnyHXgxKexf4e6Ja/wJlskKI2gDkqHLAOMVxApjPve3PbyBit5sqOXECLuU/eJauJ6rHBZ+8wMWRXZdK5/72nRBDHmtYjRfYkQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778486107; c=relaxed/relaxed;
-	bh=YNqC0EP+ZRlEgk4a4W28NKoUpWg0qHx/wFMvisS+PHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BN7MRYyYNjsj3IMkSwaHFNztGrLTT49AAYFgPWQyvWl7AcakYcG7t5SUvA38rBG7baPHD3jZjqjSfDf8oVZpo3YzDslPJ7doaJ06nHDiQ/DAucfbWxMpji/RetyriK1LcCFrrMHB/HonXLWRzxK+Xgt8xZ3HQjYrcy5F4B/TjVg6D08d2xAeebETvJCdYzmOa33Pv8KiJA11Dh0VIq0HndLnAb2P5LfxwGbJIPxi9E9AP3IbFZDj4mUnFo5WIUNlfxQgyt4o2wtAdX3Ncduk0AM3x21N2RhKXFCrTLL3poj4KaPxGfyTDK8U6UnByhy0/gNt7vXGI4F5XB7jgzbGAw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bSiMJYFZ; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::42f; helo=mail-wr1-x42f.google.com; envelope-from=niuzhiguo84@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.125.188.123
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778489956;
+	cv=none; b=jidYcyBrYuYCVCuqbFR4ibMskqO47rtIOhVpfoU/zOQ9DTZvWiz3/kO9GiF4L33Iw+OqMzr9rNIbgV5McsjUHSHOObSxrwIAeNbdFBaWjRlVQ2BWPO57yWJZqZ+xdnr7i37KhrwaRBwEfOYlTtnhjQlDXw9bZi5eY8MjlqxiGEG38iAKMYi//IQF6idrxGNm7sAK7VVGedOtoaxI2b2phz/gLyZzBOIvxqROzeE7MkasA7cYarOekbRvxPOj71BE+5CDLiBr9jsgC/5tP6Gw81T1aiphLrf/C+J+4quxA7IkF4qswJSRF3bYcyMu/vUEPSviFEfU+M/zuKwgJzafUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1778489956; c=relaxed/relaxed;
+	bh=S6S3tmCtghAcRufgbPHFJ9gmk8ioXC1goBcILuNfLMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ze3SXQdmqgbLKVrYEPUZhUJ3TgTetojTPx2EZk6AXPuFKB2Lmqy1UJ0KOaw9Cyg7ltM+BLxcOVaEn8Dq298rb0YCPEPMFSZnrcS//2mqpe9M6oz1OMRQFTQA5US+bqmQmx6blR3KnCbV5npUofm0php3ddLERv4us/Uf5CtW30mLr12PRub7xsHeEPgT1UogS/or8HafB5zj5LSJVRymghnMAq+FEN1WM0H7jTwXeizHx8P2NIfvX2W+1/VaTfGTQvi/EUEOrP8BGLFm8Mse/z4+CM+AIGmfxEXrqYOLP7uqPWDM4j5NRR6Vqxd0Z8CvE5vhvwtQiXM0cjR5jUYrew==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=FdHBuJeC; dkim-atps=neutral; spf=pass (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=aristo.chen@canonical.com; receiver=lists.ozlabs.org) smtp.mailfrom=canonical.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=bSiMJYFZ;
+	dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=FdHBuJeC;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::42f; helo=mail-wr1-x42f.google.com; envelope-from=niuzhiguo84@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=canonical.com (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=aristo.chen@canonical.com; receiver=lists.ozlabs.org)
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gDX7s2hWPz2xl6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 17:55:04 +1000 (AEST)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-4462f8d2488so217312f8f.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 00:55:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778486100; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JRSnpdi+TzMQbiSjqab6Av9Trh94pDgl8opwo9sBVM/I6XNhWOUfbJnTLdRZtKfBRp
-         6DdWbCvZu+76hpyRIXWlXTLkfwZqLGuCx7maE8BtTn72OGjjGC+kLuRPm9omvpPDY64D
-         cziLfxV5mUg+kJvYqgILArFKuWJ9WVx0fVitDfUzymO1RTUpZqgHKEc6LpoFq3NIJyEX
-         PjPxopzDmGxp1K7kbNO+oYseCaG45eKj++9GXBIO0bvkjJhLI3K8mntPgh5X/N+dPTx7
-         PWgEvwBS0G6VXI2X827Te1r5yoTi17o+sw4qZuWxpMWXqJQrNCSFVG6xT/AKxKuC5Y9f
-         j+pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=YNqC0EP+ZRlEgk4a4W28NKoUpWg0qHx/wFMvisS+PHU=;
-        fh=BwaDHfHo1r9w1U6Ph0oPGq7gGMKW2P5Yrymmh3BjFzs=;
-        b=BumK6CaWZKxvIHL9eQZBhIOXMTz4NiIPiW2JIVAeBNaNREAZp6sYWFpObs/QrTl4t7
-         JEzc3R225MX2wf5/R6ikuJVrdf/oTaklj0kXOhFh8MFuAGwX76R6kKAz5v8tVdW59K2c
-         /QhIxZJV4+pL7LlftneW+Rzge0NC5CJxMQrKiPk84bRyJTDt1kwa/+G9DqiEsJW4uNYx
-         wAFSwGQIDVPcShgjU95U6PMhzVVidNRkWYTIS4TfFhWIuBMA9F/WtK0210NHHtqJ90rK
-         ihXh2ZfwDhE2fl+d+3e1HQnwFa/1WNUb1hClSzH7VdjOnQKO+I9E5UxIGZlPtfFIhd1j
-         6CRw==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778486100; x=1779090900; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YNqC0EP+ZRlEgk4a4W28NKoUpWg0qHx/wFMvisS+PHU=;
-        b=bSiMJYFZErilHSrtfDn5ZqAx32al1Mluhn57tN+KwNAFdAPOnqAGJGMOW1Adk7E0io
-         RexXIHyD44kqZlffBEqBwcyMSY2eaB2XZLi2Ypwe7F/9SN5P6HLqHql9WJMflGkZspbh
-         NuJZwNrC3NaHq6ipsjtaotKZu2tH8jJGrYS42/yvklf3/oFuAe0yX3GmxbzjuplkBQYr
-         HzGcEcpHtSFhgkks9HXqZnB5k1Z8LVZPLIF9N5GVIM0o6CgWsM9YkyEZ0HLHCQjPQU6O
-         ch/0o+kNVqPDcmcvEW2ebo+y/SpeCB36dkL22wEMGCAYAUOvkLaitsda9EBwOp3Go7Wf
-         ujAQ==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gDYYs5GY4z2xjQ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 18:59:12 +1000 (AEST)
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 05FE23F60E
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 08:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1778489949;
+	bh=S6S3tmCtghAcRufgbPHFJ9gmk8ioXC1goBcILuNfLMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=FdHBuJeCtMEVsXi1SRZ0sGWz5VGi3MGPrPUBKU8Dh4wO8MKxaEW2LvInxpDPXIguk
+	 5wPxhHgThLoWtbBUxjbULYLMgFJ2oge0lcHXu2PXArjaN1N0aChiCf3RcQ2HWpMm1n
+	 38O13XrlGG2AywHmOTVRrQzJyAwzA9QQM6eiPzfLo+1UgidhiOx6yNecSE8V0iUzOg
+	 nOJSHNRP8Xm9m9hBKJF/Q5M2q1oHicHkg2GkhCSVHLABYHDtgALYX8ldfkM6lspMkq
+	 maa9xUyDfc44eoCXHv+qVcAwJVimVcMy3AF0nSubIiPIxZQX1SQmuE8/Q52CDXIb+c
+	 AhXtvK/kW66BNqZCbOMORbF3JARTGOasbivCEW4QKgENjokxmCNBBGT+aF4yRAS+7A
+	 c3D3BWxbJnm8k1qycSF+wpi6FiCUw+p/F8PBrS19btJtteg/zcd74BhoTu47FGknEv
+	 Dj7uXEyb4HDkbHLEJxBF99b1IYkzRbSE3QinhZtQi7JLardqU99nhr5ItHmxnyqD4A
+	 BNBBmX+s7AEEkH5BV3JHoZYnDBbFxX6zn/YI5eJ1iXSnGapM2M1xB8d8VwLVplqaPB
+	 jkPyweILNTbcnWlJFhjl/RmDRPG98n4aw8iU/0trpX4eYL8i83IiBQF6U+yLx/XyuY
+	 P5S0gpE/bJzBz5vObQkZBJEQ=
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-82fa1c94b37so4916676b3a.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 01:59:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778486100; x=1779090900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YNqC0EP+ZRlEgk4a4W28NKoUpWg0qHx/wFMvisS+PHU=;
-        b=fVWZTJOrfrxEnQ2GQ5a1Boqv/9YJWemroB7QA7IfiaCHy7u+7GT9Zh90ZDSkfDbfxf
-         UAR5Za8x/jR8nHCsx6IjJq9s3AJohSJZjYIqtw47DO+MeDVJVMH81xvImc5QSQSzBzFd
-         ZnohD8FpFow3o4wY3i/CiY3BlFIDOqJAj/QnT2o5okcm4RgYsK5MwJtmgyIXeauY0R/q
-         c6Ztp8pABB8h8Mfac0Tp/GPOyRA5Q9dWkIzMe15xq7ArSLO84a76j3Y+l6t/GDebD/yc
-         ShtuoNu0/z6O3E/2JApilzyjCk8SRaVKd5H2VecSvjOCxsrUWdHGPdwfxJ5SVnq7Yo4c
-         5AFA==
-X-Forwarded-Encrypted: i=1; AFNElJ/bMzV2yMm6Zt3GGek0I2/ldWVSxBzH/xHCOuBIUxE+I4HU91zFGZz4yR2sl+MCuvC/sdCkiaIPh8giQQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yyll36Yntdrqdzy/rTZzIosiEQAgFktTEwTyMhcCxJkxWlq+imN
-	4AfvoaCJZKhyx3uPBFaaSUsNYzhIDe0e9wHXsz5k4dO9m54jXzHSA7Fll70YyFEEW01722yAk56
-	cKRBU4Gqc/GTFAXR5aL6KGkGnQoyDJ1tjAg7X
-X-Gm-Gg: Acq92OFPT1emmkUR0rLlNdOYtPvV5UJD4tdL/mMlfoGcBjhAYJ+1VTXamb+RTGSrxGV
-	BWZuFG2ySkBt+llEF9v/PtJrYqvclYRBwq7cfF4rf6Plvyyj70+IcOJLsct9iRnJZO9le9Vl/D7
-	6Xf7/b1hUQAjn7W+g0XOj9kRbxv1gwYpKUIijuNIppP49IlbJPCB5mEctIkxgZUZws8ufwrixBf
-	pn6EOnzlQa40zaoGTS1IOdta/nzRWLWIRpJQ4b523n5duGaAnxLkC58OjwOKddeS0DoH7TVCG+D
-	YRLeHRjt
-X-Received: by 2002:a05:600c:4510:b0:48a:79da:c87 with SMTP id
- 5b1f17b1804b1-48e5310852amr163508065e9.8.1778486099468; Mon, 11 May 2026
- 00:54:59 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1778489947; x=1779094747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S6S3tmCtghAcRufgbPHFJ9gmk8ioXC1goBcILuNfLMI=;
+        b=oVY2YlhvoJN8yLVa16X7aNYmwigmwSDWSt3XdeYmh6AYFCz83IQX3ErikazTw54Iwx
+         ykx0+Dr8Hi+LD6Ul2STWOGMgg5xpD/19ADCwus6hWaH7CK5sfb6/N1nEVGB5zu8Bye9h
+         0bR/rYx3/aJWQIZEh0uwWhq2Ha+GpGpBLvsZJEP+HIFzlFf/tJXdW8QRS/qqxHqk1TDz
+         x32hNrUgs1m5HggYORnFjtmnz5VyIVcugxXHpxKrtQ889og8pzrFSyYLltosL1YR3FTJ
+         4SKzHwDsHA0k8HGCE9EOtJlxfkyho/94Nw06TiCVwUf9o1wXn4Dv78IJQnFZsD7YVLz4
+         WQTQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8kbP02wm69lYQJXqm/nZyGYZTPPYqvOSO1NMVK2tC4BfjreTjUOIZb8WUbGK83Jk6GqhC5UW/HopkQlg==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzlcgRaeS3Wp2fn/bXoB54+P+PhJCwwmUzf90afTJybxibBSNJB
+	xbJgmz2fJ7KZGoROYeFklWi/esN+gK5xBxn8gmKzgq6WHHWBB44FF/lfIvfE373X09mDjxMOhk1
+	+J1T56pk/VGKEZIHyEHFwXMiBx/qmUqmlaiQkUBYuamcCN7qQJQ0/ONp+UXSo4b0IF4iZPkAc6O
+	1sFlx9cQ==
+X-Gm-Gg: Acq92OGA0UGjbHYcn6Q06ciuQtKq4mRPLePtyyYH0Rb09+NzSqFOjrDEbHsws56Pht+
+	sCoKXBbHnDo/gYWM3xdwXDZHLQ0cvJVrUNdOlQXIPxE+fNivw0XYZya67wxZWpP8nOfw5F+FskX
+	xaTLX/mrb8I1bg8JHe3dIevcJbx2M5saKjA7cx2CwGd+jQ07UwBrkApZq6zHtFuQJGWt/TSLwSL
+	x9g3RTSPafcYWfpMbzWBJ9+L2IAj4PuAT1MQ4hb41cV+OKunGURHMvn8YnGwBR0hY7stxVt1+EY
+	mF01P+QGyiiV8X9UifsN66gsuRhU8hgJSvvC9dbPGp9R7MsFxXA0qhTqAck/+44jQOYGXMfgYES
+	G4TQwwGfjifQ+m9mKA62RZBQsLWlrNzluYRqmT8fjO3Rd9HBExYClMwPNtntqjH5L5McVE/0pmE
+	+EOLKc4otW0ycHU55jZSH7+e0E3A==
+X-Received: by 2002:a05:6a00:3e22:b0:82f:7888:e2fa with SMTP id d2e1a72fcca58-83bb7fb5438mr14346694b3a.17.1778489947353;
+        Mon, 11 May 2026 01:59:07 -0700 (PDT)
+X-Received: by 2002:a05:6a00:3e22:b0:82f:7888:e2fa with SMTP id d2e1a72fcca58-83bb7fb5438mr14346660b3a.17.1778489946868;
+        Mon, 11 May 2026 01:59:06 -0700 (PDT)
+Received: from noble-uboot.tail872496.ts.net (124-218-37-86.cm.dynamic.apol.com.tw. [124.218.37.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839679c80e7sm24034367b3a.31.2026.05.11.01.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2026 01:59:06 -0700 (PDT)
+From: Aristo Chen <aristo.chen@canonical.com>
+To: u-boot@lists.denx.de
+Cc: Aristo Chen <aristo.chen@canonical.com>,
+	Huang Jianan <jnhuang95@gmail.com>,
+	Tom Rini <trini@konsulko.com>,
+	Joao Marcos Costa <joaomarcos.costa@bootlin.com>,
+	Richard Genoud <richard.genoud@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v1 1/1] test: fs: Use shared generate_file from utils
+Date: Mon, 11 May 2026 08:58:50 +0000
+Message-ID: <20260511085857.3933053-1-aristo.chen@canonical.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,101 +112,190 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com> <e4701c42-1ed5-40a6-8f5d-927c40e3856b@linux.alibaba.com>
-In-Reply-To: <e4701c42-1ed5-40a6-8f5d-927c40e3856b@linux.alibaba.com>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Mon, 11 May 2026 15:54:47 +0800
-X-Gm-Features: AVHnY4Jb_0JDSKw6pa8ZCQB1Rmp0M9WRYFhGbiYcWr7Fr5PvDcaZ0fUEG7DBD-I
-Message-ID: <CAHJ8P3KB02f2dTWrMXtyBMQwfqmFEeOwa4SW8CKL-rKrE=Dg=w@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in z_erofs_drop_inline_pcluster
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, ke.wang@unisoc.com, linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 04B6A509A47
+X-Rspamd-Queue-Id: E2B0A50A771
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[canonical.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[canonical.com:s=20251003];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3394-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[niuzhiguo84@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:zhiguo.niu@unisoc.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[canonical.com,gmail.com,konsulko.com,bootlin.com,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3395-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:u-boot@lists.denx.de,m:aristo.chen@canonical.com,m:jnhuang95@gmail.com,m:trini@konsulko.com,m:joaomarcos.costa@bootlin.com,m:richard.genoud@bootlin.com,m:thomas.petazzoni@bootlin.com,m:miquel.raynal@bootlin.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[aristo.chen@canonical.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[niuzhiguo84@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[canonical.com:+];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,unisoc.com:email]
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aristo.chen@canonical.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-Gao Xiang <hsiangkao@linux.alibaba.com> =E4=BA=8E2026=E5=B9=B45=E6=9C=8811=
-=E6=97=A5=E5=91=A8=E4=B8=80 12:01=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Zhiguo,
->
-> On 2026/4/29 15:59, Zhiguo Niu wrote:
-> > With ztailpacking enabled, the current process assumes that a compacted=
-_4b_end
-> > always exists in the compacted pack. However, in some specific files, t=
-he
-> > compacted pack may not have a compacted_4b_end. This leads to an incorr=
-ect
-> > modification of the last compacted_2B entry, resulting in incorrect mod=
-ification
-> > of its clusterofs. In subsequent fsck operations, incorrect parameters =
-will
-> > affect the decompression of the penultimate pcluster.
-> >
-> > This patch determines whether the last entry of the current compacted p=
-ack
-> > belongs to compacted 2B or 4B and then updates the correct bits accordi=
-ngly.
-> >
-> > Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression=
- approach")
-> > Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
->
-> Sorry for late response.
->
-> I do think the issue is valid, but either the previous
-> solution or the proposed one is ugly.
+test_fs/test_erofs.py and test_fs/test_squashfs/sqfs_common.py both
+defined a generate_file() helper that writes a file of a given size
+filled with 'x'. The two functions were functionally identical and
+differed only in parameter names and docstrings.
 
-Hi Xiang,
-Yes it would be ideal if the same piece of common code could cover
-both scenarios.
-But I haven't figured it out yet, so I'll distinguish them like this for no=
-w. ^^
-thanks!
->
-> I wonder if there exists a better way to fixup the last lcluster
-> type into plain instead: I've thought about for a while but without
-> any valid suggestion.
->
-> Thanks,
-> Gao Xiang
+Move the helper into the existing test/py/utils.py module, which is
+the established home for generic test utilities (md5sum_file,
+PersistentRandomFile, attempt_to_open_file). Update both call sites
+to use it.
+
+Signed-off-by: Aristo Chen <aristo.chen@canonical.com>
+---
+ test/py/tests/test_fs/test_erofs.py           | 16 ++++----------
+ .../test_fs/test_squashfs/sqfs_common.py      | 22 +++++--------------
+ test/py/utils.py                              | 13 +++++++++++
+ 3 files changed, 22 insertions(+), 29 deletions(-)
+
+diff --git a/test/py/tests/test_fs/test_erofs.py b/test/py/tests/test_fs/test_erofs.py
+index a2bb6b505f2..cec803256ac 100644
+--- a/test/py/tests/test_fs/test_erofs.py
++++ b/test/py/tests/test_fs/test_erofs.py
+@@ -6,19 +6,11 @@ import os
+ import pytest
+ import shutil
+ import subprocess
++import utils
+ 
+ EROFS_SRC_DIR = 'erofs_src_dir'
+ EROFS_IMAGE_NAME = 'erofs.img'
+ 
+-def generate_file(name, size):
+-    """
+-    Generates a file filled with 'x'.
+-    """
+-    content = 'x' * size
+-    file = open(name, 'w')
+-    file.write(content)
+-    file.close()
+-
+ def make_erofs_image(build_dir):
+     """
+     Makes the EROFS images used for the test.
+@@ -36,15 +28,15 @@ def make_erofs_image(build_dir):
+     os.makedirs(root)
+ 
+     # 4096: uncompressed file
+-    generate_file(os.path.join(root, 'f4096'), 4096)
++    utils.generate_file(os.path.join(root, 'f4096'), 4096)
+ 
+     # 7812: Compressed file
+-    generate_file(os.path.join(root, 'f7812'), 7812)
++    utils.generate_file(os.path.join(root, 'f7812'), 7812)
+ 
+     # sub-directory with a single file inside
+     subdir_path = os.path.join(root, 'subdir')
+     os.makedirs(subdir_path)
+-    generate_file(os.path.join(subdir_path, 'subdir-file'), 100)
++    utils.generate_file(os.path.join(subdir_path, 'subdir-file'), 100)
+ 
+     # symlink
+     os.symlink('subdir', os.path.join(root, 'symdir'))
+diff --git a/test/py/tests/test_fs/test_squashfs/sqfs_common.py b/test/py/tests/test_fs/test_squashfs/sqfs_common.py
+index d1621dcce3a..b366bde5f49 100644
+--- a/test/py/tests/test_fs/test_squashfs/sqfs_common.py
++++ b/test/py/tests/test_fs/test_squashfs/sqfs_common.py
+@@ -5,6 +5,7 @@
+ import os
+ import shutil
+ import subprocess
++import utils
+ 
+ """ standard test images table: Each table item is a key:value pair
+ representing the output image name and its respective mksquashfs options.
+@@ -66,19 +67,6 @@ def init_standard_table():
+     for key, value in zip(STANDARD_TABLE.keys(), opts_list):
+         STANDARD_TABLE[key] = value
+ 
+-def generate_file(file_name, file_size):
+-    """ Generates a file filled with 'x'.
+-
+-    Args:
+-        file_name: the file's name.
+-        file_size: the content's length and therefore the file size.
+-    """
+-    content = 'x' * file_size
+-
+-    file = open(file_name, 'w')
+-    file.write(content)
+-    file.close()
+-
+ def generate_sqfs_src_dir(build_dir):
+     """ Generates the source directory used to make the SquashFS images.
+ 
+@@ -107,20 +95,20 @@ def generate_sqfs_src_dir(build_dir):
+ 
+     # 4096: minimum block size
+     file_name = 'f4096'
+-    generate_file(os.path.join(root, file_name), 4096)
++    utils.generate_file(os.path.join(root, file_name), 4096)
+ 
+     # 5096: minimum block size + 1000 chars (fragment)
+     file_name = 'f5096'
+-    generate_file(os.path.join(root, file_name), 5096)
++    utils.generate_file(os.path.join(root, file_name), 5096)
+ 
+     # 1000: less than minimum block size (fragment only)
+     file_name = 'f1000'
+-    generate_file(os.path.join(root, file_name), 1000)
++    utils.generate_file(os.path.join(root, file_name), 1000)
+ 
+     # sub-directory with a single file inside
+     subdir_path = os.path.join(root, 'subdir')
+     os.makedirs(subdir_path)
+-    generate_file(os.path.join(subdir_path, 'subdir-file'), 100)
++    utils.generate_file(os.path.join(subdir_path, 'subdir-file'), 100)
+ 
+     # symlink (target: sub-directory)
+     os.symlink('subdir', os.path.join(root, 'sym'))
+diff --git a/test/py/utils.py b/test/py/utils.py
+index ca80e4b0b0a..e8971502509 100644
+--- a/test/py/utils.py
++++ b/test/py/utils.py
+@@ -51,6 +51,19 @@ def md5sum_file(fn, max_length=None):
+         data = fh.read(*params)
+     return md5sum_data(data)
+ 
++def generate_file(file_name, file_size):
++    """ Generates a file filled with 'x'.
++
++    Args:
++        file_name: the file's name.
++        file_size: the content's length and therefore the file size.
++    """
++    content = 'x' * file_size
++
++    file = open(file_name, 'w')
++    file.write(content)
++    file.close()
++
+ class PersistentRandomFile:
+     """Generate and store information about a persistent file containing
+     random data."""
+-- 
+2.43.0
+
 
