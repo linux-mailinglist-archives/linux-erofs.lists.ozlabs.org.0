@@ -1,49 +1,67 @@
-Return-Path: <linux-erofs+bounces-3391-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3392-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DmYCLZUAWpvVQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3391-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 06:01:58 +0200
+	id +J1wOtR0AWr9ZwEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3392-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 08:19:00 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81F4E507C60
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 06:01:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04D02508767
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 May 2026 08:18:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gDQyn2j8Zz2xQB;
-	Mon, 11 May 2026 14:01:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gDV0v23xGz2xSF;
+	Mon, 11 May 2026 16:18:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778472113;
-	cv=none; b=IowzkMDhy9SKc3Uc6b2iwQKGDnkoZoeimeGlBrcqhmcNEm879uZ+8Y3GzPq1eT3KXvntgUFP2gi2Kv+L2HdkHesJ6DCBpqdZnjuVNeWbXsRFkMg2yeqF+wWtwxoWTPBrpJvPTwq0r2niuR4hDeHefvHC3BxTCzeSa7a9xubi4b9nzGFY4mjRrCem4tFyQaGFXTNdGP6jH7yWS0CVR4nXZfpyLdi0TUmPLsHTjo2/Xf4wmW6aCWqM6Jxg4oBY05nZH66fK8QH4s7Ws87YYwvpYFE+BGcaeF+Q5EZf/bJqMMWDYaZYvPd9ii15ByhoN/3xFgDlg6K1LrIvPS7fW0edAw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778480335;
+	cv=none; b=f39Ui2+xrzW+YiD++cdGkaw+/k1tl5OrCRLUIsTFEKK4uog88ldXfWj0QzcyNmB8DPNVazpAvqkF3ngIyMDfaWzaFUzZnP47cQhYTmaWsJE/z34BWdNbC0oORfXqsiznETZkvYsaUE+Rx0I5Z1bDWAOYH/tndcyaI1vZ0U264IFPXL2SfYKth85qTpTLXxnewtQUzynHiKsD8363Gh5Xo00+c9eiQsObql5ZDIvY/CkfqhXOLazZl4ZX6cDhirCKqwJeoPsHQGBb7EUtow2UrHSxza9F/PykkVciys/P6JPK/pZgoSIftvKd86II3e4mMYjmaup9DchWpfU3PC7nbg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778472113; c=relaxed/relaxed;
-	bh=rE+Q6UPWWQ1oC/sAQGNy8A9SUWlnTwUNv8DAOK0GVa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zttw+joz987fKrUAguD73VtvA408fj9BI6GUq2Lr4JHY+9IOvYInPAnHhT5C4idditLcam5JcVHT3x+eplpOpF8ZusxKUkvfdXHnRUb0Ep6GDyli+2Pf4JxWoBHJQqbslpSkwKKYs8kmr+vssC/NcosbkjwPESZHsGN0eS4WNSc5ZBfZzqUOtjV6z81NNzwjH+kL1c5EhjuIyeqB2XKzPPWIcUqcOdBC6pW6Lio9uoVt9a70T+Kbb8kVQlP+FKiawpw/dMUDm60jCpbzW35QzymX3+SKn2WIQNNiHI7G69DfWOQGMFTyqIb8cRcktTgYoud2+g3H5poTFbjF7O+2vw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FGhWidfj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1778480335; c=relaxed/relaxed;
+	bh=QUzB0vtFO1H2OCGd0aM3xe8F77OrZDRCrHXJ9f+x6G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AK2qJ+kr8Tdq4zUnirMtLNNn9+yE+Y+F+aGrKv794X2JOi2jcw4TLZx9lpEhPGrI+ygW2+f/OeQqV9o07i0EsBybpvqUmCsdcVc1YrNfLJll1UsBASjpQ68KHe394da7mmObpENipxK60/dtdrrElBWQC835ESRzpaRP+VdEAwoQJTGTU9iqyIPsIOs08X4ULR4j+6tw3eXEZkNzOZ+PDQHQk8AENAKad6cnQw4OiAvp671QIhMjEmS4u2CymMY8Xi1tw8W51eWORh+4g5fM/vayUmjTw+KG3BlxUgDpMsnINrQK9f4J9uCMZ2DLiXqjRNLS00XY/FEoneP7ZfJgLA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yJJMCrzY; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+13670275a3c3dad42177+8296+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FGhWidfj;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=yJJMCrzY;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+13670275a3c3dad42177+8296+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gDQyl0GkPz2xHF
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 14:01:48 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1778472103; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=rE+Q6UPWWQ1oC/sAQGNy8A9SUWlnTwUNv8DAOK0GVa8=;
-	b=FGhWidfjVFHZV2HWuQgcCOXNb89NJm63Y/MEy/eLS9fzNDxQ/DNQ/n2ckrDFdaOb3RPtRKF2OxnGFoBmXz6SrcSCyX3TtnklYZzidrrKrPQrwZRnU6Fa5o+MnzBvE2gZvJkxudbBnUwPpC7zmrbwgykK+ZI9e/7v6Kz5O0p0QXI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X2e5vNy_1778472101;
-Received: from 30.221.132.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X2e5vNy_1778472101 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 11 May 2026 12:01:42 +0800
-Message-ID: <e4701c42-1ed5-40a6-8f5d-927c40e3856b@linux.alibaba.com>
-Date: Mon, 11 May 2026 12:01:41 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gDV0l5FHCz2x9N
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 May 2026 16:18:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QUzB0vtFO1H2OCGd0aM3xe8F77OrZDRCrHXJ9f+x6G4=; b=yJJMCrzYqeJoVQLb0lSpEthgie
+	KJ4ISZY92D9rTQ6iWYUbeYHkrzIVeC8mEmH3+in2LVpBXpXZx7tl6STmTeoz88JhE4ITGPOKu9QrY
+	Fknyl29GVPdGPjx9auYyna92ibWxC8OQsaqrdRDfcrP/52ATRkINSYeYm2l0nImlXvmr5rsIPh23P
+	80mpZkrUwBZJsowKJyYkhUVWfbeV+JR7GSn2pz22RXEgZLm6sTRb+sGTQbfkchQZPteUO2j19xX1h
+	OdpQCzKcAlm8Eny6EfZs+gnJJ/pmlMJemCUKyyCFt2QIqQV/BW2xDwYFJRNaTv7C9SOUdlAhJaHBD
+	zs5xukSw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wMJyS-0000000CT8m-1XF5;
+	Mon, 11 May 2026 06:18:40 +0000
+Date: Sun, 10 May 2026 23:18:40 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-erofs@lists.ozlabs.org,
+	Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	oliver.yang@linux.alibaba.com, Carlos Llamas <cmllamas@google.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Tatsuyuki Ishi <ishitatsuyuki@google.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] erofs: use the opener's credential when verifing
+ metadata accesses
+Message-ID: <agF0wJSFRAEcRP8M@infradead.org>
+References: <af2kDfHe0B3LnvVm@infradead.org>
+ <50668994-b6cf-4288-9ee2-0264bad2b271@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,82 +73,74 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in
- z_erofs_drop_inline_pcluster
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Cc: niuzhiguo84@gmail.com, ke.wang@unisoc.com, linux-erofs@lists.ozlabs.org
-References: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50668994-b6cf-4288-9ee2-0264bad2b271@linux.alibaba.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 81F4E507C60
+X-Rspamd-Queue-Id: 04D02508767
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3391-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:zhiguo.niu@unisoc.com,m:niuzhiguo84@gmail.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:hch@infradead.org,m:linux-erofs@lists.ozlabs.org,m:chao@kernel.org,m:linux-kernel@vger.kernel.org,m:oliver.yang@linux.alibaba.com,m:cmllamas@google.com,m:dhavale@google.com,m:brauner@kernel.org,m:linux-fsdevel@vger.kernel.org,m:ishitatsuyuki@google.com,m:willy@infradead.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[hch@infradead.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,unisoc.com,lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-3392-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[unisoc.com:email,linux.alibaba.com:mid,linux.alibaba.com:dkim]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
-Hi Zhiguo,
+On Fri, May 08, 2026 at 05:10:21PM +0800, Gao Xiang wrote:
+> On the one side, I hope if there could be some interface for
+> such temporary usage rather than just one vfs_iter_read model.
 
-On 2026/4/29 15:59, Zhiguo Niu wrote:
-> With ztailpacking enabled, the current process assumes that a compacted_4b_end
-> always exists in the compacted pack. However, in some specific files, the
-> compacted pack may not have a compacted_4b_end. This leads to an incorrect
-> modification of the last compacted_2B entry, resulting in incorrect modification
-> of its clusterofs. In subsequent fsck operations, incorrect parameters will
-> affect the decompression of the penultimate pcluster.
+As in a in-kernel mmap?  While not entirely impossible, the locking
+model for that sounds horrible.
+
+> > Now for reads it mostly works on the most common disk-based file systems,
+> > but it does create lots of problem for slightly more complex ones like
+> > network/clustered or synthetic file systems.  It also really breaks
 > 
-> This patch determines whether the last entry of the current compacted pack
-> belongs to compacted 2B or 4B and then updates the correct bits accordingly.
-> 
-> Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression approach")
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Just out of curiousity, could you point out one specific path
+> so I can look into that.
 
-Sorry for late response.
+file system might require their own locking, e.g. cluster locks for
+cluster file systems, and at least in the path direct page cache access
+also caused problems with NFS data invalidation semantics.  Last but not
+least ->read_folio has a file paramater that isn't really a file but a
+file system specific cookie.  So calling this with something not managed
+by the file system can cause problems as has caused crashes in the past,
+although the offender at that time (the old smbfs) is now gone.
 
-I do think the issue is valid, but either the previous
-solution or the proposed one is ugly.
+> But could we just fix this issue first for previous linux versions?
 
-I wonder if there exists a better way to fixup the last lcluster
-type into plain instead: I've thought about for a while but without
-any valid suggestion.
+I just pointed out another issue.  You'll have to fix the credentials
+either way.
 
-Thanks,
-Gao Xiang
 
