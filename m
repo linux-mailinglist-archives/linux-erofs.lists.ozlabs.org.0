@@ -1,57 +1,70 @@
-Return-Path: <linux-erofs+bounces-3406-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3407-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sAwLKaFkA2oq5gEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3406-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:34:25 +0200
+	id sD1JBTBoA2qa5gEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3407-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:49:36 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F609525E26
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:34:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0F215262D2
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:49:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gFNxh6QvLz2xb3;
-	Wed, 13 May 2026 03:34:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gFPHJ4LNdz2xjQ;
+	Wed, 13 May 2026 03:49:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778607256;
-	cv=none; b=SheUlmXAMmC434MoFfD7X1t/Dq2c3lqSqGczW3CHKM4U/irvm+dG5XXS/KPc1RN2UmKebB9FSSl1bWXcE2h4fwiTHzZcvNOMsfLmPiRAmQL0ZR4WZFmLDAycpptBvhei6TyxwX3AQ87Yuvti/JU/kl5tb48Qowh7G7rHFC7QeO/gwRU5ZvuEBvv6Ve5qgiAZWXeX5b0VZ6AINbWrYiBh3S6BuxHhxYAUvTLfwcr5OKGLxr1/DBlk7aqo3LAJHrcnYQz4wmW00r+lhdNvxlZp+aOvkpR13+7aIzFk17pWTk/PNhkGVdHFWbavyFFVF4XT7PsPP5SDblRvD2YZMpPMPg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778608172;
+	cv=none; b=CGGkRzYIcF/RWs43bxn8fi6PeWE+sUkPvZf9xzVX+CseTOVAcZ9Y0i6CVs1J5fAIiTTtKh7pQ+r/9KMFXWs5yL0eSpKYWGumur4Ptf0VDMW3jLhwcUW9txuoCW/7piWNGaXVch2cLXTxrVrr8vtKZ3/u3qd8ehM2tOtj3YqIPCTnVoDvuRtBYBxBdkEhbb/xGimy90DgB/osohkKQUm331NPFFf41WHnJam/vdfVtNEy/vgIH2Mox9aTh6uLE4KhZXr9o1zMy845a8t7ySqTIR8p2xLkRMrALANTqgqhbvf0yQH0kIPLJE3OjZYqbDakzV/w5HQI9IQjCkv23jOb4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778607256; c=relaxed/relaxed;
-	bh=K4+/wSEKUqAD/W+/ff+9cKWqjXae45pN4NiFhl3U5Ms=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=OlqIuUgeDy2iBg9q1zO0SOnQ0W2W3oTwSW/VwC/thErNN6C89NycR7PzPU1A7k3aXxK5QPahZQSuynftLxKOj8f0jNlqbpJDZl43M8fZPnxMEBK3y1TuCnYl5K4gi1f+B/T8RTZdw13SJJrFozuxMk75ONja5B04iellEESjRw56Mt5MJH4G8X9vP9sJ/ofdXRD+2tL01w1elLt9pu+qSMkyO7c/iVFD42gtCJuA1x9pLgEFnFKZhkDG+8wLCNLJPkcAXz4EXqxH7pQRVdy8Gbu537/4jbqxftCo0Snp5dU2JbZ6xAr5vYkPTMl3OZkJTrsrMND7OAVva1JfKk8eUw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=TcLmvQxv; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	t=1778608172; c=relaxed/relaxed;
+	bh=05ATtaj5Nh47boMKVuEC/AaNxrFWV3ENlKLTMOVJjgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lwexW+YHepatMu4nfq3aXwpAVWIdQbATWv7z5XFpqfiheKj0UGyF1jp8WpuxOWxq5LfN0hsw3p2g/nPHk9P+3KnUyGsBRFQFVmPF3OpDjmTeH5HDV+Qe4ewqjw1cBWSZlqPl0L/At3Pclw5u9nvNXEiLnudR5YUtamvsn7eW1Hfwhz1nbGkl0WFMEQHVYvcaLtjomIWFDn2bBvdnu8/y/Xe9aQmmHSPCRKPvXFCavQuhWFUzdPHNz4YQY6GwkcCnn6JBWgnlTi34BKp8IqX/jUL6Z4YekkYZhy1qfGcx44dkCEkX4p6mmZuKI4FQ1dKngI1pcfgtL0KQrLPk6F3wtw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=qAo7GGzb; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=TcLmvQxv;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=qAo7GGzb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gFNxg2fYXz2xH9
-	for <linux-erofs@lists.ozlabs.org>; Wed, 13 May 2026 03:34:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gFPHG6QTnz2xb3
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 May 2026 03:49:30 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id D7CB343EF4;
-	Tue, 12 May 2026 17:34:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A863C2BCB0;
-	Tue, 12 May 2026 17:34:11 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 2230A600CB;
+	Tue, 12 May 2026 17:49:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6C1C2BCB0;
+	Tue, 12 May 2026 17:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1778607251;
-	bh=y3wzO/A6RnjXu38ree/8JUlQqCjaIfDvgzE4Ar9RKyU=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=TcLmvQxvzwJqeHRTfPQ/igcqGie6bt6vh+JloYMmjnRMZn6Eldzu9hUsmcpxV+B7p
-	 iw0IDOYIpaaqIYhXnDerLSk2pNlaIr9Mbw1YzJyS+O+cc7xKTvRL0BbP5Et8ETSBJZ
-	 6jyQBH8wQXXSbf1l0O9Yf51bitvjsLG57UGGec5g=
-Subject: Patch "fs: prepare for adding LSM blob to backing_file" has been added to the 6.12-stable tree
-To: amir73il@gmail.com,gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org,paul@paul-moore.com,sashal@kernel.org,serge@hallyn.com
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Tue, 12 May 2026 19:33:42 +0200
-In-Reply-To: <20260505001614.127730-1-sashal@kernel.org>
-Message-ID: <2026051242-unless-neatly-8b00@gregkh>
+	s=korg; t=1778608167;
+	bh=kWtPhROQqPhgoX3k0skKuZmLauLRMJdtRbw6LdrvqoM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qAo7GGzbW6tm2Y0FCwrSa8In5SHBjj1nb705/70h7atPe8vP79CFXgn04InnyenHI
+	 khwrl9Dm4ejH+ITWzNdgbGHgL2Q2UlQm0Tulwxi6lBfFxVvpZJGUaLOQ43UMgsp4vh
+	 VGg0z0mgLbLlWBbta93/4W97tau/LwT5GXmXyduw=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	Amir Goldstein <amir73il@gmail.com>,
+	Serge Hallyn <serge@hallyn.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.12 180/206] fs: prepare for adding LSM blob to backing_file
+Date: Tue, 12 May 2026 19:40:32 +0200
+Message-ID: <20260512173936.672348670@linuxfoundation.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260512173932.810559588@linuxfoundation.org>
+References: <20260512173932.810559588@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,76 +76,51 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
-X-Spam-Status: No, score=1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SORTED_RECIPS,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Level: *
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 6F609525E26
+X-Rspamd-Queue-Id: B0F215262D2
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.30 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3406-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:linux-erofs@lists.ozlabs.org,m:paul@paul-moore.com,m:sashal@kernel.org,m:serge@hallyn.com,m:stable-commits@vger.kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,linuxfoundation.org,lists.ozlabs.org,paul-moore.com,kernel.org,hallyn.com];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linuxfoundation.org:+];
-	FROM_NO_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	TAGGED_FROM(0.00)[bounces-3407-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,lists.linux.dev,vger.kernel.org,lists.ozlabs.org,gmail.com,hallyn.com,paul-moore.com,kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_RECIPIENTS(0.00)[m:stable@vger.kernel.org,m:gregkh@linuxfoundation.org,m:patches@lists.linux.dev,m:linux-fsdevel@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:amir73il@gmail.com,m:serge@hallyn.com,m:paul@paul-moore.com,m:sashal@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linuxfoundation.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,linuxfoundation.org:dkim,ozlabs.org:email,hallyn.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	TAGGED_RCPT(0.00)[linux-erofs];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,linuxfoundation.org:mid,linuxfoundation.org:dkim,paul-moore.com:email,hallyn.com:email,ozlabs.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
-This is a note to let you know that I've just added the patch titled
-
-    fs: prepare for adding LSM blob to backing_file
-
-to the 6.12-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     fs-prepare-for-adding-lsm-blob-to-backing_file.patch
-and it can be found in the queue-6.12 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-243940-greg=kroah.com@vger.kernel.org Tue May  5 02:16:25 2026
-From: Sasha Levin <sashal@kernel.org>
-Date: Mon,  4 May 2026 20:16:14 -0400
-Subject: fs: prepare for adding LSM blob to backing_file
-To: stable@vger.kernel.org
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Sasha Levin <sashal@kernel.org>
-Message-ID: <20260505001614.127730-1-sashal@kernel.org>
+------------------
 
 From: Amir Goldstein <amir73il@gmail.com>
 
@@ -211,43 +199,4 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
 
 
-Patches currently in stable-queue which might be from sashal@kernel.org are
-
-queue-6.12/rxrpc-also-unshare-data-response-packets-when-paged-.patch
-queue-6.12/mm-convert-mm_lock_seq-to-a-proper-seqcount.patch
-queue-6.12/fs-prepare-for-adding-lsm-blob-to-backing_file.patch
-queue-6.12/dma-mapping-drop-unneeded-includes-from-dma-mapping.h.patch
-queue-6.12/mmc-core-optimize-time-for-secure-erase-trim-for-some-kingston-emmcs.patch
-queue-6.12/x86-shadow-stacks-proper-error-handling-for-mmap-loc.patch
-queue-6.12/net-txgbe-fix-rtnl-assertion-warning-when-remove-mod.patch
-queue-6.12/erofs-move-in-out-pages-into-struct-z_erofs_decompress_req.patch
-queue-6.12/dma-mapping-add-__dma_from_device_group_begin-end.patch
-queue-6.12/rxrpc-fix-conn-level-packet-handling-to-unshare-resp.patch
-queue-6.12/iommu-amd-use-atomic64_inc_return-in-iommu.c.patch
-queue-6.12/crypto-nx-migrate-to-scomp-api.patch
-queue-6.12/alsa-aloop-fix-peer-runtime-uaf-during-format-change-stop.patch
-queue-6.12/udf-fix-partition-descriptor-append-bookkeeping.patch
-queue-6.12/bluetooth-l2cap-fix-deadlock-in-l2cap_conn_del.patch
-queue-6.12/kvm-x86-fix-shadow-paging-use-after-free-due-to-unex.patch
-queue-6.12/hfsplus-fix-uninit-value-by-validating-catalog-record-size.patch
-queue-6.12/crypto-nx-fix-bounce-buffer-leaks-in-nx842_crypto_-alloc-free-_ctx.patch
-queue-6.12/gtp-disable-bh-before-calling-udp_tunnel_xmit_skb.patch
-queue-6.12/net-stmmac-avoid-shadowing-global-buf_sz.patch
-queue-6.12/crypto-caam-guard-hmac-key-hex-dumps-in-hash_digest_key.patch
-queue-6.12/hfsplus-fix-held-lock-freed-on-hfsplus_fill_super.patch
-queue-6.12/octeon_ep_vf-add-null-check-for-napi_build_skb.patch
-queue-6.12/printk-add-print_hex_dump_devel.patch
-queue-6.12/net-af_key-zero-aligned-sockaddr-tail-in-pf_key-expo.patch
-queue-6.12/tracepoint-balance-regfunc-on-func_add-failure-in-tracepoint_add_func.patch
-queue-6.12/flow_dissector-do-not-dissect-pppoe-pfc-frames.patch
-queue-6.12/fbdev-defio-disconnect-deferred-i-o-from-the-lifetime-of-struct-fb_info.patch
-queue-6.12/erofs-tidy-up-z_erofs_lz4_handle_overlap.patch
-queue-6.12/iommu-amd-serialize-sequence-allocation-under-concur.patch
-queue-6.12/x86-shstk-prevent-deadlock-during-shstk-sigreturn.patch
-queue-6.12/erofs-fix-unsigned-underflow-in-z_erofs_lz4_handle_overlap.patch
-queue-6.12/net-stmmac-prevent-null-deref-when-rx-memory-exhausted.patch
-queue-6.12/net-stmmac-rename-stmmac_get_entry-stmmac_next_entry.patch
-queue-6.12/mtd-spinand-winbond-declare-the-qe-bit-on-w25nxxjw.patch
-queue-6.12/hwmon-powerz-avoid-cacheline-sharing-for-dma-buffer.patch
-queue-6.12/wifi-mt76-mt7925-fix-incorrect-tlv-length-in-clc-command.patch
 
