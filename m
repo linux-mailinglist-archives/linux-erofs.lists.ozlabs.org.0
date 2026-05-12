@@ -1,49 +1,57 @@
-Return-Path: <linux-erofs+bounces-3405-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3406-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gPmINMrbAmrJyAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3405-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 09:50:34 +0200
+	id sAwLKaFkA2oq5gEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3406-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:34:25 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F10E551C2E8
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 09:50:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F609525E26
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 May 2026 19:34:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gF8075JW7z2ygG;
-	Tue, 12 May 2026 17:50:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gFNxh6QvLz2xb3;
+	Wed, 13 May 2026 03:34:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778572231;
-	cv=none; b=YQNvSkRIogfjK/Vhqo6eoOEq97rZdSFkXLzewfSMfhok5ZterfCmHkUAvnnib4zBHOYuVoXNtIqAwAvSUgJ0XK8b0eXw2hmPqkWnb4l3sLyrLuoEupOBvfI3CSUTddcfqa5YWRDglGZJM1vxwfVj08wr6T9wuYd0PR/ZTrR04BzWmMLp6P36sQv6QcMHZUcuOLI6xXB/8ofHvG3Uv5yzoPT/K2s6GGIAA542UpMxy26Tus11Pq2359fjTaqaIVsWP9MAMDUbwbM3U2NXd0E3dLAPlczd51UkxPkFoT/5CFBWG4obLpCd6CKJRLvir4JgwfOcGH4ENjHaDy2RQJJ4iQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778607256;
+	cv=none; b=SheUlmXAMmC434MoFfD7X1t/Dq2c3lqSqGczW3CHKM4U/irvm+dG5XXS/KPc1RN2UmKebB9FSSl1bWXcE2h4fwiTHzZcvNOMsfLmPiRAmQL0ZR4WZFmLDAycpptBvhei6TyxwX3AQ87Yuvti/JU/kl5tb48Qowh7G7rHFC7QeO/gwRU5ZvuEBvv6Ve5qgiAZWXeX5b0VZ6AINbWrYiBh3S6BuxHhxYAUvTLfwcr5OKGLxr1/DBlk7aqo3LAJHrcnYQz4wmW00r+lhdNvxlZp+aOvkpR13+7aIzFk17pWTk/PNhkGVdHFWbavyFFVF4XT7PsPP5SDblRvD2YZMpPMPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778572231; c=relaxed/relaxed;
-	bh=/9Pa2zVHN342aqTKMVpbrHhy6+1SlaI8Gt/QQlhdyT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hg/9VENO3Wj5vDZzeUrX2gzm4TgdQkgY2TPM4uB45JfuNW2PnTPT4MQFI+P99BTG9dDM37D3cHqr0o17OP5sS4i+I1jLd6MLI5L4vVwYHjwdobvGpuNSAgqx2yLlIuTAihyXWmCPRqN6GjLO8Dk49Pyq9MRb5KpvMEoB/+gi6J/65PSr3Gc6tlUHHvjkHDucPS47LyzUYDUXMiizfdGeZNhjwkdXvxqVQhyFMsEOs1JzAf3WAqJ+VnrRq3rYuB/lP7gNw4UuCA0iIWdDZaIIUDLrJKJrY9B4DARu4LYRkuys2NenDDi899V80OEvyPRMAchFUiNjUVqbjjbGx5WcAw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yC7bs54A; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1778607256; c=relaxed/relaxed;
+	bh=K4+/wSEKUqAD/W+/ff+9cKWqjXae45pN4NiFhl3U5Ms=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=OlqIuUgeDy2iBg9q1zO0SOnQ0W2W3oTwSW/VwC/thErNN6C89NycR7PzPU1A7k3aXxK5QPahZQSuynftLxKOj8f0jNlqbpJDZl43M8fZPnxMEBK3y1TuCnYl5K4gi1f+B/T8RTZdw13SJJrFozuxMk75ONja5B04iellEESjRw56Mt5MJH4G8X9vP9sJ/ofdXRD+2tL01w1elLt9pu+qSMkyO7c/iVFD42gtCJuA1x9pLgEFnFKZhkDG+8wLCNLJPkcAXz4EXqxH7pQRVdy8Gbu537/4jbqxftCo0Snp5dU2JbZ6xAr5vYkPTMl3OZkJTrsrMND7OAVva1JfKk8eUw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=TcLmvQxv; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yC7bs54A;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=TcLmvQxv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gF8054MJvz2yFl
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 May 2026 17:50:28 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1778572225; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=/9Pa2zVHN342aqTKMVpbrHhy6+1SlaI8Gt/QQlhdyT4=;
-	b=yC7bs54AMJ9Y8lLAGMclcHF/eVqXSTMS9FI5gVmYWlax4M3OaOk6yv1btvQaMbBPRoGCpE2UvRjFbmRUkcYM0LZvJoQvnzpJGNFoBl1Z8EXhuk9Q+ELmbg0xhsa4ad17+aSBO6V0wkf5JRuW0SEa1YLLiFBzyYTMi85JgK5SG+E=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X2prWs3_1778572222;
-Received: from 30.221.130.241(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X2prWs3_1778572222 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 12 May 2026 15:50:23 +0800
-Message-ID: <bceec1dc-78a4-4fd2-aef0-6d6670048dea@linux.alibaba.com>
-Date: Tue, 12 May 2026 15:50:22 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gFNxg2fYXz2xH9
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 May 2026 03:34:15 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id D7CB343EF4;
+	Tue, 12 May 2026 17:34:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A863C2BCB0;
+	Tue, 12 May 2026 17:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1778607251;
+	bh=y3wzO/A6RnjXu38ree/8JUlQqCjaIfDvgzE4Ar9RKyU=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=TcLmvQxvzwJqeHRTfPQ/igcqGie6bt6vh+JloYMmjnRMZn6Eldzu9hUsmcpxV+B7p
+	 iw0IDOYIpaaqIYhXnDerLSk2pNlaIr9Mbw1YzJyS+O+cc7xKTvRL0BbP5Et8ETSBJZ
+	 6jyQBH8wQXXSbf1l0O9Yf51bitvjsLG57UGGec5g=
+Subject: Patch "fs: prepare for adding LSM blob to backing_file" has been added to the 6.12-stable tree
+To: amir73il@gmail.com,gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org,paul@paul-moore.com,sashal@kernel.org,serge@hallyn.com
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Tue, 12 May 2026 19:33:42 +0200
+In-Reply-To: <20260505001614.127730-1-sashal@kernel.org>
+Message-ID: <2026051242-unless-neatly-8b00@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,96 +63,191 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] erofs-utils: lib: reject packed inodes in metabox
-To: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-Cc: jingrui@huawei.com, zhukeqian1@huawei.com,
- linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
-References: <20260512071631.969752-1-zhaoyifan28@huawei.com>
- <20260512071631.969752-2-zhaoyifan28@huawei.com>
- <d759a7f6-b273-4a3b-b686-3ff48ccd7150@linux.alibaba.com>
- <aa902420-a6d8-41c8-b3c4-68d6be1c839b@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <aa902420-a6d8-41c8-b3c4-68d6be1c839b@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-stable: commit
+X-Patchwork-Hint: ignore 
+X-Spam-Status: No, score=1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SORTED_RECIPS,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: F10E551C2E8
+X-Rspamd-Queue-Id: 6F609525E26
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [2.30 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3405-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3406-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhaoyifan28@huawei.com,m:jingrui@huawei.com,m:zhukeqian1@huawei.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
+	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:gregkh@linuxfoundation.org,m:linux-erofs@lists.ozlabs.org,m:paul@paul-moore.com,m:sashal@kernel.org,m:serge@hallyn.com,m:stable-commits@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,linuxfoundation.org,lists.ozlabs.org,paul-moore.com,kernel.org,hallyn.com];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[gregkh@linuxfoundation.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linuxfoundation.org:+];
+	FROM_NO_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:mid,linux.alibaba.com:dkim,huawei.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,linuxfoundation.org:dkim,ozlabs.org:email,hallyn.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
 
+This is a note to let you know that I've just added the patch titled
 
-On 2026/5/12 15:46, zhaoyifan (H) wrote:
-> 
-> On 2026/5/12 15:33, Gao Xiang wrote:
->>
->>
->> On 2026/5/12 15:16, Yifan Zhao wrote:
->>> If packed_nid carries the metabox NID bit, loading the packed
->>> inode first redirects its inode metadata lookup through the
->>> metabox inode.  Initializing that metabox inode can then read
->>> metadata that refers back through the packed inode, forming a
->>> recursive packed inode -> metabox inode -> packed inode path.
->>>
->>> Reject such images while parsing the superblock, matching the
->>> format rule that the special packed inode itself is not stored
->>> inside the metabox.
->>>
->>> Reproducible image (base64-encoded gzipped blob):
->>> H4sIAAAAAAAAA2NgGAWjYBSMVPDo4dcHrY0KwsxANg8jAwMLFjVMSGzPx/7Lzj3zXb3jSFTh
->>> 5iN7v6CrbQSa8f8/gq8GoRpARHErYxYDEh8EVAm4jw2Il4AMFYDoB7IYmDGVNRhAzf8PBMh+
->>> yEjNyclXKM8vyklRIILNRcA5o2AUjIJRMApGwSgYBaNgFAxpAGorv3VkYtBgQLSfQW3sF8wv
->>> kJvZDSqIXkCDKpANlWxQZ2Bk0NPTS8RlPkgXqP0Oa5/DxNDNB7XvR8EoGAWjYBSMglEwCkbB
->>> KBgFo2AUjIJRQBsAAEZO6n4AIAAA
->>>
->>> Assisted-by: Codex:GPT-5.5
->>> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
->>
->> Can you fix the kernel instead first and backport to
->> erofs-utils? like below,
->>
-> OK. Should we do the same for [PATCH 1/3] too?
+    fs: prepare for adding LSM blob to backing_file
 
-Basically for incompatble features, they should assume to 0.
-So I don't think [PATCH 1/3] is needed.
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-Thanks,
-Gao Xiang
+The filename of the patch is:
+     fs-prepare-for-adding-lsm-blob-to-backing_file.patch
+and it can be found in the queue-6.12 subdirectory.
 
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-243940-greg=kroah.com@vger.kernel.org Tue May  5 02:16:25 2026
+From: Sasha Levin <sashal@kernel.org>
+Date: Mon,  4 May 2026 20:16:14 -0400
+Subject: fs: prepare for adding LSM blob to backing_file
+To: stable@vger.kernel.org
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Sasha Levin <sashal@kernel.org>
+Message-ID: <20260505001614.127730-1-sashal@kernel.org>
+
+From: Amir Goldstein <amir73il@gmail.com>
+
+[ Upstream commit 880bd496ec72a6dcb00cb70c430ef752ba242ae7 ]
+
+In preparation to adding LSM blob to backing_file struct, factor out
+helpers init_backing_file() and backing_file_free().
+
+Cc: stable@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-unionfs@vger.kernel.org
+Cc: linux-erofs@lists.ozlabs.org
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+[PM: use the term "LSM blob", fix comment style to match file]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+[ Used kfree() instead of kmem_cache_free(bfilp_cachep, ff) ]
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/file_table.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -60,6 +60,12 @@ struct path *backing_file_user_path(stru
+ }
+ EXPORT_SYMBOL_GPL(backing_file_user_path);
+ 
++static inline void backing_file_free(struct backing_file *ff)
++{
++	path_put(&ff->user_path);
++	kfree(ff);
++}
++
+ static inline void file_free(struct file *f)
+ {
+ 	security_file_free(f);
+@@ -67,8 +73,7 @@ static inline void file_free(struct file
+ 		percpu_counter_dec(&nr_files);
+ 	put_cred(f->f_cred);
+ 	if (unlikely(f->f_mode & FMODE_BACKING)) {
+-		path_put(backing_file_user_path(f));
+-		kfree(backing_file(f));
++		backing_file_free(backing_file(f));
+ 	} else {
+ 		kmem_cache_free(filp_cachep, f);
+ 	}
+@@ -255,6 +260,12 @@ struct file *alloc_empty_file_noaccount(
+ 	return f;
+ }
+ 
++static int init_backing_file(struct backing_file *ff)
++{
++	memset(&ff->user_path, 0, sizeof(ff->user_path));
++	return 0;
++}
++
+ /*
+  * Variant of alloc_empty_file() that allocates a backing_file container
+  * and doesn't check and modify nr_files.
+@@ -277,7 +288,14 @@ struct file *alloc_empty_backing_file(in
+ 		return ERR_PTR(error);
+ 	}
+ 
++	/* The f_mode flags must be set before fput(). */
+ 	ff->file.f_mode |= FMODE_BACKING | FMODE_NOACCOUNT;
++	error = init_backing_file(ff);
++	if (unlikely(error)) {
++		fput(&ff->file);
++		return ERR_PTR(error);
++	}
++
+ 	return &ff->file;
+ }
+ 
+
+
+Patches currently in stable-queue which might be from sashal@kernel.org are
+
+queue-6.12/rxrpc-also-unshare-data-response-packets-when-paged-.patch
+queue-6.12/mm-convert-mm_lock_seq-to-a-proper-seqcount.patch
+queue-6.12/fs-prepare-for-adding-lsm-blob-to-backing_file.patch
+queue-6.12/dma-mapping-drop-unneeded-includes-from-dma-mapping.h.patch
+queue-6.12/mmc-core-optimize-time-for-secure-erase-trim-for-some-kingston-emmcs.patch
+queue-6.12/x86-shadow-stacks-proper-error-handling-for-mmap-loc.patch
+queue-6.12/net-txgbe-fix-rtnl-assertion-warning-when-remove-mod.patch
+queue-6.12/erofs-move-in-out-pages-into-struct-z_erofs_decompress_req.patch
+queue-6.12/dma-mapping-add-__dma_from_device_group_begin-end.patch
+queue-6.12/rxrpc-fix-conn-level-packet-handling-to-unshare-resp.patch
+queue-6.12/iommu-amd-use-atomic64_inc_return-in-iommu.c.patch
+queue-6.12/crypto-nx-migrate-to-scomp-api.patch
+queue-6.12/alsa-aloop-fix-peer-runtime-uaf-during-format-change-stop.patch
+queue-6.12/udf-fix-partition-descriptor-append-bookkeeping.patch
+queue-6.12/bluetooth-l2cap-fix-deadlock-in-l2cap_conn_del.patch
+queue-6.12/kvm-x86-fix-shadow-paging-use-after-free-due-to-unex.patch
+queue-6.12/hfsplus-fix-uninit-value-by-validating-catalog-record-size.patch
+queue-6.12/crypto-nx-fix-bounce-buffer-leaks-in-nx842_crypto_-alloc-free-_ctx.patch
+queue-6.12/gtp-disable-bh-before-calling-udp_tunnel_xmit_skb.patch
+queue-6.12/net-stmmac-avoid-shadowing-global-buf_sz.patch
+queue-6.12/crypto-caam-guard-hmac-key-hex-dumps-in-hash_digest_key.patch
+queue-6.12/hfsplus-fix-held-lock-freed-on-hfsplus_fill_super.patch
+queue-6.12/octeon_ep_vf-add-null-check-for-napi_build_skb.patch
+queue-6.12/printk-add-print_hex_dump_devel.patch
+queue-6.12/net-af_key-zero-aligned-sockaddr-tail-in-pf_key-expo.patch
+queue-6.12/tracepoint-balance-regfunc-on-func_add-failure-in-tracepoint_add_func.patch
+queue-6.12/flow_dissector-do-not-dissect-pppoe-pfc-frames.patch
+queue-6.12/fbdev-defio-disconnect-deferred-i-o-from-the-lifetime-of-struct-fb_info.patch
+queue-6.12/erofs-tidy-up-z_erofs_lz4_handle_overlap.patch
+queue-6.12/iommu-amd-serialize-sequence-allocation-under-concur.patch
+queue-6.12/x86-shstk-prevent-deadlock-during-shstk-sigreturn.patch
+queue-6.12/erofs-fix-unsigned-underflow-in-z_erofs_lz4_handle_overlap.patch
+queue-6.12/net-stmmac-prevent-null-deref-when-rx-memory-exhausted.patch
+queue-6.12/net-stmmac-rename-stmmac_get_entry-stmmac_next_entry.patch
+queue-6.12/mtd-spinand-winbond-declare-the-qe-bit-on-w25nxxjw.patch
+queue-6.12/hwmon-powerz-avoid-cacheline-sharing-for-dma-buffer.patch
+queue-6.12/wifi-mt76-mt7925-fix-incorrect-tlv-length-in-clc-command.patch
 
