@@ -1,75 +1,75 @@
-Return-Path: <linux-erofs+bounces-3436-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3437-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oEUBKIKTC2ohJgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3436-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 00:32:34 +0200
+	id IH36F4iTC2ohJgUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3437-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 00:32:40 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E109557488E
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 00:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB7CA574895
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 00:32:39 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gKCH32JYCz2xMQ;
-	Tue, 19 May 2026 08:32:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gKCH94T4Qz2xR3;
+	Tue, 19 May 2026 08:32:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779143551;
-	cv=none; b=Da7bnP0a+K77W8pFHzyxz5z01o18JWAp/dAbmHs2vC5u7kV880caZvRQ83JWSOCQhjLWEUGiX8D5dgms7QBxO5Blnb7rsGQ0Xd1tYuPYKMJpxfW7uC3n6EBnb9Uvw26FlZVa8pY/ZW2jO0BGu2a3pCzb3ujjE0gyl13IonEgVeLpfPRRFSZyVR+cFO39RvPZrHttzRs8KOmlsNaYq8PcUaAVkb1pA4KcrCRsQOEmk6fkncKfWDUmhkMzq0rwnKLvywHc6M+KyrUYqdgL94e0K2OIYVgDDFHgDGlZp4/I/kBEG1eJ77AxlNvFiNz6SXXGTJLioiLtN/zqiMrbK6Yupg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779143557;
+	cv=none; b=C7/q7foKvPnqgkRw41TXBlBnP28/zqB+Mts7cJIBlUI5uVwtGFKDA3WY8afIr3by0sJC6bot6FYr2YIEGbPhInowHQJiRtwmo1PthvjZulCtGlKrZL397CUewVj6w63HSlO3tOsQK0oPW8u4/z+Nwx9GjHH4da+Hehrge8eaXi+wj1PE4/76y7m+zmn6hwakl8I4Eou3bzxCJJqvNOgtb8QJHQQkPGKY1uepLO0G3+O9U3cbdJZ2jnG3PhMJAiiJhQ2ugAXR3HLM9/KPCYUYDY/vmeCC8XXfAGig68jGog1t8+B0BTDuYbWanFOtGmUXaLABHTlhndjPRof09IS6+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1779143551; c=relaxed/relaxed;
-	bh=2GdqhlTTyPpgPeJEKArfYZH3i6xjRZ8jMxV7l6pWvfU=;
+	t=1779143557; c=relaxed/relaxed;
+	bh=dDpeP38QOsfxeIaJNWSXWtmDpOF3Fp9FCzxzSp2z87g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=hpKQ9w/FnBKf5pnKxwYmi4BgGYdBSX9bQHCYTAc0LOuMWLgTmFb+PSlV/rT1QUYKPhxPaLTUak1rGeJLcO1MGCq4qdBGFe0HmYNeJvUCMLvftx4MzGySnTqgwHHZBUgDrikDuat9Z46RuM9dj7DqdWUw5ibQZn+1SF5jjcAkQk1MhXUZutBh4G55h4vWqSvAuMGpNKCdg8EOGy9mYYn0CaZFzHGYYwDBOb/RwSPjHWF3Qgs27wteqG6ONpmiv/fH9GRfrEK/K9+Mn+L52fPQiCmmGEVaDGLaUUo7HlYNVWXfT65v/x8JfSj0hh/SxkQDMI9ns/AL3iWEXihaOr3OwA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N0zK5/5J; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N0zK5/5J; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:content-type; b=OSBaS3ZShUTiI9/XJeKBMSGaMV3Y+yV6amdXKhwaXFCnajdpweTSfbYYbCOSF/2EfsVCB2lZdwHDHm9Is9UngPnLKyzyYXfvio0o2ZvtmHOKbnpr8z3wT9zl2WP30Ym1/oU7WVsyJBL1GBNJ1Wg7pw0EHZn0XE2kY4V41gh9b88pGs2m324bLZ9uDI50d2gSasGOssyrT07KJ5njZ1RVV+x+/hrniPj4i7Sh5gL8cINRrV0/A4LX1k+onebkyFmzkT4ejFbwM8fcEX06uP5LWOBZZ8MQIAtsXwnXYqjo7HxzAYYfQfL/E/hGHm6SrnG6ln63G7cVOKxTtv0JR33Xsw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C3MQ3lRo; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C3MQ3lRo; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N0zK5/5J;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N0zK5/5J;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C3MQ3lRo;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=C3MQ3lRo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKCH22v3Sz2xHK
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 08:32:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKCH859Tpz2xHK
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 08:32:36 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779143547;
+	s=mimecast20190719; t=1779143553;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2GdqhlTTyPpgPeJEKArfYZH3i6xjRZ8jMxV7l6pWvfU=;
-	b=N0zK5/5JbzrdhHac/1kNSfaiPril6VMCUhEBw/eOwwkvYj4X1hoKFHcj/LvXRN25zmezLG
-	bpUOZEdmhxh2HMUNQBtzMzRo4felybD5FHFqEjc7yUFEiMNQzJfrHCZdtdeGMAh80Cvq+I
-	KGbcL0Jhuzby+GmSQpSEUESv+tugNL4=
+	bh=dDpeP38QOsfxeIaJNWSXWtmDpOF3Fp9FCzxzSp2z87g=;
+	b=C3MQ3lRoMATRMrYdiYvHCB4pF8TX3vAf/ITkZK8WCS9FE/JVXP5pIrp1Ke3BhEgrdTgAvj
+	06GqzfWj6zxR4eGOna7moEqmOCXxU/L/cnyWfAufxeiyMVZipv5b2MIVjO2oHqvoqlDn4P
+	Elz3bosikofLVc77CRdx55WErFNeO2g=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779143547;
+	s=mimecast20190719; t=1779143553;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2GdqhlTTyPpgPeJEKArfYZH3i6xjRZ8jMxV7l6pWvfU=;
-	b=N0zK5/5JbzrdhHac/1kNSfaiPril6VMCUhEBw/eOwwkvYj4X1hoKFHcj/LvXRN25zmezLG
-	bpUOZEdmhxh2HMUNQBtzMzRo4felybD5FHFqEjc7yUFEiMNQzJfrHCZdtdeGMAh80Cvq+I
-	KGbcL0Jhuzby+GmSQpSEUESv+tugNL4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=dDpeP38QOsfxeIaJNWSXWtmDpOF3Fp9FCzxzSp2z87g=;
+	b=C3MQ3lRoMATRMrYdiYvHCB4pF8TX3vAf/ITkZK8WCS9FE/JVXP5pIrp1Ke3BhEgrdTgAvj
+	06GqzfWj6zxR4eGOna7moEqmOCXxU/L/cnyWfAufxeiyMVZipv5b2MIVjO2oHqvoqlDn4P
+	Elz3bosikofLVc77CRdx55WErFNeO2g=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-60-y65m8WQnNSWCwrjzx4UfHA-1; Mon,
- 18 May 2026 18:32:23 -0400
-X-MC-Unique: y65m8WQnNSWCwrjzx4UfHA-1
-X-Mimecast-MFC-AGG-ID: y65m8WQnNSWCwrjzx4UfHA_1779143540
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-brn1cdqUMFeJu1NB6nTX_g-1; Mon,
+ 18 May 2026 18:32:31 -0400
+X-MC-Unique: brn1cdqUMFeJu1NB6nTX_g-1
+X-Mimecast-MFC-AGG-ID: brn1cdqUMFeJu1NB6nTX_g_1779143548
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79485180047F;
-	Mon, 18 May 2026 22:32:20 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 41C7D19560AA;
+	Mon, 18 May 2026 22:32:28 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.48.33])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 39AEC1956053;
-	Mon, 18 May 2026 22:32:13 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3334B180058A;
+	Mon, 18 May 2026 22:32:21 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -94,9 +94,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/21] netfs: Remove netfs_alloc/free_folioq_buffer()
-Date: Mon, 18 May 2026 23:29:47 +0100
-Message-ID: <20260518222959.488126-16-dhowells@redhat.com>
+Subject: [PATCH v2 16/21] netfs: Remove netfs_extract_user_iter()
+Date: Mon, 18 May 2026 23:29:48 +0100
+Message-ID: <20260518222959.488126-17-dhowells@redhat.com>
 In-Reply-To: <20260518222959.488126-1-dhowells@redhat.com>
 References: <20260518222959.488126-1-dhowells@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
@@ -110,14 +110,14 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: Y6vyPrq7J5tk7zgj8leUfikJZrs7NDqoYHohJ4WItPA_1779143540
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: fQhjDESmHe9dJvqhDYsr48ESojP_j_RTo8C9yheb60s_1779143548
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-1.20 / 15.00];
@@ -129,7 +129,7 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3436-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3437-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
 	FORGED_SENDER(0.00)[dhowells@redhat.com,linux-erofs@lists.ozlabs.org];
@@ -151,12 +151,12 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,linux.dev:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo,manguebit.org:email,samba.org:email]
-X-Rspamd-Queue-Id: E109557488E
+X-Rspamd-Queue-Id: AB7CA574895
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Remove netfs_alloc/free_folioq_buffer() as these have been replaced with
-netfs_alloc/free_bvecq_buffer().
+Remove netfs_extract_user_iter() as it has been replaced with
+netfs_extract_iter().
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Paulo Alcantara <pc@manguebit.org>
@@ -167,161 +167,138 @@ cc: linux-cifs@vger.kernel.org
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/afs/dir_edit.c       |  1 -
- fs/netfs/misc.c         | 98 -----------------------------------------
- fs/smb/client/smb2ops.c |  1 -
- include/linux/netfs.h   |  6 ---
- 4 files changed, 106 deletions(-)
+ fs/netfs/iterator.c   | 104 ------------------------------------------
+ include/linux/netfs.h |   3 --
+ 2 files changed, 107 deletions(-)
 
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index fc918b3d8f68..2c655cd6a8e4 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -10,7 +10,6 @@
- #include <linux/namei.h>
- #include <linux/pagemap.h>
- #include <linux/iversion.h>
--#include <linux/folio_queue.h>
- #include "internal.h"
- #include "xdr_fs.h"
+diff --git a/fs/netfs/iterator.c b/fs/netfs/iterator.c
+index 10a25a618712..566693ac47ef 100644
+--- a/fs/netfs/iterator.c
++++ b/fs/netfs/iterator.c
+@@ -141,110 +141,6 @@ ssize_t netfs_extract_iter(struct iov_iter *orig, size_t max_len, size_t max_pag
+ EXPORT_SYMBOL_GPL(netfs_extract_iter);
  
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index ee67a0681784..8fc4e5ef2152 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -8,104 +8,6 @@
- #include <linux/swap.h>
- #include "internal.h"
- 
--#if 0
+ #if 0
 -/**
-- * netfs_alloc_folioq_buffer - Allocate buffer space into a folio queue
-- * @mapping: Address space to set on the folio (or NULL).
-- * @_buffer: Pointer to the folio queue to add to (may point to a NULL; updated).
-- * @_cur_size: Current size of the buffer (updated).
-- * @size: Target size of the buffer.
-- * @gfp: The allocation constraints.
-- */
--int netfs_alloc_folioq_buffer(struct address_space *mapping,
--			      struct folio_queue **_buffer,
--			      size_t *_cur_size, ssize_t size, gfp_t gfp)
--{
--	struct folio_queue *tail = *_buffer, *p;
--
--	size = round_up(size, PAGE_SIZE);
--	if (*_cur_size >= size)
--		return 0;
--
--	if (tail)
--		while (tail->next)
--			tail = tail->next;
--
--	do {
--		struct folio *folio;
--		int order = 0, slot;
--
--		if (!tail || folioq_full(tail)) {
--			p = netfs_folioq_alloc(0, GFP_NOFS, netfs_trace_folioq_alloc_buffer);
--			if (!p)
--				return -ENOMEM;
--			if (tail) {
--				tail->next = p;
--				p->prev = tail;
--			} else {
--				*_buffer = p;
--			}
--			tail = p;
--		}
--
--		if (size - *_cur_size > PAGE_SIZE)
--			order = umin(ilog2(size - *_cur_size) - PAGE_SHIFT,
--				     MAX_PAGECACHE_ORDER);
--
--		folio = folio_alloc(gfp, order);
--		if (!folio && order > 0)
--			folio = folio_alloc(gfp, 0);
--		if (!folio)
--			return -ENOMEM;
--
--		folio->mapping = mapping;
--		folio->index = *_cur_size / PAGE_SIZE;
--		trace_netfs_folio(folio, netfs_folio_trace_alloc_buffer);
--		slot = folioq_append_mark(tail, folio);
--		*_cur_size += folioq_folio_size(tail, slot);
--	} while (*_cur_size < size);
--
--	return 0;
--}
--EXPORT_SYMBOL(netfs_alloc_folioq_buffer);
--
--/**
-- * netfs_free_folioq_buffer - Free a folio queue.
-- * @fq: The start of the folio queue to free
+- * netfs_extract_user_iter - Extract the pages from a user iterator into a bvec
+- * @orig: The original iterator
+- * @orig_len: The amount of iterator to copy
+- * @new: The iterator to be set up
+- * @extraction_flags: Flags to qualify the request
 - *
-- * Free up a chain of folio_queues and, if marked, the marked folios they point
-- * to.
+- * Extract the page fragments from the given amount of the source iterator and
+- * build up a second iterator that refers to all of those bits.  This allows
+- * the original iterator to be disposed of.
+- *
+- * @extraction_flags can have ITER_ALLOW_P2PDMA set to request peer-to-peer DMA be
+- * allowed on the pages extracted.
+- *
+- * On success, the number of elements in the bvec is returned, the original
+- * iterator will have been advanced by the amount extracted.
+- *
+- * The iov_iter_extract_mode() function should be used to query how cleanup
+- * should be performed.
 - */
--void netfs_free_folioq_buffer(struct folio_queue *fq)
+-ssize_t netfs_extract_user_iter(struct iov_iter *orig, size_t orig_len,
+-				struct iov_iter *new,
+-				iov_iter_extraction_t extraction_flags)
 -{
--	struct folio_queue *next;
--	struct folio_batch fbatch;
+-	struct bio_vec *bv = NULL;
+-	struct page **pages;
+-	unsigned int cur_npages;
+-	unsigned int max_pages;
+-	unsigned int npages = 0;
+-	unsigned int i;
+-	ssize_t ret = 0;
+-	size_t count = orig_len, offset, len;
+-	size_t bv_size, pg_size;
 -
--	folio_batch_init(&fbatch);
+-	if (WARN_ON_ONCE(!iter_is_ubuf(orig) && !iter_is_iovec(orig)))
+-		return -EIO;
 -
--	for (; fq; fq = next) {
--		for (int slot = 0; slot < folioq_count(fq); slot++) {
--			struct folio *folio = folioq_folio(fq, slot);
+-	max_pages = iov_iter_npages(orig, INT_MAX);
+-	bv_size = array_size(max_pages, sizeof(*bv));
+-	bv = kvmalloc(bv_size, GFP_KERNEL);
+-	if (!bv)
+-		return -ENOMEM;
 -
--			if (!folio ||
--			    !folioq_is_marked(fq, slot))
--				continue;
+-	/* Put the page list at the end of the bvec list storage.  bvec
+-	 * elements are larger than page pointers, so as long as we work
+-	 * 0->last, we should be fine.
+-	 */
+-	pg_size = array_size(max_pages, sizeof(*pages));
+-	pages = (void *)bv + bv_size - pg_size;
 -
--			trace_netfs_folio(folio, netfs_folio_trace_put);
--			if (folio_batch_add(&fbatch, folio))
--				folio_batch_release(&fbatch);
+-	while (count && npages < max_pages) {
+-		ret = iov_iter_extract_pages(orig, &pages, count,
+-					     max_pages - npages, extraction_flags,
+-					     &offset);
+-		if (unlikely(ret <= 0)) {
+-			ret = ret ?: -EIO;
+-			break;
 -		}
 -
--		netfs_stat_d(&netfs_n_folioq);
--		next = fq->next;
--		kfree(fq);
+-		if (WARN(ret > count,
+-			 "%s: extract_pages overrun %zd > %zu bytes\n",
+-			 __func__, ret, count)) {
+-			ret = -EIO;
+-			break;
+-		}
+-
+-		cur_npages = DIV_ROUND_UP(offset + ret, PAGE_SIZE);
+-		if (WARN(cur_npages > max_pages - npages,
+-			 "%s: extract_pages overrun %u > %u pages\n",
+-			 __func__, npages + cur_npages, max_pages)) {
+-			ret = -EIO;
+-			break;
+-		}
+-
+-		count -= ret;
+-		ret += offset;
+-
+-		for (i = 0; i < cur_npages; i++) {
+-			len = ret > PAGE_SIZE ? PAGE_SIZE : ret;
+-			bvec_set_page(bv + npages + i, *pages++, len - offset, offset);
+-			ret -= len;
+-			offset = 0;
+-		}
+-
+-		npages += cur_npages;
 -	}
 -
--	folio_batch_release(&fbatch);
--}
--EXPORT_SYMBOL(netfs_free_folioq_buffer);
--#endif
+-	/* Note: Don't try to clean up after EIO.  Either we got no pages, so
+-	 * nothing to clean up, or we got a buffer overrun, memory corruption
+-	 * and can't trust the stuff in the buffer (a WARN was emitted).
+-	 */
 -
- /**
-  * netfs_dirty_folio - Mark folio dirty and pin a cache object for writeback
-  * @mapping: The mapping the folio belongs to.
-diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-index 230102f2e411..9199baa5c315 100644
---- a/fs/smb/client/smb2ops.c
-+++ b/fs/smb/client/smb2ops.c
-@@ -13,7 +13,6 @@
- #include <linux/sort.h>
- #include <crypto/aead.h>
- #include <linux/fiemap.h>
--#include <linux/folio_queue.h>
- #include <uapi/linux/magic.h>
- #include "cifsfs.h"
- #include "cifsglob.h"
+-	if (ret < 0 && (ret == -ENOMEM || npages == 0)) {
+-		for (i = 0; i < npages; i++)
+-			unpin_user_page(bv[i].bv_page);
+-		kvfree(bv);
+-		return ret;
+-	}
+-
+-	iov_iter_bvec(new, orig->data_source, bv, npages, orig_len - count);
+-	return npages;
+-}
+-EXPORT_SYMBOL_GPL(netfs_extract_user_iter);
+-
+ /*
+  * Select the span of a bvec iterator we're going to use.  Limit it by both maximum
+  * size and maximum number of segments.  Returns the size of the span in bytes.
 diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index 15a1c3026733..9e551e09054f 100644
+index 9e551e09054f..d0b1408bd02f 100644
 --- a/include/linux/netfs.h
 +++ b/include/linux/netfs.h
-@@ -479,12 +479,6 @@ void netfs_end_io_write(struct inode *inode);
- int netfs_start_io_direct(struct inode *inode);
- void netfs_end_io_direct(struct inode *inode);
- 
--/* Buffer wrangling helpers API. */
--int netfs_alloc_folioq_buffer(struct address_space *mapping,
--			      struct folio_queue **_buffer,
--			      size_t *_cur_size, ssize_t size, gfp_t gfp);
--void netfs_free_folioq_buffer(struct folio_queue *fq);
--
- /**
-  * netfs_inode - Get the netfs inode context from the inode
-  * @inode: The inode to query
+@@ -464,9 +464,6 @@ void netfs_put_subrequest(struct netfs_io_subrequest *subreq,
+ ssize_t netfs_extract_iter(struct iov_iter *orig, size_t max_len, size_t max_pages,
+ 			   unsigned long long fpos, struct bvecq **_bvecq_head,
+ 			   iov_iter_extraction_t extraction_flags);
+-ssize_t netfs_extract_user_iter(struct iov_iter *orig, size_t orig_len,
+-				struct iov_iter *new,
+-				iov_iter_extraction_t extraction_flags);
+ size_t netfs_limit_iter(const struct iov_iter *iter, size_t start_offset,
+ 			size_t max_size, size_t max_segs);
+ void netfs_prepare_write_failed(struct netfs_io_subrequest *subreq);
 
 
