@@ -1,95 +1,49 @@
-Return-Path: <linux-erofs+bounces-3408-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3409-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IDFZLdH0A2rKBAIAu9opvQ
-	(envelope-from <linux-erofs+bounces-3408-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 13 May 2026 05:49:37 +0200
+	id yHzIKUmTCmrL3gQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3409-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 06:19:21 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A30F52CFBE
-	for <lists+linux-erofs@lfdr.de>; Wed, 13 May 2026 05:49:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79BDB5659DD
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 06:19:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gFfbc2DgFz2xlV;
-	Wed, 13 May 2026 13:49:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gJl163N8jz2xfB;
+	Mon, 18 May 2026 14:18:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::932" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1778644172;
-	cv=pass; b=mEmf+pjR7LKdgPWuIzAr32ECEouQ+CNd6e4RuVQ9BAuMI9/fcq+DRPtPRpEFPY3FlkYdayXKZfB65NxMupHFufa6qZgPOvIVLPsjk1NVZ89HTmE3h6Fnh8KlAuJicPSYPB1a7Oww1/foJ7FN4PcNhtQW1mL+5dh+6Z04gxFYYhUYcA4PkqVQCtmf/LR65Jf97JxVTFsWULrmg8tcedAtx50+ReM7j18bhpp5i/fVc1vtgu7CjsmZQufRlkCui6NQ8Z/8pXkkzMOe2G+PKEkBaaLZRgNVG2GfdvBzh9HO66WdZkE2x7L1mYRMFsMSTn+3Z9vzAB69TnjAUWSJNkU3bQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1778644172; c=relaxed/relaxed;
-	bh=h2Rr35H6VMfqNu5tPyDtO3cgHXuBcLoAooKupan7DT4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=jRMHioVrbQkKUofad2Zr9q6DGrOxFz+SOTknvRp0sgKTBXiSCRRuoO8RMx8szJgUi8baOlGb73l4WdMPdxrG/dO3MDnFv7umVmlCXlRhMzyolCWWxIZzM265wZhLFS7fVZ8kXMei16Tq3e3jiv8fNyyC9QlPjPabmfjBWLREEfXKcEJbikXWK95ZDua6tdxC6ZalqShIgD+y4omiKTCBvXMz+S+Xdicyz0/Z3Nxdl5wWK3H2SI4njGAWsQroeBGFEv1/uNpsqt2ZdsJ5UgE1QIvi+iu4edf5WSoJRf/lFMA70wuS43Vi/S1pqTGZoVrp33FWr8VIYl9tfMysoJKTuw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=OHAdZ/lE; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::932; helo=mail-ua1-x932.google.com; envelope-from=aa01088621951@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779077930;
+	cv=none; b=Hg9uNJ3KCwBWUPCobQxFLPL4vvb6yURAFPY9tyjwDd+HxMRV1oij+UpwaU6dXU3kmfXmFyd/ZK7CG9vaunQsoJVPzufAt+yPslKJoKSJi7II2xWKqTwNUUN0lwY3CnO3wnAdxT7otYnuVaMqqs69vOC/nxBmAUg6yt1QNXua/8q8bVFegfBFHukEekmWhMOQkbf7Jpol3poajJTUYwVjweO/FgU8nvtVUBVY1SQLR0zHsmPJN5G6DtMppjypZLKkYtaOvm8VxCKUIriT1GE56Azaa7Y3/5iZP+QVOYTLxZyIxuUHwwRKRvpIyAm+23jk5PpAJfZi2v3Xh0EzWLpCdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1779077930; c=relaxed/relaxed;
+	bh=ytp+fDBw2liGaMlB67MJhnJrhArdI1RgYJ695XV8dX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cEsOTgCbgNrnyRBVKMPxH04Xz2gVbZ7tM14VnGRYjU+x0TsEZBjOa0nwEZeh22zh5jTN1Wb0n0axjbJRZOgk424xIvgRBXMT0s0u/SduJBDDaS1hJQnn4K1/iahcwOVHUBXSbeKKbJ2XuNzFv6IdX3QgsbkruSvlLKXQKbacHFyuy4RN0p75NcZHGgt/05VRA0v0tHQw0l4QFN7TQachOpDh2dUFtwHMekxFlTgnQspK8Tgtj0HWVEk7TJWZczsviAUiP5tb+vlqL36M6DCsBaQvFLyINT5vVogvvd8ZM6OlIAXAc5GK3VfQ0SUXlHJ4BRk/24LHQLipPDRJtcg5pw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CM7y3x0M; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=OHAdZ/lE;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CM7y3x0M;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::932; helo=mail-ua1-x932.google.com; envelope-from=aa01088621951@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gFfbZ5c7Wz2xJT
-	for <linux-erofs@lists.ozlabs.org>; Wed, 13 May 2026 13:49:29 +1000 (AEST)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-95cd0a38730so139531241.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 12 May 2026 20:49:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778644167; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jwkSwPd9HyT8QaogUjjuBbE6raK7D99sgl42AlTsiiO92O/qwYqrjOo/6GHxZB3Rsa
-         EtL6qrFRbLg3dwu1YoctRsThG6sKY47h+xLg7s1DcfOfXxvGQGH8atC5lOZJPPgGjnly
-         MYSVXyE1MMzdM5qxC7wVIdaCp9jufVPaEnZS84AzPciX+McRindz8eFSyYSy2YOpMt66
-         cxes4sCwLyNM+wOK3vs2r4SWNdDTQzOB7VS+4qefTpVDORFJRIyJVN5LJtD62Hf5l4ef
-         wcnBzokj8oKFGpiuA54rUUfNPnbHURr0WZ8wE3GSx4mHxLkNroRNRxPomWBfX4fij6N4
-         nxLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=h2Rr35H6VMfqNu5tPyDtO3cgHXuBcLoAooKupan7DT4=;
-        fh=tj2kNoma2cSJNejPje+5e+DnWB9k45OGp8f34QbC9PI=;
-        b=FGeE/aBcSaH3MKOeamkoYejcO/sBI2xJSGEPMRPTijovBM+LrN2kM/YwxoUKgfRY90
-         x1CGfHEfHaGgKwHXTOtjOkzbSfVGbTXoIVc16SDsCLAfzToyc3HSSql0ADvsoKu/JdvF
-         pszng/+d1VE4fYywtloP7WAvjJvWnPvXTJtbCTWN9zcJjbm+aOM3Veo9KefJ3hBueM6z
-         LFlIxg51qzbNaFB+Bnh8O1pRViU5Sh2h/qsuhLVICvQpf3jH1me1Fm0QC/9IyoGbbqu8
-         V07lVRyBWabdS7vWf36GHD7Fuj7tsVpyUDoZbFf2ysUtWesJOAci4U+ZYV/zo9wkcnhz
-         txWg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778644167; x=1779248967; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=h2Rr35H6VMfqNu5tPyDtO3cgHXuBcLoAooKupan7DT4=;
-        b=OHAdZ/lEUiMs+Zs1nvZ+OaKpvFEP1YIF6O6dvtH2xmHWRjCPwdVeDz3/hOK6lzYO8k
-         AzTUM/zhmVVdthqmFcE7kQSBmByQissMNUrkxnMx6xvNxpCU9BkjY76UuzlCPkshGaRe
-         J96q6oagQstVUfI4XKYjRu51xVEXIL4D2AA/IdZ3RLVkOiw63QzGHIB5FGe/AlcB08YI
-         6SMXw3HSFYbUkYJDPmr7XzhEcUL6HjWNLQJHfNVZ8pM9GNirMtPkuwuTMwsM/Pt9yD0S
-         HuslGIR0KvbHI4/HCkQyn5j7LyJN/I+ZcD2fqdPeNnHKJx/RmtVEFlOv8uOSV/TI32GA
-         DwuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778644167; x=1779248967;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2Rr35H6VMfqNu5tPyDtO3cgHXuBcLoAooKupan7DT4=;
-        b=LVnda6SQYRIQh4B3xe22eoN04xBsxB/eDg20Exb2q2tNn59QS6LDhi6T9d2oT6gEJd
-         g3emK8DUjd+2CeT/SDn3Vju0LOgHX9bQxe853omkz5nkUZCkyPuJ9rWrnN3lBVbC92MY
-         f+OryFJZSqCdlXoZqBxcW0LO74DX5RT0ozdw5quMkubReAs2+BgWDzdSIA+kDNGD7mfl
-         aOMoVJPCKWAn9ka7jc1pKi7vX6PtOwCplXJATkPdlcDDtETChnArZLFjzfbHZbb7DSSK
-         VbK9y2VaoXLRn2igyMLxsrt2BrGFnXhym0i6+G/uFjB/bfQxx22X3PmvUC5CTJIX7Xxg
-         L8Og==
-X-Forwarded-Encrypted: i=1; AFNElJ9g9XrKUdphjVs3N3TtEIlEjA1NEuFhIDa5/RSkzzwCcSTMLHVQcOunPk5Dpl03zd69fOYYEweP1a6dFw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YyEFk3oK7Ik7xbze2CL9G5gn3ec/imq5YXqY5A+kvLfPmVodTJG
-	OxcQEj1RiXzOG+0xMZwNsqEVh8lTOjlxD2DREbCKh8oo2HM2SzeMUDc33s9sgWhJLbjpmAyWkHG
-	G3OXpcEMMjTpKkGeI8JTKH23CehsOy3c=
-X-Gm-Gg: Acq92OEeMn2SKSkZNWmuexzYKJKw5ZE0Xm3U8Npd+cRU/4tw4uYxlwA8UtazLlVF2wm
-	Lvf6hRgVokFuMm6zPqL9Z3AvXCYZKkeuGvqcAntVoD/bzRoF/VuWjFxOrwTKGP1m998qrZYvypz
-	4AxLGivVlEIBoS0SZMRzpvAcoxqlxgkJV9V+vYyL3SBGO2u6aMrekDvSN1iE/WUn4srQeoJf/Oj
-	+yVYkQfigPwISEpCeHr4+F7BCZapMHbz5jpSRgKqeEtVFYuC9tNKUmyV3HQf8STxpUehSbUtzRY
-	JzDnpXeg4zOODTFr3y5zeKIg+Uvk4jQTnU3bg7IdlvuyMFcnfSmF4aYj+bFC9Txym75QYlbf9QM
-	NMtfcNyPvGT97zRi/9JL8VHArFzJyBBNdu1h48nNtrdL8nO4RW4ouvEpzh32Tp5L6gzNw3sbLqz
-	ERQYEHBvp186Alt07V72nzrkH0JkUkd/knIGnIg/+vo5QEd29idKeRctt2x6tgcnHyQv5XjB8=
-X-Received: by 2002:a05:6102:1264:b0:632:c8af:8a89 with SMTP id
- ada2fe7eead31-637750db26amr218055137.4.1778644167143; Tue, 12 May 2026
- 20:49:27 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gJl130Rk3z2xWP
+	for <linux-erofs@lists.ozlabs.org>; Mon, 18 May 2026 14:18:44 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1779077921; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ytp+fDBw2liGaMlB67MJhnJrhArdI1RgYJ695XV8dX8=;
+	b=CM7y3x0MEtzTI8t8rugcQur2wkMngnsmUNLecpH6Wf9gtgPYzWSK7MKseSiAKdqhEOM0x2JapX0uyu+2P8dfXyVK6rCdCWP4KrZVFnKvAsbOVgXZWuh8zGIHOU7ffMc4D7kvUS0to1/YyC2+r1ed7n/hqzid41DXIIOHHGEOR3E=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X336a36_1779077917;
+Received: from 30.221.130.166(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X336a36_1779077917 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 18 May 2026 12:18:37 +0800
+Message-ID: <91d164b2-adac-4f17-970b-698e500f84a2@linux.alibaba.com>
+Date: Mon, 18 May 2026 12:18:33 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,109 +55,244 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Thomas He <aa01088621951@gmail.com>
-Date: Wed, 13 May 2026 10:49:14 +0700
-X-Gm-Features: AVHnY4KFF2_LukSjSZ9G-Yiv8ukN6oZaV_wL7EUGMnMq2-K63gG0j-VjsZeRK38
-Message-ID: <CAJHzvkrjijY2e+oVZQDD_Qdkf8VtNct-1g+FhAVKP-wO1su3bA@mail.gmail.com>
-Subject: =?UTF-8?B?57u05LuW5ZG9ReaXoOWKqemYsueZjOOAgOacjeeUqOi/h+mHj+aBkOiHtOW/g+iEj+ihsA==?=
-	=?UTF-8?B?56ut?=
-To: suely_cu@yahoo.com, theresa@eaglepointrealty.com, se@usst.edu.cn, 
-	linux-erofs@lists.ozlabs.org
-Content-Type: multipart/alternative; boundary="000000000000c3b5030651aadd02"
-X-Spam-Status: No, score=2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	FROM_LOCAL_DIGITS,FROM_LOCAL_HEX,HTML_MESSAGE,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_SPAM autolearn=disabled version=4.0.1
-X-Spam-Level: **
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs-utils: mkfs: also handle last compacted 2B pack in
+ z_erofs_drop_inline_pcluster
+To: Zhiguo Niu <niuzhiguo84@gmail.com>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, ke.wang@unisoc.com,
+ linux-erofs@lists.ozlabs.org
+References: <1777449565-22154-1-git-send-email-zhiguo.niu@unisoc.com>
+ <e4701c42-1ed5-40a6-8f5d-927c40e3856b@linux.alibaba.com>
+ <CAHJ8P3KB02f2dTWrMXtyBMQwfqmFEeOwa4SW8CKL-rKrE=Dg=w@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CAHJ8P3KB02f2dTWrMXtyBMQwfqmFEeOwa4SW8CKL-rKrE=Dg=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 2A30F52CFBE
+X-Rspamd-Queue-Id: 79BDB5659DD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.10 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3408-lists,linux-erofs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:suely_cu@yahoo.com,m:theresa@eaglepointrealty.com,m:se@usst.edu.cn,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[yahoo.com,eaglepointrealty.com,usst.edu.cn,lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[aa01088621951@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3409-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:niuzhiguo84@gmail.com,m:zhiguo.niu@unisoc.com,m:ke.wang@unisoc.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_NONE(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aa01088621951@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sumo.ad:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:mid,linux.alibaba.com:dkim,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
---000000000000c3b5030651aadd02
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Hi Zhiguo,
 
-KuS9oOWlvSEqDQoNCuS9oOWPr+efpemBk++8jOe7tOS7luWRvUXkuI3og73pooTpmLLlv4PohI/o
-obDnq60g5Y+N5aKe6aOO6ZmpIO+8nw0KDQrnoJTnqbbkurrlkZjpkojlr7nmlbDljYPlkI3lv4Po
-hI/nl4XkuI7ns5blsL/nl4XmgqPov5vooYzkuLrmnJ/kuIPlubTnmoTnoJTnqbblkI7lj5HnjrDv
-vIznu7Tku5blkb1F5LiN5LuF5LiN6IO96aKE6Ziy5b+D6ISP55eF5LiO55mM55eH77yM5Y+N5YCS
-5Y+v6IO95aKe5Yqg5b+D6ISP6KGw56ut55qE5Y2x6Zmp44CCDQoNCuWcqOaJgOacieaOpeWPl+a1
-i+ivleeahOW/l+aEv+S6uuWjq+S4re+8jOacjeeUqOe7tOS7luWRve+8peiAhe+8jOW/g+iEj+eX
-heWPkeS9nOeOh+i+g+acjeeUqOWuieaFsOWJguiAhemrmOWHuueZvuWIhuS5i+WNgeS4ieOAguac
-jeeUqOe7tOS7luWRve+8peWvvOiHtOeahOW/g+iEj+eXheWkp+WkmuaYr+W3puW/g+WupOWkseWO
-u+WKn+iDveOAgg0KDQrngrnlh7vmn6XnnIvmm7TlpJrvvIzkuI3opoHplJnov4fku7vkvZXph43o
-poHkv6Hmga/vvIENCg0KaHR0cHM6Ly9zdW1vLmFkL3dlaXNoZW5nc3UtZS1kYW96aGkteGlubGkt
-c2h1YWlqaWUNCg0K56Wd5L2g5bmz5a6J77yBDQoNCi0tLQ0KDQrmhL/lhYnmmI7kuI7nnJ/nm7jl
-kIzooYwNCg==
---000000000000c3b5030651aadd02
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
+On 2026/5/11 15:54, Zhiguo Niu wrote:
+> Gao Xiang <hsiangkao@linux.alibaba.com> 于2026年5月11日周一 12:01写道：
+>>
+>> Hi Zhiguo,
+>>
+>> On 2026/4/29 15:59, Zhiguo Niu wrote:
+>>> With ztailpacking enabled, the current process assumes that a compacted_4b_end
+>>> always exists in the compacted pack. However, in some specific files, the
+>>> compacted pack may not have a compacted_4b_end. This leads to an incorrect
+>>> modification of the last compacted_2B entry, resulting in incorrect modification
+>>> of its clusterofs. In subsequent fsck operations, incorrect parameters will
+>>> affect the decompression of the penultimate pcluster.
+>>>
+>>> This patch determines whether the last entry of the current compacted pack
+>>> belongs to compacted 2B or 4B and then updates the correct bits accordingly.
+>>>
+>>> Fixes: a7c1f0575ef8 ("erofs-utils: lib: refine tailpcluster compression approach")
+>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+>>
+>> Sorry for late response.
+>>
+>> I do think the issue is valid, but either the previous
+>> solution or the proposed one is ugly.
+> 
+> Hi Xiang,
+> Yes it would be ideal if the same piece of common code could cover
+> both scenarios.
+> But I haven't figured it out yet, so I'll distinguish them like this for now. ^^
+> thanks!
+>>
+Could you confirm if the following diff fixes the issue?
 
-PGRpdiBkaXI9Imx0ciI+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1m
-YW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1z
-aXplOm1lZGl1bSI+PHN0cm9uZz7kvaDlpb0hPC9zdHJvbmc+PC9wPjxwIGNsYXNzPSJnbWFpbC1h
-dXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90
-Oztjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtc2l6ZTptZWRpdW0iPuS9oOWPr+efpemBk++8jOe7tOS7
-luWRvUXkuI3og73pooTpmLLlv4PohI/oobDnq63jgIDlj43lop7po47pmakg77yfPC9wPjxwIGNs
-YXNzPSJnbWFpbC1hdXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29m
-dCBZYUhlaSZxdW90Oztjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtc2l6ZTptZWRpdW0iPueglOeptuS6
-uuWRmOmSiOWvueaVsOWNg+WQjeW/g+iEj+eXheS4juezluWwv+eXheaCo+i/m+ihjOS4uuacn+S4
-g+W5tOeahOeglOeptuWQjuWPkeeOsO+8jOe7tOS7luWRvUXkuI3ku4XkuI3og73pooTpmLLlv4Po
-hI/nl4XkuI7nmYznl4fvvIzlj43lgJLlj6/og73lop7liqDlv4PohI/oobDnq63nmoTljbHpmanj
-gII8L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1
-b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1zaXplOm1lZGl1
-bSI+5Zyo5omA5pyJ5o6l5Y+X5rWL6K+V55qE5b+X5oS/5Lq65aOr5Lit77yM5pyN55So57u05LuW
-5ZG977yl6ICF77yM5b+D6ISP55eF5Y+R5L2c546H6L6D5pyN55So5a6J5oWw5YmC6ICF6auY5Ye6
-55m+5YiG5LmL5Y2B5LiJ44CC5pyN55So57u05LuW5ZG977yl5a+86Ie055qE5b+D6ISP55eF5aSn
-5aSa5piv5bem5b+D5a6k5aSx5Y675Yqf6IO944CCPC9wPjxwIGNsYXNzPSJnbWFpbC1hdXRvLXN0
-eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90Oztjb2xv
-cjpyZ2IoMCwwLDApO2ZvbnQtc2l6ZTptZWRpdW0iPueCueWHu+afpeeci+abtOWkmu+8jOS4jeim
-gemUmei/h+S7u+S9lemHjeimgeS/oeaBr++8gTwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHls
-ZTEiIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6
-cmdiKDAsMCwwKTtmb250LXNpemU6bWVkaXVtIj48YSBocmVmPSJodHRwczovL3N1bW8uYWQvd2Vp
-c2hlbmdzdS1lLWRhb3poaS14aW5saS1zaHVhaWppZSIgdGFyZ2V0PSJfYmxhbmsiPmh0dHBzOi8v
-c3Vtby5hZC93ZWlzaGVuZ3N1LWUtZGFvemhpLXhpbmxpLXNodWFpamllPC9hPjwvcD48cCBjbGFz
-cz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQg
-WWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAsMCwwKTtmb250LXNpemU6bWVkaXVtIj7npZ3kvaDlubPl
-ronvvIE8L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGU5IiBzdHlsZT0iZm9udC1zaXplOjEx
-LjVwdDtjb2xvcjpyZ2IoOTEsMTAyLDExNikiPi0tLTwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1z
-dHlsZTE0IiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2Nv
-bG9yOnJnYigwLDEyMywyNTUpO2ZvbnQtc2l6ZTptZWRpdW0iPuaEv+WFieaYjuS4juecn+ebuOWQ
-jOihjDwvcD48L2Rpdj4NCg==
---000000000000c3b5030651aadd02--
+
+diff --git a/include/erofs/defs.h b/include/erofs/defs.h
+index 9f3d0f9c35bc..0e4c2a9b53c7 100644
+--- a/include/erofs/defs.h
++++ b/include/erofs/defs.h
+@@ -218,6 +218,11 @@ typedef int64_t         s64;
+  #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
+  #define put_unaligned(val, ptr) __put_unaligned_t(typeof(*(ptr)), (val), (ptr))
+
++static inline u32 get_unaligned_le16(const void *p)
++{
++	return le32_to_cpu(__get_unaligned_t(__le16, p));
++}
++
+  static inline u32 get_unaligned_le32(const void *p)
+  {
+  	return le32_to_cpu(__get_unaligned_t(__le32, p));
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 450e2647cca7..2cc9cc8009aa 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -210,6 +210,12 @@ struct erofs_diskbuf;
+  #define EROFS_INODE_DATA_SOURCE_RESVSP		3
+  #define EROFS_INODE_DATA_SOURCE_REBUILD_BLOB	4
+
++enum erofs_idata_type {
++	EROFS_IDATA_TYPE_RAW,
++	EROFS_IDATA_TYPE_COMPRESSED_DEFAULT,
++	EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B,
++};
++
+  #define EROFS_I_BLKADDR_DEV_ID_BIT		48
+
+  struct erofs_inode {
+@@ -262,7 +268,7 @@ struct erofs_inode {
+  	unsigned short idata_size;
+  	char datasource;
+  	bool in_metabox;
+-	bool compressed_idata;
++	char idata_type;
+  	bool lazy_tailblock;
+  	bool opaque;
+  	/* OVL: non-merge dir that may contain whiteout entries */
+diff --git a/lib/compress.c b/lib/compress.c
+index 62d2672cb665..e171aee48c0b 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -483,7 +483,7 @@ static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
+  {
+  	inode->z_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
+  	inode->idata_size = len;
+-	inode->compressed_idata = !raw;
++	inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED_DEFAULT;
+
+  	inode->idata = malloc(inode->idata_size);
+  	if (!inode->idata)
+@@ -980,7 +980,8 @@ int z_erofs_convert_to_compacted_format(struct erofs_inode *inode,
+  					      &dummy_head, big_pcluster);
+  		compacted_2b -= 16;
+  	}
+-	DBG_BUGON(compacted_2b);
++	if (!compacted_4b_end && inode->idata_size)
++		inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B;
+
+  	/* generate compacted_4b_end */
+  	while (compacted_4b_end > 1) {
+@@ -1210,10 +1211,12 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+
+  	h->h_advise = cpu_to_le16(le16_to_cpu(h->h_advise) &
+  				  ~Z_EROFS_ADVISE_INLINE_PCLUSTER);
++	DBG_BUGON(inode->idata_size != le16_to_cpu(h->h_idata_size));
+  	h->h_idata_size = 0;
++
+  	if (!inode->eof_tailraw)
+  		return;
+-	DBG_BUGON(inode->compressed_idata != true);
++	DBG_BUGON(inode->idata_type != EROFS_IDATA_TYPE_RAW);
+
+  	/* patch the EOF lcluster to uncompressed type first */
+  	if (inode->datalayout == EROFS_INODE_COMPRESSED_FULL) {
+@@ -1224,18 +1227,26 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+  		di->di_advise = cpu_to_le16(type);
+  	} else if (inode->datalayout == EROFS_INODE_COMPRESSED_COMPACT) {
+  		/* handle the last compacted 4B pack */
+-		unsigned int eofs, base, pos, v, lo;
++		unsigned int lclusterbits = inode->z_lclusterbits;
++		unsigned int lobits, eofs, base, pos, v;
+  		u8 *out;
+
+-		eofs = inode->extent_isize -
+-			(4 << (BLK_ROUND_UP(sbi, inode->i_size) & 1));
+-		base = round_down(eofs, 8);
+-		pos = 16 /* encodebits */ * ((eofs - base) / 4);
+-		out = inode->compressmeta + base;
+-		lo = erofs_blkoff(sbi, get_unaligned_le32(out + pos / 8));
+-		v = (type << sbi->blkszbits) | lo;
+-		out[pos / 8] = v & 0xff;
+-		out[pos / 8 + 1] = v >> 8;
++		lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
++
++		if (inode->idata_type == EROFS_IDATA_TYPE_COMPRESSED_DEFAULT) {
++			eofs = inode->extent_isize -
++				(4 << (BLK_ROUND_UP(sbi, inode->i_size) & 1));
++			base = round_down(eofs, 8);
++			pos = 16 /* encodebits */ * ((eofs - base) / 4);
++			out = inode->compressmeta + base + pos / 8;
++		} else {
++			out = inode->compressmeta + inode->extent_isize - 4 - 2;
++			lobits = 16 - 14 /* encodebits */ + lobits;
++		}
++		v = (get_unaligned_le16(out) & (BIT(lobits) - 1)) |
++			(type << lobits);
++		*out = v & 0xff;
++		*(out + 1) = v >> 8;
+  	} else {
+  		DBG_BUGON(1);
+  		return;
+@@ -1244,7 +1255,7 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+  	/* replace idata with prepared uncompressed data */
+  	inode->idata = inode->eof_tailraw;
+  	inode->idata_size = inode->eof_tailrawsize;
+-	inode->compressed_idata = false;
++	inode->idata_type = EROFS_IDATA_TYPE_RAW;
+  	inode->eof_tailraw = NULL;
+  }
+
+diff --git a/lib/inode.c b/lib/inode.c
+index 735319e1d3bf..c225faa121e7 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1043,7 +1043,7 @@ noinline:
+  		if (is_inode_layout_compression(inode)) {
+  			DBG_BUGON(!params->ztailpacking);
+  			erofs_dbg("Inline %scompressed data (%u bytes) to %s",
+-				  inode->compressed_idata ? "" : "un",
++				  inode->idata_type == EROFS_IDATA_TYPE_RAW ? "un": "",
+  				  inode->idata_size, inode->i_srcpath);
+  			erofs_sb_set_ztailpacking(sbi);
+  		} else {
+@@ -1149,7 +1149,8 @@ static int erofs_write_tail_end(struct erofs_importer *im,
+  		pos = erofs_btell(bh, true) - erofs_blksiz(sbi);
+
+  		/* 0'ed data should be padded at head for 0padding conversion */
+-		h0 = erofs_sb_has_lz4_0padding(sbi) && inode->compressed_idata;
++		h0 = erofs_sb_has_lz4_0padding(sbi) &&
++			inode->idata_type != EROFS_IDATA_TYPE_RAW;
+  		DBG_BUGON(inode->idata_size > erofs_blksiz(sbi));
+
+  		iov[h0] = (struct iovec) { .iov_base = inode->idata,
+
+
+
 
