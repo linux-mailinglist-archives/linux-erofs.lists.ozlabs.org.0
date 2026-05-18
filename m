@@ -1,60 +1,60 @@
-Return-Path: <linux-erofs+bounces-3414-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3415-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2DHJLHaqCmoK5gQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3414-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 07:58:14 +0200
+	id 4AQoOXiqCmpE5gQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3415-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 07:58:16 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 060CF5667E1
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 07:58:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 457A55667E8
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 May 2026 07:58:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gJnCZ44fNz3dRt;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gJnCZ4sQmz3dS5;
 	Mon, 18 May 2026 15:58:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.125.188.120
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779083882;
-	cv=none; b=gnjuoVzhJqv+kQD+12jqU9ipdrdP+sdLjogMKC/vHufLUIUbTMUFK817p0NvcIJqZPwvQRi68qQUHFLAPE9F5gyheWpj32ioFKEPhP03y1b+g8PkxxuxmoEQsoxBFKt2VcAoPaS6n17npAgPyElKlUCCSKr2pgO04jxEtZ/hTYfdkogsdyEmvq0Vt8U369sJVi+5Oaa8fV5qmoubKt7YkYXJVu5094Gtsc1yKyBv/38dFwPuGCqX4ddnFGRwKGXpqVzFfUQmgKdoYg/XxX5emAbYVWiPvFjj+RfhViHs3CA6ARnItZHAOghqmgUpm3qdAFLnCak7+KsyBDG2BLu11A==
+	cv=none; b=TQd/JkhE7hjX+KxpCC9s+Ei8pEd3mxxHEQSC9Tt02BDjxoOl+upoVTgX31pF4z5Uic7ynXcmfAGQy4yTJ2aTOzP9elLme7FY50Bwpx0CBh0XI5f/ew/3Epiz6gjZ6MSYoCKpS2y8142p5lR8pJKc+ChKUae1nfyFGARX6AEbE2T922817flGZFmMMSth/ogPl8leJo0Ku+TlWt+f6k++Njv67wbx6KxDXgCFBa5fXMsnM+2m04JZYroqxQe1ksSmGtpdev3B8efoeaGTq/D4isyTxEFNAR/vamjWOX/xFekzDsJ7XLvBoPo+K3pa8ybpakhAXQFZ59qYWNKU+sJl8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1779083882; c=relaxed/relaxed;
-	bh=k9RkXZxEwl6o/7FfnLzHzC2L0aybsy/Nb+ZQf2WEYeU=;
+	bh=xEWQS2T7OkzeUKBXKc2GcKYGi1ur+BDSuuyyEdvwzjw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZS2vdnrOAfvvDpnmRK1OUGAzM5NyH1f9ESuXGRGd/ssUTZzXlYuuWPElCxjHA+h6rze/QsqDzRjYby03HwqXyZi2TgF5Ce51EbH7qJDFSiCTfIk8EkFEwEdm26MPU/wXps6XOVHQoTsVIJn7EC9HfY5M6cdwsWEW6frMuTjFnRZq6whGE9ro1JPb5thvKQK9RSKvfMrpj7nPMehyb2lkuTibOoklgKD5L1nKJbjt3PaSSS0/xj/AcYTbb3vxYJR9Fho7QSdUx8s4GqoyzW1fuoCP8qyp9V7YQ7HClrO2jjPibkz9MtqwRWdbHpAB1hbvkODmPV6M/0wFIbAB7kENfA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=c7DLp5iU; dkim-atps=neutral; spf=pass (client-ip=185.125.188.120; helo=smtp-relay-canonical-0.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=lists.ozlabs.org) smtp.mailfrom=canonical.com
+	 MIME-Version; b=R4Nr9JMwCn1+VYHqlZwAc2aAdsFEQFEzfth2QwtXyimA2mGhps/Lypn+X3uyLxzasYCDOfRFVHH36Znhg9WSN5WNAT369dBAyTW5kaT8s9hSySnR4vBW6scFrknRE40/cIh25B1shRxUTms24b+OaJ/ojH+I6sofc+SU+p55BRbLlfKU9O4iV682E7ZQPrlpUvNf05fXJrtuLJLeIA35mJwxzeelnwqSJ6bldTc+Dox9EvR/swK6OSYp/oOQkeZuHPYSMgbHSCplp0gonlbxXOyfsWL05NzIn9ykE1MUbCWyZPYRieJRXnmFYXXNfT7LbNNnGLQAB6F8763Jm/wuWw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=OBBOWlAo; dkim-atps=neutral; spf=pass (client-ip=185.125.188.120; helo=smtp-relay-canonical-0.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=lists.ozlabs.org) smtp.mailfrom=canonical.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=c7DLp5iU;
+	dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=OBBOWlAo;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=canonical.com (client-ip=185.125.188.120; helo=smtp-relay-canonical-0.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=lists.ozlabs.org)
 Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gJnCY6h7hz3dRT
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gJnCY6Z2Sz3dRP
 	for <linux-erofs@lists.ozlabs.org>; Mon, 18 May 2026 15:58:01 +1000 (AEST)
 Received: from LT03 (dynamic-046-114-109-175.46.114.pool.telefonica.de [46.114.109.175])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id ACC2541798;
-	Mon, 18 May 2026 05:57:56 +0000 (UTC)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 8053041799;
+	Mon, 18 May 2026 05:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1779083877;
-	bh=k9RkXZxEwl6o/7FfnLzHzC2L0aybsy/Nb+ZQf2WEYeU=;
+	s=20251003; t=1779083878;
+	bh=xEWQS2T7OkzeUKBXKc2GcKYGi1ur+BDSuuyyEdvwzjw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=c7DLp5iUteiU+nG2ilDybCk2K+Ck9cM1f0fXomFdixRCKkPTwGNiVoI8nnhEm0Vkl
-	 nGgmHY+uh7EAWWaeZ7EGJ6MDNDRhEk5s9BLjIoJiRMsDvofC8Kn2azdyVrN/S5+65+
-	 UvwUdFCdEY6xhOEeY31rJGlBuOwUQNRS3uvzcwqcX2wF4ynGquRjgRYQtoPinoF1l2
-	 8puT7oGOL1/hMKnP+ZB2HxAbLGCi/Hwwb/BXDEGyMwWr9fkI9R6kI/aWePy2uK+uP6
-	 K1QHwYRAx/bPAT7i4ATI3WE8Kv74390u3YHA6SAngB+0C40FcqhuMPplQnAhR7VmIm
-	 FivnAgQrVCyZlbPGPgdNoPSUFI8qIu4ziLZic1jHKbTShwfbaH58M1RJQWt/TsEHvq
-	 +R+Hcblo5FSBktF746t70Rx9LqGUqfIC/hTPtUw+ew8raXN7+uDetGIQXXrWieaJxP
-	 SVLZFcauU6QtSP7p/Eu3rgu2g7tdrUmaF8CiYFTQ6FiZsq4boqkdCQCn9+c4RkpHlU
-	 bnN69mNkr/lTgUC1221o9Q3PUAGqXjIAyu7Pt3nqt5pqSdh446+zUWRkuJ46xl3D+u
-	 cyipXYPkngoWDxIZN+mOZ5nhzYlgyvF/eKbipuxFu68NaUx2eg6vjVajPRKAw1vxyn
-	 6jLQBIZdl2lifpl690qYy7PY=
+	b=OBBOWlAo1R3Q/xHOHF59c6mcHSdesPg9uE9WvCU/+nRZSENoqif1txGBPTkdgFFjm
+	 W+tBOiigogPxzGYNROiEtQG+lDy02XFzgAGZ5UAhinlQi7YOQ6pnk6GeuMvvyrRU9X
+	 Xanvu244fFvPMuMMTE9fZAhaCCyNoEO5043GzONFM9AZxqu9l0olGAm3Oeze5IIdx/
+	 iXt+J5NfxQkoIaO+TyrORElsZWHOfsxn1ixtnzxz4YUoujhZKXSohhLF0XyCFNG2os
+	 Zu/K96yDSxGwMEv0gFpInkBJEqrQPQsYF9l8pPVrMGB83jiDjXXltfmHQzSilYRVMv
+	 SS6XM8MslUYHWYZMdOq+WYe/uWYjYyuE/7XQihkxgUrh+M9GoGjR84p6qNn6fBpbd1
+	 KPQF0J9p05T8zlof/vtTfoX+9YEhQG3uATSQki+h+eZ5uGTxq8+lXUbvBvMR58aDbF
+	 vydDajlrFEfy/ksKsg/ALeNrMILrWC7pUrZchocek5IgJKzcP6RsVq1ur1fh3m5fDO
+	 xzmNiYGNZH05PT55BfptNOetE3hmbLxAq3ZjmaiR2Nk4pPhAlvns5j9hqsckecAuOU
+	 oM9LtFsV0phXjl9YEPCkVSmHD54u3RJroVfRd0caqOtZFGDLE3Kzn05R3b13ErqsCm
+	 sxBq04cf+WXcVx7imNnqcoUQ=
 From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 To: Tom Rini <trini@konsulko.com>
 Cc: Simon Glass <sjg@chromium.org>,
@@ -73,9 +73,9 @@ Cc: Simon Glass <sjg@chromium.org>,
 	u-boot@lists.denx.de,
 	linux-erofs@lists.ozlabs.org,
 	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Subject: [PATCH 8/9] test: env: allow optional date field in ls output assertion
-Date: Mon, 18 May 2026 07:57:27 +0200
-Message-ID: <20260518055728.178507-9-heinrich.schuchardt@canonical.com>
+Subject: [PATCH 9/9] test: test_erofs: adjust expected ls output
+Date: Mon, 18 May 2026 07:57:28 +0200
+Message-ID: <20260518055728.178507-10-heinrich.schuchardt@canonical.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260518055728.178507-1-heinrich.schuchardt@canonical.com>
 References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com>
@@ -95,7 +95,7 @@ X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
 	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 060CF5667E1
+X-Rspamd-Queue-Id: 457A55667E8
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.80 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -104,11 +104,11 @@ X-Spamd-Result: default: False [0.80 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[canonical.com,reject];
 	R_DKIM_ALLOW(-0.20)[canonical.com:s=20251003];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3414-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3415-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:trini@konsulko.com,m:sjg@chromium.org,m:jnhuang95@gmail.com,m:quentin.schulz@cherry.de,m:mibodhi@gmail.com,m:t.preissl@proton.me,m:fberder@outlook.fr,m:andrew.goodbody@linaro.org,m:daniel@thingy.jp,m:varadarajan.narayanan@oss.qualcomm.com,m:sughosh.ganu@arm.com,m:ilias.apalodimas@linaro.org,m:peng.fan@nxp.com,m:marek.vasut+renesas@mailbox.org,m:u-boot@lists.denx.de,m:linux-erofs@lists.ozlabs.org,m:heinrich.schuchardt@canonical.com,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[heinrich.schuchardt@canonical.com,linux-erofs@lists.ozlabs.org];
@@ -128,34 +128,53 @@ X-Spamd-Result: default: False [0.80 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Action: no action
 
-fs_ls_generic() now prints a date between the file size and filename
-when the filesystem sets FS_CAP_DATE (currently FAT and ext4).
-
-Adjust the assert in test_env.py().
+With the addition of the date field the space between columns in the ls
+output has been reduced. Reflect this in the expected lines of the erofs
+test.
 
 Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 ---
- test/py/tests/test_env.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ test/py/tests/test_fs/test_erofs.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/test/py/tests/test_env.py b/test/py/tests/test_env.py
-index f8713a59ba9..e9d502148bc 100644
---- a/test/py/tests/test_env.py
-+++ b/test/py/tests/test_env.py
-@@ -523,7 +523,7 @@ def test_env_ext4(state_test_env):
-         assert 'Loading Environment from EXT4... OK' in response
+diff --git a/test/py/tests/test_fs/test_erofs.py b/test/py/tests/test_fs/test_erofs.py
+index a2bb6b505f2..0531f99cd9c 100644
+--- a/test/py/tests/test_fs/test_erofs.py
++++ b/test/py/tests/test_fs/test_erofs.py
+@@ -73,8 +73,8 @@ def erofs_ls_at_root(ubman):
+     slash = ubman.run_command('erofsls host 0 /')
+     assert no_slash == slash
  
-         response = c.run_command('ext4ls host 0:0')
--        assert '8192   uboot.env' in response
-+        assert(re.search('8192 .*uboot.env', ''.join(response)))
+-    expected_lines = ['./', '../', '4096   f4096', '7812   f7812', 'subdir/',
+-                      '<SYM>   symdir', '<SYM>   symfile', '4 file(s), 3 dir(s)']
++    expected_lines = ['./', '../', '4096 f4096', '7812 f7812', 'subdir/',
++                      '<SYM> symdir', '<SYM> symfile', '4 file(s), 3 dir(s)']
  
-         response = c.run_command('env info')
-         assert 'env_valid = valid' in response
+     output = ubman.run_command('erofsls host 0')
+     for line in expected_lines:
+@@ -84,7 +84,7 @@ def erofs_ls_at_subdir(ubman):
+     """
+     Test if the path resolution works.
+     """
+-    expected_lines = ['./', '../', '100   subdir-file', '1 file(s), 2 dir(s)']
++    expected_lines = ['./', '../', '100 subdir-file', '1 file(s), 2 dir(s)']
+     output = ubman.run_command('erofsls host 0 subdir')
+     for line in expected_lines:
+         assert line in output
+@@ -97,7 +97,7 @@ def erofs_ls_at_symlink(ubman):
+     output_subdir = ubman.run_command('erofsls host 0 subdir')
+     assert output == output_subdir
+ 
+-    expected_lines = ['./', '../', '100   subdir-file', '1 file(s), 2 dir(s)']
++    expected_lines = ['./', '../', '100 subdir-file', '1 file(s), 2 dir(s)']
+     for line in expected_lines:
+         assert line in output
+ 
 -- 
 2.53.0
 
