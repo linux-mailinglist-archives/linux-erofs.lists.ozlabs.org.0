@@ -1,97 +1,101 @@
-Return-Path: <linux-erofs+bounces-3449-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3450-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MPuuAoMQDGoZVQUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3449-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 09:25:55 +0200
+	id KG/9LjwcDGpJWQUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3450-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 10:15:56 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 995D5579008
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 09:25:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2141579CC0
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 10:15:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gKR6P091Pz2xwH;
-	Tue, 19 May 2026 17:25:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gKSD90r04z2xwH;
+	Tue, 19 May 2026 18:15:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.125.188.123
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779175548;
-	cv=none; b=TUKlhqq6k9RCZF5DvYR5PVgl1hs4SPmG4M2QCRaQDHLmQOGWh3OWAUcND8DFaQMuPPwTsyOIPiwZD3YaOd3YxmCW34LL+24kQrEx3M07syAixxxqfrRBVhrpoIlnRSGcE601Tpcky9mfWgn70jKSItnQl64E2VU71aAHzE05NdJEFq44pdmKETmdpK9fbuhchrK9y+2fpbd6bHe3fDNv8Z6Yc6dpmkrBPhrFqr33/pKQI7HGbxGLBsZcrtIIKR/tab6UJLWdfIYD0AgjkIMtqIvokC6RIN8Hh6ES3ySSoCv6MGOyD2Kmpbjci62fWVVSRzJ5x1TTZ/OShzV25ipaNw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::429"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779178553;
+	cv=none; b=gaiUFboETU8/xPYKe9CLTNURIjGC1RYsVDMMXD9mZUUaREf6vI3TLfqqUrKBHwF+hGxHzdYKdxAYfZLjtj862OTFSuP0uF1mAuqPDVgQ4W9kMELHKUsrxR0pOweCz4TGA2MZX1pw9scVsJ0/7MDUeF/b+u6YtlHomKmzR81QIX+iNBWjPEktSNWdYRGVL3cYd2bKWdUks4JZUcY9bW7O8v9MglzWX8ruTurmB99gCkj60PfAdFIlOWim94KRaVg8JYJSteN3lJD2loVG7pZMU7c1QQQPWHC8MHZ+cVcz5NRrL1T2Ix5arjFTuVE71A0hBRMAfEl0X49CUp6mK0YYmw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1779175548; c=relaxed/relaxed;
-	bh=5j4OGQByxO6buY1HNm2sEBzvCPdPOOjHFKfuFwzdMNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MSyAZTfFkY+ofIip+OQkfV3/taolCLcVe7wv7SA/MOY6f25oF48xxztjvzVbnIpsUSuWId2YWXH9Zt2Nllcyl72k4gpzU/crqOHAOSzxqIXkxyNh6OQxmS0RExeDpB0Y6u6fopPxzUerA6SivVXUpj/IBky8/+pTfUVoVQVRehRsIO2U3WVBLuvzE6VP4SGuIvUNXyF1uLAGfpsWz/dwJWGHjoVOWEyv1OAaxw2wtI/wECdY+wc0awcjIHsXVsZfdd8wlKEnC6Cx1nldu6PT3DsdPQdRmHpR0GnfscGJDMhA7mr0ei44eqKr+u/djk2v8B7h0lCEfgCq68EVFOrBKw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=QniN0JzP; dkim-atps=neutral; spf=pass (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=lists.ozlabs.org) smtp.mailfrom=canonical.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+	t=1779178553; c=relaxed/relaxed;
+	bh=Gq7q4q44H1XtbreNnGBa/qXoQQzGGv2LByvvEOVI2FM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FmRSpOJ/DWfG7ZW5HeInrUxcTSvWXvKeGVNi9bLz6LoQ1WXfZSAy8EI+1ECqSsJlkzGdcJxXA4R4TkrWqLo+PKiBYVnAieetrQ5wiYG6hdua2OkAxUn8QrY3kshlbNQ4L0Vm7jOLlAsLrrFI7IzcQH8YwwXPtWZFaMITEru02uHIgvxI/pb+LfrWAKoelH3IE58M2UsHtLiAOwSuk3ys4LIwWDZ9W5ugDfU+UsIaGxj9gb1Ki0ad8i5cN7SHu9CbZ60MF7aRJkmc4oDk3omeDZjlasCVGQNVL03zSM9bZ39ep6L2P/41AHi2RsnpLXXsr3FBMXzVWTSsADimnDRJJA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=nuTSMRsZ; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::429; helo=mail-wr1-x429.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (4096-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20251003 header.b=QniN0JzP;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=nuTSMRsZ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=canonical.com (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=heinrich.schuchardt@canonical.com; receiver=lists.ozlabs.org)
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::429; helo=mail-wr1-x429.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKR6L2WDbz2xqv
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 17:25:44 +1000 (AEST)
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C0BB13F667
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 07:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1779175540;
-	bh=5j4OGQByxO6buY1HNm2sEBzvCPdPOOjHFKfuFwzdMNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=QniN0JzP+S+nWeCTTSa8Sq4PGxVQS95Xft3gov1eXRq08pa1v7AS5rwznnT3dAc93
-	 eaRCmRt0B9LYKwQoCIlQMOKi4dHcevsnhLpFXVlyhm0XJzjGKvLr+WM0Q/b85YVrpF
-	 aK5T+N2NsX74LQq/mgW4LWzOOwwfW6EyeyBZDMt1n8JgpmP7IVPbE9vGoPYLzJ3+64
-	 PFgldOsCvypX12erTEbBiH8EyoR7aopTXMfbELTZRIg4NMsHTRsk1JmZfZNJjLqV6V
-	 mtSn2eusls98yDfCAS7DLtkIuHBL/WdAH2+/pv8mraYmOE+/iE4bfDZRYRGfhWP+yO
-	 5PbEP1yCxT/+lzme9iQwzeDWLHFoiTarCqhgKx36MEIaAxzBDgtzEwVTf5XuYH+EZg
-	 PeLzPhEu0ClvMws6K1+RIKeGQl6XIWTWS0trI+x8+Bc1p3w7oqHX0pvwn8+x20I99F
-	 3qgs9Ni7w8Kt4aYTFen0ze8XHiDDXmxbrsKeebeUu4Ef2egMje9rBEnW+Ga4+ggbSa
-	 q3kB+v8sy8pqFV5Q2sdf4rsmyUUbPdYFURFIR+sueqs4KTllqYwsmeG3Mt9T3iFS83
-	 9WXBbuDaaz7uGcGxqKxeVDo1krvm7oEtSp+i6aUxlcDx9AmGdui7VpceD7dMkdWFNl
-	 iaO780lCrj+bmYOrDKkE6FxM=
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-43d789cebcfso2779994f8f.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 00:25:40 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKSD80NJVz2xSG
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 18:15:51 +1000 (AEST)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-43d734223e4so2006882f8f.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 01:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779178548; x=1779783348; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gq7q4q44H1XtbreNnGBa/qXoQQzGGv2LByvvEOVI2FM=;
+        b=nuTSMRsZc6nCxPwyQzPpgW/F/Z8ZUnqEm0eMZ48F0fZbuXH2+o7+HNAXODiQGm+lxR
+         Io/ob14S3TJUY7Eod3WSUCySkRKdGHH9NsAD/HwAlNAmW9dw0ngkI47S43TkaoIO17qV
+         e/2UrHxHqnjNKZ8ebmHdSDoyvq0Rp70ExINq16JKszVO+uuNxnz4qLfLVPrkirlGmbBP
+         7gQhyLy86xv+bl8M1obc0Z/d5uHqDSuUa9R8/BVWW7K1NqO4ae8ZNE1Doc4fZSJ5Iqc9
+         HgoNDjs1RAXYvmFNEhEmrbivwTqWevtFwGE/gfpOm5cYIwNnjdGHkwrVZvwIilYOBskd
+         OuHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779175540; x=1779780340;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5j4OGQByxO6buY1HNm2sEBzvCPdPOOjHFKfuFwzdMNI=;
-        b=Fq8Za/cZrIx2ElkKiQXm5r2tq/zwDpHEPQzF1psnZhGLDYE6PDshXurT6x6CpRc5er
-         XehKImVlOHGlW5P6E1zBBQZnAvQEtTv3GVUQRyr3VJswR5hIfNwYobbU9M/OBx9qMUsk
-         PQJIRLJmC13HEFL1bOF4+mCpi3w23lvHfjLvhw5N7/kNeHij7C1SMLUx0IzoeujI7ZLo
-         bAjnAqgtvJOEhtEcWYIkRFLFH4Eo1fLWJ+gV+r6BmEuV8RRYaAiGWnRygX/pqOLQs1Ur
-         fJjoB4sXcOtVu67G4r2HJspq2FJhGjt8FNoSzHDKdK/kw/+yxuzwrVeytTkkUNGLEbza
-         nsGA==
-X-Forwarded-Encrypted: i=1; AFNElJ+KFLRIeA9ezCiCUOTzLmnBUZhZUtbOsFSXOpDYRcN/ad5nH7BzlPDf5F1n1a+v/7XLUhXbsrPIGMFOwA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwJ4q1HTsU4bh0cu98lPWZQCY5EUjWcdK36BiQ3gBV98zodr29C
-	3YM3BhpibcP+1Y3k8OZSxzIIW2ugIwEn9RYJ5qfRhiC6SUFCV8aw6hpjaBtAJzRQAmOcC/gKMwW
-	LPxXsKZYkqkufB+Cw73OV0sLTxlm2GvzbHqddP3119MFPfav0Vl3TPMJEECZvI/U00lCl1uMiIQ
-	GNKq9Cew==
-X-Gm-Gg: Acq92OHU7jRAiRywUp4VqQUh36G4ZIS+5DFaV75NsUTeVEJBUb4yyfy/WeoxmiY2tgW
-	NUzHgwSoXVwEYIpMsHBWBqkvSLXRMlcYskDAOGcec5kC/1WllFCSZgZQtzR1GH+G3ne/eSefGEH
-	/tkLuIm89LwBfC3IcmLvn19n67+Wv/f2zvmPe6waN5tDArL/6UFGLypk9J5Gxy7HGoxsWq+PhV9
-	4Pm2PGVfAuAs4X+UdOUuH6ZoEma8LRN/JDe7SPdTe3M3EgpHr3fTyJnLrXXdfVee1xpqZI5grpJ
-	OBCNftt9hbyLOwHHalgKRFzfCMyvw9UlMlW4xhhh/Sago76vQAmEttI3kceLK0SA9Qhk5YFpgRF
-	QVqpBCrP1t/LVys30OI6yThi4xRN3n2iOh2rAE3LhCGLA1+maVpElyLHSefu6LGoKNa81bFH91h
-	B8ZD5UTJZmbY8GMJ84aIWKj7L6YrCSfWEi0QSnprHxvLaduBhvrmYm9gCu5T5zFpzhDcM=
-X-Received: by 2002:a05:6000:410d:b0:451:73c8:9101 with SMTP id ffacd0b85a97d-45d92797006mr26017307f8f.18.1779175540436;
-        Tue, 19 May 2026 00:25:40 -0700 (PDT)
-X-Received: by 2002:a05:6000:410d:b0:451:73c8:9101 with SMTP id ffacd0b85a97d-45d92797006mr26017265f8f.18.1779175540087;
-        Tue, 19 May 2026 00:25:40 -0700 (PDT)
-Received: from [192.168.103.101] (ip-176-199-115-125.um44.pools.vodafone-ip.de. [176.199.115.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da0fe2464sm44905739f8f.32.2026.05.19.00.25.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 00:25:39 -0700 (PDT)
-Message-ID: <aebdf20c-c93a-4711-8ea8-2b92334714bc@canonical.com>
-Date: Tue, 19 May 2026 09:25:37 +0200
+        d=1e100.net; s=20251104; t=1779178548; x=1779783348;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Gq7q4q44H1XtbreNnGBa/qXoQQzGGv2LByvvEOVI2FM=;
+        b=C3IDDONG5LdjRPga9CRCBeul9sVfacJg5z9FS7QMQfAY8FGw+Frq3lYZw/kIaSTTwL
+         Jn+rJ05XXB5K6rY/1b6BgF+mvEcgufS2PsNHASD9jSB3Yi0sK+5wLiGbYVuZUznw2pou
+         8/nQe/nytCNTBdJX/jvpKlocXZ/OImH/yD778GnjNQ5a4DD7Ji/yXd3lmvFG/bGF2HSI
+         n1eYjoC2Mlq6If6hgVCXL0F7hwgTE2HZtzS+WU6O8ZYI2hx828Quf7fEidToOBz38NST
+         uPgztC22zo9XePpjo2Z3Lh5IQMKsI68HtvV1dNoSUyiOB5z02TcC+0DEmb4YrRAqt1b8
+         kq/w==
+X-Forwarded-Encrypted: i=1; AFNElJ9WioTm/nBtlhQxMlhuvJXYuwELm5tuKMPqH3H7rQCumiFDNP0YR5bLvWG20dHgNG7OH3ibzJ979m1PPA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxSXr0RBHZXJUXsXaQFUirARaVmPYiBd68PDhNb+JRS5Ekh2+5R
+	NXS1PC7H6OdUlCa2EJcLk5PnNMAQ7zwdC2z4BN6hvn+PtY2RZIZb7e8G
+X-Gm-Gg: Acq92OHaFqtDqAyo8Q3AV0uKUX1U9LwnYVKS5cKP1AiP3aEtQsIIL1DDYiNRHiWYBK7
+	/09S/eK9q4YZ6Z4LTxIPSPeMnN1U1dftVXK7eQ/qImakTn91xDlajk8/wk+zjt90at4ovQDAtq2
+	QjqrwmQAPTI4UVCIFb0qqqZutS8/LtRR0ua/7rHnI56Mu62dzBuBvBbYJy2jPHuKlZEt71xVtm7
+	Z37zWLteMS8ggGBo2BcqdDJBKrXKzu+dXqB/ZO6ofG0kimkFU5/VuGVp/jdxu5g3khOky4eQ4lr
+	OPQsXDF0PnIH+auxZa2RL91MGAA6fDHIWx8THA7vGUfvjJU9uozQPYIQ27iBQRGnWIra7aj02iW
+	ck8qaUZa1NM3lQ+iHyt5Vky1qe+3vwIgI9V9OzNeiHeq4yCnr3BV2vxV091+RX/1poDomcFeiWK
+	qhKjZ7m6aQg8viIS5LIx86kxlhMzaPJzWONOu7Ja+xWhoH6TtPrbuEZva+pIJuPtkJ
+X-Received: by 2002:a5d:4577:0:b0:450:b883:dd3c with SMTP id ffacd0b85a97d-45d9352412cmr26263969f8f.20.1779178547828;
+        Tue, 19 May 2026 01:15:47 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45e7c22d8b7sm14602897f8f.6.2026.05.19.01.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 01:15:47 -0700 (PDT)
+Date: Tue, 19 May 2026 09:15:45 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Matthew Wilcox
+ <willy@infradead.org>, Christoph Hellwig <hch@infradead.org>, Paulo
+ Alcantara <pc@manguebit.org>, Jens Axboe <axboe@kernel.dk>, Leon Romanovsky
+ <leon@kernel.org>, Steve French <sfrench@samba.org>, ChenXiaoSong
+ <chenxiaosong@chenxiaosong.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>, Dominique Martinet
+ <asmadeus@codewreck.org>, Ilya Dryomov <idryomov@gmail.com>, Trond
+ Myklebust <trondmy@kernel.org>, netfs@lists.linux.dev,
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/21] netfs: Keep track of folios in a segmented
+ bio_vec[] chain
+Message-ID: <20260519091545.171c4b85@pumpkin>
+In-Reply-To: <20260518222959.488126-1-dhowells@redhat.com>
+References: <20260518222959.488126-1-dhowells@redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,90 +107,123 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] fs: add change date to ls output
-To: Tom Rini <trini@konsulko.com>
-Cc: Simon Glass <sjg@chromium.org>, Huang Jianan <jnhuang95@gmail.com>,
- Quentin Schulz <quentin.schulz@cherry.de>, Tony Dinh <mibodhi@gmail.com>,
- =?UTF-8?Q?Timo_tp_Prei=C3=9Fl?= <t.preissl@proton.me>,
- Francois Berder <fberder@outlook.fr>,
- Andrew Goodbody <andrew.goodbody@linaro.org>,
- Daniel Palmer <daniel@thingy.jp>,
- Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
- Sughosh Ganu <sughosh.ganu@arm.com>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, Peng Fan <peng.fan@nxp.com>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>, u-boot@lists.denx.de,
- linux-erofs@lists.ozlabs.org
-References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com>
- <20260518181553.GU1858239@bill-the-cat>
-Content-Language: en-US
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <20260518181553.GU1858239@bill-the-cat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FORGED_GMAIL_RCVD,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[canonical.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[canonical.com:s=20251003];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3449-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:trini@konsulko.com,m:sjg@chromium.org,m:jnhuang95@gmail.com,m:quentin.schulz@cherry.de,m:mibodhi@gmail.com,m:t.preissl@proton.me,m:fberder@outlook.fr,m:andrew.goodbody@linaro.org,m:daniel@thingy.jp,m:varadarajan.narayanan@oss.qualcomm.com,m:sughosh.ganu@arm.com,m:ilias.apalodimas@linaro.org,m:peng.fan@nxp.com,m:marek.vasut+renesas@mailbox.org,m:u-boot@lists.denx.de,m:linux-erofs@lists.ozlabs.org,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[heinrich.schuchardt@canonical.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[chromium.org,gmail.com,cherry.de,proton.me,outlook.fr,linaro.org,thingy.jp,oss.qualcomm.com,arm.com,nxp.com,mailbox.org,lists.denx.de,lists.ozlabs.org];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:dhowells@redhat.com,m:christian@brauner.io,m:willy@infradead.org,m:hch@infradead.org,m:pc@manguebit.org,m:axboe@kernel.dk,m:leon@kernel.org,m:sfrench@samba.org,m:chenxiaosong@chenxiaosong.com,m:marc.dionne@auristor.com,m:ericvh@kernel.org,m:asmadeus@codewreck.org,m:idryomov@gmail.com,m:trondmy@kernel.org,m:netfs@lists.linux.dev,m:linux-afs@lists.infradead.org,m:linux-cifs@vger.kernel.org,m:linux-nfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:v9fs@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[davidlaightlinux@gmail.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3450-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[heinrich.schuchardt@canonical.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[canonical.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[brauner.io,infradead.org,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 995D5579008
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+X-Rspamd-Queue-Id: A2141579CC0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/18/26 20:15, Tom Rini wrote:
-> On Mon, May 18, 2026 at 07:57:19AM +0200, Heinrich Schuchardt wrote:
+On Mon, 18 May 2026 23:29:32 +0100
+David Howells <dhowells@redhat.com> wrote:
+
+> Hi Christian,
 > 
->> The ls command currently only displays the size and name of files and
->> directories.
->>
->> * Add the change date to the output on FAT and ext2/3/4.
->> * Use the actual date when updating the change date in ext2/3/4
->>    file-systems.
+> Could you add these patches to the VFS tree for next?
 > 
-> What's the motivation for this change, and how much of a size impact
-> does this have in general?
+> The patches get rid of folio_queue, rolling_buffer and ITER_FOLIOQ,
+> replacing the folio queue construct used to manage buffers in netfslib with
+> one based around a segmented chain of bio_vec arrays instead.  There are
+> three main aims here:
 > 
+>  (1) The kernel file I/O subsystem seems to be moving towards consolidating
+>      on the use of bio_vec arrays, so embrace this by moving netfslib to
+>      keep track of its buffers for buffered I/O in bio_vec[] form.
+> 
+>  (2) Netfslib already uses a bio_vec[] to handle unbuffered/DIO, so the
+>      number of different buffering schemes used can be reduced to just a
+>      single one.
+> 
+>  (3) Always send an entire filesystem RPC request message to a TCP socket
+>      with single kernel_sendmsg() call as this is faster, more efficient
+>      and doesn't require the use of corking as it puts the entire
+>      transmission loop inside of a single tcp_sendmsg().
+> 
+> For the replacement of folio_queue, a segmented chain of bio_vec arrays
+> rather than a single monolithic array is provided:
+> 
+> 	struct bvecq {
+> 		struct bvecq		*next;
+> 		struct bvecq		*prev;
+> 		unsigned long long	fpos;
+> 		refcount_t		ref;
+> 		u32			priv;
+> 		u16			nr_segs;
+> 		u16			max_segs;
+> 		enum bvecq_mem		mem_type:2;
+> 		bool			inline_bv:1;
+> 		bool			discontig:1;
 
-For qemu_arm64_defconfig fs/fs.o shows a growth of 260 bytes in .text 
-and .data sections.
+There doesn't seem to be any point using bitfields.
+There is a massive hole here anyway.
 
-Change times let users immediately spot which files were modified most 
-recently (kernel images, device trees).
+> 		struct bio_vec		*bv;
+> 		struct bio_vec		__bv[];
+> 	};
+> 
+> The fields are:
+> 
+>  (1) next, prev - Link segments together in a list.  I want this to be
+>      NULL-terminated linear rather than circular to make it possible to
+>      arbitrarily glue bits on the front.
 
-If a device stops booting, seeing a file’s change date helps determine 
-whether a recent change could be the cause.
+Do you ever need to follow the list backwards?
+If not making prev point to the pointer to the entry (probably a tailq?)
+makes the logic simpler (and safer) because you can remove an item without
+knowing whether it is the head or which list it is on.
 
-Best regards
+> 
+>  (2) fpos, discontig - Note the current file position of the first byte of
+>      the segment; all the bio_vecs in ->bv[] must be contiguous in the file
+>      space.  The fpos can be used to find the folio by file position rather
+>      then from the info in the bio_vec.
 
-Heinrich
+Should fpos be off_t (or u64) rather than 'long long' (they are all the
+same underlying type).
+
+>      If there's a discontiguity, this should break over into a new bvecq
+>      segment with the discontig flag set (though this is redundant if you
+>      keep track of the file position).  Note that the beginning and end
+>      file positions in a segment need not be aligned to any filesystem
+>      block size.
+
+At this point you lose me :-)
+
+-- David
 
