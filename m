@@ -1,93 +1,93 @@
-Return-Path: <linux-erofs+bounces-3459-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3460-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gHF9CXPBDGqJlgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3459-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:51 +0200
+	id WJkUDnnBDGqJlgUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3460-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:57 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FB05584687
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:49 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6484758468E
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gKlsW5s73z2yCM;
-	Wed, 20 May 2026 06:00:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gKlsf2l5Qz2yD6;
+	Wed, 20 May 2026 06:00:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::635" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779220847;
-	cv=pass; b=Zztxj5I4CyXfGcXRZYpJ5xK6DhxC5pjC3PrzuT8lPwHvHXxteyIRxUF51SRlPwNzgJc3Zp6RvE2122j7Vv6EHubHK3FFXKrCgKiSDZUkFSxNptRPjD/bCaelEy9s7UpsaJqd0GjGIhJzEqbSXOSLfQM0JWCDLNUWGwhjRcpPfOMOxce0KhZD/H1O7/ifG2VXGJpuCR+hOVHoIMWFSMWWqewH90xvkPllXEkzedjXeASeqqEsQ4WjhOEzPitGOyW6JEu1Icpel9icV70wz8pM1l67ayN0Hf/I6OEDQ90qhYt1FilFJbE2aJnBK/YtYhWxbCbaIvF60Wm7fre2SaPDkQ==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::52f" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779220854;
+	cv=pass; b=fTq/O2xVevo6Woc2wxKPzG3g67oYof/Gu+5qifQm37YLoQ30ns/whywfMfWrwpwKN9YOH3J9thXgKQwJ27xriyPkFuw+3oHX0CmodZf77NxK5YxXXTz/jwP9LftF9gSIZnzH1Xlgi1AxjTT8N/UdZNqGDon0sWHIqZOf0X9q0TKr2ByZyVslv+z1OrADmua2XZE6dkUTv+CMGe/6S0dvpHix76oMt4xbdzKo6E9Pp/3cYjF687ffzfRSenXfcJqv/GX1ae9dO9yUyfZRyrLV0/JlpVtEPd9Xh81LtGe4fAalX1acpS+GcRQdMa1CMmjC5IXDsrG1MAzUBXpo9s8zUQ==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1779220847; c=relaxed/relaxed;
-	bh=ZCZ3JqoysNE9TiYNsF5liZsuZ03stCANBEnkx2eZ5uw=;
+	t=1779220854; c=relaxed/relaxed;
+	bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VlIGKU2w5OLdv1JfN0a3yuhOIN9YAZMF2Bp94levVnLpgYsXeMyaRNddhc3p7ofiagcMpdnYgFUgEptyQtdVRlVnb8y+B0LcAqRxIePL0X4aign9Rp5E+Ak/NpLuOs8H++O7IHve/fHN9Ye4FAqw/ZL9AJ82NnnhhyHdFRoQpp5M2wX0ogU9sK+CoPZ5Q7kSwLsPCFa/wwr+7YN5q//VyWQHpI3/EDZ8tV/iVBqjO7k7FX+AhKS3afAoVSRsrzoTeDy1Ky06TPd2PpAyYodLQuZfTFfRl8MRKh3Wr7Re0Z2ggP83t8SkQiuuCXWMOEjMZmxxAfyLBPQYXO3ZyufeKQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org; dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=WBsOalB9; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::635; helo=mail-ej1-x635.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org) smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=YsI3pKm2ZEgJMvhX+Ba5JuSQPuaWyyhbNUyXHwPre2s4eZsnX7eehBO/lx5X2+EHg4Q6PTzgpJEYUQH18d7LBa0SVrtiJ58whRHgBmzb1LgT9yrb+YFq7Pls8g9Yv9rASE6pbWC8S0UxWijZZumx8Yf8TEv233baqsQYq8PzghdWbAg1+Cj87IrdqdY0MrzJm/3czZxLkW4vYRKZJMZcBlLhOQ8zCrb1BlVl25dHWpYxIiq0vVu4qRFsgzFGbl44CgVvNqTmWh9c8QstHELhvn2yu2gFrxwxxQOMm0n/flNdRAsOukPvTtG1knoeYiE7l+7NiWwhCfgNFxM8csfatg==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org; dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=KeWTEb+e; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::52f; helo=mail-ed1-x52f.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org) smtp.mailfrom=chromium.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=WBsOalB9;
+	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=KeWTEb+e;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2a00:1450:4864:20::635; helo=mail-ej1-x635.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2a00:1450:4864:20::52f; helo=mail-ed1-x52f.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKlsV6Xy3z2xwH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 06:00:46 +1000 (AEST)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-bd11a3729e8so671619766b.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 13:00:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779220844; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKlsd4T0Zz2xwH
+	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 06:00:53 +1000 (AEST)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-67b8d9c26bbso9253450a12.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 13:00:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779220850; cv=none;
         d=google.com; s=arc-20240605;
-        b=FWVP/JAPxzNZ4uuSbI2tDq0FuRNYlqaRAVfcSQmS3vGVJSVkH++9nw4aVhEGU9Lx0l
-         LOKuCr/ix/i2dM0N6NSk40GGGhOpTGNdgo0c5cYOM5y+wqc7oTE6XisXBi8bxmR2rSPu
-         oBxEOE2ISOzKrQQjhBXhgqXNOqbPnLdas4lsFMK4JXF/LV66IAxCYVnn5wefoQhPYsb+
-         ILFcazcq8mg5xDvUthfdWbqZHyJ8o8Y2q43bFenviO40gfn7Pwrkiduy8px0J8nEPA1a
-         DW4ciGReWpUDRZrS6fM0XZdlf73mDIagwdgxR7+8TIlAi+lARRjXXLt+0sRkn6Tm8lBu
-         Wx8g==
+        b=hH1W89w0AcwWxT0Sm8zdT0mV26k0rYrDrvpryPa12aJARIvSKfRJftMAe5mZaVofox
+         uXkUgFw9MFyqjw9roGP9+SX1hdUp/PSCLrvHG+LkHc27hN4HZOf8zML6PbSSnEkmGYot
+         1J4zYK4xi/mou6l4DF2yXSJS3K0PiQx3YLikwK1AeRs8PAyO16jzm4dw7XIV5ZQfEB/1
+         9v+W9qRdlL6VJJiiadfAl/zqldcsFC9QdDzBZf3uMNmv8bjw1jmc/Si2AXvrFmemqGTL
+         qXSPhzzCwIDYXZw98sbH2N6o5rX11FmtGlCzAm454vZG3NOSKUKxPPlvKUFab3j+EuOY
+         ClXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=ZCZ3JqoysNE9TiYNsF5liZsuZ03stCANBEnkx2eZ5uw=;
-        fh=iiuz88X67pheBe8S0ev/cxqFQHx6AeiuXCPke4Kx0xs=;
-        b=YP212iO9tC0x/XYcUoiTxBE0ikhHGvOscBwl8OMj1A5CMB5fwTnN5WJq/oQ5/KJJ5S
-         CgkpTKdL6DsTcPFZc0xPm+99XO7fOJcGETLU2OOCpEsAgZCbRDBvWobWGHXonkTcJ9vy
-         FybsKsMQG9aPBQTL8YeX7hx8FtkHolSqdElEi3vBN3J8EBA2KOM21/EMff6d3drDkSry
-         I92KfuyZISBK9pQL335F3HYWHixHW3siDMz6aUuItPUG1ffNQckshfe8OY1F7OzWfNL3
-         ivj8YB5xr8Lg3JlpRAZxF8tpEGv1WeZY5mQ8hHzzefmXqG6q8Bo5z2Px4eiQQfD2wy48
-         GS4w==;
+        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
+        fh=uEmhZNLwAEaIoj0/Qn9qQydLCyaVsszjPGYvwQRko1s=;
+        b=X0xKKAaj7oqxrlsKCTVEds3gjacnoLoOxuWrgwqv1UhOj33pXN+UjNh+eicLE60Mb8
+         JDzbO3/nTKB9Bs6FNd03aTpy6XoBJfJBrMcboFvImVmkwwoDYmhyoAq2n6HT9qAsTiTm
+         iR4pMktVcEXKhiLmn/4rdcrjBGfgorpHcj9cVuhBqB6fbmtOEwWDprPWq1czZ6k8Od/T
+         9ZWkLCC3bCi93gPJblzzJOTA/EKQhNwpgG01jar/r4JASNvPtiKbsvq0ArvY/MiS2I3q
+         R76B8ACFozzMt/QBoUTgf/DBcY6Y4weGeFPBCU2SWjPw8YMHhlt/2yn8pmwT1PYnmXo4
+         77oA==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1779220844; x=1779825644; darn=lists.ozlabs.org;
+        d=chromium.org; s=google; t=1779220850; x=1779825650; darn=lists.ozlabs.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCZ3JqoysNE9TiYNsF5liZsuZ03stCANBEnkx2eZ5uw=;
-        b=WBsOalB9WX6ZCoyvxH6xJOSXY1zYdUnE8U4KOi9WzXVOh1NUtwdbGomn9kK/AvxEMn
-         KnyOjz88onDtLRPbcQNzy8a+SKja8eLeKAk+rxvZHPI+c7rkr7FwOLPIpNXDwAwdsW8w
-         JqRLH2aQGeW5NOKG6KnshlwDETw/F1ytH9uHE=
+        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
+        b=KeWTEb+e5PppNvnNW1yTUrALO2aXJ/6/VkkdNjXLrm9BaW/cuuxculzC9m9At7bIuA
+         b0FcAiQ3p4/YMJLRaJBNfhC/Srtu60sQuoUTdXBDCFF9X9LLYU8G+jpZTeJq2+j4sopy
+         yi/NQU4iFTPN/0LtbbD+Hcxf6t/fb8Ndba+k8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779220844; x=1779825644;
+        d=1e100.net; s=20251104; t=1779220850; x=1779825650;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZCZ3JqoysNE9TiYNsF5liZsuZ03stCANBEnkx2eZ5uw=;
-        b=hhO/mivbmdGojfr3o8zldiuJgMCYS8tbYEE4I/idjU+nWELez756Ktq5CJ2N0OoJtZ
-         om+bFNRaxPvbkKM2QWTj3BVgPlY6Y92xL0cYhrqUve1YGtEpDJheTYVgPFRN2JoO76X1
-         eFh1H2Qfp0qDPF5XygececXZl7K63y/ARJWHgUM3sJ0kLhS44+jKePY5F6a8+FZyqb+I
-         ajDd9Rd2b9nGlMlDaG/qGGiqGGL2L2Gr3PIEqHOq4Dbm6LvGPCtxPxFA5J7ORbPFRPHC
-         VIa+ViV8T/K9eJurKTOgCOjq0ZSaPRzZ6A78BVbRwceP0LWLU2fjUGsq7J6A+706CW9U
-         e+Rg==
-X-Forwarded-Encrypted: i=1; AFNElJ9427vOX1t+jRy44zeAQJyc0bNTg9NPzZTsCFZ0IJOnur1q7EYwVR4E+ditDZYFWy3AG7mqx4fhsGNkcA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwcDHif0IfKqe55PECRtKbOMZV8NBLL+lfsW0SM5T8K8NrP4fnG
-	POQ66+t9WIlDtcYoDjT4Z4TMaPlhN/JXNqFcOthQJ0keqUj41bJqqTmtibw1dL2Hhcja1RRwIED
-	hrUkCyyGV55tcl7Imki0nD0Ly8rMem6u0JSc0TwYV
-X-Gm-Gg: Acq92OFXCIfyr1R+qgiUbUfVcXr+Nvz8T+x/ntbNodDklOoGLMiEyktfyLKRIKdE9La
-	64jgxBYjB0Gk0TjP9zvvPWf+kFuJnFuAARInlT5Hwg4Mb3nZM4+tZUMts7uSe69JGqCmE6xCgAQ
-	n6tDcoPc8DnQTsppL0MSjg15WVK4dgJxdA8beeA8aor2jfKnNLzXx7R5bF7mSJaqUmpwJsUgcVH
-	5JqoTE00nM+0OawRq35Kzc5mDRg3rMsvEAlQRZPgQziGeFzVFQTzazd5PU5KFTCRekm0/0+tO4i
-	T96BD5WlCV9DTB4j
-X-Received: by 2002:a17:907:7ba9:b0:bd0:783c:9dd0 with SMTP id
- a640c23a62f3a-bd517966ab4mr1142839366b.40.1779220843826; Tue, 19 May 2026
- 13:00:43 -0700 (PDT)
+        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
+        b=tYFpUXu7yiPuiOhPKqbAE/ea5BDnj5hBxE06UNI/HKEUKAa+6ez1ssQbY9hIDettRh
+         d/Co2IEhhJ6QhHDHCW85fLE183DyMkach45PVqgIB4UJrdEhTMQsPzJQaIKhTGQhocnz
+         YHoCoofd4abzUmgnP6FoX97871lNuijsCupelzrHiAAXdmjhW6JJcqrqB+icdYezf+/w
+         R2d/LXpn9els9kxKEh64bz24Lq/8WpKkGXLmN7xiL7v07V7PBudZvdxG3c7cTOZ5waac
+         c9q2M9rP5je2oh4LkeU/DidLGT3mKMsWu4NOJeQecug3e2jdEthOij0p1ygKZZI0rFMb
+         qglg==
+X-Forwarded-Encrypted: i=1; AFNElJ+MdsIRxbUrEbj7lDLsongla2nhP2ecGcGCUFtktF8xvSOxGwwULPj9Pe58DPBotSq/dZPXYGFzE1JMVA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxXPIEDtB6PZR9fkd4mJ/tKg9uN9YWV5R3lXsf7hLmjuq7Tu9OJ
+	ZuEDD6WgtMyxBaO2zM9BKsWGpuwjlpYT+0F5EXSse726brRP25011HsAGB3ZfVDenut67L9WhPh
+	yT1Bwt2pf/nh4KdmZ4srtly4EdHpRyTbgy7uBY1eX
+X-Gm-Gg: Acq92OF7uc6ybzVOCM99jH3tFomzTFTsZim41jKXVU9f3AizZMF/HpUzxb7OHrCC7TJ
+	jScr1a2brpvMQArl52hvTauZrQ5CA+uEU21JQA8HTZUo0pN2v6Pom6lsi2O2DNql3MoPC9CDd+T
+	sJVPz3p0PECKwD1YBi0HQTw6GBqAbBCoM+V1MVXvFYGPGGOqoLcPNbdKx9Tji8nfaCuZkjqi00L
+	wYN6+/SR83rssVA/8YgdKIawYj8LJyXDu5q/KfeqLwJPIct9oOgLED26uTccAAP8tLF5gYjWKq6
+	cN51zw==
+X-Received: by 2002:a17:907:26c5:b0:bda:7a3a:b05c with SMTP id
+ a640c23a62f3a-bda7a4a0d99mr21994866b.42.1779220850366; Tue, 19 May 2026
+ 13:00:50 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -99,13 +99,13 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com> <20260518055728.178507-7-heinrich.schuchardt@canonical.com>
-In-Reply-To: <20260518055728.178507-7-heinrich.schuchardt@canonical.com>
+References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com> <20260518055728.178507-8-heinrich.schuchardt@canonical.com>
+In-Reply-To: <20260518055728.178507-8-heinrich.schuchardt@canonical.com>
 From: Simon Glass <sjg@chromium.org>
-Date: Tue, 19 May 2026 14:00:31 -0600
-X-Gm-Features: AVHnY4JXKoQbnUnIF8QmMjGYjI09x77nd-7tujmANE4GPST_yWO1UPjFAykUn_U
-Message-ID: <CAFLszThEXe_dskFi4nNCnEq6-75GcRo6YNA2CCgt1tmacs_S7g@mail.gmail.com>
-Subject: Re: [PATCH 6/9] test: Probe RTC early in dm_test_host()
+Date: Tue, 19 May 2026 14:00:34 -0600
+X-Gm-Features: AVHnY4LEd8HnuTfPu1Wx1zno3zaqntNzH3CitGLfmu9PDvntVnfPbTMaqGHoN9Q
+Message-ID: <CAFLszTikKyaW+OUGuz8KRffyU8Mn3xCZ6AvJtpGPuFAhNqyqrg@mail.gmail.com>
+Subject: Re: [PATCH 7/9] test: fs: allow optional date field in ls output assertion
 To: heinrich.schuchardt@canonical.com
 Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, 
 	Huang Jianan <jnhuang95@gmail.com>, Quentin Schulz <quentin.schulz@cherry.de>, 
@@ -126,11 +126,11 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
 	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3459-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3460-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[sjg@chromium.org,linux-erofs@lists.ozlabs.org];
@@ -148,69 +148,32 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[sjg@chromium.org,linux-erofs@lists.ozlabs.org];
 	FREEMAIL_CC(0.00)[konsulko.com,chromium.org,gmail.com,cherry.de,proton.me,outlook.fr,linaro.org,thingy.jp,oss.qualcomm.com,arm.com,nxp.com,mailbox.org,lists.denx.de,lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs,renesas];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,chromium.org:dkim,canonical.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
-X-Rspamd-Queue-Id: 6FB05584687
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,chromium.org:email,chromium.org:dkim,canonical.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+X-Rspamd-Queue-Id: 6484758468E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Heinrich,
-
 On 2026-05-18T05:57:19, Heinrich Schuchardt
 <heinrich.schuchardt@canonical.com> wrote:
-> test: Probe RTC early in dm_test_host()
+> test: fs: allow optional date field in ls output assertion
 >
-> The ext4 driver probes and reads the RTC which allocates memory.
+> fs_ls_generic() now prints a date between the file size and filename
+> when the filesystem sets FS_CAP_DATE (currently FAT and ext4).  The
+> two regex patterns in test_fs1 used ' *' (zero or more spaces) to
+> match between the size and filename; that no longer matches when a
+> date is present.
 >
-> Ensure that the device is already probed and read once in dm_test_hook()
-> to avoid false positives.
+> Change ' *' to ' .*' so the pattern matches both the old format
+> (size + spaces + name) and the new format (size + spaces + date + name).
 >
 > Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 >
-> test/dm/host.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> test/py/tests/test_fs/test_basic.py | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> diff --git a/test/dm/host.c b/test/dm/host.c
-> @@ -26,6 +27,18 @@ static int dm_test_host(struct unit_test_state *uts)
->       ulong mem_start;
->       loff_t actwrite;
->
-> +     /*
-> +      * Probing and first read from the RTC allocates memory.
-> +      * Do it before the measurement.
-> +      */
-
-Please mention here (and in the commit message) which call inside this
-test ends up touching the RTC. It is non-obvious that fs_write()
-further down now reaches into the RTC via patch 5, and a future reader
-will not understand why an RTC probe belongs in a host test.
-
-> diff --git a/test/dm/host.c b/test/dm/host.c
-> @@ -26,6 +27,18 @@ static int dm_test_host(struct unit_test_state *uts)
-> +     if (CONFIG_IS_ENABLED(DM_RTC)) {
-> +             struct rtc_time tm;
-> +
-> +             uclass_first_device(UCLASS_RTC, &dev);
-> +             if (dev)
-> +                     dm_rtc_get(dev, &tm);
-> +     }
-
-Since this is a DM test you should assert each of these calls.
-
-Also, would it be simpler to take a second mem_start sample after the
-warm-up, so the RTC allocation is naturally outside the measured
-window without needing to know it exists?
-
-> Ensure that the device is already probed and read once in dm_test_hook()
-> to avoid false positives.
-
-Should be dm_test_host(). Also spell out that it is the
-ut_check_delta() leak check at the end of the test that gets fooled by
-the RTC's one-shot allocation.
-
-Regards,
-Simon
+Reviewed-by: Simon Glass <sjg@chromium.org>
 
