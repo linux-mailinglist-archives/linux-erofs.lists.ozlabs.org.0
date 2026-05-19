@@ -1,93 +1,93 @@
-Return-Path: <linux-erofs+bounces-3460-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3461-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJkUDnnBDGqJlgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3460-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:57 +0200
+	id sHa5EH7BDGqJlgUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3461-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:01:02 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6484758468E
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8383C584695
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 May 2026 22:01:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gKlsf2l5Qz2yD6;
-	Wed, 20 May 2026 06:00:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gKlsl3HwJz2yCM;
+	Wed, 20 May 2026 06:00:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::52f" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779220854;
-	cv=pass; b=fTq/O2xVevo6Woc2wxKPzG3g67oYof/Gu+5qifQm37YLoQ30ns/whywfMfWrwpwKN9YOH3J9thXgKQwJ27xriyPkFuw+3oHX0CmodZf77NxK5YxXXTz/jwP9LftF9gSIZnzH1Xlgi1AxjTT8N/UdZNqGDon0sWHIqZOf0X9q0TKr2ByZyVslv+z1OrADmua2XZE6dkUTv+CMGe/6S0dvpHix76oMt4xbdzKo6E9Pp/3cYjF687ffzfRSenXfcJqv/GX1ae9dO9yUyfZRyrLV0/JlpVtEPd9Xh81LtGe4fAalX1acpS+GcRQdMa1CMmjC5IXDsrG1MAzUBXpo9s8zUQ==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::632" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779220859;
+	cv=pass; b=HzPsTBbNDTrYUW54XuVLeFYY/VdD3Q+O7BeZNkBI+XnxzBpxc0zA0wKoLJ3H23Vrza3nFE/1DzYV5XrLkMbAisGSfRXRL49hWMcrSkPb5i+afNCRXEB+FieWGSeQHaVdOtklpLPleqfZqaNCjj2XrQaQm8syWApH4p0BnYGTNEknBqHWDOLla6p0RjEBAkD1L30otv3AgLwYZ3kILqbTIakiJsTowOt0YzuOfqfCE0jv4uzozC8pUytbKnE4+kQKEtxVRn+KrtZBtQH497mqCaVnYJmJQrC4YJGTvOCCs4w2/tWU9ZX5OcyXNCgXresK8uKwVWYBNIz2BbYihUXncw==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1779220854; c=relaxed/relaxed;
-	bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
+	t=1779220859; c=relaxed/relaxed;
+	bh=sWQr185us1DFSlKchLrpfMSQoSkpQKMiKjcWvQQMoeY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YsI3pKm2ZEgJMvhX+Ba5JuSQPuaWyyhbNUyXHwPre2s4eZsnX7eehBO/lx5X2+EHg4Q6PTzgpJEYUQH18d7LBa0SVrtiJ58whRHgBmzb1LgT9yrb+YFq7Pls8g9Yv9rASE6pbWC8S0UxWijZZumx8Yf8TEv233baqsQYq8PzghdWbAg1+Cj87IrdqdY0MrzJm/3czZxLkW4vYRKZJMZcBlLhOQ8zCrb1BlVl25dHWpYxIiq0vVu4qRFsgzFGbl44CgVvNqTmWh9c8QstHELhvn2yu2gFrxwxxQOMm0n/flNdRAsOukPvTtG1knoeYiE7l+7NiWwhCfgNFxM8csfatg==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org; dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=KeWTEb+e; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::52f; helo=mail-ed1-x52f.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org) smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=YMnSqxaTkNHJ7h9F7o+/VvYym6g+U/XVtic+dZseXyOWiICdJ2o2qkP96u+qw6XiHyJg7zmyAW4Yjpu2Gm72T/Idgmk63AE7jE3rAMuy9y1255HBXlCXRfPku9WjB8+w6zEXdeGCxecvFiaIS4UDtbex2y8cIhD7UNpt1y2qyuDn+GfP48fr6OFHzVamio708iDNnmKryZ3Fzau5oiV7I3HLJ8EcoznqlKU9jk6GbKszgspUDN0iwzbMmvEPPrifoEAWphPb9b8WODqD0lgz2utytR6a/EJj4GyVm5+YTmqc5M2HvHPOu+p96qyrYmcW0/yx9JTC6vf/mYAllqY5GA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org; dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=PNA2nH8V; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::632; helo=mail-ej1-x632.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org) smtp.mailfrom=chromium.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=KeWTEb+e;
+	dkim=pass (1024-bit key; unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=PNA2nH8V;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2a00:1450:4864:20::52f; helo=mail-ed1-x52f.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=chromium.org (client-ip=2a00:1450:4864:20::632; helo=mail-ej1-x632.google.com; envelope-from=sjg@chromium.org; receiver=lists.ozlabs.org)
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKlsd4T0Zz2xwH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 06:00:53 +1000 (AEST)
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-67b8d9c26bbso9253450a12.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 13:00:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779220850; cv=none;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKlsk1F9pz2xwH
+	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 06:00:58 +1000 (AEST)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-bcc2b199c17so525726466b.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 19 May 2026 13:00:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779220855; cv=none;
         d=google.com; s=arc-20240605;
-        b=hH1W89w0AcwWxT0Sm8zdT0mV26k0rYrDrvpryPa12aJARIvSKfRJftMAe5mZaVofox
-         uXkUgFw9MFyqjw9roGP9+SX1hdUp/PSCLrvHG+LkHc27hN4HZOf8zML6PbSSnEkmGYot
-         1J4zYK4xi/mou6l4DF2yXSJS3K0PiQx3YLikwK1AeRs8PAyO16jzm4dw7XIV5ZQfEB/1
-         9v+W9qRdlL6VJJiiadfAl/zqldcsFC9QdDzBZf3uMNmv8bjw1jmc/Si2AXvrFmemqGTL
-         qXSPhzzCwIDYXZw98sbH2N6o5rX11FmtGlCzAm454vZG3NOSKUKxPPlvKUFab3j+EuOY
-         ClXw==
+        b=GlHvkgn1o3JnWbDk7JXc3HCcH1iXuqVOkVONdHNb3zD6sGvP2GSldn+e9EB1rHdAaU
+         p44lRl8nhZXAR0xGfMhjW6Yzud5VtyHkJsGPn3RyQULR6BXJOCNZM5zfwxh1yahgAm+d
+         XlWK+a4zYCPqAgTqDihsAV66k7xJZxYvGnKSWHW7Y2nv+ErAS2ei5rbP2NRq3mKQm8N4
+         vxOcFP092PH25RI+XG7FofVjKvelEyA82uiaxuh+Yuyxzhvef5C9p4sHFC3kj2RX5IJ7
+         Lf1O9GPK/F8FTZyRs2oVHQkwqkd222YG9a7zYuNdGPMcPVk2cyeNZghNrPZBHfmC9uj9
+         2d4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
-        fh=uEmhZNLwAEaIoj0/Qn9qQydLCyaVsszjPGYvwQRko1s=;
-        b=X0xKKAaj7oqxrlsKCTVEds3gjacnoLoOxuWrgwqv1UhOj33pXN+UjNh+eicLE60Mb8
-         JDzbO3/nTKB9Bs6FNd03aTpy6XoBJfJBrMcboFvImVmkwwoDYmhyoAq2n6HT9qAsTiTm
-         iR4pMktVcEXKhiLmn/4rdcrjBGfgorpHcj9cVuhBqB6fbmtOEwWDprPWq1czZ6k8Od/T
-         9ZWkLCC3bCi93gPJblzzJOTA/EKQhNwpgG01jar/r4JASNvPtiKbsvq0ArvY/MiS2I3q
-         R76B8ACFozzMt/QBoUTgf/DBcY6Y4weGeFPBCU2SWjPw8YMHhlt/2yn8pmwT1PYnmXo4
-         77oA==;
+        bh=sWQr185us1DFSlKchLrpfMSQoSkpQKMiKjcWvQQMoeY=;
+        fh=svMbc0WeRwaZoUKHLQmsvK90nkLHUtQ5O5qT344xX0w=;
+        b=N0W9xxao7YMHcl8cNzM2djsFGWOYnossBJbGS8dpH0HhtfBbdiD4xqL4K10GgC2R1K
+         /k3Lh3I5FiadcOE7h1q/ZFdXavYzmJyKpNiHKy/tW7rtSiHsZAcLqmyo6BjqH/91qO39
+         Yr1vnAG12z57DzfJ0+Xn/WI1XZPuuyY/tLI6gpdY75uUlXj1xAN/tYzb4ZU/3MwrkbSl
+         O3YT/mB8ccTZfl3u61myvGISjKcifS9cUNq1GLizGIQerHZ9LVCk4N83EJ1nmazQ1oYq
+         h1hvU8BpXVsTy6EWFcIo2cAM+PsBPPwxX0NkmrLne/FlizDhRzFdgcNFWs1O10DFWP4E
+         ZZ9w==;
         darn=lists.ozlabs.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1779220850; x=1779825650; darn=lists.ozlabs.org;
+        d=chromium.org; s=google; t=1779220855; x=1779825655; darn=lists.ozlabs.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
-        b=KeWTEb+e5PppNvnNW1yTUrALO2aXJ/6/VkkdNjXLrm9BaW/cuuxculzC9m9At7bIuA
-         b0FcAiQ3p4/YMJLRaJBNfhC/Srtu60sQuoUTdXBDCFF9X9LLYU8G+jpZTeJq2+j4sopy
-         yi/NQU4iFTPN/0LtbbD+Hcxf6t/fb8Ndba+k8=
+        bh=sWQr185us1DFSlKchLrpfMSQoSkpQKMiKjcWvQQMoeY=;
+        b=PNA2nH8VGwdE1Rl2mnuuvn1WwuXZNJCIuR6S1mzLl7dLtq9xXT/jGFrcLXqGCGuIRG
+         C86ff77sMRj5E9u/Jhj+42hOFK40cFwdzC9aUKgMgM1+HDiq5Mp4MKo/U39E2jni+qFW
+         Fh9Z1lD92m5IEGxpQ2YJyJHd3BpyztcZExdSA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779220850; x=1779825650;
+        d=1e100.net; s=20251104; t=1779220855; x=1779825655;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lwuzneXbvXgqa6Bkbu/2Ynh+GBSHRDdIshE+cuLXX+A=;
-        b=tYFpUXu7yiPuiOhPKqbAE/ea5BDnj5hBxE06UNI/HKEUKAa+6ez1ssQbY9hIDettRh
-         d/Co2IEhhJ6QhHDHCW85fLE183DyMkach45PVqgIB4UJrdEhTMQsPzJQaIKhTGQhocnz
-         YHoCoofd4abzUmgnP6FoX97871lNuijsCupelzrHiAAXdmjhW6JJcqrqB+icdYezf+/w
-         R2d/LXpn9els9kxKEh64bz24Lq/8WpKkGXLmN7xiL7v07V7PBudZvdxG3c7cTOZ5waac
-         c9q2M9rP5je2oh4LkeU/DidLGT3mKMsWu4NOJeQecug3e2jdEthOij0p1ygKZZI0rFMb
-         qglg==
-X-Forwarded-Encrypted: i=1; AFNElJ+MdsIRxbUrEbj7lDLsongla2nhP2ecGcGCUFtktF8xvSOxGwwULPj9Pe58DPBotSq/dZPXYGFzE1JMVA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxXPIEDtB6PZR9fkd4mJ/tKg9uN9YWV5R3lXsf7hLmjuq7Tu9OJ
-	ZuEDD6WgtMyxBaO2zM9BKsWGpuwjlpYT+0F5EXSse726brRP25011HsAGB3ZfVDenut67L9WhPh
-	yT1Bwt2pf/nh4KdmZ4srtly4EdHpRyTbgy7uBY1eX
-X-Gm-Gg: Acq92OF7uc6ybzVOCM99jH3tFomzTFTsZim41jKXVU9f3AizZMF/HpUzxb7OHrCC7TJ
-	jScr1a2brpvMQArl52hvTauZrQ5CA+uEU21JQA8HTZUo0pN2v6Pom6lsi2O2DNql3MoPC9CDd+T
-	sJVPz3p0PECKwD1YBi0HQTw6GBqAbBCoM+V1MVXvFYGPGGOqoLcPNbdKx9Tji8nfaCuZkjqi00L
-	wYN6+/SR83rssVA/8YgdKIawYj8LJyXDu5q/KfeqLwJPIct9oOgLED26uTccAAP8tLF5gYjWKq6
-	cN51zw==
-X-Received: by 2002:a17:907:26c5:b0:bda:7a3a:b05c with SMTP id
- a640c23a62f3a-bda7a4a0d99mr21994866b.42.1779220850366; Tue, 19 May 2026
- 13:00:50 -0700 (PDT)
+        bh=sWQr185us1DFSlKchLrpfMSQoSkpQKMiKjcWvQQMoeY=;
+        b=p76n3Q9m/NWCaMVRrZf8xQGr1gXBZrN0CDOGE9iozAVfCxHlE6SERoHxfE1jE1vujH
+         N1gnN64TisfFwVSmMUVNY6hhwDlTugqEb9Wx3nAMqHmXeeOQcOjkupIALqVex9H8+j0y
+         J8i/+4buenxtvkXoMQ0KM22r8tx00HXzleqEPfKVSfQUNQoDLlhYEh17+r5RMt4ri5aS
+         tkeWqwwxpC2RCJA+OKKER7lQqnoKKqMGgKr96pCkWwWVsMLgdwVq978FtO8q3J8I2qYd
+         I9BUFxIRoUV9Q5qx2rP3BudL28YhxUBWJpijo94sswc+PIaBeBYpNX0zzcxdP6TRVGrP
+         tCTg==
+X-Forwarded-Encrypted: i=1; AFNElJ+2mddhrshZxtyWjz1ZKPladwplfFHB0/Pk9B4OVB9YgX6NN/p45HAnN1npP2Ic6dZeADA0QqdXnmmy5g==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzUnBRCi3Jzu175/hXISMy+A4OMsecMXGWomcLb1Ujg3vTXYP3w
+	6IADJJCFsV2benhUrQI8eWZSrFVBfp1t0kekyjY2dB9Sv+9BI0HtlB3ImO50pJ54HU2nVh7QD3C
+	n+YtHl0uct8RH99wQa9wK2ZYNScLrZY74NpT4qazS
+X-Gm-Gg: Acq92OEOPWi3NE4ik+dUPOyPvEC2lhm9QL59lAT15KfTT3W4ng75R7RZBD+/Z63qawL
+	c5NjjilqW/VI78tDmRhp80btc+Lt4UhtnxYllAtDP/GT7krxavHR6Le7tG4NcIJgA6Y4+aANve4
+	V/oBACkE1aMgCYecHjBiKhSW8NQGWdz2e6so49zi3RR8zLr57rRdUuL8bS3g6fP/H6Ut1FK7M9O
+	3AGy3AJsTb/PU0rdPM3rr1+kfG3vYWZn9tIFAyHM8Rtqq1wJpC1vKOjTMHHeaimTa5aHp2n/+y+
+	U5VFZw==
+X-Received: by 2002:a17:906:730b:b0:bd5:7c3:ac9e with SMTP id
+ a640c23a62f3a-bd517aa8105mr1142870366b.46.1779220855252; Tue, 19 May 2026
+ 13:00:55 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -99,13 +99,13 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com> <20260518055728.178507-8-heinrich.schuchardt@canonical.com>
-In-Reply-To: <20260518055728.178507-8-heinrich.schuchardt@canonical.com>
+References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com> <20260518055728.178507-9-heinrich.schuchardt@canonical.com>
+In-Reply-To: <20260518055728.178507-9-heinrich.schuchardt@canonical.com>
 From: Simon Glass <sjg@chromium.org>
-Date: Tue, 19 May 2026 14:00:34 -0600
-X-Gm-Features: AVHnY4LEd8HnuTfPu1Wx1zno3zaqntNzH3CitGLfmu9PDvntVnfPbTMaqGHoN9Q
-Message-ID: <CAFLszTikKyaW+OUGuz8KRffyU8Mn3xCZ6AvJtpGPuFAhNqyqrg@mail.gmail.com>
-Subject: Re: [PATCH 7/9] test: fs: allow optional date field in ls output assertion
+Date: Tue, 19 May 2026 14:00:41 -0600
+X-Gm-Features: AVHnY4KC0GDkeKmpBF700SEAxCy3NKu-3GUv9icrLt_Kv_du43jZqg81h26JHTg
+Message-ID: <CAFLszThSuXELXXsdkz09FOtmL+XwE0gz-J8qeWR-MyAranzMxA@mail.gmail.com>
+Subject: Re: [PATCH 8/9] test: env: allow optional date field in ls output assertion
 To: heinrich.schuchardt@canonical.com
 Cc: Tom Rini <trini@konsulko.com>, Simon Glass <sjg@chromium.org>, 
 	Huang Jianan <jnhuang95@gmail.com>, Quentin Schulz <quentin.schulz@cherry.de>, 
@@ -130,7 +130,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3460-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3461-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[sjg@chromium.org,linux-erofs@lists.ozlabs.org];
@@ -152,28 +152,40 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs,renesas];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,chromium.org:email,chromium.org:dkim,canonical.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
-X-Rspamd-Queue-Id: 6484758468E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,chromium.org:dkim,canonical.com:email,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
+X-Rspamd-Queue-Id: 8383C584695
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Heinrich,
+
 On 2026-05-18T05:57:19, Heinrich Schuchardt
 <heinrich.schuchardt@canonical.com> wrote:
-> test: fs: allow optional date field in ls output assertion
+> test: env: allow optional date field in ls output assertion
 >
 > fs_ls_generic() now prints a date between the file size and filename
-> when the filesystem sets FS_CAP_DATE (currently FAT and ext4).  The
-> two regex patterns in test_fs1 used ' *' (zero or more spaces) to
-> match between the size and filename; that no longer matches when a
-> date is present.
+> when the filesystem sets FS_CAP_DATE (currently FAT and ext4).
 >
-> Change ' *' to ' .*' so the pattern matches both the old format
-> (size + spaces + name) and the new format (size + spaces + date + name).
+> Adjust the assert in test_env.py().
 >
 > Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 >
-> test/py/tests/test_fs/test_basic.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> test/py/tests/test_env.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Simon Glass <sjg@chromium.org>
+> diff --git a/test/py/tests/test_env.py b/test/py/tests/test_env.py
+> @@ -523,7 +523,7 @@ def test_env_ext4(state_test_env):
+>          assert 'Loading Environment from EXT4... OK' in response
+>
+>          response = c.run_command('ext4ls host 0:0')
+> -        assert '8192   uboot.env' in response
+> +        assert(re.search('8192 .*uboot.env', ''.join(response)))
+
+run_command() returns a string, not a list. So ''.join(response)
+iterates the characters and rebuilds the string; it is a no-op. Please
+drop the join() and pass response directly. Also, the trailing '.' in
+uboot.env is a regex metacharacter - escape it as uboot\\.env.
+
+Regards,
+Simon
 
