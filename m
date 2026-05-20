@@ -1,56 +1,60 @@
-Return-Path: <linux-erofs+bounces-3468-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3470-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4gDGDi89DWqquwUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3468-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 May 2026 06:48:47 +0200
+	id GAUAH11XDWpuwQUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3470-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 May 2026 08:40:29 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EA61587A09
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 May 2026 06:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8950588458
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 May 2026 08:40:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gKzZd2xhjz2xy3;
-	Wed, 20 May 2026 14:48:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gL23Z0Ywtz2yDs;
+	Wed, 20 May 2026 16:40:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=103.149.242.129
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779252521;
-	cv=none; b=Xrr5ttom7b9XeKOH6WsF6NhRo2IS138pM3xRK0grmZ2C/qw9hVWTcMGxWDDoHWAW1CsprRD5SvhEriiVIiPVvy9qdBUKI9Awv91nodhXlvzDe7gbu3jgUfSJsyDqKjx0LHxLr9Y0NwKbMmg4WK9HkvRIcpob7czWZAhnTJpYvQNOP1jS/KwcbrrEF9LYbKfe96dLivHhKFSp8lxYRs0osflBJTpX+jAj5H/WKg1yDKwoGIwyjjJkuYd+xKlSQ5R97idSCnLhwO9ZuTTWLtIELDhQbGf2U7scgHTSkF4vlcMlumn2K4nD1E33Ue9kMosYbyJIefALh7CKEb6tWKSLrA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=152.89.196.46
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1779259225;
+	cv=none; b=gmKA9lq8ivTC4AVaRo73wDBp9V/f09dE1sN/8hv/nZu7HDykaMR+W5NtjZkLqkkSsvsxh3MLKB56z1fdxTZKlg0SC3qpZnkBUQ9b89cLJB/5TCMICxcCtEJozVGIbQJ+RzN9yZtzXHhCPMusKMc/1uYzxqnjdE5exJJvAo8Ugi90ftpJMmzahztSQc4Qrj3dgwPAHed2vSzJLG4UaPhPzoVkKGwcpggDSfLkKcDY/2PD9QyN2k7Fh3yLQL76NK60aycgzubAW5YiUiphWkXQtdNi3HJFdmpGgixEwDr0sdCMYaXno3aInVuQzLVTl0Wd6ph62uQBrZEL01hQwsub5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1779252521; c=relaxed/relaxed;
-	bh=NNXYVdNOk08NyvAM1XrvfKwXcAVxz+xeGBQj1CZCknQ=;
-	h=Cc:From:Mime-Version:References:Content-Type:Message-Id:Date:
-	 In-Reply-To:To:Subject; b=gFtPVbajo/MDqEyEalHmNbqwn0XEKJcmFWG1qvTdWlOwIXDNGZBKB+pqbxSOk+xA194gKlkz1DpDgHgCe1HYdEYbCiOTsoxS4HDCcmEY0hwmbHIXv2z7JqJXB6yBPTHs4t7j/4PrIvFJOl27Wd5Nu6SiVp7Fpuiz4OUvqKDBRkFjf/BwKVR27k1xeMCZ1JS9wFjmAzoM9kugj+8HlnO1tpig0Hxqpycc7IGv1BNVZN6l5e6Px20GL0ySnXpsort+A18+whLnhKEcEoIOBRy/oXshzG627GIaNTlPqd6IE9e/5vsXdjtHBZJgZNWkepU4UODRzRwzngptm22QJs/T0Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=pJmlhcHE; dkim-atps=neutral; spf=pass (client-ip=103.149.242.129; helo=lf-1-129.ptr.blmpb.com; envelope-from=zhujia.zj@bytedance.com; receiver=lists.ozlabs.org) smtp.mailfrom=bytedance.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+	t=1779259225; c=relaxed/relaxed;
+	bh=8g0Ujf71rFYq0yA9Y7StgZuqr0+QnZLPM+2RgWidsSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GNdxn0DWs4qcGzQ+AFdkItmSPBO51M968zwgeRxA5nDHxS0oLEDm6tulBL7paUZBMU8+PrhjpNpOGUTDcLNXH79Db6zEFHlTSnlNDEOWE2W0ZXft7qrPUGcm+h/8VWywNrXdpGArO3jmCM2ddZSxDbgFgrHZgxhYlPXOLBH8PVRGZDJWXQeNrsUvcFRqk5gqHzvTAvwslIY6IJsh6yVUXVa7+Y3SXPdMjMn9IexZSWLSi7J5cwiCl52zx5bY/guZCYPtw+NU77DcDSuk2dEPZ0iCE8CIIj0znNU6dlRznOyaDf46uEitwR8CzoN2ujBYRzaUav1/nKFE74bGuFyKyw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; dkim=pass (2048-bit key; unprotected) header.d=salutedevices.com header.i=@salutedevices.com header.a=rsa-sha256 header.s=post header.b=kjYjGH8S; dkim-atps=neutral; spf=pass (client-ip=152.89.196.46; helo=mx4.sberdevices.ru; envelope-from=avkrasnov@salutedevices.com; receiver=lists.ozlabs.org) smtp.mailfrom=salutedevices.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=pJmlhcHE;
+	dkim=pass (2048-bit key; unprotected) header.d=salutedevices.com header.i=@salutedevices.com header.a=rsa-sha256 header.s=post header.b=kjYjGH8S;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=103.149.242.129; helo=lf-1-129.ptr.blmpb.com; envelope-from=zhujia.zj@bytedance.com; receiver=lists.ozlabs.org)
-Received: from lf-1-129.ptr.blmpb.com (lf-1-129.ptr.blmpb.com [103.149.242.129])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=salutedevices.com (client-ip=152.89.196.46; helo=mx4.sberdevices.ru; envelope-from=avkrasnov@salutedevices.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 448 seconds by postgrey-1.37 at boromir; Wed, 20 May 2026 16:40:22 AEST
+Received: from mx4.sberdevices.ru (mx4.sberdevices.ru [152.89.196.46])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gKzZY1dl0z2x9N
-	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 14:48:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779252377; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=NNXYVdNOk08NyvAM1XrvfKwXcAVxz+xeGBQj1CZCknQ=;
- b=pJmlhcHEJzwV4USceD37bJ6zJRPX4z7a+A7hiDY9ZEUKH2vVz3BgpBf5p9FHyMzSB9NikD
- EjEMEB8dwbnD3DxT+Ky7MxKjPuhTCLJAhK3ysN6chvfNGggSqU5f00IYflx6JhKLuqrNXB
- UZxmIABX6ym6M3gXusga1olVHXI/TJ0lXdLwQoW8wVGN9Bq5Iea0nSESgZTDZxYFI/CJiy
- z52HhhTY6ZwwHL+tUq4XPwWhYtefJI+b34af2+5f2sR/3S/h9eCIaTUzQyze2suGkS3wpF
- 5AvVUQIptwe2lyjc6POsDcePYxy8lHS8KBDFmbq95NnmoVEcoDnJVp58Jav8DA==
-Cc: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, 
-	"Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>, 
-	"Sandeep Dhavale" <dhavale@google.com>, 
-	"Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>, 
-	"Amir Goldstein" <amir73il@gmail.com>, 
-	"Gao Xiang" <hsiangkao@linux.alibaba.com>, 
-	"Jia Zhu" <zhujia.zj@bytedance.com>
-From: "Jia Zhu" <zhujia.zj@bytedance.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gL23V4Lk6z2x9N
+	for <linux-erofs@lists.ozlabs.org>; Wed, 20 May 2026 16:40:22 +1000 (AEST)
+Received: from p-antispam-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx4.sberdevices.ru (Postfix) with ESMTP id 88B8140006;
+	Wed, 20 May 2026 09:32:43 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx4.sberdevices.ru 88B8140006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=post; t=1779258763;
+	bh=8g0Ujf71rFYq0yA9Y7StgZuqr0+QnZLPM+2RgWidsSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=kjYjGH8SRpk9VRptrmhYFPhisUc19lMqxZeDPfXlTjVqJn5e8Maj7pNAV2cryh0gJ
+	 AOqIdiazX5Lbjc3RCXHvizIOkkZR+O3W6jzL3wWV20Lpox91biMaoyJjcqDPjBB9yJ
+	 6RIhl9epw6KecxERwcUvDMoa3SzY2XEfgl5eQDXubrHojAZbYaUk9KZp/bpGpG5CYE
+	 07k03WjyQimY9NEi02qEVbqT6nugN+Ovm9VUEep+DF6XxW7cc0igxF69jVkCJ9H/CK
+	 ym5xOzwF139QGJbSGhwzm96z7BnQDxll4UpK8YBXrMC7v2qSWu6ZRgTNHWJeLgNjjX
+	 k83/fgVsWQlBw==
+Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "sberdevices.ru", Issuer "R12" (not verified))
+	by mx4.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 20 May 2026 09:32:42 +0300 (MSK)
+Message-ID: <fe724375-316f-48dc-b494-6c67fcf349eb@salutedevices.com>
+Date: Wed, 20 May 2026 09:32:41 +0300
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -61,104 +65,159 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20260520034252.40163-1-zhujia.zj@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Message-Id: <20260520044607.50992-1-zhujia.zj@bytedance.com>
-Date: Wed, 20 May 2026 12:46:07 +0800
-X-Lms-Return-Path: <lba+26a0d3c97+182f2e+lists.ozlabs.org+zhujia.zj@bytedance.com>
-In-Reply-To: <20260520034252.40163-1-zhujia.zj@bytedance.com>
-X-Original-From: Jia Zhu <zhujia.zj@bytedance.com>
-To: "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>
-Subject: [PATCH v2] erofs: fix metabuf leak in inode xattr initialization
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: fix managed cache race for unaligned extents
+Content-Language: ru
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+CC: Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	<kernel@salutedevices.com>
+References: <20260428043431.1883069-1-hsiangkao@linux.alibaba.com>
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+In-Reply-To: <20260428043431.1883069-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+X-Originating-IP: [172.28.3.98]
+X-ClientProxiedBy: p-exch-cas-s-m2.sberdevices.ru (172.16.210.3) To
+ p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
+X-KSMG-AntiPhishing: NotDetected, bases: 2026/05/20 05:49:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Info: LuaCore: 105 0.3.105 c7fb587251b1312ef0d9243823bef7335f8fcbef, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 203270 [May 20 2026]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.22
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2026/05/20 05:51:00 #28197173
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-KATA-Status: Not Scanned
+X-KSMG-LinksScanning: NotDetected, bases: 2026/05/20 05:49:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 5
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bytedance.com,quarantine];
-	MV_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[bytedance.com:s=2212171451];
+	DMARC_POLICY_ALLOW(-0.50)[salutedevices.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[salutedevices.com:s=post];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.ozlabs.org,vger.kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,bytedance.com];
-	TAGGED_FROM(0.00)[bounces-3468-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:chao@kernel.org,m:linux-kernel@vger.kernel.org,m:kernel@salutedevices.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_NEQ_ENVFROM(0.00)[zhujia.zj@bytedance.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[bytedance.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[avkrasnov@salutedevices.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3470-lists,linux-erofs=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bytedance.com:email,bytedance.com:mid,bytedance.com:dkim,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
-X-Rspamd-Queue-Id: 4EA61587A09
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	HAS_XOIP(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[avkrasnov@salutedevices.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[salutedevices.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo,zbv.page:url,alibaba.com:email,salutedevices.com:email,salutedevices.com:mid,salutedevices.com:dkim]
+X-Rspamd-Queue-Id: A8950588458
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-commit bb88e8da0025 ("erofs: use meta buffers for xattr operations")
-converted xattr operations to use on-stack erofs_buf instances.
-erofs_init_inode_xattrs() uses such a metabuf while reading the inline
-xattr header and shared xattr id array.
 
-Some error paths after erofs_read_metabuf() leave through out_unlock
-without dropping the metabuf, so the folio reference can leak.
 
-Consolidate the cleanup at out_unlock. erofs_put_metabuf() is a
-no-op if no folio has been acquired, and this keeps all paths after
-taking EROFS_I_BL_XATTR_BIT covered by a single cleanup site.
+On 28/04/2026 07:34, Gao Xiang wrote:
+> After unaligned compressed extents were introduced, the following race
+> could occur:
+> 
+> [Thread 1]                                   [Thread 2]
+> (z_erofs_fill_bio_vec)
+> <handle a Z_EROFS_PREALLOCATED_FOLIO folio>
+> ...
+> filemap_add_folio (1)
+>                                              (z_erofs_bind_cache)
+>                                              <the same folio is found..>
+>                                              ..
+>                                              ..
+> folio_attach_private (2)
+>                                              filemap_add_folio (3) again
+> 
+> Since (1) is executed but (2) hasn't been executed yet, it's possible
+> that another thread finds the same managed folio in z_erofs_bind_cache()
+> for a different pcluster and calls filemap_add_folio() again since
+> folio->private is still Z_EROFS_PREALLOCATED_FOLIO.
+> 
+> Fix this by explicitly clearing folio->private before making the folio
+> visible in the managed cache so that another pcluster can simply wait
+> on the locked managed folio as what we did for other shared cases [1].
+> 
+> This only impacts unaligned data compression (`-E48bit` with zstd,
+> for example).
+> 
+> [1] Commit 9e2f9d34dd12 ("erofs: handle overlapped pclusters out of
+>  crafted images properly") was originally introduced to handle crafted
+>  overlapped extents, but it addresses unaligned extents as well.
+> 
+> Fixes: 7361d1e3763b ("erofs: support unaligned encoded data")
+> Reported-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> Closes: https://lore.kernel.org/r/4a2f3801-fac1-42fe-ae75-da315822e088@salutedevices.com
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Fixes: bb88e8da0025 ("erofs: use meta buffers for xattr operations")
 
-Signed-off-by: Jia Zhu <zhujia.zj@bytedance.com>
----
- fs/erofs/xattr.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Tested-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
 
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 41e311019a251..df7ea019526d7 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -89,13 +89,11 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	    vi->xattr_isize - sizeof(struct erofs_xattr_ibody_header)) {
- 		erofs_err(sb, "invalid h_shared_count %u @ nid %llu",
- 			  vi->xattr_shared_count, vi->nid);
--		erofs_put_metabuf(&buf);
- 		ret = -EFSCORRUPTED;
- 		goto out_unlock;
- 	}
- 	vi->xattr_shared_xattrs = kmalloc_objs(uint, vi->xattr_shared_count);
- 	if (!vi->xattr_shared_xattrs) {
--		erofs_put_metabuf(&buf);
- 		ret = -ENOMEM;
- 		goto out_unlock;
- 	}
-@@ -112,12 +110,12 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 		}
- 		vi->xattr_shared_xattrs[i] = le32_to_cpu(*xattr_id);
- 	}
--	erofs_put_metabuf(&buf);
- 
- 	/* paired with smp_mb() at the beginning of the function. */
- 	smp_mb();
- 	set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
- out_unlock:
-+	erofs_put_metabuf(&buf);
- 	clear_and_wake_up_bit(EROFS_I_BL_XATTR_BIT, &vi->flags);
- 	return ret;
- }
--- 
-2.39.5 (Apple Git-154)
+
+> ---
+>  fs/erofs/zdata.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 8a0b15511931..6b647e75ec04 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1509,8 +1509,15 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+>  	DBG_BUGON(z_erofs_is_shortlived_page(bvec->bv_page));
+>  
+>  	folio = page_folio(zbv.page);
+> -	/* For preallocated managed folios, add them to page cache here */
+> +	/*
+> +	 * Preallocated folios are added to the managed cache here rather than
+> +	 * in z_erofs_bind_cache() in order to keep these folios locked in
+> +	 * increasing (physical) address order.
+> +	 * Clear folio->private before these folios become visible to others in
+> +	 * the managed cache to avoid duplicate additions for unaligned extents.
+> +	 */
+>  	if (folio->private == Z_EROFS_PREALLOCATED_FOLIO) {
+> +		folio->private = NULL;
+>  		tocache = true;
+>  		goto out_tocache;
+>  	}
+> @@ -1546,14 +1553,8 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+>  			}
+>  			return;
+>  		}
+> -		/*
+> -		 * Already linked with another pcluster, which only appears in
+> -		 * crafted images by fuzzers for now.  But handle this anyway.
+> -		 */
+> -		tocache = false;	/* use temporary short-lived pages */
+>  	} else {
+>  		DBG_BUGON(1); /* referenced managed folios can't be truncated */
+> -		tocache = true;
+>  	}
+>  	folio_unlock(folio);
+>  	folio_put(folio);
+
 
