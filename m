@@ -1,61 +1,78 @@
-Return-Path: <linux-erofs+bounces-3489-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3490-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wBd7Jbk9GWpVtAgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3489-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 09:18:17 +0200
+	id KKxJMgnsGWrDzwgAu9opvQ
+	(envelope-from <linux-erofs+bounces-3490-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 21:42:01 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B6375FE68D
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 09:18:15 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B80607F56
+	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 21:41:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gRZT128B9z2xLs;
-	Fri, 29 May 2026 17:18:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gRtz65WXDz2yN8;
+	Sat, 30 May 2026 05:41:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780039093;
-	cv=none; b=dsc7d6N5HS/kL0umPtFxxUgKSettDNGQ+wIRyr9iCU90oVXpepb2uTaa0wdOVFegHLQKzik4cVEN90GRZjjfT7+wW+8J4AsZ0wljw/y3BskVsLOKQEOBIP59F45zKP1pyPPx1VgGehPQDE9We7TcdCo4b4xaFqiV9UjtbH3YT0TEKTUasfBqNryWowo86AEO9ci7gBlNRXtEmkO/MsM3F8YW3sI+drkdXitIoaDhLWsvoOHJP3RAVKGcx2pU7TP0aTE7L45yq0DyXfeQ5fJ1brxAiViq/kh3y+oQlDwURIFznPdn77eF9SnPtqd4pwTh9x1J+yZWogCh1bNjLfo4Wg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.18
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780083714;
+	cv=none; b=TJLq9yN36ec6teZUluxGCZkr8Gg0R8s9N/Fj4aalgPoHgAAvP8stdK49eNUKpOSYjJ3dR6gO9Y7F94Sloc2r5L9YVMkHB/v5/Gur1T6vV4VRSYDQCiXPlma+J2ihsBHq7t7Juvw4n/VS0fE/Gr79cZCszZq2amUVkzYAOACIq3tZn5FdT4l2h6HIRrAfSgtSNPhv3eihXDyNlNruOBeebWZu1gZT87WW35Sm4a6dSCPhlbnA3lHJeTRCrk1dcQdCMWx7UbCkj++WFddU26BrKZhSVeQao6LfG03LybTEvsyL3c2KhF6ncZ2bQZolk58JByTnOwSqqpIZNzpqTDJZFQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1780039093; c=relaxed/relaxed;
-	bh=dRqHDQZ9TYwYFDhhiPpHt8LvhR14FSwbkdJNaAcdpDY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KdfPO6sesLr+2+lmMM5LMo7AkkOdBFQFNPN6o2BQjcDUVZy6AyQMZu+eKGs5w3UEwdRMT/64GkGiuFed8Khb6zeuTSmr5Hapcqn0Kl5sJ6imjBNrZDCLE6FEDMH/JMihWvDvFDLBA00zC4lz1SGBXcTmXqEhvMEWy+IqspBMeUfP2p/FHTXBSjogIRfAbdu6fC208MiNI/cPwi3H3FcQZNDZSYYLRcKO7Kkho7HyuvL00WmepJPvRXbxO41FukCvrwiKqMcxqrVj7wpluqF/nFOmmtI5LgVvJNonoLu+0FSsGS/3iZLWvVJe0zNiIXw+kBfij2ZyDTjX84J0WikF0Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZmIbfZbV; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1780083714; c=relaxed/relaxed;
+	bh=e+/blPjWSl4R+mwuMbc2al6PF2WJRPT4VpYdsrZJx30=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=mHbLI7UxU8rAld6FoEMalkBB1VIM6M0eDdDYjnNS0Y0bSI2S/R7G6iPppdKh58OvZQKdSAsDClEMwTqzqLf2w7bAc+4mYWHT1tlrjSwtDjugFfxiujfoyX28fKuUkUeJ9zViSwW0xoKm41fXbtc4ajFZBqQ7kcoYWTFS8c0g5TWrTmLCntSuU1vjYhwXcrkXLqkeJnwlE63OEOo3MzrRNXf/sbRU5ZZijKyoiKzVM82gKnAE+/Dx0aRGTsKzKmQIhp84bKRWnePsaJfz4H9seWpEfx+o8PmnAWf+v0n+ssHhshd5UGiOJ67cTNtkuT3m6zgrhtF+GKLX2qIG1daGIg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QVrzryqo; dkim-atps=neutral; spf=pass (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZmIbfZbV;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QVrzryqo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gRZSy4vVgz2xC3
-	for <linux-erofs@lists.ozlabs.org>; Fri, 29 May 2026 17:18:08 +1000 (AEST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=dRqHDQZ9TYwYFDhhiPpHt8LvhR14FSwbkdJNaAcdpDY=;
-	b=ZmIbfZbVI3Z6WQ6Mf6/PhIIZ+RhrKQKpFzTsCHp5bM2WoMOTNrUU5hBvSA1QLdrxWBP9DPxeo
-	Opk9SANZBFX8z9Cb14Pz3WjKymX7tuzspmGXzUyLuF7QU+yzCqZuiP8fuhhZsE4icNqaWicYq5J
-	ekP6EjB8Uo9HOQ2svSfQLdo=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gRZHt0QzzzRhQV
-	for <linux-erofs@lists.ozlabs.org>; Fri, 29 May 2026 15:10:18 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 83253201E9
-	for <linux-erofs@lists.ozlabs.org>; Fri, 29 May 2026 15:18:04 +0800 (CST)
-Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
- (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 29 May
- 2026 15:18:04 +0800
-From: Yifan Zhao <zhaoyifan28@huawei.com>
-To: <linux-erofs@lists.ozlabs.org>
-CC: <guoxuenan@huawei.com>, <zhukeqian1@huawei.com>, <zhaoyifan28@huawei.com>
-Subject: [PATCH] erofs-utils: build: link tools with liberofs dependencies
-Date: Fri, 29 May 2026 15:17:02 +0800
-Message-ID: <20260529071702.981596-1-zhaoyifan28@huawei.com>
-X-Mailer: git-send-email 2.47.3
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gRtz42LqDz2xmX
+	for <linux-erofs@lists.ozlabs.org>; Sat, 30 May 2026 05:41:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780083712; x=1811619712;
+  h=date:from:to:cc:subject:message-id;
+  bh=qLlIZ7FKNdhyaVznP0NEqIakPrkX/3MV4h3SisqKsM4=;
+  b=QVrzryqoMpcTZM7Z46w/FT4JK0mVfMC8one8T91ws/F1nryFsISzV7iV
+   j3RsbPZXq5xoL1IyQy3we2pTDLyAQVeiMp1C3zR2HolGu3rb5BpcpckRN
+   kmMs8NIz9WpHbB81SABv+aKEDdUyXBnViqsf7Gjf8XiBUD4s/Kc3fSsEu
+   2MuHdZp6lE6jfCvahqBfatYIshuv4rNFuGU6XXYH4xxCNl259PpFFF8UV
+   YadSy2S3uM5pcTmGWFkAuX+gtGeKWw1En85DfZMav98eomJ4WcFL1e6+k
+   5l5jrgQOAYhuNL6OtPHVW0+uDi94jjKIqOfmSJfJG3vBCVXHB28HRoAzy
+   g==;
+X-CSE-ConnectionGUID: b/CFBTZNSyexK7W8PhxtBw==
+X-CSE-MsgGUID: rTMC4wUrQFOSRvZ2py5JJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="80085036"
+X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
+   d="scan'208";a="80085036"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 12:41:47 -0700
+X-CSE-ConnectionGUID: 3Db4BBcQQ3ugvqkO1FyjrA==
+X-CSE-MsgGUID: BVe9oISEQdqusHvml2dJjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
+   d="scan'208";a="236584814"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 29 May 2026 12:41:46 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wT35T-000000007dC-33O8;
+	Fri, 29 May 2026 19:41:43 +0000
+Date: Sat, 30 May 2026 03:41:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 1aee05e814d292064bf5fa15733741040cdc48ba
+Message-ID: <202605300304.b1YJpidu-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -66,244 +83,253 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.50.159.234]
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Spamd-Result: default: False [-0.70 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3489-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_FIVE(0.00)[5];
-	HAS_XOIP(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3490-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo,huawei.com:email,huawei.com:mid,huawei.com:dkim,liberofsfuse.la:url]
-X-Rspamd-Queue-Id: 7B6375FE68D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: 05B80607F56
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-liberofs.la is a noinst libtool archive, so relying on its
-dependency_libs to carry external libraries is not enough for
-static-only dependencies.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 1aee05e814d292064bf5fa15733741040cdc48ba  erofs: fix use-after-free on sbi->sync_decompress
 
-For example, when liblzma is installed as a static libtool archive,
-libtool consumes -llzma while creating liberofs.la but does not record it
-in dependency_libs.  The final tools then link only with liberofs.la and
-fail with undefined lzma_* references.
+elapsed time: 894m
 
-Collect liberofs external libraries in LIBEROFS_LIBS and use it for both
-liberofs.la and the final tools, so final executable links see the
-pkg-config supplied liblzma flags directly.
+configs tested: 198
+configs skipped: 2
 
-Reported-by: Guo Xuenan <guoxuenan@huawei.com>
-Fixes: 6c2a000782b2 ("erofs-utils: lib: add test for s3erofs_prepare_url()")
-Assisted-by: Codex:GPT-5.5
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
----
-To reproduce link error:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-    ./autogen.sh
-    PKG_CONFIG_PATH=/path/to/xz-static/lib/pkgconfig ./configure
-    make -j
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                              allmodconfig    clang-16
+arc                               allnoconfig    gcc-15.2.0
+arc                              allyesconfig    clang-23
+arc                                 defconfig    gcc-15.2.0
+arc                            randconfig-001    clang-23
+arc                   randconfig-001-20260529    clang-23
+arc                            randconfig-002    clang-23
+arc                   randconfig-002-20260529    clang-23
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    clang-16
+arm                                 defconfig    gcc-15.2.0
+arm                         lpc32xx_defconfig    clang-17
+arm                            randconfig-001    clang-23
+arm                   randconfig-001-20260529    clang-23
+arm                            randconfig-002    clang-23
+arm                   randconfig-002-20260529    clang-23
+arm                            randconfig-003    clang-23
+arm                   randconfig-003-20260529    clang-23
+arm                            randconfig-004    clang-23
+arm                   randconfig-004-20260529    clang-23
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                 randconfig-001-20260529    clang-23
+arm64                 randconfig-002-20260529    clang-23
+arm64                 randconfig-003-20260529    clang-23
+arm64                 randconfig-004-20260529    clang-23
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                  randconfig-001-20260529    clang-23
+csky                  randconfig-002-20260529    clang-23
+hexagon                          allmodconfig    gcc-15.2.0
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    gcc-15.2.0
+hexagon               randconfig-001-20260529    gcc-8.5.0
+hexagon               randconfig-001-20260530    clang-23
+hexagon               randconfig-002-20260529    gcc-8.5.0
+hexagon               randconfig-002-20260530    clang-23
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20260529    gcc-12
+i386        buildonly-randconfig-002-20260529    gcc-12
+i386        buildonly-randconfig-003-20260529    gcc-12
+i386        buildonly-randconfig-004-20260529    gcc-12
+i386        buildonly-randconfig-005-20260529    gcc-12
+i386        buildonly-randconfig-006-20260529    gcc-12
+i386                                defconfig    gcc-15.2.0
+i386                  randconfig-001-20260529    gcc-14
+i386                  randconfig-002-20260529    gcc-14
+i386                  randconfig-003-20260529    gcc-14
+i386                  randconfig-004-20260529    gcc-14
+i386                  randconfig-005-20260529    gcc-14
+i386                  randconfig-006-20260529    gcc-14
+i386                  randconfig-007-20260529    gcc-14
+i386                  randconfig-011-20260529    gcc-14
+i386                  randconfig-012-20260529    gcc-14
+i386                  randconfig-013-20260529    gcc-14
+i386                  randconfig-014-20260529    gcc-14
+i386                  randconfig-015-20260529    gcc-14
+i386                  randconfig-016-20260529    gcc-14
+i386                  randconfig-017-20260529    gcc-14
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260529    gcc-8.5.0
+loongarch             randconfig-001-20260530    clang-23
+loongarch             randconfig-002-20260529    gcc-8.5.0
+loongarch             randconfig-002-20260530    clang-23
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    clang-16
+m68k                                defconfig    clang-19
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    clang-19
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+nios2                            allmodconfig    clang-23
+nios2                             allnoconfig    clang-23
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20260529    gcc-8.5.0
+nios2                 randconfig-001-20260530    clang-23
+nios2                 randconfig-002-20260529    gcc-8.5.0
+nios2                 randconfig-002-20260530    clang-23
+openrisc                         allmodconfig    clang-23
+openrisc                          allnoconfig    clang-23
+openrisc                            defconfig    gcc-15.2.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-23
+parisc                           allyesconfig    clang-19
+parisc                              defconfig    gcc-15.2.0
+parisc                         randconfig-001    clang-19
+parisc                randconfig-001-20260529    clang-19
+parisc                         randconfig-002    clang-19
+parisc                randconfig-002-20260529    clang-19
+parisc64                            defconfig    clang-19
+powerpc                          allmodconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-23
+powerpc                        randconfig-001    clang-19
+powerpc               randconfig-001-20260529    clang-19
+powerpc                        randconfig-002    clang-19
+powerpc               randconfig-002-20260529    clang-19
+powerpc64                      randconfig-001    clang-19
+powerpc64             randconfig-001-20260529    clang-19
+powerpc64                      randconfig-002    clang-19
+powerpc64             randconfig-002-20260529    clang-19
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    gcc-15.2.0
+riscv                          randconfig-001    gcc-15.2.0
+riscv                 randconfig-001-20260529    gcc-15.2.0
+riscv                          randconfig-002    gcc-15.2.0
+riscv                 randconfig-002-20260529    gcc-15.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    gcc-15.2.0
+s390                           randconfig-001    gcc-15.2.0
+s390                  randconfig-001-20260529    gcc-15.2.0
+s390                           randconfig-002    gcc-15.2.0
+s390                  randconfig-002-20260529    gcc-15.2.0
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-23
+sh                               allyesconfig    clang-19
+sh                                  defconfig    gcc-14
+sh                             randconfig-001    gcc-15.2.0
+sh                    randconfig-001-20260529    gcc-15.2.0
+sh                             randconfig-002    gcc-15.2.0
+sh                    randconfig-002-20260529    gcc-15.2.0
+sparc                             allnoconfig    clang-23
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260529    gcc-11.5.0
+sparc                 randconfig-002-20260529    gcc-11.5.0
+sparc64                          allmodconfig    clang-23
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260529    gcc-11.5.0
+sparc64               randconfig-002-20260529    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-15.2.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260529    gcc-11.5.0
+um                    randconfig-002-20260529    gcc-11.5.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260529    gcc-14
+x86_64      buildonly-randconfig-002-20260529    gcc-14
+x86_64      buildonly-randconfig-003-20260529    gcc-14
+x86_64      buildonly-randconfig-004-20260529    gcc-14
+x86_64      buildonly-randconfig-005-20260529    gcc-14
+x86_64      buildonly-randconfig-006-20260529    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20260529    clang-20
+x86_64                randconfig-002-20260529    clang-20
+x86_64                randconfig-003-20260529    clang-20
+x86_64                randconfig-004-20260529    clang-20
+x86_64                randconfig-005-20260529    clang-20
+x86_64                randconfig-006-20260529    clang-20
+x86_64                randconfig-011-20260529    clang-20
+x86_64                randconfig-012-20260529    clang-20
+x86_64                randconfig-013-20260529    clang-20
+x86_64                randconfig-014-20260529    clang-20
+x86_64                randconfig-015-20260529    clang-20
+x86_64                randconfig-016-20260529    clang-20
+x86_64                         randconfig-071    clang-20
+x86_64                randconfig-071-20260529    clang-20
+x86_64                         randconfig-072    clang-20
+x86_64                randconfig-072-20260529    clang-20
+x86_64                         randconfig-073    clang-20
+x86_64                randconfig-073-20260529    clang-20
+x86_64                         randconfig-074    clang-20
+x86_64                randconfig-074-20260529    clang-20
+x86_64                         randconfig-075    clang-20
+x86_64                randconfig-075-20260529    clang-20
+x86_64                         randconfig-076    clang-20
+x86_64                randconfig-076-20260529    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-23
+xtensa                           allyesconfig    clang-23
+xtensa                randconfig-001-20260529    gcc-11.5.0
+xtensa                randconfig-002-20260529    gcc-11.5.0
 
-Then {mkfs,dump,fsck}.erofs reports missing lzma_* symbol as `-llzma`
-missing in ld flags.
-
- configure.ac      | 17 +++++++++++++++++
- dump/Makefile.am  |  2 +-
- fsck/Makefile.am  |  4 ++--
- fuse/Makefile.am  |  5 +++--
- lib/Makefile.am   | 14 +++-----------
- mkfs/Makefile.am  |  2 +-
- mount/Makefile.am |  2 +-
- 7 files changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index f68bb74..17b4856 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -790,6 +790,23 @@ AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
- AM_CONDITIONAL([ENABLE_OCI], [test "x${have_oci}" = "xyes"])
- AM_CONDITIONAL([ENABLE_FANOTIFY], [test "x${have_fanotify}" = "xyes"])
- 
-+LIBEROFS_LIBS="${libselinux_LIBS} ${libuuid_LIBS} ${liblz4_LIBS} \
-+${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS} \
-+${libqpl_LIBS} ${libcurl_LIBS} ${openssl_LIBS} ${json_c_LIBS}"
-+AS_IF([test "x${have_xxhash}" = "xyes"], [
-+  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libxxhash_LIBS}"
-+])
-+AS_IF([test "x${have_s3}" = "xyes"], [
-+  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libxml2_LIBS}"
-+])
-+AS_IF([test "x${enable_multithreading}" != "xno"], [
-+  LIBEROFS_LIBS="${LIBEROFS_LIBS} -lpthread"
-+])
-+AS_IF([test "x${build_linux}" = "xyes"], [
-+  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libnl3_LIBS}"
-+])
-+AC_SUBST([LIBEROFS_LIBS])
-+
- if test "x$have_uuid" = "xyes"; then
-   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
- fi
-diff --git a/dump/Makefile.am b/dump/Makefile.am
-index 2611fd2..5d908b4 100644
---- a/dump/Makefile.am
-+++ b/dump/Makefile.am
-@@ -6,4 +6,4 @@ bin_PROGRAMS     = dump.erofs
- AM_CPPFLAGS = ${libuuid_CFLAGS}
- dump_erofs_SOURCES = main.c
- dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
--dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la
-+dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index 8eebadd..461eb88 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -6,12 +6,12 @@ bin_PROGRAMS     = fsck.erofs
- AM_CPPFLAGS = ${libuuid_CFLAGS}
- fsck_erofs_SOURCES = main.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
--fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la
-+fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
- 
- if ENABLE_FUZZING
- noinst_PROGRAMS   = fuzz_erofsfsck
- fuzz_erofsfsck_SOURCES = main.c
- fuzz_erofsfsck_CFLAGS = -Wall -I$(top_srcdir)/include -DFUZZING
- fuzz_erofsfsck_LDFLAGS = -fsanitize=address,fuzzer
--fuzz_erofsfsck_LDADD = $(top_builddir)/lib/liberofs.la
-+fuzz_erofsfsck_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
- endif
-diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index 9fe5608..b72e065 100644
---- a/fuse/Makefile.am
-+++ b/fuse/Makefile.am
-@@ -6,12 +6,13 @@ bin_PROGRAMS     = erofsfuse
- erofsfuse_SOURCES = main.c
- erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
- erofsfuse_CFLAGS += ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
--erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LIBS}
-+erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS) \
-+	${libfuse2_LIBS} ${libfuse3_LIBS}
- 
- if ENABLE_STATIC_FUSE
- lib_LTLIBRARIES = liberofsfuse.la
- liberofsfuse_la_SOURCES = main.c
- liberofsfuse_la_CFLAGS  = -Wall -I$(top_srcdir)/include
- liberofsfuse_la_CFLAGS += -Dmain=erofsfuse_main ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
--liberofsfuse_la_LIBADD  = $(top_builddir)/lib/liberofs.la
-+liberofsfuse_la_LIBADD  = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
- endif
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 27bf710..25ad79d 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -48,9 +48,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      vmdk.c metabox.c global.c importer.c base64.c
- 
- liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
--liberofs_la_LDFLAGS = ${libselinux_LIBS} ${libuuid_LIBS} ${liblz4_LIBS} \
--	${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS} \
--	${libqpl_LIBS}
-+liberofs_la_LIBADD = $(LIBEROFS_LIBS)
- if ENABLE_LZ4
- liberofs_la_CFLAGS += ${liblz4_CFLAGS}
- liberofs_la_SOURCES += compressor_lz4.c
-@@ -74,23 +72,18 @@ liberofs_la_SOURCES += compressor_libzstd.c
- endif
- if ENABLE_XXHASH
- liberofs_la_CFLAGS += ${libxxhash_CFLAGS}
--liberofs_la_LDFLAGS += ${libxxhash_LIBS}
- else
- liberofs_la_SOURCES += xxhash.c
- endif
- liberofs_la_CFLAGS += ${libcurl_CFLAGS} ${openssl_CFLAGS} ${libxml2_CFLAGS}
--liberofs_la_LDFLAGS += ${libcurl_LIBS} ${openssl_LIBS}
- if ENABLE_S3
- liberofs_la_SOURCES += remotes/s3.c
--liberofs_la_LDFLAGS += ${libxml2_LIBS}
- endif
- if ENABLE_EROFS_MT
--liberofs_la_LDFLAGS += -lpthread
- liberofs_la_SOURCES += workqueue.c
- endif
- if OS_LINUX
- liberofs_la_CFLAGS += ${libnl3_CFLAGS}
--liberofs_la_LDFLAGS += ${libnl3_LIBS}
- liberofs_la_SOURCES += backends/nbd.c
- if ENABLE_FANOTIFY
- liberofs_la_SOURCES += backends/fanotify.c
-@@ -98,19 +91,18 @@ endif
- endif
- liberofs_la_SOURCES += remotes/oci.c remotes/docker_config.c
- liberofs_la_CFLAGS += ${json_c_CFLAGS}
--liberofs_la_LDFLAGS += ${json_c_LIBS}
- liberofs_la_SOURCES += gzran.c
- 
- if ENABLE_S3
- noinst_PROGRAMS = s3erofs_test
- s3erofs_test_SOURCES = remotes/s3.c
- s3erofs_test_CFLAGS = -Wall -I$(top_srcdir)/include ${libxml2_CFLAGS} ${openssl_CFLAGS} -DTEST
--s3erofs_test_LDADD = liberofs.la
-+s3erofs_test_LDADD = liberofs.la $(LIBEROFS_LIBS)
- endif
- 
- if ENABLE_OCI
- noinst_PROGRAMS = ocierofs_test
- ocierofs_test_SOURCES = remotes/oci.c
- ocierofs_test_CFLAGS = -Wall -I$(top_srcdir)/include ${json_c_CFLAGS} -DTEST
--ocierofs_test_LDADD = liberofs.la
-+ocierofs_test_LDADD = liberofs.la $(LIBEROFS_LIBS)
- endif
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index 386455a..f511a09 100644
---- a/mkfs/Makefile.am
-+++ b/mkfs/Makefile.am
-@@ -5,4 +5,4 @@ bin_PROGRAMS     = mkfs.erofs
- AM_CPPFLAGS = ${libselinux_CFLAGS}
- mkfs_erofs_SOURCES = main.c
- mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
--mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la
-+mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
-diff --git a/mount/Makefile.am b/mount/Makefile.am
-index 637029d..189dbaf 100644
---- a/mount/Makefile.am
-+++ b/mount/Makefile.am
-@@ -7,5 +7,5 @@ sbin_PROGRAMS    = mount.erofs
- AM_CPPFLAGS = ${libuuid_CFLAGS}
- mount_erofs_SOURCES = main.c
- mount_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
--mount_erofs_LDADD = $(top_builddir)/lib/liberofs.la
-+mount_erofs_LDADD = $(top_builddir)/lib/liberofs.la $(LIBEROFS_LIBS)
- endif
--- 
-2.47.3
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
