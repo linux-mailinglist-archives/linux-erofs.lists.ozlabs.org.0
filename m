@@ -1,99 +1,94 @@
-Return-Path: <linux-erofs+bounces-3491-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3492-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFc9M5XwGWoX0AgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3491-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 22:01:25 +0200
+	id SBCILn5BGmot2ggAu9opvQ
+	(envelope-from <linux-erofs+bounces-3492-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sat, 30 May 2026 03:46:38 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 927EB6082AE
-	for <lists+linux-erofs@lfdr.de>; Fri, 29 May 2026 22:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD4EC60AD62
+	for <lists+linux-erofs@lfdr.de>; Sat, 30 May 2026 03:46:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gRvPY50cPz2yN8;
-	Sat, 30 May 2026 06:01:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gS33v1W3cz2ySC;
+	Sat, 30 May 2026 11:46:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::32e"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780084881;
-	cv=none; b=CPaD+j0mXQkdGUs5g8ToPgfDuS5vayxsWS4E3CjC8YU2u34Axv5JpVv1aVA7jLAi3xEaGaPOp6HB7dv4kulW+6cNfbko3A4nU3DOHjIx6rK+/Z/tVKYWDbs0ekSSMQcM4R03BNeQ+c4Uwd2oBTpFDYEtnUZnCKTgZUbt+Iod0N5eMjSJ7+yttQ1fkekCoMc7zVapzHTRFKecM8eK+eXreHdYqGwksAGJXawvegv9HV1evUongGUhTVxQAjZSv3zn7W1nQMtIk50Cs6udoBgfo6BXLEKEYtOV4zzOVxAq29lCHWB8qaH5IUwbfd6qBL64DBHJ5N3Op+D+UNQitwulUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1780084881; c=relaxed/relaxed;
-	bh=BflQpILYNsdV418HEymaoaI5jvicSdyjwWiaN4KjVE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A49YqLKzqSsiD+wfOBZMK1bt84ke7yqxbIW/oYFPd79sZ2mFEU/vfreDVgspZN4pjFCK3pcmEDsddWoRlvr6BjtUbLiY4CIxs7OL5HUb8XZrYybH8IBzj6mxEBDv10PNleZNc5aQZ7l9SZOLjAdF9XzGPcaBhgnPaj5EA4teOKdrRp+mdNTYNIRHSGz77onKtduZUplwz7H9N0ohHpMbyKCtnUuHACoM9CdOVAHIHWYziMy6fbhOcjtkXcqhAm2OujmSAUBy3R6G3CQhm65dxoORRD6+mAZtdXcqROXeQ5QScOGfbgJdLF6wj7I8Z5yKPHup+9IKs9q1pekCtW3vkw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=konsulko.com; dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=IaFs+4RE; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::32e; helo=mail-ot1-x32e.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org) smtp.mailfrom=konsulko.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=konsulko.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::542" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780105595;
+	cv=pass; b=TZtAO+M17kMFZUyTUgVpqEEyU6EQA1sjCmP7EFkdxxaSnNc9vy4plTTyP9TDxQaVEBs080FA0RJEBW8JnYNmszlWPku3tyMgRi66QjeDWNBZ5pYBrjHWSHTH5jnsvpd5bneVJf9LyukhG9KEEEEFEADv3TWivaLNAU25vZPwvtTT/UupAyfbx2pqTakPUVhFy/ZfiQzpsvIQS7IIOhspLCJRh72+6Vs2UErkCuX6B7Tka/gjCUeq1NE8Radwe8zges7KL7XQ6+QyT3oZR/7SuLHf8AwixP5PJC1jlrVLEuTgzEUhmbriEWnIrI1pzG0wbM/6GTd46JPo3o/h3G75Fw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1780105595; c=relaxed/relaxed;
+	bh=E1sLSRzJJUkH0W3tWVgjgtkRs5G8i5oJq5j/TLdnhhA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=BANqGwG8KU/Pqo6xYBqivWXZkqbh7E/4NwtVZa+hHhbChMhaYtVRJReSGcUdcCxROdZrnkv2nZvpK7TM/p+J9VvhbwFRPSPTUBGkL5nnfiWHEfsAiytkK8IUHaUIz1CJnyY20diOVJ0NOULK2TTEOSrMI8DHRNs2Z+s+je1+uPTmyIyI2uW0HJxOK0JhePwSg8MuuWmjNZB/E15FgTBbPwy2dRTgrRMvTl8zNHBXtufDA5910C78bC4vX+lfVQIzks4/cFCVQhIYiEReEoJokQ3WFxTycYEE589XhzPRGMbWw7Dm6Uk8s3HkRQX+DNrIqkKK1VTERxNxk+TCiS+ROA==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=by4/yj1g; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::542; helo=mail-ed1-x542.google.com; envelope-from=mizellikeksi@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=IaFs+4RE;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=by4/yj1g;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::32e; helo=mail-ot1-x32e.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org)
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::542; helo=mail-ed1-x542.google.com; envelope-from=mizellikeksi@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gRvPX2Z1qz2xmX
-	for <linux-erofs@lists.ozlabs.org>; Sat, 30 May 2026 06:01:19 +1000 (AEST)
-Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-7de431da8fbso11613640a34.1
-        for <linux-erofs@lists.ozlabs.org>; Fri, 29 May 2026 13:01:19 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gS33s25KJz2xLs
+	for <linux-erofs@lists.ozlabs.org>; Sat, 30 May 2026 11:46:32 +1000 (AEST)
+Received: by mail-ed1-x542.google.com with SMTP id 4fb4d7f45d1cf-6804e24803bso2720502a12.1
+        for <linux-erofs@lists.ozlabs.org>; Fri, 29 May 2026 18:46:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780105589; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Fg4wqlfrlsZzJB7qlNc3Ts88kTE3iNVaXhuocJ8ohslZTpjB2N29EZQ+KA8G1+TsA2
+         nP3efd6DWBaR1aEsK+m4Y7pY3fNC6EvUzIZ4zO8dXmBBZaH56dWvY3YMtE4p99xGYn6V
+         r7ed3NBTfVntBwTCbMeKp/b2w1mFFbbE8IvUtayB+u9F6gCprApcSJARoTvxkBXdkw0k
+         +xpwwMOGz6fDLxlJPDBAmOMm0sRY8bGpuLsf2LC5/dnS5R1sSPx0y7mWp8l5EL5PyLF6
+         OYxGiMuzMhqFHOXTuFq4LK/3K+tq5GvsF+giNjVcsdmTR/JVP08DSY50ZUnukoxSb172
+         aaqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=E1sLSRzJJUkH0W3tWVgjgtkRs5G8i5oJq5j/TLdnhhA=;
+        fh=wOhGMmq2KH+KOElLlPuS8ws9o9ArjDb4wH58JVHh4Vg=;
+        b=f2mpx3vJD0tNnGM6rRfu3PfXY9+UYO5Iyf8pftGR0//p03rbNo8j4P6p9mTrvA4FKo
+         7fnEjZlVEI/4vd6bIVhaklilDnkZ3nzErTQtFq/i1bf5en8y0V/o6B1kepmHNc0elN6d
+         GSvvK1ivQQr+SpjR3jI82EQN/JNoap4+MVCS6sbys/iwoypMNGrA78qrtvIbcIKC9JBm
+         r+mZtuXZrPhEdcd+La56orBH2PH9Or/KJobWT9tYssTX9cXaCSn3I0hlPqeNaV1+OyQS
+         YeEn0bbotuA755Qe0b7acI1aDxBT48l04CDhLK5KtyBQzOJJFeWxuWEZeHkKi+vhfDLl
+         TV+Q==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1780084876; x=1780689676; darn=lists.ozlabs.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BflQpILYNsdV418HEymaoaI5jvicSdyjwWiaN4KjVE0=;
-        b=IaFs+4REb3n5TjaP3S5NlFs6ba3WpvkIKwSDO3ePRkcNch7EKgHuoRhyU++5yA4zhD
-         iSZkDofU0pG1UUYn5szdK+Zj/JIGZKTN2Jw39QXmDv1R4YnDsD/YW6AbG2bJtb2IxQLh
-         /ypjXrvY/iOrvq4//tdnsQ4qGu1cJh29L5deg=
+        d=gmail.com; s=20251104; t=1780105589; x=1780710389; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=E1sLSRzJJUkH0W3tWVgjgtkRs5G8i5oJq5j/TLdnhhA=;
+        b=by4/yj1gegRE3tzLJ0Kdpy1ewPZf8a5hJ22eS7vAT6Z6NBhfy/HTIfDpY/NDGuEFxG
+         qhgdAmwwGidkhYqzVFC9ywXzNw1zVSF7BqCCYdM5Erh+NH1ftUi5RZZMu6PRQKdDrG+1
+         0A0DZYIjS6jSA+y5YnQwzd+yj9GXc3fUxG5iBDIQ9bf4uGzv35TgJm9QroVixGgj4cTL
+         xMB0BYw26xhNQd7UBhI1mFiY4xiyeVtE00J4On0XNZvXujkXYlGX3SPwqTTMzIgFiwsL
+         1Y5z5cnmpTkWCAU4E6ysxMbY6HjsOIhAHH8sbQF2Ilcy/CdHtLrPhHYTxieyJljRsnVZ
+         nhmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780084876; x=1780689676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BflQpILYNsdV418HEymaoaI5jvicSdyjwWiaN4KjVE0=;
-        b=nwNqyXobzBIQ4WEYdjRjQftGJPV/ZQHt+A9iNIu6SQgIPMDL385nuovw4nL0N0ZtHq
-         hI0DIlRgh2EpT7N1FZSIlBYx3fW6nmr9HHuRUwdwjIH7C7OfG4mpyDCcuJf8at7LknKq
-         wpxPXgTd3KWEwbtPAiQz3l80IAL2s/vdKmQrh6+fLCnTSvYDI9t/B+l4x4ql/N5OMNaG
-         mhAns0t1723iR1g2Q0mir60YW4FQN3PgVl/WfVQ6bonQibUx6q9nxFxKXQbyY4fYFL0G
-         747Tp14duOJpCmnNnSQ8xeRhueKzeXGAu1T8vEHXph5vmgKHDDDq2eqNXGU3n+Q6d688
-         sX+A==
-X-Forwarded-Encrypted: i=1; AFNElJ/khelGetQwnUxZSTHWlHICaxQX0nCd3nCAHSI2FoS8JlYMKuoq5vzE+bJfchL0YAGsyePprZ2Mq9xSdA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzRApLcNONFTmuyaXDKZy5FJiglkytdrNr2QpUc3WJfTVrpoDZI
-	xbPVNHP4T4zIBlJH+cDfVmA3zxWx9AqZpbIWV2D81gjC9fPunfXrfIxW00y0DGD0FFo=
-X-Gm-Gg: Acq92OFhCHbvUYaf1bJHQHr4M3blwcnMaieYlwzbdsX4uDVtV4uK6Qf+aQEJsj3VeZn
-	BGF1fMFU9Gwk0xAsiYtfKxfXu75zbQHV2clSPrwj1xb0etpU/MY5TQBeHm5s3hO5xYNeA/d2YsP
-	u5Vx354Wuv8/rmbaWceAuvHqYwjOUDxCysArIvVtTrDtlarq8Yvw8VFPTxUr/KTb8bIwzN3CrHh
-	Wul8djFozYS6BM9ECSCXZb7fzcYGLa/h03kZSplBTw65ekje+uCUI8x0QCxM6Zt5LzkMmsHoBDj
-	7ug4UJ4QcYjcKmxb1ao+jZPoV2x71FkU+bcnc7A3XDlbPrqIGf5UoocgMlTH1j5hUFMsdO8ntXb
-	WI4aWxasQ/Km38yu+21kjzrsuW93BnfqDRI+TyPL0Vx21kEFAddiPf61hemfTu/sA9EmKaWJ5vP
-	nzm+Gl+ebbVgf4HQGixt5YNE7TEdZS4+rt94GvyGOkAfSdgQ0sp5O2T99B8tdZlr6EhpskrsyMM
-	kxrY8qCO93v/Ybv7hRPNJV1tP185iazo8KnAfGyJT3Z+p1a1irNzlnV
-X-Received: by 2002:a05:6830:378f:b0:7dd:e032:3ce5 with SMTP id 46e09a7af769-7e6a1e6334bmr837498a34.17.1780084876426;
-        Fri, 29 May 2026 13:01:16 -0700 (PDT)
-Received: from bill-the-cat (fixed-187-191-8-235.totalplay.net. [187.191.8.235])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e695d6b1d4sm2144644a34.21.2026.05.29.13.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2026 13:01:15 -0700 (PDT)
-Date: Fri, 29 May 2026 14:01:12 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Cc: Simon Glass <sjg@chromium.org>, Huang Jianan <jnhuang95@gmail.com>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Tony Dinh <mibodhi@gmail.com>,
-	Timo tp =?iso-8859-1?Q?Prei=DFl?= <t.preissl@proton.me>,
-	Francois Berder <fberder@outlook.fr>,
-	Andrew Goodbody <andrew.goodbody@linaro.org>,
-	Daniel Palmer <daniel@thingy.jp>,
-	Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
-	Sughosh Ganu <sughosh.ganu@arm.com>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>, u-boot@lists.denx.de,
-	linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH 3/9] fs: ext4: print change date in directory listing
-Message-ID: <20260529200112.GA694169@bill-the-cat>
-References: <20260518055728.178507-1-heinrich.schuchardt@canonical.com>
- <20260518055728.178507-4-heinrich.schuchardt@canonical.com>
- <CAFLszTgZ=ciSU-ny1+X+8jYsvRD-jc-TVQ3WwfyZ3DYvmR81Ug@mail.gmail.com>
- <73acbfa7-43aa-4d65-b7ba-1824fda3b348@canonical.com>
+        d=1e100.net; s=20251104; t=1780105589; x=1780710389;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1sLSRzJJUkH0W3tWVgjgtkRs5G8i5oJq5j/TLdnhhA=;
+        b=BBPBIz5qfTVyQbMqX569YaTO6ArXpZIBJnbZPrx6Vlh4mH1GkgkO6CkBNjGvAqGBqI
+         pfHd72OIoaWflZ7cOyg5ybJrd2UIGOMb/03SOK5hYyKc7awbF9w5SPiG72WOQv/DMPzk
+         1XgwHTePw+Nwiuo5VlhoPMyhRYFlVUd1ptxF1WMZLpzv4CDceba6pDa2+6+utL+0e4XT
+         HTMkSBdPKpugsFcepbSvOJbJTHDr0L5WvLssSQVJyBhrB80o7ik/hukfKghX3zkLAV6R
+         zOwmIeInZaBkKQAOhM6GrGQRd2b/z6SHnr7UGmPFduFUsxjw9OU1/sB17N3+yxIRAcEK
+         Xxyw==
+X-Gm-Message-State: AOJu0Yylql+4s3YrhT5xBdMJ8gL0BssXjaVuYlfiKbHAyuZE6TamspV2
+	52/+TpKMDOjFcoW1v8KTcqFm1YtaYTldiP+oZRSKFve0cz7UmPwUYBd2I8YYrjOCgNMXC2Y1blf
+	suYEOF0wDBqvmEZkzokW17H0b8FLIIppGxnkyLTIOXTbF
+X-Gm-Gg: Acq92OHZ4rAMhWYm2KAF3fib5zZVy4uIBdfFzY6jWfKLnbt8JCYqWIdNZNzuClXrqea
+	l9jB/rcv8G9SKmaXYRiIghXge2nU4rvyjZtHLlbe6U+9gPdsgfcETZHDc9bYGkuXGI26hZp7A5h
+	H2GqaTqdLwMTAhYHiky+0gxuVWeynQoGmfM5k8Ou0g4LGVOKkVSvdIuhRYxBWeSYEi59dc2xGSe
+	3l7elGiGxawBxMhZKN2Q/yfucpxvsn5/tuRl/22778BUjCo/opgBu0yAqPROSuwf52ahcU96W5D
+	9ELSA4k+n5uogmEEB5ESqsLUZ5q6M3qVQCSuJ3/drJuB7mo5HiB7V6mNkP2vffilSuXhCtk4hKZ
+	eKsrWVhl+VARZOPUWm43gqzVzdHuZbcpQ2/o9BL3MrNPZVR6zFU6YyPtvzl6Fcmb6QTmvxpjaKU
+	GozSADIAdoWOpUV36OEv4MwWUG
+X-Received: by 2002:a05:6402:354f:b0:68c:df5b:d6e7 with SMTP id
+ 4fb4d7f45d1cf-68cdf5bd85fmr106757a12.10.1780105588415; Fri, 29 May 2026
+ 18:46:28 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -105,150 +100,102 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LnZKIoigaDDXZoCB"
-Content-Disposition: inline
-In-Reply-To: <73acbfa7-43aa-4d65-b7ba-1824fda3b348@canonical.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+From: Kelly Dang <mizellikeksi@gmail.com>
+Date: Sat, 30 May 2026 08:46:16 +0700
+X-Gm-Features: AVHnY4LiV8_bpP3wheSe1oOnHUZ5YrsElyPLud8mYRWT3-SgeANMi_vwWxuvT9o
+Message-ID: <CADVYKHsxyZyMuQJRE_eXEiE9YDLhgb3G+wg+S_6SSuF3bDiSNA@mail.gmail.com>
+Subject: =?UTF-8?B?6ZO26KGM5pyA5oCV5L2g55So4oCc6L+ZM+aLm+KAneWtmOmSsQ==?=
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="00000000000042a2140652ff2104"
+X-Spam-Status: No, score=2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_SPAM
 	autolearn=disabled version=4.0.1
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.30 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[konsulko.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[konsulko.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+X-Spamd-Result: default: False [-2.10 / 15.00];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3491-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3492-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[trini@konsulko.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FORGED_RECIPIENTS(0.00)[m:heinrich.schuchardt@canonical.com,m:sjg@chromium.org,m:jnhuang95@gmail.com,m:quentin.schulz@cherry.de,m:mibodhi@gmail.com,m:t.preissl@proton.me,m:fberder@outlook.fr,m:andrew.goodbody@linaro.org,m:daniel@thingy.jp,m:varadarajan.narayanan@oss.qualcomm.com,m:sughosh.ganu@arm.com,m:ilias.apalodimas@linaro.org,m:peng.fan@nxp.com,m:marek.vasut+renesas@mailbox.org,m:u-boot@lists.denx.de,m:linux-erofs@lists.ozlabs.org,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[konsulko.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[trini@konsulko.com,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[chromium.org,gmail.com,cherry.de,proton.me,outlook.fr,linaro.org,thingy.jp,oss.qualcomm.com,arm.com,nxp.com,mailbox.org,lists.denx.de,lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs,renesas];
+	RCPT_COUNT_ONE(0.00)[1];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mizellikeksi@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.761];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[canonical.com:email,konsulko.com:dkim]
-X-Rspamd-Queue-Id: 927EB6082AE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo,mail.gmail.com:mid,sumo.ad:url]
+X-Rspamd-Queue-Id: DD4EC60AD62
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+--00000000000042a2140652ff2104
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
---LnZKIoigaDDXZoCB
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+KuS9oOWlvSEqDQoNCuWutuS6uuS7rO+8jOWtmOmSsei/meS6i+WEv+eci+i1t+adpeeugOWNle+8
+jOWunuWImeaal+iXj+eOhOacuuOAgg0KDQrpk7booYzooajpnaLkuIrnrJHohLjnm7jov47vvIzl
+hbblrp7mnIDmgJXlkrHmjozmj6Hov5kz5oub5a2Y6ZKx5rOV77yM55So5LqG6L+Z5Lqb5pa55rOV
+77yM5Yip5oGv6IO95aSa5ou/5LiN5bCR77yM6KaB5piv6L+Y5LiN55+l6YGT77yM6YKj5Y+v5bCx
+5LqP5aSn5LqG77yBDQoNCuS7peS4i+aYr+aWh+eroOeahOS4u+imgeWGheWuue+8mg0KDQpodHRw
+czovL3N1bW8uYWQvemhlLTMtemhhby1jdW4tcWlhbjINCg0K5oSf6LCi5L2g6ZiF6K+76L+Z56+H
+5paH56ug77yBDQoNCi0tLQ0KDQrmr4/kuIDku73nnJ/nkIbpg73lgLzlvpfooqvmjY3ljavvvIzm
+r4/kuIDku73lhazmraPpg73lgLzlvpfooqvov73msYLjgIINCg==
+--00000000000042a2140652ff2104
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Thu, May 21, 2026 at 02:46:51AM +0200, Heinrich Schuchardt wrote:
-> On 5/20/26 22:42, Simon Glass wrote:
-> > Hi Heinrich,
-> >=20
-> > On Mon, 18 May 2026 at 00:57, Heinrich Schuchardt
-> > <heinrich.schuchardt@canonical.com> wrote:
-> > >=20
-> > > Declare FS_CAP_DATE in the ext4 fstype_info entry so that fs_ls_gener=
-ic()
-> > > displays the modification date alongside the file size:
-> > >=20
-> > >   4096 2024-03-15 09:30 filename.txt
-> > >=20
-> > > Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> > > ---
-> > >   fs/fs.c | 3 +++
-> > >   1 file changed, 3 insertions(+)
-> > >=20
-> > > diff --git a/fs/fs.c b/fs/fs.c
-> > > index f8e4794c10e..482a5523712 100644
-> > > --- a/fs/fs.c
-> > > +++ b/fs/fs.c
-> > > @@ -261,6 +261,9 @@ static struct fstype_info fstypes[] =3D {
-> > >                  .fstype =3D FS_TYPE_EXT,
-> > >                  .name =3D "ext4",
-> > >                  .null_dev_desc_ok =3D false,
-> > > +#if !IS_ENABLED(CONFIG_XPL_BUILD)
-> > > +               .caps =3D FS_CAP_DATE,
-> > > +#endif
-> > >                  .probe =3D ext4fs_probe,
-> > >                  .close =3D ext4fs_close,
-> > >                  .ls =3D fs_ls_generic,
-> > > --
-> > > 2.53.0
-> > >=20
-> >=20
-> > I would prefer having a head-file macro which expands to nothing for
-> > xPL builds, rather than adding preprocessor macros.
-> >=20
-> > Regards,
-> > Simon
->=20
-> Hello Simon,
->=20
-> In the internet I could not find what a "head-file macro" might be.
->=20
-> As struct fstype_info is not defined in a header file, a preprocessor mac=
-ro
-> defined in a header file would not make sense here.
->=20
-> Do you mean something like:
->=20
-> #if IS_ENABLED(CONFIG_XPL_BUILD)
-> #define FS_CAPS(flags)  /* empty */
-> #else
-> #define FS_CAPS(flags)  .caps =3D (flags),
-> #endif
->=20
-> static struct fstype_info fstypes[] =3D {
-> #if CONFIG_IS_ENABLED(FS_FAT)
-> =A0=A0=A0=A0=A0=A0=A0=A0{
->                 .fstype =3D FS_TYPE_FAT,
->                 .name =3D "fat",
->                 .null_dev_desc_ok =3D false,
->                 FS_CAPS(FS_CAP_DATE)
->                 .probe =3D fat_set_blk_dev,
-> ...
->=20
-> A line without a comma in the initializer is easily mistaken as incorrect=
-=2E I
-> am not sure that a code reviewers life is made easier with defining a new
-> preprocessor macro.
-
-We have a lot of other examples like this in-tree already such as
-ENV_NAME(..) so I think it's reasonable to make an FS_CAPS macro like
-this.
-
---=20
-Tom
-
---LnZKIoigaDDXZoCB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTzzqh0PWDgGS+bTHor4qD1Cr/kCgUCahnwhQAKCRAr4qD1Cr/k
-Cr2kAQCgadsybh4J7JeK8gNZFoxFWxsAanUeadtWkzWgoniXMAEAwJkNH02zDbmW
-WQPr1wdeUdrnL8L68LzU6wnAQiPJrgM=
-=qb4P
------END PGP SIGNATURE-----
-
---LnZKIoigaDDXZoCB--
+PGRpdiBkaXI9Imx0ciI+PHAgc3R5bGU9ImNvbG9yOnJnYigwLDAsMCk7Zm9udC1mYW1pbHk6JnF1
+b3Q7VGltZXMgTmV3IFJvbWFuJnF1b3Q7O2ZvbnQtc2l6ZTptZWRpdW0iPjxzcGFuIGNsYXNzPSJn
+bWFpbC1hdXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhl
+aSZxdW90OyI+PHN0cm9uZz7kvaDlpb0hPC9zdHJvbmc+PC9zcGFuPjxiciBjbGFzcz0iZ21haWwt
+YXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVv
+dDsiPjxiciBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWlseTomcXVv
+dDtNaWNyb3NvZnQgWWFIZWkmcXVvdDsiPjxzcGFuIGNsYXNzPSJnbWFpbC1hdXRvLXN0eWxlMSIg
+c3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90OyI+5a625Lq65Lus
+77yM5a2Y6ZKx6L+Z5LqL5YS/55yL6LW35p2l566A5Y2V77yM5a6e5YiZ5pqX6JeP546E5py644CC
+PC9zcGFuPjxiciBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWlseTom
+cXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDsiPjxiciBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEi
+IHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDsiPjxzcGFuIGNs
+YXNzPSJnbWFpbC1hdXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29m
+dCBZYUhlaSZxdW90OyI+6ZO26KGM6KGo6Z2i5LiK56yR6IS455u46L+O77yM5YW25a6e5pyA5oCV
+5ZKx5o6M5o+h6L+ZM+aLm+WtmOmSseazle+8jOeUqOS6hui/meS6m+aWueazle+8jOWIqeaBr+iD
+veWkmuaLv+S4jeWwke+8jOimgeaYr+i/mOS4jeefpemBk++8jOmCo+WPr+WwseS6j+Wkp+S6hu+8
+gTwvc3Bhbj48YnIgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1mYW1pbHk6
+JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7Ij48YnIgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUx
+IiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7Ij48c3BhbiBj
+bGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3Nv
+ZnQgWWFIZWkmcXVvdDsiPuS7peS4i+aYr+aWh+eroOeahOS4u+imgeWGheWuue+8mjwvc3Bhbj48
+YnIgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWlj
+cm9zb2Z0IFlhSGVpJnF1b3Q7Ij48YnIgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0i
+Zm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7Ij48c3BhbiBjbGFzcz0iZ21h
+aWwtYXV0by1zdHlsZTEiPjxzcGFuIGNsYXNzPSJnbWFpbC1hdXRvLXN0eWxlMyIgc3R5bGU9ImZv
+bnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90OyI+PGEgaHJlZj0iaHR0cHM6Ly9z
+dW1vLmFkL3poZS0zLXpoYW8tY3VuLXFpYW4yIj5odHRwczovL3N1bW8uYWQvemhlLTMtemhhby1j
+dW4tcWlhbjI8L2E+PC9zcGFuPjwvc3Bhbj48L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUx
+IiBzdHlsZT0iY29sb3I6cmdiKDAsMCwwKTtmb250LXNpemU6bWVkaXVtO2ZvbnQtZmFtaWx5OiZx
+dW90O01pY3Jvc29mdCBZYUhlaSZxdW90OyI+5oSf6LCi5L2g6ZiF6K+76L+Z56+H5paH56ug77yB
+PC9wPjxwIGNsYXNzPSJnbWFpbC1hdXRvLXN0eWxlOSIgc3R5bGU9ImZvbnQtc2l6ZToxMS41cHQ7
+Y29sb3I6cmdiKDkxLDEwMiwxMTYpIj4tLS08L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUx
+NCIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90Oztjb2xvcjpy
+Z2IoMCwxMjMsMjU1KTtmb250LXNpemU6bWVkaXVtIj7mr4/kuIDku73nnJ/nkIbpg73lgLzlvpfo
+oqvmjY3ljavvvIzmr4/kuIDku73lhazmraPpg73lgLzlvpfooqvov73msYLjgII8L3A+PC9kaXY+
+DQo=
+--00000000000042a2140652ff2104--
 
