@@ -1,57 +1,57 @@
-Return-Path: <linux-erofs+bounces-3498-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3499-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KCXtEBSsHmq3IwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3498-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:28 +0200
+	id GD0JFRasHmq3IwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3499-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:30 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FBEE62C390
-	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD43062C3A8
+	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gV65s35jkz2xmX;
-	Tue, 02 Jun 2026 20:10:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gV65v5CmBz2ybR;
+	Tue, 02 Jun 2026 20:10:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780395025;
-	cv=none; b=Qs0g39kOQtCrhQ/9sBxycZox81bOKb04CV6saYkHhOGbF52ag/u6Bl6cQFGq9vZpzoXVRs5h20vnlksRxPD5C+sqxVG9/lTnaJ7NNKdurZVBEJepIO5F5dUjQLgJwcsrRgr04ajs6gn7FbHyWLheHzof9pG1RlSNlgYfvD8z0/wCf7GUM+yXlhOETFphUklIhMS8l4D7xkwc0N9d/IrXUthR854HgMCGA4I8lU8yEKI0Uh10kSl6TfTm2SHkdDwZUk8X1fSiizvKum1uFtcPrksTE7lUSj1P2leA81QIFZtkEU/kS+020S7Lwfgva2BNI9rPKCk/wOaEGb199/KVdA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780395027;
+	cv=none; b=jcXRH2EK0C1AQWpRshmih3ilC7TNaSBqIIS6ZpZv5HotXyFZKkypUuH6tZjFQdS+9L4DjRVkvqqPzSR1cSAX7kisXla5Q88rTqVrX9No4pr6k5edKxcQgWE0XR4XUYaooqmwzTkZ7YfXI4Xs52CBtWIgXHKKfVkbFfXjWyFMGW9g52oIHzEm6YbPam9w9yPxjB9qxigaWb2vc4y9WuCYshyRfvQSzf28kp7YBG3+JqE6tE54d2kIJOc3puKx1MCaqQfStbboDoBHCYJZMDsYHpoBblxIqDOZZyrxMR+q8N+wPPTiUIhKn360d5D6E4+x1cAM9Ofvv6hJlF74k5qFtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1780395025; c=relaxed/relaxed;
-	bh=0sPLzsNzNrE5sYBDRc7UQyK3KG2m+vueA9urvjX/WEs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=njYhm5/CLx+ZCbZS4pdayGajRFU8CREA7eqc00tQmYG7TNI6qFEAPYka8PmdzJK8MtiKMDJMlsYQvw2ZpDVEO60JUVdX3/IVPEaN81yVziMg6Uh5Cn3P0s8l7Eb13PPY6tH0UfR2oLS6MoV/dtDYyy/MmdZb0l+zsbgMP9GTExoBIWUMw+MIUmpM6LfNNtbuAd/BD+PvDwvnhAprahqD9+rJfawz6SAUu8H5sUle1PsdLUWwVi7ej7CfgvWnIaDypMuyQX+/9fiY+m2t7kXMnxrkNINQIM5VTRThjLaqMkka38pLNWrghcyqhgqfDhQ4w07X53ein5hk42N3Xazi0Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S4YSpK4f; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1780395027; c=relaxed/relaxed;
+	bh=QUhM5h4C1WnXSL2tEPYUniUgKT/hUDIJ/vXilp+tDFQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QHEKFhfvjoilb54hCaJAkrEE/rblENFuyJxDyRBYoQv5GUyWOX6mGegpEoaD8EGgL1DifPZ/dw+WphYa0o8mHifWwBSX6GbAwIjeqJlrSXLWWo1SAH57k31gnbDW5c03gLBx3V+w4miWzzjQYOOsCf5R1/xk9ELdIwsy8Ufo0CUfgazE5hC1iNBCXF6GusTpHMsfyY5ywYOD93lOLy09tzatxhtrrwXiOf4wC84XDWwYHJZbM0gG8DbJA5rnKiI8uX2BPtKUrAjh3jH3v6EUXr84+y64oS4gLf44p4lsrRXTzv5E6icbpPLriZRpfPzmesJ9aw2c1V96HCQNwZtOMA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MyfVmOmz; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S4YSpK4f;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MyfVmOmz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gV65r2gkjz2xdh
-	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Jun 2026 20:10:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gV65t6SCdz2xdh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Jun 2026 20:10:26 +1000 (AEST)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2A9F560141;
+	by tor.source.kernel.org (Postfix) with ESMTP id E4D5E601DE;
+	Tue,  2 Jun 2026 10:10:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FEB71F00898;
 	Tue,  2 Jun 2026 10:10:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2201F00893;
-	Tue,  2 Jun 2026 10:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780395020;
-	bh=0sPLzsNzNrE5sYBDRc7UQyK3KG2m+vueA9urvjX/WEs=;
-	h=From:Subject:Date:To:Cc;
-	b=S4YSpK4f2pH92GwKlT/TH7osx/3MRT19koRieRsuI8QrPrzw9Y4FYYnYq0otMcoyp
-	 VSHl8KQnZDBBKDmDUPyKjCMUWJ6ZGoOengV4oTpi2xqiMC4Yjmy78OEQcCssvY+VZu
-	 DqL0TX5jcsKhAYFp0YcTJIZz7cPNS7drfGUuWJbMB9lNcwUoC7WbeQWEf0vvEytf4g
-	 E2hEwx3SZQkoNeSkVDldR9nbV1lcHQM+HfWvflJSfugCh/uOt4BzAXg3uR21ZxXMDF
-	 TQG+Ip0ZgtZRMEhGNLTRZiLwK11BdWG0F8eUdP2xTsna7AngAggXRan6Z6nnT86IXO
-	 VpU0aTWvxNBfQ==
+	s=k20260515; t=1780395024;
+	bh=QUhM5h4C1WnXSL2tEPYUniUgKT/hUDIJ/vXilp+tDFQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=MyfVmOmzX7hd/4gWE9I1HAP/tDKLvZhsRpaF0AF23wvS4sNb3Xx0sJuwzDIkbfDaY
+	 FsjPXGFT3LWBJ11nfCzL1IsgItbFt8v/ksAh9q4fYdWKCRAccQxAc4jxDSN2NkQn0K
+	 eY38uDZhStmD6xXuv8afkp2SHzSXcsbad+Ke/JhlJXTO7XIsGDNYOKscFTgMpf5sg8
+	 jIW2Bk3szsshYcD+t0Twms+Bqnsaau186Rw1A/ruY0DQDE8M20cf3PbYzb7WGuGxs+
+	 w47n+mxCjsQSBAa0DZ11hagsIDAIEDnl7/4kcTCJ7YlAYbw9I1tyAav6MqFcLlx2aQ
+	 X9caJzyyrZdAg==
 From: Christian Brauner <brauner@kernel.org>
-Subject: [PATCH RFC 0/8] fs: support freeze/thaw/mark_dead/sync with shared
- devices
-Date: Tue, 02 Jun 2026 12:10:06 +0200
-Message-Id: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
+Date: Tue, 02 Jun 2026 12:10:07 +0200
+Subject: [PATCH RFC 1/8] fs, block: move blk_mode_t and fop_flags_t into
+ <linux/types.h>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -65,11 +65,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAP+rHmoC/yWM0QqCQBAAf0X2uRU90KLXoA/oNUJu7za9Mk921
- QLx39N6nGGYGZQlsMIxmUF4Chpit0K+S8A1tqsZg18ZTGbKrMwMvqM8UceeBcnzVDWx9SxV3Ua
- yLR4c2YILQ+wLWB+98D18fv8rXM4nuP2ljvRgN2znLSOrjCS2c82mXlYHlnTapzmKy2FZvtNKv
- tmoAAAA
-X-Change-ID: 20260602-work-super-bdev_holder_global-8cba5e52bed5
+Message-Id: <20260602-work-super-bdev_holder_global-v1-1-bb0fd82f3861@kernel.org>
+References: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
+In-Reply-To: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
 Cc: Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, 
  linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -80,19 +78,19 @@ Cc: Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>,
  Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.16-dev-fffa9
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2309; i=brauner@kernel.org;
- h=from:subject:message-id; bh=8PAOYH0N838UHayA/tOONu2IcWfdoIg+edZyFkLDa8o=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTJreG4GXYx+0Zi52NGHc+ynRf2b+1hern5Se/Jry/CN
- IQiT9qzdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzktTsjw7bF/kr3QxgvK7a9
- qGtq7bnpZLzseI7IvqWc+y5dOfCuehYjw8kbi46lLWmzqL7e/awsJuK+hcjZUx3XwhU5tbNsg4Q
- ucwMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1762; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=LHr7gBg6PtJCZf6/6mkuc3vnbKC5yndXujDfy0HTjfM=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTJreGQ0tbvuCvNPbdnY7ncU9PyXVtSrr4UOXPnm57kl
+ sqwU8b/OkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZS6cHI8IFJyzT/iD9n3TUF
+ yYePNC5UyCp2aSR8/9TYf9xL5drecIb/cbfU15913s30r980eIpVTc3qw1+uhF5de2BJ2qn/hsy
+ TWQE=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 6FBEE62C390
+X-Rspamd-Queue-Id: BD43062C3A8
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
@@ -108,7 +106,7 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3498-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3499-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
@@ -126,58 +124,59 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
 X-Rspamd-Action: no action
 
-Note, this is on the border between RFC/POC and so I haven't pushed this
-through testing yet. But I don't want to waste more time on this before
-showing it.
-
-I surveyed various fs implementations because I want the ability to
-extend userspace the ability to manage what devices can be onlined in a
-centralized way without having to force every fs to care about this.
-
-I realized that erofs allows sharing block devices with multiple
-superblocks. Any freeze, thaw, removal, or sync on those devices will
-not be communicated to the superblocks using it and our current
-infrastructure is unable to deal with this.
-
-This attempts to add the ability to go from device number to all the
-superblock using that device, iterate through them one-by-one and
-perform actions on them. For most fses this is a 1:1 mapping but for
-erofs its a 1:many mapping.
-
-This is not unreasonable infastructure to support in my opinion. I
-played around with some ideas for this and I want to send out an RFC to
-gather some early input.
+blk_mode_t and fop_flags_t are both plain 'unsigned int __bitwise' flag
+typedefs, exactly like the gfp_t, slab_flags_t and fmode_t that already
+live in <linux/types.h>. Move them there so they are available
+everywhere without having to drag in a subsystem header.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
-Christian Brauner (8):
-      fs, block: move blk_mode_t and fop_flags_t into <linux/types.h>
-      fs: add a global device to super block hash table
-      fs: refuse to claim any frozen block device
-      xfs: port to fs_bdev_file_open_by_path()
-      btrfs: open via dedicated fs bdev helpers
-      ext4: open via dedicated fs bdev helpers
-      erofs: open via dedicated fs bdev helpers
-      super: make fs_holder_ops private
+ include/linux/blkdev.h | 2 --
+ include/linux/fs.h     | 2 --
+ include/linux/types.h  | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
- fs/btrfs/dev-replace.c   |   6 +-
- fs/btrfs/ioctl.c         |   4 +-
- fs/btrfs/volumes.c       |  26 ++-
- fs/erofs/data.c          |   6 +
- fs/erofs/internal.h      |  10 ++
- fs/erofs/super.c         |  66 +++++--
- fs/erofs/zdata.c         |  10 +-
- fs/ext4/super.c          |  12 +-
- fs/super.c               | 452 ++++++++++++++++++++++++++++++++---------------
- fs/xfs/xfs_buf.c         |   2 +-
- fs/xfs/xfs_super.c       |  10 +-
- include/linux/blkdev.h   |   9 -
- include/linux/fs.h       |   2 -
- include/linux/fs/super.h |   7 +
- include/linux/types.h    |   2 +
- 15 files changed, 433 insertions(+), 191 deletions(-)
----
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-change-id: 20260602-work-super-bdev_holder_global-8cba5e52bed5
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 890128cdea1c..c8494d64a69d 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -126,8 +126,6 @@ struct blk_integrity {
+ 	unsigned char				pi_tuple_size;
+ };
+ 
+-typedef unsigned int __bitwise blk_mode_t;
+-
+ /* open for reading */
+ #define BLK_OPEN_READ		((__force blk_mode_t)(1 << 0))
+ /* open for writing */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 11559c513dfb..e9346be8470f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1921,8 +1921,6 @@ struct dir_context {
+ struct io_uring_cmd;
+ struct offset_ctx;
+ 
+-typedef unsigned int __bitwise fop_flags_t;
+-
+ struct file_operations {
+ 	struct module *owner;
+ 	fop_flags_t fop_flags;
+diff --git a/include/linux/types.h b/include/linux/types.h
+index 608050dbca6a..ef026585420b 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -163,6 +163,8 @@ typedef u32 dma_addr_t;
+ typedef unsigned int __bitwise gfp_t;
+ typedef unsigned int __bitwise slab_flags_t;
+ typedef unsigned int __bitwise fmode_t;
++typedef unsigned int __bitwise blk_mode_t;
++typedef unsigned int __bitwise fop_flags_t;
+ 
+ #ifdef CONFIG_PHYS_ADDR_T_64BIT
+ typedef u64 phys_addr_t;
+
+-- 
+2.47.3
 
 
