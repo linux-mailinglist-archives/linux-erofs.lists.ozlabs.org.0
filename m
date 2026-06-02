@@ -1,56 +1,56 @@
-Return-Path: <linux-erofs+bounces-3504-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3505-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qBrvKiisHmq3IwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3504-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:48 +0200
+	id AB71AC2sHmq3IwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3505-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:53 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11BC862C3E5
-	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 692D162C402
+	for <lists+linux-erofs@lfdr.de>; Tue, 02 Jun 2026 12:10:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gV66G0Bdtz2ytj;
-	Tue, 02 Jun 2026 20:10:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gV66L2smCz2ytV;
+	Tue, 02 Jun 2026 20:10:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780395045;
-	cv=none; b=mWLtcEtExCwiOUQDfPp16hy7SDssoka6jnuZJXZQ7HPlGr/iggsafEDuFT0b+Q3uU6FSXoDQSv9dUJJ1lJYrbP4Tslmj42ypx9PCV+D1hfqPBUG8vmOUIISYeSEsEa/3BvJw0h84Bmsjb+GSdxnNVQVxzeCIFIcirFNGx+HH6XU/WOYv/aEbrt4/eGalnZl6c3WVgnqadjDQD5CUKBMZCjYQd5x+hVeYBMGAxKjkBEVwdSMOTJxamuw1M4jsLW2N2u1a7nH4lHDiz8ET6fTN0yTvwoDGB7GIDEQe8tKoAk7sBlJMV9/v9tWP4gCkkBuhu/ERA/fXLOHjNj+i0NnKLw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780395050;
+	cv=none; b=SXTkh1PFChmdnHodX6cs3hu7y9ED+pjLDF/Ndyo1K5fwZX6pscM5ieICfFXjZ28MX/JXz3U3okqmxN1cdCw7troAFKL1z6Ceo1i1a6b8dmtzWeBWiw3cmZTb+OQ6B5gR6kCkpT9y337L+lmiYKnSyIbAnRAWl4CYPCTuXm/WRKqJlcSzhB8dhnfiB1gXLeYQFl884eFEV8XRH2bKtbWnT28T9i61pr0l5BhBWz8UcTHaGm3KQMh1NU2+Hwb8Nkxn/3meIp/aEs85NHw+IUc/gvnNmc/EAoKRYzMYtX7weL1uAXMENbIQWythdykufJ6WkeFEG8tctPxTL5O1NXqTlQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1780395045; c=relaxed/relaxed;
-	bh=Rcl0Ij+Ta68yATaT5Q/U3eCvCYbsFeYyob8MpA9JEIY=;
+	t=1780395050; c=relaxed/relaxed;
+	bh=5bBzVi4bBIK5tK2AYeV9dNHzpJuPm4TjbWGXo8xGZGo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UwHjYo4pNeca+1bRHReJP3TXBB3GgvHQLJlASpG3yueQmMIXML5dEgm+8SH0seXfJHM4h9+za3+WcTElROtsxoNbFpmVqiTo4kPrNra/1aaEKMSB3tyUJuhrXu0cpqddtAiQWqNFSSCnsc5m5AeNCZFn0m1PB8wgbP25YszLtrFH7F200H7f/eQffqvm7cJqYFqcFSuOSeYEUlsgKhLIGRyuNzPChJoXio4qWPm4IyFqKxShhAslL/BVVSPinxCYdlc9iLWeccVifuD++IeeOZr31NNJmU/pYPh/QH/qsr/hLuVdfc24G3OlEOq3924YiF8k3QFY9L2WqkaeR1S2QA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IcYRFZ7I; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=Ibt518RLFnc6u359oLJcwsjnW3/ip4eCGFd6841ceT8HrP7hXqpCEjmn8zl0+Y4wYsTuaOz6GdZy2sq/DUkUdaVodBoEk1o3RaenP6YZh0PYejzw0zqTTLpERSBfark5idJD9ZPM9aGNzvfcr3Z2s27MP2uJisgql40xWb5g8aS9D/T0V6jNCMY4mKZeVNdgWDyRbIDVBut7mY2Q+hKejT5F5COhPOgyXdjlosuUUUOQKTxdMCa8Z95RkGD3IawPZYRg3t9uryFXc6+LFOzDHvxODTjzGxzsWNnOs4i4F3BpLzHkdqEEN4SZDyo7rX5vLSU+Hi+F9lQhaIsPn5OsTQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AeFRVuEy; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IcYRFZ7I;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AeFRVuEy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gV66F290jz2xdh
-	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Jun 2026 20:10:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gV66K4KzPz2xdh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Jun 2026 20:10:49 +1000 (AEST)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C610443B0D;
+	by tor.source.kernel.org (Postfix) with ESMTP id B343A6012B;
+	Tue,  2 Jun 2026 10:10:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 216A91F00893;
 	Tue,  2 Jun 2026 10:10:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416B61F00899;
-	Tue,  2 Jun 2026 10:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780395043;
-	bh=Rcl0Ij+Ta68yATaT5Q/U3eCvCYbsFeYyob8MpA9JEIY=;
+	s=k20260515; t=1780395047;
+	bh=5bBzVi4bBIK5tK2AYeV9dNHzpJuPm4TjbWGXo8xGZGo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=IcYRFZ7IwF5i2OaH89y2up0aV6PvzsJqfvYMhN8Rb430whUhhGzKxCyO61VhDckN8
-	 mdwK5pkZmT3BPZZ2F6YPiiuM867ZBfa6ef0HaJHGqB3X/ozsJJWexF5h8jHXFKML1k
-	 oqoumaaaw6e1Hel59xTSQu+iyE3jZQ1A9Q/8NejBaZSDfHP/ifSkh2au0Fjza5xpWa
-	 IrW4Vcsz7CnMp80iPim5gTBwbJSF+Z7YZbEOlJszNf7x+wdCisnmSxsc9W66E+6TYr
-	 Wa5VA/7TNUf7EzQoU7ZT1PRntyOyrkVstP0XLHkDaECwCp7k0kvPAGxNgmF/kA2UOe
-	 BMZza+NotpqGw==
+	b=AeFRVuEyR0A20ZtgU5dPVf0eDw0c7XFSyhj5dtede4QGcluYMTeYtifMC5iR5XnGX
+	 wHUXAPLk+87sonl7T37TwkoLvCUZhbd+gSThgOX309X9rE6TwvVadruCk76Aytlj3N
+	 XPa6OOtFtvZXSWMIsWJG0wswkVofTjU6Njtcw2QXDs/57twKmM7AF/YprE14G8CHsY
+	 YwKGXHThQducHnEKFUNrDWRB2wS3HC+ZvcQj7kT7ZhJAzd8+UO058UeOS2+IAcBODf
+	 pvevE4L1pq85maDAfTFD9Mu4vl2NugCGFtDYmOXe2FsTxnuO2ET/UgGfjRZ4kNnUmK
+	 Y3edpjJ2DBISA==
 From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 02 Jun 2026 12:10:12 +0200
-Subject: [PATCH RFC 6/8] ext4: open via dedicated fs bdev helpers
+Date: Tue, 02 Jun 2026 12:10:13 +0200
+Subject: [PATCH RFC 7/8] erofs: open via dedicated fs bdev helpers
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,7 +64,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-work-super-bdev_holder_global-v1-6-bb0fd82f3861@kernel.org>
+Message-Id: <20260602-work-super-bdev_holder_global-v1-7-bb0fd82f3861@kernel.org>
 References: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
 In-Reply-To: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
@@ -77,19 +77,19 @@ Cc: Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>,
  Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.16-dev-fffa9
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1960; i=brauner@kernel.org;
- h=from:subject:message-id; bh=tRD6D2ZvC10l0Swb1mE77uQnFpNR5auwAZCGdQLKj3I=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTJreHQvVlsv1mBf/ON//MTCj44HOu5eIo74EO/d/ONo
- LLZxpF+HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPpEGNkuLdt+8Ldt/37WQ7P
- +LFH8YH+sRW3n1wvXqvCWFi/48R+y0ZGhoVLNebPSzimfdyP4ci2z7+/z1hav17yfvESwfglBdm
- TYrgA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7744; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=rcHD4HbFbUrUpExn6n0CNv7K4b9hWXj4N9RjO33LQqM=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTJreHY5X4o6u+VmAbplGN/S3j3PHN4Y3E6fV/YwhOP9
+ xzn0LM811HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRj5MZ/pdG+t3afEJN7Iv4
+ 7K8VLJ5qPTwuh6dfD5swLYGjfGXyVRNGhgVzy244cyedkOOIP3gw8fjEU3XCp3+/C0wpWreUz2X
+ lHhYA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Queue-Id: 11BC862C3E5
+X-Rspamd-Queue-Id: 692D162C402
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
@@ -105,7 +105,7 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3504-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3505-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
@@ -129,61 +129,239 @@ releases.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- fs/ext4/super.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/erofs/data.c     |  6 +++++
+ fs/erofs/internal.h | 10 ++++++++
+ fs/erofs/super.c    | 66 +++++++++++++++++++++++++++++++++++++++++++----------
+ fs/erofs/zdata.c    | 10 +++++---
+ 4 files changed, 77 insertions(+), 15 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 6a77db4d3124..8108d999008e 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5793,7 +5793,7 @@ failed_mount8: __maybe_unused
- 	brelse(sbi->s_sbh);
- 	if (sbi->s_journal_bdev_file) {
- 		invalidate_bdev(file_bdev(sbi->s_journal_bdev_file));
--		bdev_fput(sbi->s_journal_bdev_file);
-+		fs_bdev_file_release(sbi->s_journal_bdev_file, sb);
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 44da21c9d777..5220585293df 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -69,6 +69,9 @@ int erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb,
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
++	if (erofs_is_shutdown(sb))
++		return -EIO;
++
+ 	buf->file = NULL;
+ 	if (in_metabox) {
+ 		if (unlikely(!sbi->metabox_inode))
+@@ -236,6 +239,9 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+ 		}
+ 		up_read(&devs->rwsem);
  	}
- out_fail:
- 	invalidate_bdev(sb->s_bdev);
-@@ -5972,9 +5972,9 @@ static struct file *ext4_get_journal_blkdev(struct super_block *sb,
- 	struct ext4_super_block *es;
- 	int errno;
- 
--	bdev_file = bdev_file_open_by_dev(j_dev,
-+	bdev_file = fs_bdev_file_open_by_dev(j_dev,
- 		BLK_OPEN_READ | BLK_OPEN_WRITE | BLK_OPEN_RESTRICT_WRITES,
--		sb, &fs_holder_ops);
-+		sb, sb);
- 	if (IS_ERR(bdev_file)) {
- 		ext4_msg(sb, KERN_ERR,
- 			 "failed to open journal device unknown-block(%u,%u) %ld",
-@@ -6034,7 +6034,7 @@ static struct file *ext4_get_journal_blkdev(struct super_block *sb,
- out_bh:
- 	brelse(bh);
- out_bdev:
--	bdev_fput(bdev_file);
-+	fs_bdev_file_release(bdev_file, sb);
- 	return ERR_PTR(errno);
++	if (erofs_is_shutdown(sb) ||
++	    (map->m_dif && READ_ONCE(map->m_dif->dead)))
++		return -EIO;
+ 	return 0;
  }
  
-@@ -6073,7 +6073,7 @@ static journal_t *ext4_open_dev_journal(struct super_block *sb,
- out_journal:
- 	ext4_journal_destroy(EXT4_SB(sb), journal);
- out_bdev:
--	bdev_fput(bdev_file);
-+	fs_bdev_file_release(bdev_file, sb);
- 	return ERR_PTR(errno);
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 4792490161ec..ca1ed7ce3961 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -48,6 +48,7 @@ struct erofs_device_info {
+ 
+ 	erofs_blk_t blocks;
+ 	erofs_blk_t uniaddr;
++	bool dead;		/* backing device gone; fence I/O */
+ };
+ 
+ enum {
+@@ -104,6 +105,7 @@ struct erofs_xattr_prefix_item {
+ struct erofs_sb_info {
+ 	struct erofs_device_info dif0;
+ 	struct erofs_mount_opts opt;	/* options */
++	unsigned long flags;		/* see EROFS_SB_* */
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	/* list for all registered superblocks, mainly for shrinker */
+ 	struct list_head list;
+@@ -195,6 +197,14 @@ static inline bool erofs_is_fscache_mode(struct super_block *sb)
+ 			!erofs_is_fileio_mode(EROFS_SB(sb)) && !sb->s_bdev;
  }
  
-@@ -7492,7 +7492,7 @@ static void ext4_kill_sb(struct super_block *sb)
- 	kill_block_super(sb);
++/* erofs_sb_info->flags */
++#define EROFS_SB_SHUTDOWN	0	/* primary device gone; fail all I/O */
++
++static inline bool erofs_is_shutdown(struct super_block *sb)
++{
++	return test_bit(EROFS_SB_SHUTDOWN, &EROFS_SB(sb)->flags);
++}
++
+ enum {
+ 	EROFS_ZIP_CACHE_DISABLED,
+ 	EROFS_ZIP_CACHE_READAHEAD,
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 802add6652fd..e03cb95be96b 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -153,8 +153,8 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 	} else if (!sbi->devs->flatdev) {
+ 		file = erofs_is_fileio_mode(sbi) ?
+ 				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
+-				bdev_file_open_by_path(dif->path,
+-						BLK_OPEN_READ, sb->s_type, NULL);
++				fs_bdev_file_open_by_path(dif->path,
++						BLK_OPEN_READ, sb->s_type, sb);
+ 		if (IS_ERR(file)) {
+ 			if (file == ERR_PTR(-ENOTBLK))
+ 				return -EINVAL;
+@@ -843,11 +843,16 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
  
- 	if (bdev_file)
--		bdev_fput(bdev_file);
-+		fs_bdev_file_release(bdev_file, sb);
+ static int erofs_release_device_info(int id, void *ptr, void *data)
+ {
++	struct super_block *sb = data;
+ 	struct erofs_device_info *dif = ptr;
+ 
+ 	fs_put_dax(dif->dax_dev, NULL);
+-	if (dif->file)
+-		fput(dif->file);
++	if (dif->file) {
++		if (S_ISBLK(file_inode(dif->file)->i_mode))
++			fs_bdev_file_release(dif->file, sb);
++		else
++			fput(dif->file);
++	}
+ 	erofs_fscache_unregister_cookie(dif->fscache);
+ 	dif->fscache = NULL;
+ 	kfree(dif->path);
+@@ -855,18 +860,19 @@ static int erofs_release_device_info(int id, void *ptr, void *data)
+ 	return 0;
  }
  
- static struct file_system_type ext4_fs_type = {
+-static void erofs_free_dev_context(struct erofs_dev_context *devs)
++static void erofs_free_dev_context(struct erofs_dev_context *devs,
++				   struct super_block *sb)
+ {
+ 	if (!devs)
+ 		return;
+-	idr_for_each(&devs->tree, &erofs_release_device_info, NULL);
++	idr_for_each(&devs->tree, &erofs_release_device_info, sb);
+ 	idr_destroy(&devs->tree);
+ 	kfree(devs);
+ }
+ 
+-static void erofs_sb_free(struct erofs_sb_info *sbi)
++static void erofs_sb_free(struct erofs_sb_info *sbi, struct super_block *sb)
+ {
+-	erofs_free_dev_context(sbi->devs);
++	erofs_free_dev_context(sbi->devs, sb);
+ 	kfree(sbi->fsid);
+ 	kfree_sensitive(sbi->domain_id);
+ 	if (sbi->dif0.file)
+@@ -879,8 +885,13 @@ static void erofs_fc_free(struct fs_context *fc)
+ {
+ 	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 
+-	if (sbi) /* free here if an error occurs before transferring to sb */
+-		erofs_sb_free(sbi);
++	/*
++	 * Freed here only if an error occurs before the sb is set up; at that
++	 * point no block-backed device has been claimed (that happens in
++	 * fill_super), so the NULL sb never reaches fs_bdev_file_release().
++	 */
++	if (sbi)
++		erofs_sb_free(sbi, NULL);
+ }
+ 
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -936,7 +947,7 @@ static void erofs_kill_sb(struct super_block *sb)
+ 	erofs_drop_internal_inodes(sbi);
+ 	fs_put_dax(sbi->dif0.dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+-	erofs_sb_free(sbi);
++	erofs_sb_free(sbi, sb);
+ 	sb->s_fs_info = NULL;
+ }
+ 
+@@ -948,7 +959,7 @@ static void erofs_put_super(struct super_block *sb)
+ 	erofs_shrinker_unregister(sb);
+ 	erofs_xattr_prefixes_cleanup(sb);
+ 	erofs_drop_internal_inodes(sbi);
+-	erofs_free_dev_context(sbi->devs);
++	erofs_free_dev_context(sbi->devs, sb);
+ 	sbi->devs = NULL;
+ 	erofs_fscache_unregister_fs(sb);
+ }
+@@ -1121,6 +1132,35 @@ static void erofs_evict_inode(struct inode *inode)
+ 	clear_inode(inode);
+ }
+ 
++/*
++ * A blob device may back several erofs superblocks; fence only the affected
++ * one and keep the rest of the mount alive.  The primary device falls back to
++ * the generic teardown (return non-zero).
++ */
++static int erofs_remove_bdev(struct super_block *sb, struct block_device *bdev)
++{
++	struct erofs_dev_context *devs = EROFS_SB(sb)->devs;
++	struct erofs_device_info *dif;
++	int id;
++
++	if (bdev == sb->s_bdev)
++		return 1;
++
++	down_read(&devs->rwsem);
++	idr_for_each_entry(&devs->tree, dif, id) {
++		if (dif->file && S_ISBLK(file_inode(dif->file)->i_mode) &&
++		    file_bdev(dif->file)->bd_dev == bdev->bd_dev)
++			WRITE_ONCE(dif->dead, true);
++	}
++	up_read(&devs->rwsem);
++	return 0;
++}
++
++static void erofs_shutdown(struct super_block *sb)
++{
++	set_bit(EROFS_SB_SHUTDOWN, &EROFS_SB(sb)->flags);
++}
++
+ const struct super_operations erofs_sops = {
+ 	.put_super = erofs_put_super,
+ 	.alloc_inode = erofs_alloc_inode,
+@@ -1128,6 +1168,8 @@ const struct super_operations erofs_sops = {
+ 	.evict_inode = erofs_evict_inode,
+ 	.statfs = erofs_statfs,
+ 	.show_options = erofs_show_options,
++	.remove_bdev = erofs_remove_bdev,
++	.shutdown = erofs_shutdown,
+ };
+ 
+ module_init(erofs_module_init);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 43bb5a6a9924..89ae91935364 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1697,11 +1697,15 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+ 			continue;
+ 		}
+ 
+-		/* no device id here, thus it will always succeed */
+ 		mdev = (struct erofs_map_dev) {
+ 			.m_pa = round_down(pcl->pos, sb->s_blocksize),
+ 		};
+-		(void)erofs_map_dev(sb, &mdev);
++		if (erofs_map_dev(sb, &mdev)) {
++			/* the backing device is gone; fail the batch */
++			q[JQ_SUBMIT]->eio = true;
++			qtail[JQ_SUBMIT] = &pcl->next;
++			continue;
++		}
+ 
+ 		cur = mdev.m_pa;
+ 		end = round_up(cur + pcl->pageofs_in + pcl->pclustersize,
+@@ -1785,7 +1789,7 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+ 	 * although background is preferred, no one is pending for submission.
+ 	 * don't issue decompression but drop it directly instead.
+ 	 */
+-	if (!*force_fg && !nr_bios) {
++	if (!*force_fg && !nr_bios && !q[JQ_SUBMIT]->eio) {
+ 		kvfree(q[JQ_SUBMIT]);
+ 		return;
+ 	}
 
 -- 
 2.47.3
