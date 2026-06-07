@@ -1,56 +1,55 @@
-Return-Path: <linux-erofs+bounces-3521-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id MPESAjhWJWqlHAIAu9opvQ
-	(envelope-from <linux-erofs+bounces-3521-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 07 Jun 2026 13:30:00 +0200
+	id 0uFQOq+oJWrBKAIAu9opvQ
+	(envelope-from <linux-erofs+bounces-3522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 07 Jun 2026 19:21:51 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77887650733
-	for <lists+linux-erofs@lfdr.de>; Sun, 07 Jun 2026 13:29:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF00A65111E
+	for <lists+linux-erofs@lfdr.de>; Sun, 07 Jun 2026 19:21:49 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=opBpCm43;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3521-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3521-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=Iq+gCMrU;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3522-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3522-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gYCdJ03gWz2ySD;
-	Sun, 07 Jun 2026 21:29:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gYMRG4rwqz2xlV;
+	Mon, 08 Jun 2026 03:21:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780831795;
-	cv=none; b=e6luDIFrdj22Jbde2a1kYGlxmZzb8L0hK04X7Q0YAlIEKxCLiafpG7pkMF9sLmCTUWFqkzaAdPElsEr+dbRJMhVDmwNayzFsaMJF6M6B9TFYEVUO0QuJcD7Ak8M8XnHOKmjvpAPDvuXudYFrWhltbeQ7Wc3y919RN9CKnC/djgtpupUtsLKx/zVez5yEMgD0dN1jKK38uNyAUTatgaCtEH9JXiVn3Rkre2bno0gHa/Wu/0ysth0y3KkoHXYd0fzQeQjDotaSkOA+eL++Xzsis22vFf0K6Rn+4ZWTZJuNDlL7JXrSVU9ZO0YR6NXi7VAU3Rd0ILuH2QIOV5EIbc9/KQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1780852906;
+	cv=none; b=Jhp0YB9t66qcVJF0buZXutjEWL0lzu4fBpTcvjQuR6usJ5HSsJ9OBu2Wd9YOzoHNAd/Ei1vLl1bV7B/amCXSDW/6cXlD4qu1sZB2VzIEbG83h5RD9lX9Lk+FjPvKRARqdAqlkQY+EnXhi8bIEAt0esvxgByPLv4hJ5k/fUcRZur3C0AmJHN7hHsD8rGMZQXuL4pAy0CgUubWYIRfMeVwkY/vQdOTDURQzbrY9VXluwtggg8xrqA3jo722z+vKVtG6W8j1gITkSV9jtYRpMyYu4rp/I8oCE7TXYTIfe8LuCSLjlQsiYCnHgWWZUEOCxR6i+rl0iBMteeakl6wYet7xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1780831795; c=relaxed/relaxed;
-	bh=1hzsraQ4artZAo5uyrEsoD73UbwNnmz77UyuRLdwA18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=C8yIQCgJW3xll4p4OhgEExtUiPO0oBHymVYhkXndORdEwOnsknrVpxo/tN8S+3UJZnTYGOidWc7tVWLlP3YP0WXEIMMwPaN4LxyMy2I9FoKOgQRJdcAkkne5WeGAhLVOeCzPniks2hwYOkkVZggXCeyPYG60HgooCRGg2wR0FIY5Yq3qzOhIUBmgEx1I5OkXqm9Jca7/KLA5xu3KANo/FaxwRn2+Zh7qcs4f+jEZ/gGkEr1mtM+3afM9ubuNLgyiebhEXMT+He5qQwTyGQmXwljyaZ5dHBlH48SM+gHmuAtok7WP9RXtfeNPaabRs4fIoj3/6gmLN64Vm5EKa+E31A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=opBpCm43; dkim-atps=neutral; spf=pass (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+	t=1780852906; c=relaxed/relaxed;
+	bh=qhImzRXmhei5Lr7a0pQpo3qVbnwWVnRGJ4t5QvDiQqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GH7fJbp1vvdKT407RYEd3uNx7UlfdZmr6HQcB5HQNg2KBkTso9XIXY/WW+tIRDKh2YAoLeSQdowOSBuRpXd0X0GzXVarWqB1SrOOsmri2HJ3n7xYg0vgDi+wcd+ka5F1U5CsiEv4RerYopOcAaDNhEBeM4qlFpc8YStD9p39SSRIWe2wyb7C2GybGzt9bxR8bbLcbegDUlreDp48OZLxMPZANOkRLXDG8QaOW9H5BoRb0fX3n+hIwbztRVeocQFIKlOYi3/ICMamp9oU8DUssP17AhEi1ndnIfFqZVCnu5fYogHnwxsMDIN7ZUloyl5Jflk2hLhi3RfCWC4a2VOPmw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Iq+gCMrU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gYCdD1zX7z2xlV
-	for <linux-erofs@lists.ozlabs.org>; Sun, 07 Jun 2026 21:29:48 +1000 (AEST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=1hzsraQ4artZAo5uyrEsoD73UbwNnmz77UyuRLdwA18=;
-	b=opBpCm43EZRyXFHPUfa5dL2A/l90l265yfJmd3CHHdHyq9Jdg+qkS+SdKmGvzrFxeVub8WUvt
-	KRUaIRiPjbrGKaKRAsKdwbLRyZ8XolGcCmbfYimuL0PTO8nwMPpByIpj2tz1zBm0HIPkcHP7wT7
-	N0+wmAxpi5xYPrp+EozZ7eY=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gYCRR5xHQz1T4G9
-	for <linux-erofs@lists.ozlabs.org>; Sun,  7 Jun 2026 19:21:23 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id AE8A240571
-	for <linux-erofs@lists.ozlabs.org>; Sun,  7 Jun 2026 19:29:40 +0800 (CST)
-Received: from [100.102.28.251] (100.102.28.251) by
- kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Sun, 7 Jun 2026 19:29:40 +0800
-Message-ID: <1c8489d6-c55b-426d-b965-b6b96caa616f@huawei.com>
-Date: Sun, 7 Jun 2026 19:29:39 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gYMRD70Z3z2xl0
+	for <linux-erofs@lists.ozlabs.org>; Mon, 08 Jun 2026 03:21:42 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780852899; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=qhImzRXmhei5Lr7a0pQpo3qVbnwWVnRGJ4t5QvDiQqk=;
+	b=Iq+gCMrU98YcHeR3AGGwhigVkptxbLbT7NUgMkz7vbl9j4VyAVOeDSf2RpTPmDWceRbJEv84ugJSNHdkC0pg7Kcl+K84PCq7G8eD99NJBivPtTeLyDokds0ZIKIUqaymtkzEgpK/IECslW4r9M35GBbtVDSwwrBcpW1l9yLkKTI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X4IBbZn_1780852893;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4IBbZn_1780852893 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 08 Jun 2026 01:21:37 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	oliver.yang@linux.alibaba.com,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Hongbo Li <lihongbo22@huawei.com>
+Subject: [PATCH] erofs: clean up erofs_ishare_fill_inode()
+Date: Mon,  8 Jun 2026 01:21:32 +0800
+Message-ID: <20260607172132.2695176-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,137 +61,145 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: build: link tools with liberofs dependencies
-To: <linux-erofs@lists.ozlabs.org>, <guoxuenan@huawei.com>,
-	<zhukeqian1@huawei.com>
-References: <20260529071702.981596-1-zhaoyifan28@huawei.com>
- <aiA8AhQvFtK_QMwb@debian>
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-In-Reply-To: <aiA8AhQvFtK_QMwb@debian>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [100.102.28.251]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3521-lists,linux-erofs=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3522-lists,linux-erofs=lfdr.de];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_RCPT(0.00)[linux-erofs];
 	ALIAS_RESOLVED(0.00)[];
-	HAS_XOIP(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,huawei.com:mid,huawei.com:dkim,huawei.com:from_mime,huawei.com:email,configure.ac:url]
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,alibaba.com:email,linux.alibaba.com:mid,linux.alibaba.com:from_mime,linux.alibaba.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 77887650733
+X-Rspamd-Queue-Id: DF00A65111E
 
+ - Use the shorthand `si` to replace the overly long `sharedinode`;
 
-On 2026/6/3 22:36, Gao Xiang wrote:
-> Hi Yifan,
->
-> On Fri, May 29, 2026 at 03:17:02PM +0800, Yifan Zhao wrote:
->> liberofs.la is a noinst libtool archive, so relying on its
->> dependency_libs to carry external libraries is not enough for
->> static-only dependencies.
->>
->> For example, when liblzma is installed as a static libtool archive,
->> libtool consumes -llzma while creating liberofs.la but does not record it
->> in dependency_libs.  The final tools then link only with liberofs.la and
->> fail with undefined lzma_* references.
->>
->> Collect liberofs external libraries in LIBEROFS_LIBS and use it for both
->> liberofs.la and the final tools, so final executable links see the
->> pkg-config supplied liblzma flags directly.
->>
->> Reported-by: Guo Xuenan <guoxuenan@huawei.com>
->> Fixes: 6c2a000782b2 ("erofs-utils: lib: add test for s3erofs_prepare_url()")
->> Assisted-by: Codex:GPT-5.5
->> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
->> ---
->> To reproduce link error:
->>
->>      ./autogen.sh
->>      PKG_CONFIG_PATH=/path/to/xz-static/lib/pkgconfig ./configure
->>      make -j
->>
->> Then {mkfs,dump,fsck}.erofs reports missing lzma_* symbol as `-llzma`
->> missing in ld flags.
->>
->>   configure.ac      | 17 +++++++++++++++++
->>   dump/Makefile.am  |  2 +-
->>   fsck/Makefile.am  |  4 ++--
->>   fuse/Makefile.am  |  5 +++--
->>   lib/Makefile.am   | 14 +++-----------
->>   mkfs/Makefile.am  |  2 +-
->>   mount/Makefile.am |  2 +-
->>   7 files changed, 28 insertions(+), 18 deletions(-)
->>
->> diff --git a/configure.ac b/configure.ac
->> index f68bb74..17b4856 100644
->> --- a/configure.ac
->> +++ b/configure.ac
->> @@ -790,6 +790,23 @@ AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
->>   AM_CONDITIONAL([ENABLE_OCI], [test "x${have_oci}" = "xyes"])
->>   AM_CONDITIONAL([ENABLE_FANOTIFY], [test "x${have_fanotify}" = "xyes"])
->>   
->> +LIBEROFS_LIBS="${libselinux_LIBS} ${libuuid_LIBS} ${liblz4_LIBS} \
->> +${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS} \
->> +${libqpl_LIBS} ${libcurl_LIBS} ${openssl_LIBS} ${json_c_LIBS}"
->> +AS_IF([test "x${have_xxhash}" = "xyes"], [
->> +  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libxxhash_LIBS}"
->> +])
->> +AS_IF([test "x${have_s3}" = "xyes"], [
->> +  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libxml2_LIBS}"
->> +])
->> +AS_IF([test "x${enable_multithreading}" != "xno"], [
->> +  LIBEROFS_LIBS="${LIBEROFS_LIBS} -lpthread"
->> +])
->> +AS_IF([test "x${build_linux}" = "xyes"], [
->> +  LIBEROFS_LIBS="${LIBEROFS_LIBS} ${libnl3_LIBS}"
->> +])
-> Although I admit that I'm not super happy with this approach, but it
-> seems that we have to do like this.
->
-> My only question here is that why  ${libxxhash_LIBS},  ${libxml2_LIBS}
-> and ${libnl3_LIBS} cannot be appended directly to LIBEROFS_LIBS as
-> others.
+ - Introduce erofs_warn() and get rid of barely-used _erofs_printk();
 
-As these flags were conditionally appended to liberofs_la_LDFLAGS in the 
-original lib/Makefile.am code path.
+ - Get rid of the variable `hash`;
 
+ - Simplify error paths.
 
-Thanks,
+Cc: Hongbo Li <lihongbo22@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/ishare.c   | 45 +++++++++++++++++++--------------------------
+ 2 files changed, 21 insertions(+), 26 deletions(-)
 
-Yifan
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 4792490161ec..9e2ae7b61977 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -23,6 +23,8 @@
+ __printf(2, 3) void _erofs_printk(struct super_block *sb, const char *fmt, ...);
+ #define erofs_err(sb, fmt, ...)	\
+ 	_erofs_printk(sb, KERN_ERR fmt "\n", ##__VA_ARGS__)
++#define erofs_warn(sb, fmt, ...) \
++	_erofs_printk(sb, KERN_WARNING fmt "\n", ##__VA_ARGS__)
+ #define erofs_info(sb, fmt, ...) \
+ 	_erofs_printk(sb, KERN_INFO fmt "\n", ##__VA_ARGS__)
+ 
+diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+index 6ed66b17359b..35cbd0bc04d7 100644
+--- a/fs/erofs/ishare.c
++++ b/fs/erofs/ishare.c
+@@ -40,49 +40,42 @@ static int erofs_ishare_iget5_set(struct inode *inode, void *data)
+ bool erofs_ishare_fill_inode(struct inode *inode)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+-	struct erofs_inode *vi = EROFS_I(inode);
+ 	const struct address_space_operations *aops;
++	struct erofs_inode *vi = EROFS_I(inode);
+ 	struct erofs_inode_fingerprint fp;
+-	struct inode *sharedinode;
+-	unsigned long hash;
++	struct inode *si;
+ 
+ 	aops = erofs_get_aops(inode, true);
+ 	if (IS_ERR(aops))
+ 		return false;
+ 	if (erofs_xattr_fill_inode_fingerprint(&fp, inode, sbi->domain_id))
+ 		return false;
+-	hash = xxh32(fp.opaque, fp.size, 0);
+-	sharedinode = iget5_locked(erofs_ishare_mnt->mnt_sb, hash,
+-				   erofs_ishare_iget5_eq, erofs_ishare_iget5_set,
+-				   &fp);
+-	if (!sharedinode) {
+-		kfree(fp.opaque);
+-		return false;
+-	}
+ 
+-	if (inode_state_read_once(sharedinode) & I_NEW) {
+-		sharedinode->i_mapping->a_ops = aops;
+-		sharedinode->i_size = vi->vfs_inode.i_size;
+-		unlock_new_inode(sharedinode);
++	si = iget5_locked(erofs_ishare_mnt->mnt_sb,
++			  xxh32(fp.opaque, fp.size, 0),
++			  erofs_ishare_iget5_eq, erofs_ishare_iget5_set, &fp);
++	if (si && (inode_state_read_once(si) & I_NEW)) {
++		si->i_mapping->a_ops = aops;
++		si->i_size = inode->i_size;
++		unlock_new_inode(si);
+ 	} else {
+ 		kfree(fp.opaque);
+-		if (aops != sharedinode->i_mapping->a_ops) {
+-			iput(sharedinode);
++		if (!si || aops != si->i_mapping->a_ops) {
++			iput(si);
+ 			return false;
+ 		}
+-		if (sharedinode->i_size != vi->vfs_inode.i_size) {
+-			_erofs_printk(inode->i_sb, KERN_WARNING
+-				"size(%lld:%lld) not matches for the same fingerprint\n",
+-				vi->vfs_inode.i_size, sharedinode->i_size);
+-			iput(sharedinode);
++		if (si->i_size != inode->i_size) {
++			erofs_warn(inode->i_sb, "i_size mismatch (%lld != %lld) for the same fingerprint",
++				   inode->i_size, si->i_size);
++			iput(si);
+ 			return false;
+ 		}
+ 	}
+-	vi->sharedinode = sharedinode;
++	vi->sharedinode = si;
+ 	INIT_LIST_HEAD(&vi->ishare_list);
+-	spin_lock(&EROFS_I(sharedinode)->ishare_lock);
+-	list_add(&vi->ishare_list, &EROFS_I(sharedinode)->ishare_list);
+-	spin_unlock(&EROFS_I(sharedinode)->ishare_lock);
++	spin_lock(&EROFS_I(si)->ishare_lock);
++	list_add(&vi->ishare_list, &EROFS_I(si)->ishare_list);
++	spin_unlock(&EROFS_I(si)->ishare_lock);
+ 	return true;
+ }
+ 
+-- 
+2.43.5
 
-> But I think it's fine to guard `-lpthread` with enable_multithreading
-> tho.
->
-> Thanks,
-> Gao Xiang
->
 
