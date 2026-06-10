@@ -1,48 +1,77 @@
-Return-Path: <linux-erofs+bounces-3564-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3565-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id MZQgAIwKKWrnPAMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3564-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 08:56:12 +0200
+	id PeIzO8iXKWoraQMAu9opvQ
+	(envelope-from <linux-erofs+bounces-3565-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 18:58:48 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 647BF6666AA
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 08:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 522E566BC22
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 18:58:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=K4qw8D70;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3564-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3564-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	dkim=pass header.d=intel.com header.s=Intel header.b=B+b0ikbI;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3565-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3565-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gZxPz20mGz2xl6;
-	Wed, 10 Jun 2026 16:56:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gbBnH5sHWz2ysW;
+	Thu, 11 Jun 2026 02:58:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781074567;
-	cv=none; b=IVj2v3ltimfFQWar/fchYnDpPh115Ep70LX99ElnJjigyUA7Hf8MxeqWscxVZ7DAIQPDVoNlyfk4b3NLyR//+OYWSKDXRHEHqfheSplcX+vU08MKtUOh4S9d1SUizT2DhGZq/Lq1YgkfmWRxVJ1vphE7GSc0busAH55RMDND29HAEXZ2B0LO0SyZlazvjHJTAsjhZaWZ/U9j12n71/mLFmT6VF6j8Pn/rz3YXMPRdjSHNbOa8v6weStzssePjH2e9UPQy4RLEln5nJW0YG/3NvVGuvfv48OVgoZMcrnG8h7XNfONVti6OrA/dHk9IJw+EIgZHpDFg4qnqTzMJvlh3w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781110723;
+	cv=none; b=PveDwDQzhOscdma/7c1xp9nTO94TYvYBziiluu9e1gIdfIR9SmFarzi/owsNZH2ahoYg27wtW4jWJmuAhvu6NDxsP6x07vo9bow44lOrO1NqcbZQw6ijWreHH9UhTFBSkfvjUVB9jZba4TL91xx548HvI4kx0jhYabJqrwvbyBbNk123lTEM1M5pADvk2CuUdtBT7SMBngBG09fA8Vkln2C950WnQnJHQdlJgJY0dRJJesqnvzN3TLzun5rNU4M2UI3G4cRUSh9cS6wB78WzbipgCGvwr630xImN1R9wQFz5A1P79BIiIlS4Jxqy0rhkRD1wzo4PJi81ZZ0pq1fVDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781074567; c=relaxed/relaxed;
-	bh=tHKZXlYHzQiuz4CuXIVUBayRBgQEvDJmST6DE9mf+8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jDaugbyxgmARhKotIY0XDbFcM3LVQkS+RufzPPpvz47B+O5CEiZl+crFKJym1DEK6JBomfhpc1thxPsjtkjPEr0sBRrAeXNmmTiC+JC1UB3sZy5ONicqUQAvYCmaBHb9Oe6e9Kqga8xmORPWiGD+6PEjZ8zuayVvSJ/XLNUOcEX3zF13bolZvN+M7vKt8unghoXP5Ym2XqrSayx4mZ6pry68XC6NrwV0Ak8Ecpdzng1WY4/mjRYNsAIq04flvD93V6+XEfEX2piwoR9LVhD/a6g/QAvW9WtEaL8VeAh6RsefMbSSaGN/RlBmPF65iDQaryNP559HxBdzaH8dlxLUXQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=K4qw8D70; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1781110723; c=relaxed/relaxed;
+	bh=CXTTcuFWbZ7V0XvKeXPADe0IJquvkzdNY73C33bMulk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=n/SWlA9Krj1ZD2BiK9zOwpE5wRcg/+bieikR5dRqJBpgz2OOhixf6uHNZZsW7cY6E3d1f3MWDS0qzd5O5Ys/B5z7g36QTEUG/JRADUzhndujCRh6Z8qXenU4VYCYjz7ub3eVtRjrP2z6ru68PHJt8kb9ECwMZ1iht0+vqvN0fMpaLmlkG8FHT2cHdK2/1lWCoamtkF9U3h2NEaXH6gy4m6sqhVESdOANpRBA0CD0/mu4Xt3za7CG5+tW4DvALD8sElQ7rdFjkb+ULeaOvyPCtRHovo26YNkwgO7pu2+VcGWIdtCXlJ6FlUxghOHnZGeg4mq0FEYCAdoLeWyqWjeHfA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=B+b0ikbI; dkim-atps=neutral; spf=pass (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gZxPw5gbfz2xjN
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jun 2026 16:56:02 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1781074557; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=tHKZXlYHzQiuz4CuXIVUBayRBgQEvDJmST6DE9mf+8g=;
-	b=K4qw8D70R38P6bAf0K80YJCV5rU/2Y+4objpKvfsrTzh8x7wIwXWWx1VkfhjN2YtVCzW18RwNuMMbdzGfqIgqtWHSup79ELxKrJoTZizqkPgu+Jeeu4KseHsDgUqQ5TUr877AlTIXafgCkXJO0ozvNTSQeQmNUBZqROhe3WCq9g=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0X4ZbVxy_1781074555;
-Received: from 30.221.130.225(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4ZbVxy_1781074555 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Jun 2026 14:55:56 +0800
-Message-ID: <e4aa171b-ac0f-4cd1-8605-91a3f82a4faf@linux.alibaba.com>
-Date: Wed, 10 Jun 2026 14:55:54 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gbBnD5dSNz2yfD
+	for <linux-erofs@lists.ozlabs.org>; Thu, 11 Jun 2026 02:58:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781110721; x=1812646721;
+  h=date:from:to:cc:subject:message-id;
+  bh=VOhILyXbME9z1HBGHYM9Zx5PrEVHKK/JJZA8YEqqTJ8=;
+  b=B+b0ikbIyUw3olvQa6L076XeLPDy+KEUmvuD1JBVhqwDh9xW7MCr3LdJ
+   R/119mB9yA5RPrAZTlIEC6VFS9ko95mQt6iu9uaGYpurhdHBOfVQA8ZuP
+   geDkPlgUT/VFtoopSQq/b2uvVDL5Q3wKYF1gV7iRLyLj+yDUDZe3gJpLq
+   dnDa7kZ9YQUsWMIjyC8Z2FZVILu3RFCQ4xVnwt6wKrd3FTc3elWPCo7Dn
+   ooJzWlztyB40M2eswdXuspWBEupDAzb14cLUBlmnF9gg3gQo5XK1ARJuD
+   6DUWitCnrqk+pmaYWqpzl8hBezvYYWAeR7B2AZu89jPAP9MwvKuRKPRuE
+   A==;
+X-CSE-ConnectionGUID: T8DvfMd8Q3moxTHcBehamA==
+X-CSE-MsgGUID: kAeJhKRaRJaQUEvBmL8r3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="84482573"
+X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
+   d="scan'208";a="84482573"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 09:58:34 -0700
+X-CSE-ConnectionGUID: KGYrZm3sQ/if2YYkmzde3Q==
+X-CSE-MsgGUID: gySx1ax0S1ioZ1qPc2x5QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
+   d="scan'208";a="245101260"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 10 Jun 2026 09:58:33 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wXMG5-00000000Lh4-43Jc;
+	Wed, 10 Jun 2026 16:58:29 +0000
+Date: Thu, 11 Jun 2026 00:58:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ ed9ad8d3a13931a5a0f65208b82135dd166a3ce0
+Message-ID: <202606110057.uNlSwBCu-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -53,223 +82,237 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 7/8] erofs: open via dedicated fs bdev helpers
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Carlos Maiolino <cem@kernel.org>,
- linux-xfs@vger.kernel.org, Chris Mason <clm@fb.com>,
- David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
- Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
- Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
- Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-References: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
- <20260602-work-super-bdev_holder_global-v1-7-bb0fd82f3861@kernel.org>
- <7c5bfcf0-36a3-4cc6-bf31-6af4fc901c37@linux.alibaba.com>
- <20260603-nieder-ausdehnen-siebdruck-aa96f40ebec6@brauner>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260603-nieder-ausdehnen-siebdruck-aa96f40ebec6@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3564-lists,linux-erofs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:hch@lst.de,m:jack@suse.cz,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3565-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,intel.com:dkim,intel.com:mid,intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 647BF6666AA
+X-Rspamd-Queue-Id: 522E566BC22
 
-Hi Christian,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: ed9ad8d3a13931a5a0f65208b82135dd166a3ce0  erofs: update the overview of the documentation
 
-On 2026/6/3 21:42, Christian Brauner wrote:
->> May I ask if it's an urgent 7.2 work? If not, I could
-> 
-> No no, it's way too late for that this cycle.
-> 
->> make a preparation patch for the upcoming 7.2 cycle
->> to handle erofs_map_dev() failure here so you don't
->> need to bother with this in this patchset.
-> 
-> Sounds good. I take it you can just do this yourself without me.
-> 
->> I will seek more time to resolve the recent todos
-> 
-> Thanks!
-> 
->> yet always intercepted by other unrelated stuffs.
-> 
-> :)
+elapsed time: 786m
 
-I removed .shutdown() and .remove_bdev() implementations since I
-think it doesn't quite seem necessary for immutable fses, but
-would like to know your thoughts too, my overall own comments are
-documented in the commit message below:
+configs tested: 182
+configs skipped: 0
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- From 933f6c6f2e704116d9a15815c880196bec7b9ee3 Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 2 Jun 2026 12:10:13 +0200
-Subject: [PATCH] erofs: open via dedicated fs bdev helpers
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+arc                              allmodconfig    gcc-16.1.0
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    clang-23
+arc                              allyesconfig    gcc-16.1.0
+arc                   randconfig-001-20260610    gcc-8.5.0
+arc                   randconfig-002-20260610    gcc-9.5.0
+arm                               allnoconfig    clang-23
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    gcc-16.1.0
+arm                        mvebu_v7_defconfig    clang-23
+arm                   randconfig-001-20260610    clang-23
+arm                   randconfig-002-20260610    clang-20
+arm                   randconfig-003-20260610    clang-23
+arm                   randconfig-004-20260610    clang-23
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-16.1.0
+arm64                 randconfig-001-20260610    gcc-11.5.0
+arm64                 randconfig-002-20260610    gcc-11.5.0
+arm64                 randconfig-002-20260610    gcc-9.5.0
+arm64                 randconfig-003-20260610    gcc-11.5.0
+arm64                 randconfig-003-20260610    gcc-8.5.0
+arm64                 randconfig-004-20260610    clang-23
+arm64                 randconfig-004-20260610    gcc-11.5.0
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                  randconfig-001-20260610    gcc-11.5.0
+csky                  randconfig-001-20260610    gcc-9.5.0
+csky                  randconfig-002-20260610    gcc-11.5.0
+hexagon                          allmodconfig    clang-23
+hexagon                           allnoconfig    clang-23
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon               randconfig-001-20260610    clang-23
+hexagon               randconfig-002-20260610    clang-22
+i386                             allmodconfig    clang-22
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-16.1.0
+i386                             allyesconfig    clang-22
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20260610    gcc-14
+i386        buildonly-randconfig-002-20260610    gcc-14
+i386        buildonly-randconfig-003-20260610    gcc-14
+i386        buildonly-randconfig-004-20260610    gcc-14
+i386        buildonly-randconfig-005-20260610    gcc-14
+i386        buildonly-randconfig-006-20260610    clang-22
+i386                           randconfig-001    clang-22
+i386                  randconfig-001-20260610    gcc-14
+i386                           randconfig-002    gcc-14
+i386                  randconfig-002-20260610    gcc-14
+i386                           randconfig-003    gcc-14
+i386                  randconfig-003-20260610    clang-22
+i386                           randconfig-004    clang-22
+i386                  randconfig-004-20260610    gcc-14
+i386                           randconfig-005    gcc-14
+i386                  randconfig-005-20260610    clang-22
+i386                           randconfig-006    gcc-14
+i386                  randconfig-006-20260610    gcc-14
+i386                           randconfig-007    gcc-14
+i386                  randconfig-007-20260610    gcc-14
+i386                  randconfig-011-20260610    clang-22
+i386                  randconfig-012-20260610    clang-22
+i386                  randconfig-013-20260610    clang-22
+i386                  randconfig-014-20260610    clang-22
+i386                  randconfig-015-20260610    clang-22
+i386                  randconfig-016-20260610    clang-22
+i386                  randconfig-017-20260610    gcc-14
+loongarch                        allmodconfig    clang-19
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    clang-20
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch             randconfig-001-20260610    gcc-16.1.0
+loongarch             randconfig-002-20260610    gcc-16.1.0
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    gcc-16.1.0
+m68k                        m5272c3_defconfig    gcc-16.1.0
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+nios2                            allmodconfig    clang-20
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    clang-23
+nios2                             allnoconfig    gcc-11.5.0
+nios2                 randconfig-001-20260610    gcc-11.5.0
+nios2                 randconfig-002-20260610    gcc-11.5.0
+openrisc                         allmodconfig    clang-20
+openrisc                         allmodconfig    gcc-16.1.0
+openrisc                          allnoconfig    clang-23
+openrisc                          allnoconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-23
+parisc                            allnoconfig    gcc-16.1.0
+parisc                           allyesconfig    clang-17
+parisc                           allyesconfig    gcc-16.1.0
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-23
+powerpc                           allnoconfig    gcc-16.1.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                             allnoconfig    gcc-16.1.0
+riscv                            allyesconfig    clang-23
+riscv                          randconfig-001    gcc-13.4.0
+riscv                 randconfig-001-20260610    gcc-15.2.0
+riscv                          randconfig-002    clang-23
+riscv                 randconfig-002-20260610    gcc-8.5.0
+s390                             allmodconfig    clang-17
+s390                             allmodconfig    clang-23
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-16.1.0
+s390                           randconfig-001    gcc-15.2.0
+s390                  randconfig-001-20260610    clang-23
+s390                           randconfig-002    clang-18
+s390                  randconfig-002-20260610    clang-23
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-23
+sh                                allnoconfig    gcc-16.1.0
+sh                               allyesconfig    clang-17
+sh                               allyesconfig    gcc-16.1.0
+sh                                  defconfig    gcc-14
+sh                             randconfig-001    gcc-14.3.0
+sh                    randconfig-001-20260610    gcc-16.1.0
+sh                             randconfig-002    gcc-9.5.0
+sh                    randconfig-002-20260610    gcc-16.1.0
+sparc                             allnoconfig    clang-23
+sparc                             allnoconfig    gcc-16.1.0
+sparc                 randconfig-001-20260610    gcc-8.5.0
+sparc                 randconfig-002-20260610    gcc-14.3.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260610    gcc-12.5.0
+sparc64               randconfig-002-20260610    clang-23
+um                               allmodconfig    clang-17
+um                               allmodconfig    clang-23
+um                                allnoconfig    clang-16
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-14
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260610    clang-23
+um                    randconfig-002-20260610    clang-18
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-22
+x86_64                            allnoconfig    clang-22
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-22
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260610    clang-22
+x86_64                randconfig-002-20260610    clang-22
+x86_64                randconfig-003-20260610    gcc-13
+x86_64                randconfig-004-20260610    clang-22
+x86_64                randconfig-005-20260610    clang-22
+x86_64                randconfig-006-20260610    gcc-13
+x86_64                randconfig-011-20260610    gcc-12
+x86_64                randconfig-012-20260610    gcc-12
+x86_64                randconfig-013-20260610    gcc-14
+x86_64                randconfig-014-20260610    gcc-12
+x86_64                randconfig-015-20260610    gcc-14
+x86_64                randconfig-016-20260610    gcc-14
+x86_64                randconfig-071-20260610    gcc-14
+x86_64                randconfig-072-20260610    gcc-14
+x86_64                randconfig-073-20260610    gcc-14
+x86_64                randconfig-074-20260610    gcc-14
+x86_64                randconfig-075-20260610    gcc-14
+x86_64                randconfig-076-20260610    gcc-14
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-23
+xtensa                            allnoconfig    gcc-16.1.0
+xtensa                           allyesconfig    clang-20
+xtensa                           allyesconfig    gcc-16.1.0
+xtensa                randconfig-001-20260610    gcc-8.5.0
+xtensa                randconfig-002-20260610    gcc-8.5.0
 
-Route opens through fs_bdev_file_open_by_path() so each external device
-is registered against the correct superblock, and convert the matching
-releases.
-
-Gao Xiang: I think typical immutable filesystems don't need .shutdown()
-and .remove_bdev() for the following reasons:
-
-  - blk_mark_disk_dead() sets GD_DEAD in advance of fs_bdev_mark_dead()
-    so that the following bios will fail immediately; block_device
-    references are still valid so it seems overkill to handle dead
-    blockdevs in the deep filesystem I/O submission path.
-
-  - Immutable filesystems like EROFS don't have write paths and journals,
-    so they don't need to block writes (i.e., new dirty pages), metadata
-    changes, and abort journals.
-
-  - The comment above loop_change_fd() documents a valid read-only use
-    case we need to support anyway, but it calls disk_force_media_change()
-    which will call fs_bdev_mark_dead() later: we don't want loop_change_fd()
-    shutdowns the active filesystems and return -EIO unconditionally.
-
-Currently I think the default behavior (shrink_dcache_sb + evict_inodes)
-in fs_bdev_mark_dead() is enough for immutable filesystems, tried to
-document in the commit here for later reference.
-
-Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-  fs/erofs/super.c | 35 +++++++++++++++++++++++------------
-  1 file changed, 23 insertions(+), 12 deletions(-)
-
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 802add6652fd..def9cbfbc9d8 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -153,8 +153,8 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
-  	} else if (!sbi->devs->flatdev) {
-  		file = erofs_is_fileio_mode(sbi) ?
-  				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
--				bdev_file_open_by_path(dif->path,
--						BLK_OPEN_READ, sb->s_type, NULL);
-+				fs_bdev_file_open_by_path(dif->path,
-+						BLK_OPEN_READ, sb->s_type, sb);
-  		if (IS_ERR(file)) {
-  			if (file == ERR_PTR(-ENOTBLK))
-  				return -EINVAL;
-@@ -843,11 +843,16 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
-
-  static int erofs_release_device_info(int id, void *ptr, void *data)
-  {
-+	struct super_block *sb = data;
-  	struct erofs_device_info *dif = ptr;
-
-  	fs_put_dax(dif->dax_dev, NULL);
--	if (dif->file)
--		fput(dif->file);
-+	if (dif->file) {
-+		if (S_ISBLK(file_inode(dif->file)->i_mode))
-+			fs_bdev_file_release(dif->file, sb);
-+		else
-+			fput(dif->file);
-+	}
-  	erofs_fscache_unregister_cookie(dif->fscache);
-  	dif->fscache = NULL;
-  	kfree(dif->path);
-@@ -855,18 +860,19 @@ static int erofs_release_device_info(int id, void *ptr, void *data)
-  	return 0;
-  }
-
--static void erofs_free_dev_context(struct erofs_dev_context *devs)
-+static void erofs_free_dev_context(struct erofs_dev_context *devs,
-+				   struct super_block *sb)
-  {
-  	if (!devs)
-  		return;
--	idr_for_each(&devs->tree, &erofs_release_device_info, NULL);
-+	idr_for_each(&devs->tree, &erofs_release_device_info, sb);
-  	idr_destroy(&devs->tree);
-  	kfree(devs);
-  }
-
--static void erofs_sb_free(struct erofs_sb_info *sbi)
-+static void erofs_sb_free(struct erofs_sb_info *sbi, struct super_block *sb)
-  {
--	erofs_free_dev_context(sbi->devs);
-+	erofs_free_dev_context(sbi->devs, sb);
-  	kfree(sbi->fsid);
-  	kfree_sensitive(sbi->domain_id);
-  	if (sbi->dif0.file)
-@@ -879,8 +885,13 @@ static void erofs_fc_free(struct fs_context *fc)
-  {
-  	struct erofs_sb_info *sbi = fc->s_fs_info;
-
--	if (sbi) /* free here if an error occurs before transferring to sb */
--		erofs_sb_free(sbi);
-+	/*
-+	 * Freed here only if an error occurs before the sb is set up; at that
-+	 * point no block-backed device has been claimed (that happens in
-+	 * fill_super), so the NULL sb never reaches fs_bdev_file_release().
-+	 */
-+	if (sbi)
-+		erofs_sb_free(sbi, NULL);
-  }
-
-  static const struct fs_context_operations erofs_context_ops = {
-@@ -936,7 +947,7 @@ static void erofs_kill_sb(struct super_block *sb)
-  	erofs_drop_internal_inodes(sbi);
-  	fs_put_dax(sbi->dif0.dax_dev, NULL);
-  	erofs_fscache_unregister_fs(sb);
--	erofs_sb_free(sbi);
-+	erofs_sb_free(sbi, sb);
-  	sb->s_fs_info = NULL;
-  }
-
-@@ -948,7 +959,7 @@ static void erofs_put_super(struct super_block *sb)
-  	erofs_shrinker_unregister(sb);
-  	erofs_xattr_prefixes_cleanup(sb);
-  	erofs_drop_internal_inodes(sbi);
--	erofs_free_dev_context(sbi->devs);
-+	erofs_free_dev_context(sbi->devs, sb);
-  	sbi->devs = NULL;
-  	erofs_fscache_unregister_fs(sb);
-  }
 --
-2.43.5
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
