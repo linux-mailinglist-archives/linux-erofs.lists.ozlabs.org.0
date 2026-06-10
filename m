@@ -1,77 +1,54 @@
-Return-Path: <linux-erofs+bounces-3562-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3563-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id qW9lJ7GhKGrhGwMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3562-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 01:28:49 +0200
+	id lSn9LI/UKGpQKgMAu9opvQ
+	(envelope-from <linux-erofs+bounces-3563-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 05:05:51 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB3A664C8E
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 01:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6194C6658C9
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jun 2026 05:05:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=d3aefwDz;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3562-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3562-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=buG81GDV;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3563-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3563-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gZlTl5Qk2z2ykX;
-	Wed, 10 Jun 2026 09:28:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gZrJD004Zz2xjN;
+	Wed, 10 Jun 2026 13:05:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781047723;
-	cv=none; b=g7L2OoSUor0zwAOshCBb7giwfN0xGO1+9iGslgmXb3+e6CObVK8GnKpQIn1wmfiIjquJD5ljzyXUKQSEA0DNdJJ9rXxNLphX+o6542bjPBWmPpyuK25GyuP/0NBJBI4RIHQrLdBY4lbJXOfmIHVmnyr+XqRl7sw4r1DnfgGEbwkV8z5NUwTfLzVUr3MzShnDwKvsP+zQJ9mIXxfDOSjX2dSlUw5plHCP0xOnX37cYS+8SVmylEr4q0ajr+CD2uTHJCLcXR4ZdiLceITskgFS92PpVgwhIwz7uQrQ2BVmPUZBbEDnWY0xYwHoIsqXu13xGs/4TvWTk+XQdddGpSWMZg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781060747;
+	cv=none; b=oLezKpm8UuQ/HihN2Ne+u5kdz+c//aSmg4YsI40uBjnuDVJNrfUG4oEcYruMTvT/hy2dS8R2hcVcqnsvd+AE67ftpw2/aQJHaukesgz144C3KEVoNwBAertDpdidJPMX914xYsjY5bzyw4H9SiALLxNmyGZfVKfC7FeAeNVXEptQudDg6UwsUqAfbZAkoo/DVQZYuXItzkhAnjJ7g082W8GYrfZ1UZm0TCgOcwFvLRB//iIv4fEILNmVJPkMyK+YWTVcxoG8iZ/ez2CmnAzYddDsHD6sij8zNdmYBhFdUS8ZzA0Fago0FjPEVHeJGNzNHXjLCvuC/IMxMfVLatAnlw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781047723; c=relaxed/relaxed;
-	bh=B0IUfAjQ1vUlk5yyRKIc8rQytHtbxDcb0DGGiNIx6oY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=BORT+NMn+iQpKGIsRYR+DtkpomLfLLM4SUx69FPK59MvMrPV0L3p675E4EdXjZ3MosU/EI8sNuSvZwObo3nGThtwmryb+VNUqSVLAtFkikTjKIG4BMJOLfWGqXV3d23HpqXjZkzBFeeD7scCGycAFIzkb/KoGJ+8GMla2nuHwzHf2f9Yd/Ce9fGQF4CpO5/0XgycxuBGdtqOKumMdY6Qi1sCuRTkk7U7boLwnj/A1B4sX79ExZ4xEW0oBH0RpN3i0C/cHAkbrYTP2CjkKfZfhdBpih02A5BnYpRG52w1SLZUVqzf1FIqfKAK7esrwj3BmdIX1X8znECcwQT8SNVlMA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=d3aefwDz; dkim-atps=neutral; spf=temperror (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1781060747; c=relaxed/relaxed;
+	bh=/3y1DXBqK4hASYqGvG8VlKmJ9FLUEWajTyJcdgYqiT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S/UdULCNY+/Gy1A3dAUKuU1W1zGxo4OPuv9+MysTTCVVqnqJu7u2a9CXRm9Mm+fZ3Ip8US1GgfpQuThc+v8Yneb6LnPYA0WM8t4fp7ztod58/3ZgT1zOhmPhChETCdk9SHy9pOKAMrrXkxgN5zDBZb50XxbK00yN5b4zCSnqpuf5VKDUk6j7j+3KhCOOQIOK82JJsnp+enE6MbBL+RSEowBUIK+pmB+brictEPHH60sOKlSOMET36VG4EnL6sOh2oZWlbaS4HeIUvGeqFS9FVNfi1IPx/kfJEWZw23aZ25Np3U5JpkNIWyCQkYV+6kXrj1ijZdaYbOc2jkERpkcl3w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=buG81GDV; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gZlTh3dwhz2xLm
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jun 2026 09:28:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781047721; x=1812583721;
-  h=date:from:to:cc:subject:message-id;
-  bh=K4rYkmPiQj3sv9mB/YHyGI/GE79yiNwxyz/XZjwa5LQ=;
-  b=d3aefwDzovbZhA/9taLWLWByZeRIwM//+ewJ7QyT7p6czqD5hOTVsryS
-   k0xdjj+A0YLpW6j0eDlNa+ywEa1x6LENczntxyy4Ucc37Mn29t5fw15/W
-   yOSqIBcIUFOx8nsdkxUPNduHXSoZkhRUZLlULQ6ukxY/ENbXB5lEX+hWt
-   9G8yriz26wlZtpYK5RIa8SzsRnJMdCFSczz6FL3lqsSlFg4YkMOdbj5q3
-   AXKZBiEVjQt0bg2FkznNt03A8paTYPzIDYvy9VAObaxBa1q/DOafoHNiK
-   w2kOHQV3Lysisa4lArTdE2mjV4b8ljsowu+d1Z7zAbc8nGGdCgva8qHSQ
-   g==;
-X-CSE-ConnectionGUID: MAq3AVd9SeuhW+bqYO4UpQ==
-X-CSE-MsgGUID: fC2GzZ4kRqKv69TFpP36UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80962191"
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="80962191"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 16:28:15 -0700
-X-CSE-ConnectionGUID: VSk/sjraTBanDaJbgY2ruQ==
-X-CSE-MsgGUID: 42H3PskKRSu7aOX0rFvjlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="249922079"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 09 Jun 2026 16:28:14 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wX5re-00000000KfM-3nPM;
-	Tue, 09 Jun 2026 23:28:10 +0000
-Date: Wed, 10 Jun 2026 07:27:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- bf64c6d804c4e657a7f8f1eaeb54a7058e9fa82c
-Message-ID: <202606100740.fWpVdxyA-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gZrJ873RFz2xdb
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jun 2026 13:05:43 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1781060738; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=/3y1DXBqK4hASYqGvG8VlKmJ9FLUEWajTyJcdgYqiT8=;
+	b=buG81GDVyTWbmPtr967LWtjatJgoDpCYw0tuZaCyfjN2FH5x3CZ+0Qs9ZZpY0rg+AbvrQMaQNHzgmD+zhgiGeXji+ApPlssgw7UO8mDnA4PHc9ioIpfJ9D/6FLPvSw20QPxaRelfot7RLamxWG7FJMyuOpzpKQHANM85u6S0Zhg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X4YdGUm_1781060733;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4YdGUm_1781060733 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 10 Jun 2026 11:05:37 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: oliver.yang@linux.alibaba.com,
+	LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: update the overview of the documentation
+Date: Wed, 10 Jun 2026 11:05:32 +0800
+Message-ID: <20260610030532.3170375-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -82,237 +59,223 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.70 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-3563-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-3562-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
 	ALIAS_RESOLVED(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:mid,intel.com:from_mime,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BAB3A664C8E
+X-Rspamd-Queue-Id: 6194C6658C9
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: bf64c6d804c4e657a7f8f1eaeb54a7058e9fa82c  erofs: clean up erofs_ishare_fill_inode()
+Update the overview section to better reflect EROFS's design philosophy
+as an immutable image filesystem, update the feature highlights with
+recent capabilities, and remove outdated items.
 
-elapsed time: 2604m
+The following detailed sections will be revised later since the overview
+section is the most visible part of our documentation. Outdated or
+ambiguous information could mislead new users and potential adopters.
 
-configs tested: 182
-configs skipped: 7
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ Documentation/filesystems/erofs.rst | 129 ++++++++++++++--------------
+ 1 file changed, 66 insertions(+), 63 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+index fe06308e546c..85a8d5020347 100644
+--- a/Documentation/filesystems/erofs.rst
++++ b/Documentation/filesystems/erofs.rst
+@@ -7,83 +7,90 @@ EROFS - Enhanced Read-Only File System
+ Overview
+ ========
+ 
+-EROFS filesystem stands for Enhanced Read-Only File System.  It aims to form a
+-generic read-only filesystem solution for various read-only use cases instead
+-of just focusing on storage space saving without considering any side effects
+-of runtime performance.
+-
+-It is designed to meet the needs of flexibility, feature extendability and user
+-payload friendly, etc.  Apart from those, it is still kept as a simple
+-random-access friendly high-performance filesystem to get rid of unneeded I/O
+-amplification and memory-resident overhead compared to similar approaches.
+-
+-It is implemented to be a better choice for the following scenarios:
+-
+- - read-only storage media or
+-
+- - part of a fully trusted read-only solution, which means it needs to be
++EROFS (Enhanced Read-Only File System) is a modern, efficient, and secure
++read-only kernel filesystem designed for various use cases including immutable
++system images, container images, application sandbox images, and dataset
++distribution.
++
++An immutable image filesystem can be regarded as an enhanced archive format
++which allows golden images to be built once and mounted everywhere -- images are
++bit-for-bit identical across all deployments and can be verified, audited, or
++shared without concerns about runtime modifications (in this model, all user
++writes should be redirected into another trusted filesystem, for example, via
++overlayfs for copy-on-write-style redirection, by design).
++
++EROFS is a dedicated implementation of the image filesystem idea above, with a
++flexible, hierarchical on-disk design so that needed features can be enabled on
++demand. Filesystem data in the core format is strictly block-aligned in order
++to perform optimally on all kinds of storage media, including block devices and
++memory-backed devices. The on-disk format is easy to parse and purposely avoids
++the unnecessary metadata redundancy found in generic writable filesystems, which
++can suffer from extra inconsistency issues -- making it ideal for security
++auditing and untrusted remote access. In addition, designs such as inline data,
++inline/shared extended attributes, and optimized (de)compression provide better
++space efficiency while maintaining high performance.
++
++In short, EROFS aims to be a better fit for the following scenarios:
++
++ - As part of a secure immutable storage solution, where it needs to be
+    immutable and bit-for-bit identical to the official golden image for
+-   their releases due to security or other considerations and
+-
+- - hope to minimize extra storage space with guaranteed end-to-end performance
+-   by using compact layout, transparent file compression and direct access,
+-   especially for those embedded devices with limited memory and high-density
+-   hosts with numerous containers.
++   each individual copy, in order to meet security, data sharing, and/or
++   other requirements;
+ 
+-Here are the main features of EROFS:
++ - Minimizing storage overhead with guaranteed end-to-end performance
++   by using compact (meta)data layout, optimized transparent data compression,
++   deduplication and direct access, especially for those embedded devices with
++   limited memory and high-density hosts with numerous containers.
+ 
+- - Little endian on-disk design;
++Here is the list of highlights:
+ 
+- - Block-based distribution and file-based distribution over fscache are
+-   supported;
++ - Little endian on-disk design with 48-bit block addressing, supporting up
++   to 1 EiB filesystem capacity with 4 KiB block size;
+ 
+- - Support multiple devices to refer to external blobs, which can be used
+-   for container images;
++ - Two compact inode metadata layouts for space and performance efficiency:
+ 
+- - 32-bit block addresses for each device, therefore 16TiB address space at
+-   most with 4KiB block size for now;
++   ========================  ========  ======================================
++                             compact   extended
++   ========================  ========  ======================================
++   Inode core metadata size  32 bytes  64 bytes
++   Max file size             4 GiB     16 EiB (also limited by max. vol size)
++   Max uids/gids             65536     4294967296
++   Nanosecond timestamp      no        yes
++   Max hardlinks             65536     4294967296
++   ========================  ========  ======================================
+ 
+- - Two inode layouts for different requirements:
++ - Support tailpacking inline data for better space efficiency and reduce
++   unneeded I/O amplification;
+ 
+-   =====================  ============  ======================================
+-                          compact (v1)  extended (v2)
+-   =====================  ============  ======================================
+-   Inode metadata size    32 bytes      64 bytes
+-   Max file size          4 GiB         16 EiB (also limited by max. vol size)
+-   Max uids/gids          65536         4294967296
+-   Per-inode timestamp    no            yes (64 + 32-bit timestamp)
+-   Max hardlinks          65536         4294967296
+-   Metadata reserved      8 bytes       18 bytes
+-   =====================  ============  ======================================
++ - Block-based and file-backed distribution are both supported;
+ 
+- - Support extended attributes as an option;
++ - Multiple devices to reference external data blobs: inode data can be
++   optionally placed into external blobs, which enables image layering and data
++   sharing among different filesystems;
+ 
+- - Support a bloom filter that speeds up negative extended attribute lookups;
++ - Inline and shared extended attributes with an optional bloom filter that
++   speeds up negative extended attribute lookups;
+ 
+- - Support POSIX.1e ACLs by using extended attributes;
++ - POSIX.1e ACLs by using extended attributes;
+ 
+- - Support transparent data compression as an option:
+-   LZ4, MicroLZMA, DEFLATE and Zstandard algorithms can be used on a per-file
+-   basis; In addition, inplace decompression is also supported to avoid bounce
+-   compressed buffers and unnecessary page cache thrashing.
++ - Transparent data compression as an option: Supported algorithms (LZ4,
++   MicroLZMA, DEFLATE and Zstandard) can be selected on a per-inode basis.
++   Both the on-disk metadata and decompression runtime have been heavily
++   optimized to minimize the overhead for better performance.
+ 
+- - Support chunk-based data deduplication and rolling-hash compressed data
+-   deduplication;
++ - Merging tail-end data into a special inode as fragments;
+ 
+- - Support tailpacking inline compared to byte-addressed unaligned metadata
+-   or smaller block size alternatives;
++ - Chunk-based deduplication and rolling-hash compressed data deduplication;
+ 
+- - Support merging tail-end data into a special inode as fragments.
++ - Direct I/O and FSDAX support on uncompressed inodes for use cases such as
++   secure containers, loop devices, and ramdisks that do not need page caching;
+ 
+- - Support large folios to make use of THPs (Transparent Hugepages);
++ - Page cache sharing among inodes with identical content fingerprints on
++   the same machine.
+ 
+- - Support direct I/O on uncompressed files to avoid double caching for loop
+-   devices;
++For more detailed information, please refer to our documentation site:
+ 
+- - Support FSDAX on uncompressed images for secure containers and ramdisks in
+-   order to get rid of unnecessary page cache.
+-
+- - Support file-based on-demand loading with the Fscache infrastructure.
++- https://erofs.docs.kernel.org
+ 
+ The following git tree provides the file system user-space tools under
+ development, such as a formatting tool (mkfs.erofs), an on-disk consistency &
+@@ -91,10 +98,6 @@ compatibility checking tool (fsck.erofs), and a debugging tool (dump.erofs):
+ 
+ - git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+ 
+-For more information, please also refer to the documentation site:
+-
+-- https://erofs.docs.kernel.org
+-
+ Bugs and patches are welcome, please kindly help us and send to the following
+ linux-erofs mailing list:
+ 
+-- 
+2.43.5
 
-tested configs:
-alpha                             allnoconfig    gcc-16.1.0
-alpha                            allyesconfig    gcc-16.1.0
-alpha                               defconfig    gcc-16.1.0
-arc                              allmodconfig    clang-23
-arc                              allmodconfig    gcc-16.1.0
-arc                               allnoconfig    gcc-16.1.0
-arc                              allyesconfig    clang-23
-arc                              allyesconfig    gcc-16.1.0
-arc                          axs101_defconfig    gcc-16.1.0
-arc                                 defconfig    gcc-16.1.0
-arc                   randconfig-001-20260610    gcc-8.5.0
-arc                   randconfig-002-20260610    gcc-8.5.0
-arm                               allnoconfig    clang-23
-arm                               allnoconfig    gcc-16.1.0
-arm                              allyesconfig    clang-23
-arm                              allyesconfig    gcc-16.1.0
-arm                                 defconfig    gcc-16.1.0
-arm                   randconfig-001-20260610    gcc-8.5.0
-arm                   randconfig-002-20260610    gcc-8.5.0
-arm                   randconfig-003-20260610    gcc-8.5.0
-arm                   randconfig-004-20260610    gcc-8.5.0
-arm64                            allmodconfig    clang-23
-arm64                             allnoconfig    gcc-16.1.0
-arm64                               defconfig    gcc-16.1.0
-arm64                 randconfig-001-20260610    gcc-11.5.0
-arm64                 randconfig-002-20260610    gcc-11.5.0
-arm64                 randconfig-003-20260610    gcc-11.5.0
-arm64                 randconfig-004-20260610    gcc-11.5.0
-csky                             allmodconfig    gcc-16.1.0
-csky                              allnoconfig    gcc-16.1.0
-csky                                defconfig    gcc-16.1.0
-csky                  randconfig-001-20260610    gcc-11.5.0
-csky                  randconfig-002-20260610    gcc-11.5.0
-hexagon                          allmodconfig    gcc-16.1.0
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-16.1.0
-hexagon                             defconfig    gcc-16.1.0
-hexagon               randconfig-001-20260610    clang-22
-hexagon               randconfig-002-20260610    clang-22
-i386                             allmodconfig    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-16.1.0
-i386                             allyesconfig    clang-22
-i386        buildonly-randconfig-001-20260610    gcc-14
-i386        buildonly-randconfig-002-20260610    gcc-14
-i386        buildonly-randconfig-003-20260610    gcc-14
-i386        buildonly-randconfig-004-20260610    gcc-14
-i386        buildonly-randconfig-005-20260610    gcc-14
-i386        buildonly-randconfig-006-20260610    gcc-14
-i386                                defconfig    gcc-16.1.0
-i386                  randconfig-011-20260610    gcc-14
-i386                  randconfig-012-20260610    gcc-14
-i386                  randconfig-013-20260610    gcc-14
-i386                  randconfig-014-20260610    gcc-14
-i386                  randconfig-015-20260610    gcc-14
-i386                  randconfig-016-20260610    gcc-14
-i386                  randconfig-017-20260610    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    clang-20
-loongarch                         allnoconfig    gcc-16.1.0
-loongarch                           defconfig    clang-23
-loongarch             randconfig-001-20260610    clang-22
-loongarch             randconfig-002-20260610    clang-22
-m68k                             allmodconfig    gcc-16.1.0
-m68k                              allnoconfig    gcc-16.1.0
-m68k                             allyesconfig    clang-23
-m68k                             allyesconfig    gcc-16.1.0
-m68k                                defconfig    clang-23
-microblaze                        allnoconfig    gcc-16.1.0
-microblaze                       allyesconfig    gcc-16.1.0
-microblaze                          defconfig    clang-23
-mips                             allmodconfig    gcc-16.1.0
-mips                              allnoconfig    gcc-16.1.0
-mips                             allyesconfig    gcc-16.1.0
-nios2                            allmodconfig    clang-20
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-23
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-23
-nios2                 randconfig-001-20260610    clang-22
-nios2                 randconfig-002-20260610    clang-22
-openrisc                         allmodconfig    clang-20
-openrisc                         allmodconfig    gcc-16.1.0
-openrisc                          allnoconfig    clang-23
-openrisc                          allnoconfig    gcc-16.1.0
-openrisc                            defconfig    gcc-16.1.0
-parisc                           allmodconfig    gcc-16.1.0
-parisc                            allnoconfig    clang-23
-parisc                            allnoconfig    gcc-16.1.0
-parisc                           allyesconfig    clang-23
-parisc                           allyesconfig    gcc-16.1.0
-parisc                              defconfig    gcc-16.1.0
-parisc                randconfig-001-20260610    gcc-8.5.0
-parisc                randconfig-002-20260610    gcc-8.5.0
-parisc64                            defconfig    clang-23
-powerpc                          allmodconfig    gcc-16.1.0
-powerpc                           allnoconfig    clang-23
-powerpc                           allnoconfig    gcc-16.1.0
-powerpc                   microwatt_defconfig    gcc-16.1.0
-powerpc                      pasemi_defconfig    clang-23
-powerpc               randconfig-001-20260610    gcc-8.5.0
-powerpc               randconfig-002-20260610    gcc-8.5.0
-powerpc                     tqm8548_defconfig    clang-23
-powerpc64             randconfig-001-20260610    gcc-8.5.0
-powerpc64             randconfig-002-20260610    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                             allnoconfig    gcc-16.1.0
-riscv                            allyesconfig    clang-23
-riscv                               defconfig    gcc-16.1.0
-riscv                 randconfig-001-20260610    gcc-16.1.0
-riscv                 randconfig-002-20260610    gcc-16.1.0
-s390                             allmodconfig    clang-23
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-16.1.0
-s390                                defconfig    gcc-16.1.0
-s390                  randconfig-001-20260610    gcc-16.1.0
-s390                  randconfig-002-20260610    gcc-16.1.0
-sh                               allmodconfig    gcc-16.1.0
-sh                                allnoconfig    clang-23
-sh                                allnoconfig    gcc-16.1.0
-sh                               allyesconfig    clang-23
-sh                               allyesconfig    gcc-16.1.0
-sh                                  defconfig    gcc-14
-sh                    randconfig-001-20260610    gcc-16.1.0
-sh                    randconfig-002-20260610    gcc-16.1.0
-sparc                             allnoconfig    clang-23
-sparc                             allnoconfig    gcc-16.1.0
-sparc                               defconfig    gcc-16.1.0
-sparc                 randconfig-001-20260610    gcc-14.3.0
-sparc                 randconfig-002-20260610    gcc-14.3.0
-sparc64                          allmodconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260610    gcc-14.3.0
-sparc64               randconfig-002-20260610    gcc-14.3.0
-um                               allmodconfig    clang-23
-um                                allnoconfig    clang-16
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-16.1.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260610    gcc-14.3.0
-um                    randconfig-002-20260610    gcc-14.3.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-22
-x86_64                            allnoconfig    clang-22
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-22
-x86_64      buildonly-randconfig-001-20260610    gcc-14
-x86_64      buildonly-randconfig-002-20260610    gcc-14
-x86_64      buildonly-randconfig-003-20260610    gcc-14
-x86_64      buildonly-randconfig-004-20260610    gcc-14
-x86_64      buildonly-randconfig-005-20260610    gcc-14
-x86_64      buildonly-randconfig-006-20260610    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-22
-x86_64                randconfig-011-20260610    gcc-14
-x86_64                randconfig-012-20260610    gcc-14
-x86_64                randconfig-013-20260610    gcc-14
-x86_64                randconfig-014-20260610    gcc-14
-x86_64                randconfig-015-20260610    gcc-14
-x86_64                randconfig-016-20260610    gcc-14
-x86_64                randconfig-071-20260610    gcc-14
-x86_64                randconfig-072-20260610    gcc-14
-x86_64                randconfig-073-20260610    gcc-14
-x86_64                randconfig-074-20260610    gcc-14
-x86_64                randconfig-075-20260610    gcc-14
-x86_64                randconfig-076-20260610    gcc-14
-x86_64                               rhel-9.4    clang-22
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-22
-x86_64                    rhel-9.4-kselftests    clang-22
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-22
-xtensa                            allnoconfig    clang-23
-xtensa                            allnoconfig    gcc-16.1.0
-xtensa                           allyesconfig    clang-20
-xtensa                randconfig-001-20260610    gcc-14.3.0
-xtensa                randconfig-002-20260610    gcc-14.3.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
