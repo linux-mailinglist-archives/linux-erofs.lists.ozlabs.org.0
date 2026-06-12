@@ -1,95 +1,48 @@
-Return-Path: <linux-erofs+bounces-3576-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3577-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xKGeIw+pK2pQBgQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3576-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jun 2026 08:37:03 +0200
+	id UFb3OEutK2oMBwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3577-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jun 2026 08:55:07 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F413676F68
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jun 2026 08:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B6A2E6770A3
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jun 2026 08:55:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=b3KqIhjq;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3576-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3576-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("lists.ozlabs.org:s=201707:i=2")
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=awYE8laJ;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3577-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3577-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gc8v01KQDz3brt;
-	Fri, 12 Jun 2026 16:37:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gc9Hp1vcSz2yd7;
+	Fri, 12 Jun 2026 16:55:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781246220;
-	cv=pass; b=mXvTf+uKSRi3OXrxfjcysCKB9BdQ7MqiOiPa6cbzrCOgR1BAPMip5ytItKo5KpeXvWa+zj9//rl0yy005aak/+ptonUGvvRs75e1FbBrzTdTh4LbR61onEZwpvuUYFD79HHpfB02TNrIZrS1nHkozsMBm0tdwl8dP303DCXrbAT7DnIBbWcj2ue4r2DeNWjkvJTeC/WthH3h+Pq0OlfhqRshSSrGtx0SGJAi8PaugtqudFePMVV0FUHXBI/X/4nardJi2/NVyv2XkZfnJIRoaesbLSbHdsts/lwsob61tQawF+XP6Lifzdfogq2YuS20UiwnSMUxqu2cTiGDAS2nTw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781246220; c=relaxed/relaxed;
-	bh=8pHbJrAmEddjaVICUZsITrmQ713qp2yaXURLQalqQFc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=kck+ZOQZYMc6HHE3/dG3d8WMylSEUGdn/NJUnlah8NPx1dT8vbEiWH6dluy9US3YNhz8WA7tyezqIrYS32kYyUu/AAjL5HPEOAyGxz6aE/jzurL3I80gVUQ8jLdbXFx2luM4v4FodJAO5/HT10ntzx1XKsJM23PwwXW++W0xa05G8kBqnSlhTTK90sqU93fPbe+XtuSCGHhuQaNSMrjj7ypsq1hkGKndnX17I5tDcF7lxOpx4lMZDxobJI3d8q8TZ/5vNsW+clYIrSzyCW3OMheOBM/bRl0u8J93Q15gJnqk1S3sWdyKc39dbnWLTlhe+Iu2Z2GGsfaj+zQo1U35bw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=b3KqIhjq; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b143; helo=mail-yx1-xb143.google.com; envelope-from=meperlunch@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Received: from mail-yx1-xb143.google.com (mail-yx1-xb143.google.com [IPv6:2607:f8b0:4864:20::b143])
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781247302;
+	cv=none; b=dwV5iQmL4MLOG3nWDskCGR8pcMwA2WfKu8saNKrnGvw9wuZXE6Cu0IcouhXHVBi27gEHhARBwkh3AYQiJvFe33g2yXLmefDoufbGeaqcNyTxXK38+SHBjM3b5b+b/WTo19ItSLNFA7JK8iffk1i/2Mo9qoQqt3dqVJVOHg+khpY3LkIisYYKSbcqEJ5HaN9L7fAq9zLoOqIM1CsZ3noyR3c7B4GRzye8VrNfPcVMJNfZy7wCfrN+Algd/7EV0OOEWJo8SatEiEAlHgYGZ8SPThKv0/3i7qukrkaFm6LnmZRXKKJWVBQyXSmpNfwnG9wmIav4cz+Y2iXKSdiBK6Bg5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1781247302; c=relaxed/relaxed;
+	bh=ZphKWwyl+WGH86LGIXqyFlQlvne4chYGQBsEKFLt2d0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZOfNHG1hXpfZ6DJNmZczpMrUyJnv21Vqml6caRBnESa+GjIsKkhMfN/SHHGctBD01aoFQBJTQata3LJd6G2E4gg4xufoASUiIGJJzwauuPq30vODbsNt8vnsheSW73kn6Trl9baO73HjPUeMAhA2uJFnH4eGyH/voTyypN2BSJWVOFDf8s3c3qwSTbY5P9Ux8NCY3OT9p8v/OXwqF5NRtezVuqF2ZAOCh8du7DNjAXhlud6YFB+EuDoo1COMgA7WHi/RExFqxtMZfuU6cXkFZ8FhcuAqu1W6aSONF2MmhQzPM3SaC63b19SKTSyaqBhAUm8TeKv9dmlWaCn2zW3FpA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=awYE8laJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gc8ty5mg7z2xmX
-	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jun 2026 16:36:58 +1000 (AEST)
-Received: by mail-yx1-xb143.google.com with SMTP id 956f58d0204a3-660512d80b4so688340d50.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 11 Jun 2026 23:36:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781246215; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OBAcj31yGZV6VctknAGNe0rY2l1eArRh2eYw2fkuupxsyvRVbL/Cf063KuOsgrkkWb
-         W17sepPzeqeN6cH27sJqsGklC1rjbbI/bWvqlLsLW/qRvSWshWSQ1DWrZ/GEf5TBYO0V
-         V1pJEDpJD5NctIcz0StwIUM+0tpXB87oiOh8f9UMhuWzmY6BaygLB3mvurFLmyVl7c3s
-         es3IJO+ZR+pDkjpMgMXY1kDd7hvuG+7mm4CiL1/FFKLWUShEHapCPbCR7WwvZwKCmGkw
-         okMLmhdGzwEBde3zHu5gBuEH/juNjvqhjhiTK2KKupen24yMcoqUVHJ91hs+ATCmqKKi
-         ukpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=8pHbJrAmEddjaVICUZsITrmQ713qp2yaXURLQalqQFc=;
-        fh=deW70JVB6o88YhJzf5ksMfLiL+7vsTKJV18pjO6fBaQ=;
-        b=Wv06iqVPvrLz1sXh9lnP+MnvX8zCuKX4rXcfEe4gkJvRDpP6yYbxZm4ud/nPNhvK+d
-         IUlitvA8Dk6m6GpzeOPgFdjwMIdXDeycOnX0XZf28cbD8ldkD8n14u3gMTKGm5n/hRE1
-         vZCHLXz+/N/N9P9JJKMJtFYNWg2j3U6YqF6AejNYrQrJRWM0UTRzUhA+w1ll9qJx1wo9
-         YOeNf0kb2rXDQPDLfJqkjURa1LcxtKlSTMZABPB8hlypSF5Cu/u+RDNal6GqiV+4JGnC
-         NfQezlHgpUEvZ+WBnSsrcjeZRlPHnRveP37CqntAo9K3tCDC6Gl/xIPaPRIjXSB5TfmB
-         qgEg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781246215; x=1781851015; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8pHbJrAmEddjaVICUZsITrmQ713qp2yaXURLQalqQFc=;
-        b=b3KqIhjqUwJqcqNB0BOQTQ3lXiEcuuDtyhoXvEkTJcEDl2pNv9FPqQJ0/6yxtpaC0c
-         QUpFua+tO7u642aCqx4ZheCAfMT9XZvwsDoBtXFsY6eisB7FT8z8KBOEb+tNmcVLrT3M
-         K7zC+Ko7MhU312c/jeKQZku/xMF7pxv3umkU2h/uSmbwvbfMAgmea+rIn7d0Dhs7VTdg
-         11MvrYQxIa76oXYwCNIF7Qe5IZvmBX4+R06wyLCwDDspOoaFWEnuWwQrkrheupg0yNmq
-         HTjEI93gmTLsoD3zydCyQC9/BXNLviFSR2uw8h69n6P3J9yuTPaVbAc4Hf0xjrLXaXhm
-         Vfaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781246215; x=1781851015;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8pHbJrAmEddjaVICUZsITrmQ713qp2yaXURLQalqQFc=;
-        b=O73DpQmIjVzeoFLklyUBnBC3+dCTpsQaSMZB9mSTs9x/bYhI8T655sWzrg2AR0qubr
-         /AgSNxHPJEPElnz+FuVL4arG0oFciJ/BFw7uAwhRP9OFy4oa6Aa4NlI4lRQgEs95Y1SB
-         NgyOmIrRqV0+DxcPH4K+qew9MGMuUsHsgqvLgJ3qHhENZh00z9yiEtg0tPoayyEn1GdN
-         9oBByZvxT3Hto/j0oFsXeCCJdTMjTMbF794eNDIoQZws9PCdIV6VQKbUiYyoIbIqobWL
-         ukhduytc8NprHbdRDbOTR5jXVMofPrtLSrmpg9jyrEJYPkQUC7yVyGgd4lacJ1jOvnSL
-         3VHQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+MyEUsrQtS+L444lfQiMeswJ5cnnZ9fvWZJGOhAq1ZB6EY5fhM4lDk6F5mtLlT5yIKr3d0MHUboAJRSw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yz5fGE1e7p5idQcloJ1n4UZESvjh0RjZorrDSnIRiqSAQG8d/XF
-	FvB8n6p087NC8uq6CQ68suBbhfi353Y9Y5dNbXvC7q62YPVBXpxaQdGG9IS7f0zGbidAtvw5rXS
-	mCBbvasu1UGTv+BNUgUt+izRDs1ywITU=
-X-Gm-Gg: Acq92OHgfoSfzN2R7iq01Ld4QbwNnuzH3KaBnm3XGdhbF9DUSW6aQcjcIAJhhaBM9PZ
-	pDDmUkTmire2u3CKJH9IgYKWFsV33SMG61lnYNX56s418jrPIlIJlcf62rmuL4rDunAr5895z19
-	F3fg7aE8Hle/QO0g49n7f5UZMgD6a145aIsbXGVYT/059E0umyWvjLTEG6Hx/uOU0SOPUy8ovMk
-	PgZgQc8ijqB7Y91Sz6bxseEtugAo44kIeWroSGWn8S83d5aEI6JGMh6EObgii5fWlDl5vpw17kr
-	k2HElw7RUEqIH0OUNk++KaqLoKFBp49fbLgVJUJTyAsSRmOJ8bRhxCz+rMsrpyOuvzYfQbCLPTY
-	CC4Z5oySUVaDi4B19jcoxaMaNayBVP2qYwEP79OKKFIssM1wiZmchFE9JmKp3ZlTKTlZKUqhY4U
-	tkh9DLT5psiJ9/7ZhPnYng0AGCa28dgCrulxGGSFMHyc4Fqd3gNbYL9xJWPV8mTe7XUCpmwDaX9
-	mB1iu45+G4IuHbyEEdMjKmCXsuMBDbFhVY=
-X-Received: by 2002:a05:690e:144b:b0:660:e9fe:18e9 with SMTP id
- 956f58d0204a3-66276aff4admr1308634d50.38.1781246215614; Thu, 11 Jun 2026
- 23:36:55 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gc9Hk6fhDz2xYg
+	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jun 2026 16:54:56 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1781247290; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ZphKWwyl+WGH86LGIXqyFlQlvne4chYGQBsEKFLt2d0=;
+	b=awYE8laJBdJHsDUe2+05LE6v4NQJGcAFtpWASdY2b5jZxz/bgPfVfjzq6dNuowdiy6GmRDDmC80nJIVQnr+urtRZR1uaPcQkM/7u38jNPFULiPGmU7pZmTb1J7Iredxn4VbLzMF/92dXtiEqEmnPnqbXSKzz+crLuj9vdKfrErQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X4hpKI3_1781247288;
+Received: from 30.221.132.172(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4hpKI3_1781247288 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Jun 2026 14:54:48 +0800
+Message-ID: <62f6e9bc-cfb3-441c-a3b7-301b8649f0ae@linux.alibaba.com>
+Date: Fri, 12 Jun 2026 14:54:47 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,132 +54,170 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Julianna Phung <meperlunch@gmail.com>
-Date: Fri, 12 Jun 2026 13:36:44 +0700
-X-Gm-Features: AVVi8CfGSHTjJFiIKg5CwqnbmuJbSf6ijVnPJHQdRJKyUU7Ih_62YwJaSFAz1cQ
-Message-ID: <CAAUfmt6BxJ60wsPsm0O7N6BxUEm4ZfURmriaBAT7PNEkjU5XkA@mail.gmail.com>
-Subject: =?UTF-8?B?6ZW/5a+/55qE5Lq65ZCD5LuA5LmI77yf6JCl5YW75biI55qE5Y6o5oi/5b+F5aSH6L+ZOA==?=
-	=?UTF-8?B?56eN6aOf54mp?=
-To: lacqzh@zafu.edu.cn, linux-erofs@lists.ozlabs.org, byndxwb@163.com
-Content-Type: multipart/alternative; boundary="000000000000f075dc065408b3fa"
-X-Spam-Status: No, score=2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_SPAM
-	autolearn=disabled version=4.0.1
-X-Spam-Level: **
+User-Agent: Mozilla Thunderbird
+Subject: Re: don't merge bios over iomap boundaries, was: Re: [PATCH] erofs:
+ prevent buffered read bio merges across device chunks
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, yekelu1@huawei.com, jingrui@huawei.com,
+ zhukeqian1@huawei.com, Ritesh Harjani <ritesh.list@gmail.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+ Joanne Koong <joannelkoong@gmail.com>
+References: <20260612033244.993507-1-zhaoyifan28@huawei.com>
+ <58bef9af-0926-4948-b917-e38c3793f596@linux.alibaba.com>
+ <aiumQL8LEWQX_Nag@infradead.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <aiumQL8LEWQX_Nag@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.10 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
-	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3576-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3577-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:lacqzh@zafu.edu.cn,m:linux-erofs@lists.ozlabs.org,m:byndxwb@163.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[zafu.edu.cn,lists.ozlabs.org,163.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hch@infradead.org,m:zhaoyifan28@huawei.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:yekelu1@huawei.com,m:jingrui@huawei.com,m:zhukeqian1@huawei.com,m:ritesh.list@gmail.com,m:djwong@kernel.org,m:linux-xfs@vger.kernel.org,m:joannelkoong@gmail.com,m:riteshlist@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[huawei.com,lists.ozlabs.org,vger.kernel.org,gmail.com,kernel.org];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[meperlunch@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_NONE(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[meperlunch@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sumo.ad:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime,huawei.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9F413676F68
+X-Rspamd-Queue-Id: B6A2E6770A3
 
---000000000000f075dc065408b3fa
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Hi Christoph,
 
-KuS9oOWlvSEqDQoNCuaXpeacrOacieKAnOmVv+Wvv+S5i+S5oeKAneeahOensOiqieOAgiDlnKjl
-pYjoia/plb/lpKfnmoTokKXlhbvluIjlr4zlhojnvo7mmbrlrZDnoJTnqbbplb/lr7/nmoTlgaXl
-urfppa7po5/vvIzlpbnnu4/luLjlnKhDTkJD5LiK5pKw5paH5YiG5Lqr5pel5pys6aWu6aOf5Lmg
-5oOv44CCDQoNCuWlueihqOekuu+8jOS4uuS6hua0u+W+l+abtOmVv+Wvv+OAgeabtOW/q+S5kO+8
-jOWlueWutueahOWOqOaIv+W/heWkhzjnp43po5/nianvvIzogIzkuJTmr4/lpKnpg73lkIPjgILp
-gqPkuYjov5kgOCDnp43po5/nianmmK/ku4DkuYjlkaLvvJ8NCg0KMS4g5oq56Iy2DQoyLiDlj5Hp
-hbXpo5/lk4ENCjMuIOa1t+iXuw0KNC4g6LGG57G7DQo1LiDosYbohZAuLi4NCg0K6L+Y5pyJ5pu0
-5aSaDQoNCuS7peS4i+aYr+aWh+eroOeahOS4u+imgeWGheWuue+8mg0KDQpodHRwczovL3N1bW8u
-YWQvY2hhbmdzaG91LXJlbi1jaGktc2hlbm1lNw0KDQoNCg0K56Wd5L2g5LiA5YiH6YO95aW977yB
-DQoNCi0tLQ0KDQrov73lr7vnnJ/nm7jvvIzmmK/lr7noia/nn6XmnIDlpb3nmoTlsIrph40NCg==
---000000000000f075dc065408b3fa
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 2026/6/12 14:25, Christoph Hellwig wrote:
+> On Fri, Jun 12, 2026 at 11:42:38AM +0800, Gao Xiang wrote:
+>>> Reported-by: Kelu Ye <yekelu1@huawei.com>
+>>> Assisted-by: Codex:GPT-5.5
+>>> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+>>
+>> I think it's an iomap bug instead, see:
+>>
+>> iomap_bio_read_folio_range(), we should fix iomap instead.
+> 
+> Yes.  iomap should not try to build bios over iomap boundaries.
+> caused various issues.  Ritesh ran into that with the ext2 port
+> back in the day, and I actually ran into it again with an under
+> development xfs feature.
+> 
+> Can you try this patch?
 
-<div dir=3D"ltr"><p style=3D"color:rgb(0,0,0);font-family:&quot;Times New R=
-oman&quot;;font-size:medium"><strong><span class=3D"gmail-auto-style2" styl=
-e=3D"font-family:&quot;Microsoft YaHei&quot;">=E4=BD=A0=E5=A5=BD!</span></s=
-trong><br class=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft =
-YaHei&quot;"></p><p class=3D"gmail-auto-style2" style=3D"font-family:&quot;=
-Microsoft YaHei&quot;;font-size:medium;color:rgb(0,0,0)">=E6=97=A5=E6=9C=AC=
-=E6=9C=89=E2=80=9C=E9=95=BF=E5=AF=BF=E4=B9=8B=E4=B9=A1=E2=80=9D=E7=9A=84=E7=
-=A7=B0=E8=AA=89=E3=80=82 =E5=9C=A8=E5=A5=88=E8=89=AF=E9=95=BF=E5=A4=A7=E7=
-=9A=84=E8=90=A5=E5=85=BB=E5=B8=88=E5=AF=8C=E5=86=88=E7=BE=8E=E6=99=BA=E5=AD=
-=90=E7=A0=94=E7=A9=B6=E9=95=BF=E5=AF=BF=E7=9A=84=E5=81=A5=E5=BA=B7=E9=A5=AE=
-=E9=A3=9F=EF=BC=8C=E5=A5=B9=E7=BB=8F=E5=B8=B8=E5=9C=A8CNBC=E4=B8=8A=E6=92=
-=B0=E6=96=87=E5=88=86=E4=BA=AB=E6=97=A5=E6=9C=AC=E9=A5=AE=E9=A3=9F=E4=B9=A0=
-=E6=83=AF=E3=80=82</p><p style=3D"color:rgb(0,0,0);font-family:&quot;Times =
-New Roman&quot;;font-size:medium"><span class=3D"gmail-auto-style3" style=
-=3D"font-family:&quot;Microsoft YaHei&quot;">=E5=A5=B9=E8=A1=A8=E7=A4=BA=EF=
-=BC=8C=E4=B8=BA=E4=BA=86=E6=B4=BB=E5=BE=97=E6=9B=B4=E9=95=BF=E5=AF=BF=E3=80=
-=81=E6=9B=B4=E5=BF=AB=E4=B9=90=EF=BC=8C=E5=A5=B9=E5=AE=B6=E7=9A=84=E5=8E=A8=
-=E6=88=BF=E5=BF=85=E5=A4=878=E7=A7=8D=E9=A3=9F=E7=89=A9=EF=BC=8C=E8=80=8C=
-=E4=B8=94=E6=AF=8F=E5=A4=A9=E9=83=BD=E5=90=83=E3=80=82=E9=82=A3=E4=B9=88=E8=
-=BF=99 8 =E7=A7=8D=E9=A3=9F=E7=89=A9=E6=98=AF=E4=BB=80=E4=B9=88=E5=91=A2=EF=
-=BC=9F</span><br class=3D"gmail-auto-style2" style=3D"font-family:&quot;Mic=
-rosoft YaHei&quot;"></p><p style=3D"color:rgb(0,0,0);font-family:&quot;Time=
-s New Roman&quot;;font-size:medium"><span class=3D"gmail-auto-style2" style=
-=3D"font-family:&quot;Microsoft YaHei&quot;">1. =E6=8A=B9=E8=8C=B6</span><b=
-r class=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&qu=
-ot;"><span class=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft=
- YaHei&quot;">2. =E5=8F=91=E9=85=B5=E9=A3=9F=E5=93=81</span><br class=3D"gm=
-ail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&quot;"><span cl=
-ass=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&quot;"=
->3. =E6=B5=B7=E8=97=BB</span><br class=3D"gmail-auto-style2" style=3D"font-=
-family:&quot;Microsoft YaHei&quot;"><span class=3D"gmail-auto-style2" style=
-=3D"font-family:&quot;Microsoft YaHei&quot;">4. =E8=B1=86=E7=B1=BB</span><b=
-r class=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&qu=
-ot;"><span class=3D"gmail-auto-style2" style=3D"font-family:&quot;Microsoft=
- YaHei&quot;">5. =E8=B1=86=E8=85=90...</span><br class=3D"gmail-auto-style2=
-" style=3D"font-family:&quot;Microsoft YaHei&quot;"><br class=3D"gmail-auto=
--style2" style=3D"font-family:&quot;Microsoft YaHei&quot;"><span class=3D"g=
-mail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&quot;">=E8=BF=
-=98=E6=9C=89=E6=9B=B4=E5=A4=9A</span><br class=3D"gmail-auto-style2" style=
-=3D"font-family:&quot;Microsoft YaHei&quot;"><br class=3D"gmail-auto-style2=
-" style=3D"font-family:&quot;Microsoft YaHei&quot;"><span class=3D"gmail-au=
-to-style2" style=3D"font-family:&quot;Microsoft YaHei&quot;">=E4=BB=A5=E4=
-=B8=8B=E6=98=AF=E6=96=87=E7=AB=A0=E7=9A=84=E4=B8=BB=E8=A6=81=E5=86=85=E5=AE=
-=B9=EF=BC=9A</span><br class=3D"gmail-auto-style2" style=3D"font-family:&qu=
-ot;Microsoft YaHei&quot;"></p><p class=3D"gmail-auto-style2" style=3D"font-=
-family:&quot;Microsoft YaHei&quot;;font-size:medium;color:rgb(0,0,0)"><a hr=
-ef=3D"https://sumo.ad/changshou-ren-chi-shenme7" target=3D"_blank">https://=
-sumo.ad/changshou-ren-chi-shenme7</a></p><p style=3D"color:rgb(0,0,0);font-=
-family:&quot;Times New Roman&quot;;font-size:medium">=C2=A0</p><p class=3D"=
-gmail-auto-style2" style=3D"font-family:&quot;Microsoft YaHei&quot;;font-si=
-ze:medium;color:rgb(0,0,0)">=E7=A5=9D=E4=BD=A0=E4=B8=80=E5=88=87=E9=83=BD=
-=E5=A5=BD=EF=BC=81</p><p class=3D"gmail-auto-style9" style=3D"font-size:11.=
-5pt;color:rgb(91,102,116)">---</p><p class=3D"gmail-auto-style14" style=3D"=
-font-family:&quot;Microsoft YaHei&quot;;color:rgb(0,123,255);font-size:medi=
-um">=E8=BF=BD=E5=AF=BB=E7=9C=9F=E7=9B=B8=EF=BC=8C=E6=98=AF=E5=AF=B9=E8=89=
-=AF=E7=9F=A5=E6=9C=80=E5=A5=BD=E7=9A=84=E5=B0=8A=E9=87=8D</p></div>
+hmm, currently erofs could return block-sized iomap (if the chunk
+size is 4k) even it can be merged with the following chunks.
 
---000000000000f075dc065408b3fa--
+Previously it was fairly good since consecutive chunks will be
+added to the current bio if possible, but after this patch,
+there will be a lot of 4k bios.
+
+But if iomap goes into this way, I could make iomap_begin maps
+more chunks in one shot, but that needs more changes in erofs,
+it's fine anyway.
+
+... I was thinking the following diff (space-damaged):
+
+diff --git a/fs/iomap/bio.c b/fs/iomap/bio.c
+index 4504f4633f17..241df96a16a6 100644
+--- a/fs/iomap/bio.c
++++ b/fs/iomap/bio.c
+@@ -142,6 +142,7 @@ int iomap_bio_read_folio_range(const struct iomap_iter *iter,
+
+         if (!bio ||
+             bio_end_sector(bio) != iomap_sector(&iter->iomap, iter->pos) ||
++           bio->bi_bdev != iter->iomap.bdev ||
+             bio->bi_iter.bi_size > iomap_max_bio_size(&iter->iomap) - plen ||
+             !bio_add_folio(bio, folio, plen, offset_in_folio(folio, iter->pos)))
+                 iomap_read_alloc_bio(iter, ctx, plen);
+
+
+but either way works fine with me since it's an iomap design
+stuff.
+
+Thanks,
+Gao Xiang
+
+> 
+> ---
+>  From 297230cc3c08cbfef3670b08c4e35813c18c523e Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Sun, 7 Jun 2026 08:53:20 +0200
+> Subject: iomap: submit read bio after each extent
+> 
+> This keeps bios from crossing RTG boundaries in XFS and probably fixes
+> all kinds of other stuff..
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   fs/iomap/buffered-io.c | 18 ++++++++++--------
+>   1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index d55b936e6986..3642a11c102f 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -597,12 +597,13 @@ void iomap_read_folio(const struct iomap_ops *ops,
+>   
+>   	trace_iomap_readpage(iter.inode, 1);
+>   
+> -	while ((ret = iomap_iter(&iter, ops)) > 0)
+> +	while ((ret = iomap_iter(&iter, ops)) > 0) {
+>   		iter.status = iomap_read_folio_iter(&iter, ctx,
+>   				&bytes_submitted);
+> -
+> -	if (ctx->read_ctx && ctx->ops->submit_read)
+> -		ctx->ops->submit_read(&iter, ctx);
+> +		if (ctx->read_ctx && ctx->ops->submit_read)
+> +			ctx->ops->submit_read(&iter, ctx);
+> +		ctx->read_ctx = NULL;
+> +	}
+>   
+>   	if (ctx->cur_folio)
+>   		iomap_read_end(ctx->cur_folio, bytes_submitted);
+> @@ -664,12 +665,13 @@ void iomap_readahead(const struct iomap_ops *ops,
+>   
+>   	trace_iomap_readahead(rac->mapping->host, readahead_count(rac));
+>   
+> -	while (iomap_iter(&iter, ops) > 0)
+> +	while (iomap_iter(&iter, ops) > 0) {
+>   		iter.status = iomap_readahead_iter(&iter, ctx,
+>   					&cur_bytes_submitted);
+> -
+> -	if (ctx->read_ctx && ctx->ops->submit_read)
+> -		ctx->ops->submit_read(&iter, ctx);
+> +		if (ctx->read_ctx && ctx->ops->submit_read)
+> +			ctx->ops->submit_read(&iter, ctx);
+> +		ctx->read_ctx = NULL;
+> +	}
+>   
+>   	if (ctx->cur_folio)
+>   		iomap_read_end(ctx->cur_folio, cur_bytes_submitted);
+
 
