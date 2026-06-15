@@ -1,67 +1,48 @@
-Return-Path: <linux-erofs+bounces-3586-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id T6CsEc5UL2pZ+gQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3586-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:26:38 +0200
+	id X+jML/xZL2ob+wQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:48:44 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F184682BD0
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:26:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68B5C682C9B
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:48:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=B+zuHAA9;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=B+zuHAA9;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3586-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3586-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=GbYu6ogB;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gdssM5vjnz2yT0;
-	Mon, 15 Jun 2026 11:26:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gdtLv5dZ4z2yT0;
+	Mon, 15 Jun 2026 11:48:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781486791;
-	cv=none; b=egseItS0mKtHXt6Yj8BRD7tzRKdktaqBPVNLB/CPFF/iE+QEBxXMhPhuJqJB2RSIKvo7P57hhEQhmJLjEF02pjB6BUTj8/Ccfhib/sIW+quxXpigTUDJc3cxJfYeq7Xkaxctov6ZeoIfxH31qD1OHwLorR8aRVmiiagr9tawq/0bVE+r1aPoOzHCVDTUhziJcD1AtSyjDUO98GeXkzX65u7VhlxPjZxZ9C3GCvWunvrGe0AgtMIs8jbejhjQdwbBljI9PBHg/1x1bkYpHcHi866LRzKoc5HUB6QCF7ANYWeqaLPiGUqrsVQMPcygtw4LKhWj5u41muwgFmyWKLHSRA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781488119;
+	cv=none; b=YfOIFcNmJxfayilEGZ71/Kugcql3eLoEqBApUJ4XQLZ8a4wwhS33xBqOhepM/uNnnaFYywCDaLGiqsyhBvs/uIMYZmIDVjTjX3TyIIlGfy6kL2+J8K+3mN01MB7ssmRCsOOWk7iLWrcOAw97QrhA3kEz3Vex03rzkHjkuim05QxTIZxnV3Nl6slkeQwKnPxVVgULCx7Ha6fDe5gKMidz633Lc0Dxi0E3LdgauMrxbr9mLAdoTQ9HZI4bRy7g96g6S7QDF7S9MPULVPTvgEIMGknKJJmVEd34F3Rvw1dWu6GmyHuzoKwiZxdTXKiqaKJO7L8QA2NY8idwxMwdbC8reQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781486791; c=relaxed/relaxed;
-	bh=tIUCnVj6NdE+05UAjJNPyabizqyUB0Qk7xKO+9pSNys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NA3qZRCq8/9rYzMc8vwX9cBuxJN8Ul4CERTz5voddl4P23K46DAC1qmE4SqdBQ/jtEKl/IiL/DL2o9LHOiIiCwz0//6xYKE1fWB+OhEiin4n4Si1ir1hk/S+oQ2C8R5AYW02uwEn75tE+ykJvmeqyXLb5kngESVEp/I5g7s57D+Oqh86Uxs8/s+bkAD5dcisC3yqPwXOvY/Do3CB4JcZYO2H+MKtqnQ0FbIzbdIRacHtLbb/IQVzUqilTcQFXpk9oPU/IbAameyWOGkzAD1CL4qmpcXKwest0C+R791vyNeopc/KoOQN62IBMSHb1EAj4yiuLnfq8KJn3FO6QOp+AQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=B+zuHAA9; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=B+zuHAA9; dkim-atps=neutral; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	t=1781488119; c=relaxed/relaxed;
+	bh=6e2ar3eQRlEx3kixdwmw+YpE0tNSl9Wm2mAa1feuOik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vln4MEDILYjSGMbHwWQtB07rEzpVB9Wr8xRVtR6HcaoueDSpAqowEr6goL6JKR27DDuds7G5wVsK7GXtfpNFrMhdi00ryOFAwSUky9Ns9ndotwrRwT5BUIpu8nV1ys5SCl0Mw2Vd8TQDHeZ68wBeQWqJl1uFKhjcBlEc/If9yveonA9UQJp2St/B6lNY6+IFCPa5kK+wSMeWrVwNuVipc5z0ajFgflejvAV2uHGpPoIry+ANzFr/vvSPLZpkwNFStmS483nVhbknOXgyp7/iD1ljFjlHD4JO/1wnLZRjzgfEbEyBWebBxl9AP/PT9ROeJ6373MdnIOzbUGFCo0qQCQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=GbYu6ogB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gdssJ2Klfz2yFc
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2026 11:26:28 +1000 (AEST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tIUCnVj6NdE+05UAjJNPyabizqyUB0Qk7xKO+9pSNys=;
-	b=B+zuHAA9hrVqGLRH1sovzRe30h42jjkMT/0SjUlD1m5flyS8d6NCFlKWYKDTI51uj88XH+8po
-	VELHh9jP4zU8SuQ4s1rabJIH9OJndaUnrF3sv9UBVQcvdzZZWQWuocjbgsb3s6LtWaQK0JF1OxD
-	2qoIW1AZHYLwhtgwWy0wskY=
-Received: from canpmsgout11.his.huawei.com (unknown [172.19.92.148])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4gdsrm4NLYz1BGLR
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2026 09:26:00 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tIUCnVj6NdE+05UAjJNPyabizqyUB0Qk7xKO+9pSNys=;
-	b=B+zuHAA9hrVqGLRH1sovzRe30h42jjkMT/0SjUlD1m5flyS8d6NCFlKWYKDTI51uj88XH+8po
-	VELHh9jP4zU8SuQ4s1rabJIH9OJndaUnrF3sv9UBVQcvdzZZWQWuocjbgsb3s6LtWaQK0JF1OxD
-	2qoIW1AZHYLwhtgwWy0wskY=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gdsgr05QtzKm4v;
-	Mon, 15 Jun 2026 09:18:16 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 903004048B;
-	Mon, 15 Jun 2026 09:26:15 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 15 Jun 2026 09:26:15 +0800
-Message-ID: <51c13a05-a4f5-4bbe-ad1a-ba167fa2e76c@huawei.com>
-Date: Mon, 15 Jun 2026 09:26:14 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gdtLs2Ycnz2yFc
+	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2026 11:48:35 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1781488106; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6e2ar3eQRlEx3kixdwmw+YpE0tNSl9Wm2mAa1feuOik=;
+	b=GbYu6ogBRz/nkwJZEHXvNFfKN2hltQW336H0oJyUkswyLFj3u+s+5By/ToiKnGrqhUHeTNz68SSo+Bhb7XlWzrrLByruMyWQQ13iagVUWVF9xkjY0WzwveRr+oLbCOZW5vZcHc/4PGjddWDQeYx4MwsmPXGPLrbVwUg1wYOEohE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X4oaiq-_1781488104;
+Received: from 30.221.132.227(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4oaiq-_1781488104 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 15 Jun 2026 09:48:25 +0800
+Message-ID: <555d6eec-7ddf-451e-98a3-70f7612a98c6@linux.alibaba.com>
+Date: Mon, 15 Jun 2026 09:48:23 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,166 +55,81 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: clean up erofs_ishare_fill_inode()
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-CC: LKML <linux-kernel@vger.kernel.org>, <oliver.yang@linux.alibaba.com>
-References: <20260607172132.2695176-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20260607172132.2695176-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v1] fsck.erofs: implement thread-safe global LRU metadata
+ cache
+To: Nithurshen <nithurshen.dev@gmail.com>
+Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org
+References: <423c662c-e8b4-4802-b7bf-34abd71a82ae@linux.alibaba.com>
+ <20260613101038.86333-1-nithurshen.dev@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260613101038.86333-1-nithurshen.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3586-lists,linux-erofs=lfdr.de];
-	DKIM_TRACE(0.00)[huawei.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:oliver.yang@linux.alibaba.com,s:lists@lfdr.de];
-	RCPT_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-3587-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	HAS_XOIP(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[linux-erofs];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1F184682BD0
+X-Rspamd-Queue-Id: 68B5C682C9B
 
 
 
-On 2026/6/8 1:21, Gao Xiang wrote:
->   - Use the shorthand `si` to replace the overly long `sharedinode`;
+On 2026/6/13 18:10, Nithurshen wrote:
+> Hi Xiang,
 > 
->   - Introduce erofs_warn() and get rid of barely-used _erofs_printk();
+> What if rather than caching the raw metadata bytes, the userspace
+> cache will focus on caching the parsed structures (such as the
+> computed erofs_map_blocks mappings) to save the worker threads
+> from redundantly parsing chunk indexes and calculating offsets.
 > 
->   - Get rid of the variable `hash`;
-> 
->   - Simplify error paths.
-> 
-> Cc: Hongbo Li <lihongbo22@huawei.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Can I replace this malloc-based raw buffer approach and focus v3
+> patch on an LRU cache for the parsed block mappings to reduce the
+> CPU overhead during the concurrent directory traversal?
 
-Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+I don't think it's worth unless you provide enough number to show
+which really reduces the CPU overhead.
+
+decompressed metadata cache is only useful for metabox, but I don't
+think it's prioritized for now.
 
 Thanks,
-Hongbo
+Gao Xiang
 
-> ---
->   fs/erofs/internal.h |  2 ++
->   fs/erofs/ishare.c   | 45 +++++++++++++++++++--------------------------
->   2 files changed, 21 insertions(+), 26 deletions(-)
 > 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 4792490161ec..9e2ae7b61977 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -23,6 +23,8 @@
->   __printf(2, 3) void _erofs_printk(struct super_block *sb, const char *fmt, ...);
->   #define erofs_err(sb, fmt, ...)	\
->   	_erofs_printk(sb, KERN_ERR fmt "\n", ##__VA_ARGS__)
-> +#define erofs_warn(sb, fmt, ...) \
-> +	_erofs_printk(sb, KERN_WARNING fmt "\n", ##__VA_ARGS__)
->   #define erofs_info(sb, fmt, ...) \
->   	_erofs_printk(sb, KERN_INFO fmt "\n", ##__VA_ARGS__)
->   
-> diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
-> index 6ed66b17359b..35cbd0bc04d7 100644
-> --- a/fs/erofs/ishare.c
-> +++ b/fs/erofs/ishare.c
-> @@ -40,49 +40,42 @@ static int erofs_ishare_iget5_set(struct inode *inode, void *data)
->   bool erofs_ishare_fill_inode(struct inode *inode)
->   {
->   	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-> -	struct erofs_inode *vi = EROFS_I(inode);
->   	const struct address_space_operations *aops;
-> +	struct erofs_inode *vi = EROFS_I(inode);
->   	struct erofs_inode_fingerprint fp;
-> -	struct inode *sharedinode;
-> -	unsigned long hash;
-> +	struct inode *si;
->   
->   	aops = erofs_get_aops(inode, true);
->   	if (IS_ERR(aops))
->   		return false;
->   	if (erofs_xattr_fill_inode_fingerprint(&fp, inode, sbi->domain_id))
->   		return false;
-> -	hash = xxh32(fp.opaque, fp.size, 0);
-> -	sharedinode = iget5_locked(erofs_ishare_mnt->mnt_sb, hash,
-> -				   erofs_ishare_iget5_eq, erofs_ishare_iget5_set,
-> -				   &fp);
-> -	if (!sharedinode) {
-> -		kfree(fp.opaque);
-> -		return false;
-> -	}
->   
-> -	if (inode_state_read_once(sharedinode) & I_NEW) {
-> -		sharedinode->i_mapping->a_ops = aops;
-> -		sharedinode->i_size = vi->vfs_inode.i_size;
-> -		unlock_new_inode(sharedinode);
-> +	si = iget5_locked(erofs_ishare_mnt->mnt_sb,
-> +			  xxh32(fp.opaque, fp.size, 0),
-> +			  erofs_ishare_iget5_eq, erofs_ishare_iget5_set, &fp);
-> +	if (si && (inode_state_read_once(si) & I_NEW)) {
-> +		si->i_mapping->a_ops = aops;
-> +		si->i_size = inode->i_size;
-> +		unlock_new_inode(si);
->   	} else {
->   		kfree(fp.opaque);
-> -		if (aops != sharedinode->i_mapping->a_ops) {
-> -			iput(sharedinode);
-> +		if (!si || aops != si->i_mapping->a_ops) {
-> +			iput(si);
->   			return false;
->   		}
-> -		if (sharedinode->i_size != vi->vfs_inode.i_size) {
-> -			_erofs_printk(inode->i_sb, KERN_WARNING
-> -				"size(%lld:%lld) not matches for the same fingerprint\n",
-> -				vi->vfs_inode.i_size, sharedinode->i_size);
-> -			iput(sharedinode);
-> +		if (si->i_size != inode->i_size) {
-> +			erofs_warn(inode->i_sb, "i_size mismatch (%lld != %lld) for the same fingerprint",
-> +				   inode->i_size, si->i_size);
-> +			iput(si);
->   			return false;
->   		}
->   	}
-> -	vi->sharedinode = sharedinode;
-> +	vi->sharedinode = si;
->   	INIT_LIST_HEAD(&vi->ishare_list);
-> -	spin_lock(&EROFS_I(sharedinode)->ishare_lock);
-> -	list_add(&vi->ishare_list, &EROFS_I(sharedinode)->ishare_list);
-> -	spin_unlock(&EROFS_I(sharedinode)->ishare_lock);
-> +	spin_lock(&EROFS_I(si)->ishare_lock);
-> +	list_add(&vi->ishare_list, &EROFS_I(si)->ishare_list);
-> +	spin_unlock(&EROFS_I(si)->ishare_lock);
->   	return true;
->   }
->   
+> Thanks,
+> Nithurshen
+
 
