@@ -1,48 +1,89 @@
-Return-Path: <linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3588-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id X+jML/xZL2ob+wQAu9opvQ
-	(envelope-from <linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:48:44 +0200
+	id 0yPdD0RnL2ot/wQAu9opvQ
+	(envelope-from <linux-erofs+bounces-3588-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 04:45:24 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68B5C682C9B
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 03:48:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6354B682ECC
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jun 2026 04:45:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=GbYu6ogB;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3587-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=UTOuIjcc;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3588-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3588-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gdtLv5dZ4z2yT0;
-	Mon, 15 Jun 2026 11:48:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gdvcK2Njrz3bqD;
+	Mon, 15 Jun 2026 12:45:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781488119;
-	cv=none; b=YfOIFcNmJxfayilEGZ71/Kugcql3eLoEqBApUJ4XQLZ8a4wwhS33xBqOhepM/uNnnaFYywCDaLGiqsyhBvs/uIMYZmIDVjTjX3TyIIlGfy6kL2+J8K+3mN01MB7ssmRCsOOWk7iLWrcOAw97QrhA3kEz3Vex03rzkHjkuim05QxTIZxnV3Nl6slkeQwKnPxVVgULCx7Ha6fDe5gKMidz633Lc0Dxi0E3LdgauMrxbr9mLAdoTQ9HZI4bRy7g96g6S7QDF7S9MPULVPTvgEIMGknKJJmVEd34F3Rvw1dWu6GmyHuzoKwiZxdTXKiqaKJO7L8QA2NY8idwxMwdbC8reQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781491521;
+	cv=none; b=gCUfANoqTTD+xMrHZbRsAvnD0Mc/wp6SpYgQin+Wtgvl2m4E6P9tjPiQW1x4SkKdMphEzipcQvrb+qgk60nHedhyGLelSu0/D8CPbpwfQYFN3Xs2njEfotPcWthBR5wLoSXvDSad44MwEbJt+d2WJL0qDHq8VdHCWwZdXD6hpWlREXfADwtG4PM5UYIWCWcSjvaMDIb9Qrz0nm33KX85o1/7LtJD7rC/0jOrNnngmlEk3Lnb2Wgbauxn89FLp8gj91malBaYrzORl5QqHdOi2j7dNJ7WvfABVbB5t6rLa4SZ8WPluMx16jS5pE47SIdkz08p/jBtCNzXoKg+G6rokg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781488119; c=relaxed/relaxed;
-	bh=6e2ar3eQRlEx3kixdwmw+YpE0tNSl9Wm2mAa1feuOik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vln4MEDILYjSGMbHwWQtB07rEzpVB9Wr8xRVtR6HcaoueDSpAqowEr6goL6JKR27DDuds7G5wVsK7GXtfpNFrMhdi00ryOFAwSUky9Ns9ndotwrRwT5BUIpu8nV1ys5SCl0Mw2Vd8TQDHeZ68wBeQWqJl1uFKhjcBlEc/If9yveonA9UQJp2St/B6lNY6+IFCPa5kK+wSMeWrVwNuVipc5z0ajFgflejvAV2uHGpPoIry+ANzFr/vvSPLZpkwNFStmS483nVhbknOXgyp7/iD1ljFjlHD4JO/1wnLZRjzgfEbEyBWebBxl9AP/PT9ROeJ6373MdnIOzbUGFCo0qQCQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=GbYu6ogB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	t=1781491521; c=relaxed/relaxed;
+	bh=5vNyzKH84DR1hv4ulYF/RyW72TXwcFWsow16w4/msNI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bA+b7nOTPaCOOdIl1hffTAmLjh3y/ANLpFNaOofi6RgqV0gCWdnlQt2RbrVFSJv2yqp1+wXiuBnLJl7n+B621Yx84pQBy16NECfLH+YAzaS2GNG8toKpGVWDQYew+RMNDWW7VDzZWdXuxF4fUkB+Scv79pBPuTU/S20XwsWQs30vPpx09xjKYsZviqfCBQ6wLyvD8Dq5PY932UiRl9Uh3KRnlBsZTE009oc9XE/yoHWV1ZVhQ/50dIZAJh2VUyUtoKx2jAtOAJpKTjzI4V1pyOEj+2xdXWQRljAvr4P2QKiRpguL5dvwLt7Y7wstRywbGWspXEIv7VpKvsUhX9Z/AQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=UTOuIjcc; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::631; helo=mail-pl1-x631.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gdtLs2Ycnz2yFc
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2026 11:48:35 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1781488106; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6e2ar3eQRlEx3kixdwmw+YpE0tNSl9Wm2mAa1feuOik=;
-	b=GbYu6ogBRz/nkwJZEHXvNFfKN2hltQW336H0oJyUkswyLFj3u+s+5By/ToiKnGrqhUHeTNz68SSo+Bhb7XlWzrrLByruMyWQQ13iagVUWVF9xkjY0WzwveRr+oLbCOZW5vZcHc/4PGjddWDQeYx4MwsmPXGPLrbVwUg1wYOEohE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X4oaiq-_1781488104;
-Received: from 30.221.132.227(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X4oaiq-_1781488104 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 15 Jun 2026 09:48:25 +0800
-Message-ID: <555d6eec-7ddf-451e-98a3-70f7612a98c6@linux.alibaba.com>
-Date: Mon, 15 Jun 2026 09:48:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gdvcJ3tXPz2yT0
+	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jun 2026 12:45:20 +1000 (AEST)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2bf30d530bdso28590515ad.3
+        for <linux-erofs@lists.ozlabs.org>; Sun, 14 Jun 2026 19:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781491518; x=1782096318; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5vNyzKH84DR1hv4ulYF/RyW72TXwcFWsow16w4/msNI=;
+        b=UTOuIjcch51HgqnN4047mLLHqi1OeAg+ZPzSfFdlOwsRqKGNBBybSixFLFzcNolHJQ
+         gXipAXi+6ak8Pk7X3ciQ82VDLFSwLlafAypgK1QxZL13c6CUeZb3tjh2f8jbEElPGRB4
+         5J+/xsoDXgtmIiuGpHPmsRmIt2MtHK3pjLb5cdOhawfywZ5w5dzYbGLvDQ3XkxLgdfdk
+         FERZGaUScLDwu0cwNKM13pcBKJjU63VbNzAhELWW/tVhroK8o9YIgGYmsoAivpicL/TV
+         5pZdc9twfHpkdEQcruEvmDKBwe42qVxve3N71n3iiEnbj7WjpLNVHvJltVAJKx+H++k4
+         TH1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781491518; x=1782096318;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5vNyzKH84DR1hv4ulYF/RyW72TXwcFWsow16w4/msNI=;
+        b=R8EU0iG5US6oQbXjOFgXl1kT4mU8pfyXQLR0NsIXx56/AOXcJ6Q+flxTfvEdwhznZy
+         9r742Ws3zOXCBPUYFHNTp8bUGWh+XuOfD5aEPPx2FV0KKAwEZIjXXcKhX/y8+93Zp3JC
+         KurWy8JoR4uQlnOMiPZEYTgc17MDZms/7owd15rdIemJ6xHT70b1X4yppI6uXBDWTOo3
+         o7pzGnKSZhcQPJC69lDq/w0X5gwgFbhucp/PfgEiSWpxgdDX9paKbsN6XmmrOAYkNo2v
+         MgnfnFExIOnmXwUnM6JteF2EDWOmUdoYoB3GHvZM5Z0weJhsMNB51wpcmHzQF/SaLskD
+         S9Qg==
+X-Gm-Message-State: AOJu0YwOgziiwJO1etgFWI6KhAi389jYhFwee0iDzAL/Vj+S+7l9BHjp
+	PWYxUitWR5X1DHMnzaxO77be4KKFMci0RZTd/gwwVCRHXq82jYclXqOd
+X-Gm-Gg: Acq92OEbwVPdXVwwCSLEjtnXMn3rIkQs6Hp6KMsAQZgvVeWtj974TxVG3+IWR5ArkXL
+	vARbprlDVjh5F1Abg+bfVTJG4Ul9h7bGdQWcW8gA7UIvVCbM0Z1bI+KHtZPZ3d0mA21nwu3kqNn
+	EFgOgVHbnBn5hHM9SDsFp1ZNoM5wQDbFZgYRB/adNge7Ct8xw/RIfqdeKjvMmEAYGgMvM8liKQH
+	jajKeQTX0l5GsWHFTWEiCOr95OKMLNvJYF23ssa6DpyHJ4AcW818bKmw4GdLVeGkOxEvbqoUlTs
+	cpoJMBuIXt5xTO6UISFFzMeWu5XEw6CPeL8BChmDxJVXYSoGZOkm9SCg3Cyqph+cIdgJUUCjfZH
+	j2Hz9aQsHbcfop6u7gr41a1XE3eUWhUA4NbCaPW0h9/TRH/Xb3SZweZxq5ZTjCSkDoqZwZZMoB5
+	PDuXHMiYF1DCWBfFJviSs2ckP2PqVW81IUI6xatIzV8XAtwQIuAmYspf8=
+X-Received: by 2002:a17:902:ce8c:b0:2c0:db23:4c1 with SMTP id d9443c01a7336-2c66419882fmr104261815ad.5.1781491518518;
+        Sun, 14 Jun 2026 19:45:18 -0700 (PDT)
+Received: from localhost.localdomain ([157.15.11.68])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c4328a4c14sm79691065ad.43.2026.06.14.19.45.15
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 14 Jun 2026 19:45:18 -0700 (PDT)
+From: Nithurshen <nithurshen.dev@gmail.com>
+To: hsiangkao@linux.alibaba.com
+Cc: linux-erofs@lists.ozlabs.org,
+	nithurshen.dev@gmail.com,
+	xiang@kernel.org
+Subject: Re: [PATCH v1] fsck.erofs: implement thread-safe global LRU metadata cache
+Date: Mon, 15 Jun 2026 08:15:12 +0530
+Message-ID: <20260615024512.94930-1-nithurshen.dev@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <555d6eec-7ddf-451e-98a3-70f7612a98c6@linux.alibaba.com>
+References: <555d6eec-7ddf-451e-98a3-70f7612a98c6@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,82 +95,58 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] fsck.erofs: implement thread-safe global LRU metadata
- cache
-To: Nithurshen <nithurshen.dev@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org
-References: <423c662c-e8b4-4802-b7bf-34abd71a82ae@linux.alibaba.com>
- <20260613101038.86333-1-nithurshen.dev@gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260613101038.86333-1-nithurshen.dev@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3587-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3588-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[lists.ozlabs.org,gmail.com,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:nithurshen.dev@gmail.com,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_NONE(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	TO_DN_SOME(0.00)[]
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 68B5C682C9B
+X-Rspamd-Queue-Id: 6354B682ECC
 
+Hi Xiang,
 
+Understood. I will drop the userspace metadata caching patches for now, 
+as it is not the current priority.
 
-On 2026/6/13 18:10, Nithurshen wrote:
-> Hi Xiang,
-> 
-> What if rather than caching the raw metadata bytes, the userspace
-> cache will focus on caching the parsed structures (such as the
-> computed erofs_map_blocks mappings) to save the worker threads
-> from redundantly parsing chunk indexes and calculating offsets.
-> 
-> Can I replace this malloc-based raw buffer approach and focus v3
-> patch on an LRU cache for the parsed block mappings to reduce the
-> CPU overhead during the concurrent directory traversal?
-
-I don't think it's worth unless you provide enough number to show
-which really reduces the CPU overhead.
-
-decompressed metadata cache is only useful for metabox, but I don't
-think it's prioritized for now.
+I will shift my focus entirely to the concurrent directory traversal 
+patch (Phase 3) that I submitted recently. Please let me know your 
+thoughts on this.
 
 Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Nithurshen
-
+Nithurshen
 
