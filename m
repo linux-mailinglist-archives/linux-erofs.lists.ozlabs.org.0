@@ -1,74 +1,74 @@
-Return-Path: <linux-erofs+bounces-3601-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3602-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id NReJK9YgMWpZcAUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3601-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:09:26 +0200
+	id QjHaHtogMWpbcAUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3602-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:09:30 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C731968DEAF
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:09:25 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1A0F68DEB9
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:09:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=bFqYZLoE;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=bFqYZLoE;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3601-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3601-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=SHYW17pT;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=IIOCfQHQ;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3602-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3602-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gfjQC51GVz3brH;
-	Tue, 16 Jun 2026 20:09:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gfjQH3Qn3z3bt2;
+	Tue, 16 Jun 2026 20:09:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781604563;
-	cv=none; b=NXFa3pgKwsGxf2lhA+Q9g5yPV/dM7irezlCp9B0zHZq7eGM8fl9j2wFkj0PU3TkZzba5lm/XrqWePBdsapbuCWHfTiiYvthu2R69+UD2Eo0SPo1NyBQDXPBf20/1WqhC++o2BeGkNqe9YmW1yazq9RHheARB4BORGVX007+ORQEcCrRzRjtyugzf/NUyA/Sf7Mps4bEUhkSaAXIWri9HyEJfDldujwJ+ReiMaQTI7AW5Dn8sISqJWRtdxtuenBilU4fqSYbBgR85E37kusUdJYWmqoNZaKR2IKZcFinmYHuPWGtgg1qQDLJEIAfZFjZZ5t62s/Uox9VCX2fKFT/VcQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781604567;
+	cv=none; b=dx+p0ReH7POh3Tdd7uOg9otNfnjR0geE+khQ194fr2sOSyJhgKO1MGLo/lJ23y4+yFjwNdXabbI9SsRvSpcrM8UnnA8ObNOekuyeJGIAr6zcuHu9++LQMnkWoI0rWcgXq9OVC3B85mSdhTsAPmIuPuR0cI4VOtn5QB+QmMYveRRbWMTGnAjEnWbuLMftqANRInBhVpBo+PI7J9XU/Z4uRwngbqCZlMHq0oACPNVZp0ihiYsAuaeizUXv2+R0ix/hpcAwXg9TOppEoobvcL+ni0xwzhVUmrc5Rn3V8/7TJtBDAveZ2CE1TxaZz8RKYI55/0Oe696VGAOy43T8P/C77A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781604563; c=relaxed/relaxed;
-	bh=ElRcRW2ORewxJR51AX9zH5/PcYxatkHyMOGHJQJeHbA=;
+	t=1781604567; c=relaxed/relaxed;
+	bh=tBSa5TnPIcX9KUvKuQ/n5zPtisGuhCJFsXdMJvHXniA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=hWKMGdaSlizIrQ64NlCYIPp4DKYpbQqIZKJQ01imRVHr4Bw42wkAsi/KFSvLqpUT0pHfEMSzrHn34lvCO/sFoHYCT+ethlipYfbRsa5fUhRSu1LNg9eJz3Ntrw0Te6ukeNVjEVINOszrx2oSfDerYxssmEeBbRVsuif/hT6IdxFRtLc3tzhM9S2Qt8tKWe6A+yLbrlUjPddjT+zpwACFGC4O/RhlE8FFpJy9SkjtI8PIxWUk/5Nxqv8sc1lW1d6rORlmOk08wpWx58dzfHAVTLOxLTGVwW2Ud5EKwvA6OZN5Lgn9KTQJINI5VflY4/57TnkhS9Fb/tw5wxyZZjUmdg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bFqYZLoE; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bFqYZLoE; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:content-type; b=Ef4OoxMq3pneAMhXAjfRSUYYKVj36RHnHYpp7Xe+pom0quwBvh5wWxU1sn5rHJfHyY+BuSUd+3/Xyyyl6FWsan70gi2xTYw8vEPcyw3vg5Q0jBkbFGxMtgnGKnUKvJCIIbUkCZ3d2oOeGWaDcuv19+mk7kEvKtAOXINe3Evte9zPG2bwpdXnc+2yJKSGtiwOV7aukQS5B9aYhnuzXNo9Sn4tl4wzuULMjDy/Im5l5Khm3IW/nJTbzSz1jcCcq/nd6UR0bYAkFhZ+BT3ysE12DSd8moUZkg10I9FiuD5YrfWL3Gby7wgNDTRru57gC2DF3jd59vuTMqR1ZsdcAeNE6w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SHYW17pT; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IIOCfQHQ; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfjQB4tzbz3bqh
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2026 20:09:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfjQG55bjz3bqh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2026 20:09:26 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781604559;
+	s=mimecast20190719; t=1781604562;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ElRcRW2ORewxJR51AX9zH5/PcYxatkHyMOGHJQJeHbA=;
-	b=bFqYZLoE1HLysOMveQTub5kAwPgnn+6QsKAas+a8f8c+uqYf1nB6uSchV1BwdMp5jwjxK5
-	mthVMdWTYJsvPUjFpgHkl3/6GaxI8mvmh5etEJ0K8o4ukkHtACJ2A3ZfS6UQB06fvaVK0r
-	lcTuh83zEDquS2PvyI5GCCMpuhWhJSc=
+	bh=tBSa5TnPIcX9KUvKuQ/n5zPtisGuhCJFsXdMJvHXniA=;
+	b=SHYW17pTuaeBHcbVOVip5O40Ur+N0eCuZekzJaJag8eJJX8vVk0cF+HXdYldMpfOUHJmwW
+	buIA8Ksens/IcI0UVbgwUOc9E3yGkhCDHF8o9kvlZYJ6zWP4ISxNvwm26gm+bqYu7OlrdY
+	H/8eO1JH8zTOgpJqcYR6whNzjsXsanY=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781604559;
+	s=mimecast20190719; t=1781604563;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ElRcRW2ORewxJR51AX9zH5/PcYxatkHyMOGHJQJeHbA=;
-	b=bFqYZLoE1HLysOMveQTub5kAwPgnn+6QsKAas+a8f8c+uqYf1nB6uSchV1BwdMp5jwjxK5
-	mthVMdWTYJsvPUjFpgHkl3/6GaxI8mvmh5etEJ0K8o4ukkHtACJ2A3ZfS6UQB06fvaVK0r
-	lcTuh83zEDquS2PvyI5GCCMpuhWhJSc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=tBSa5TnPIcX9KUvKuQ/n5zPtisGuhCJFsXdMJvHXniA=;
+	b=IIOCfQHQK07R7Jcxe58MmR0ugx5rhi0ZmpA4ys3FnKzEHmw7TMjqoctq0qWbbbnMErky4u
+	fsBT1JLqQrlgMpFV5v5zt7jIui3bJdcuVbOzbcaCJJI+ua5pUwV9N/HXj37QGKE5ceiB1n
+	Y/FzayuPzfZnqkurWKAXhWYJ5zAfkq8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-A1lN4myLMPuZ_6M-3L4OAg-1; Tue,
- 16 Jun 2026 06:09:13 -0400
-X-MC-Unique: A1lN4myLMPuZ_6M-3L4OAg-1
-X-Mimecast-MFC-AGG-ID: A1lN4myLMPuZ_6M-3L4OAg_1781604549
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-Fc04VauUNHK95WnDhQ22vQ-1; Tue,
+ 16 Jun 2026 06:09:20 -0400
+X-MC-Unique: Fc04VauUNHK95WnDhQ22vQ-1
+X-Mimecast-MFC-AGG-ID: Fc04VauUNHK95WnDhQ22vQ_1781604558
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E5C3180025E;
-	Tue, 16 Jun 2026 10:09:09 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C6BB19560BB;
+	Tue, 16 Jun 2026 10:09:17 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.50.44])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8E001180034F;
-	Tue, 16 Jun 2026 10:09:02 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C8421800586;
+	Tue, 16 Jun 2026 10:09:11 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -93,9 +93,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v4 04/30] iov_iter: Fix missing alloc fail check in iov_iter_extract_bvec_pages()
-Date: Tue, 16 Jun 2026 11:07:53 +0100
-Message-ID: <20260616100821.2062304-5-dhowells@redhat.com>
+Subject: [PATCH v4 05/30] iov_iter: Remove unused variable in kunit_iov_iter.c
+Date: Tue, 16 Jun 2026 11:07:54 +0100
+Message-ID: <20260616100821.2062304-6-dhowells@redhat.com>
 In-Reply-To: <20260616100821.2062304-1-dhowells@redhat.com>
 References: <20260616100821.2062304-1-dhowells@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
@@ -109,15 +109,16 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: BZOtH5RdNYdlt_H6ltLkEsuJ_BOdbEzdLIVT-jZqIro_1781604549
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: VHypxWe8TnuSHR4vCEaUxWWWxuVplVg0MURgtZ-TAu0_1781604558
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.1
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_PASS,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.20 / 15.00];
@@ -125,13 +126,13 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3601-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3602-lists,linux-erofs=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -150,16 +151,15 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,linux.dev:email,manguebit.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,sashiko.dev:url,kernel.dk:email]
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,infradead.org:email,kernel.dk:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,manguebit.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C731968DEAF
+X-Rspamd-Queue-Id: A1A0F68DEB9
 
-Fix iov_iter_extract_bvec_pages() to check if want_pages_array() fails and,
-if so, return -ENOMEM appropriately.
+Remove the no longer used variable 'b' from iov_kunit_copy_to_bvec().  The
+variable is initialised and incremented, but nothing now makes use of the
+value.
 
-Fixes: e4e535bff2bc ("iov_iter: don't require contiguous pages in iov_iter_extract_bvec_pages")
-Link: https://sashiko.dev/#/patchset/20260608145432.681865-1-dhowells%40redhat.com
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Ming Lei <ming.lei@redhat.com>
 cc: Paulo Alcantara <pc@manguebit.org>
@@ -169,21 +169,33 @@ cc: Jens Axboe <axboe@kernel.dk>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- lib/iov_iter.c | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/tests/kunit_iov_iter.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index dc9c6eb21bdb..6386ae4ef491 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1631,6 +1631,8 @@ static ssize_t iov_iter_extract_bvec_pages(struct iov_iter *i,
- 	bi.bi_bvec_done = skip;
+diff --git a/lib/tests/kunit_iov_iter.c b/lib/tests/kunit_iov_iter.c
+index f02f7b7aa796..e7e154f94f66 100644
+--- a/lib/tests/kunit_iov_iter.c
++++ b/lib/tests/kunit_iov_iter.c
+@@ -275,7 +275,7 @@ static void __init iov_kunit_copy_to_bvec(struct kunit *test)
+ 	struct page **spages, **bpages;
+ 	u8 *scratch, *buffer;
+ 	size_t bufsize, npages, size, copied;
+-	int i, b, patt;
++	int i, patt;
  
- 	maxpages = want_pages_array(pages, maxsize, skip, maxpages);
-+	if (!maxpages)
-+		return -ENOMEM;
+ 	bufsize = 0x100000;
+ 	npages = bufsize / PAGE_SIZE;
+@@ -298,10 +298,9 @@ static void __init iov_kunit_copy_to_bvec(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, iter.nr_segs, 0);
  
- 	while (bi.bi_size && bi.bi_idx < i->nr_segs) {
- 		struct bio_vec bv = bvec_iter_bvec(i->bvec, bi);
+ 	/* Build the expected image in the scratch buffer. */
+-	b = 0;
+ 	patt = 0;
+ 	memset(scratch, 0, bufsize);
+-	for (pr = bvec_test_ranges; pr->from >= 0; pr++, b++) {
++	for (pr = bvec_test_ranges; pr->from >= 0; pr++) {
+ 		u8 *p = scratch + pr->page * PAGE_SIZE;
+ 
+ 		for (i = pr->from; i < pr->to; i++)
 
 
