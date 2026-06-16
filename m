@@ -1,56 +1,56 @@
-Return-Path: <linux-erofs+bounces-3641-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3642-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id padRNANZMWrthQUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3641-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:09:07 +0200
+	id BTRpFAdZMWrwhQUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3642-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:09:11 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00DB8690406
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:09:06 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA2B669040A
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:09:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=S1kG+q+S;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3641-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3641-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="lhq+hq/T";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3642-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3642-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gfpkm5sCrz3c4l;
-	Wed, 17 Jun 2026 00:09:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gfpkr41k1z3c4v;
+	Wed, 17 Jun 2026 00:09:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781618944;
-	cv=none; b=SDTjA0e1pitBbTocJ+SIQYPysN/8RCkTfmZoHX7kyYMtqSgN1XGXruTSNEg7up9+i/fJeYFz6m0g2tNGF9Z4edOFgMIbJkajsMo4lQwUbcZ0D0O54aUDnpTPU2sKEABsqrD76yLrC9T1k1gFWsaQLwVoRB47AEMgtY45ox2WZO7UdH63n5Z3YK932w+659kgBDmYbjZdxsypXe8UPziXZ42dhWCSU/sGCYOxoj8RUraQBmBMbJW3LX+qieiSlWUi/wYgnNFMNV/KdOc1WMtWj9kerSbYxF6SteGThN1KTMDIZFEbxaLXTZp4SWeO90TLs0upwQ6NGZkWw4Fo7Tts0w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781618948;
+	cv=none; b=nwCYGcKNY5ihDHkhQRREBY6TBxt313h+CCd6u2h89/fbP5xhSwDCc8Y7PyfRILYRlYU1UAFv3Ks/fRY/XcJ/nodTpj9avSTkZcDeE5vgk9+sH3TRNnsCqqzxTJuA/NpA2h0I3M/WCnSpmKxdmtjWsQIq3RHhzbdyiLye1fD/1diAjyHfxhqCf/xbNtGXfHerVVqpefV5Dn3DAY8wyvAUovtCe0oXPc2aAPKLQvSFdnGLZyWiL8igNgJv0YCRavi2TC8s1RxCOB2QTexBhBA4s6HsOWm5c2ZIc5RCLjz3NnN0MnxILwzdRTBA2s35Eow06nADzeIu3GVexv665CZJag==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781618944; c=relaxed/relaxed;
-	bh=McE+kxkeDdz+ygzUoOoQSlBlJSu4C5ZVbP/eQgLFN3A=;
+	t=1781618948; c=relaxed/relaxed;
+	bh=nP3Udk8iy/Uza/C/ZQOR8nX+IzZC7biDMWzYcgbDqCw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nh1qcQvaFvhl40qhTUM2ThJgdiPEj5dOvas89kjFmcLd4Zn6tA+iLwP2zjQDYxx1o9P9B9SL5CptF6kxFVi7K3pVvNVsUGAkCkgLUTIvbhXdfaq0C++3BA6ZSb0Qdk/Jje5hXySvyM/gWX4BLstfmhDkQL1tDvCvPahnBg/oBiW4UlLn5cX8EEor0aPhPmLnKizeFPSdOf/LDRB2FhZhJYEkLdkbg7KXgrb8I5YrsP2NtAQ/vlC7m8z4+UMdS9Z5vBnxTSH+14eV2wDS9rnVJD63Eg54r8658367rEORcky7sEgXsCZ/g+aTUV3LImbDwOlr96tLyU6Ae5XHS9nkUw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S1kG+q+S; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+	 In-Reply-To:To:Cc; b=mHfJIyuPyxdJl0d77wfx6yiB1AwNtV/ooh6Vdw91ozQSp1U7/olEmmijKwEj3IwdFnXZMF8Yk9vvB1SQ5r7yoez2cTzRz1DevelG9Ro1vjksh3r/cwW2FUCQ6j9kg62QMui+tfneJ8kX6z16qlljmQ2yIZ7IUSGxve1A4lJmueFJ/2XYVFdva7VM4L3NEp/0qSlHwqpdzVyRxwLnibzmmcx+ij6ukj33AZhroXfaQI8phKdIoku63XL1pdt0wfmtD+Eh25GwY0NAn4NCG/elCB83WTd7qbsMiV/zZ/qmHTI3hK/iXhNW0YvTDprAVcGL9H+RA5Hfk/tasuJgFelOOg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lhq+hq/T; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfpkl6VKCz2yv0
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2026 00:09:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfpkq4x4dz2yv0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2026 00:09:07 +1000 (AEST)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id CACD743CAC;
+	by tor.source.kernel.org (Postfix) with ESMTP id B96B4600AB;
+	Tue, 16 Jun 2026 14:09:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 298481F00ADB;
 	Tue, 16 Jun 2026 14:09:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6493A1F00ADE;
-	Tue, 16 Jun 2026 14:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781618941;
-	bh=McE+kxkeDdz+ygzUoOoQSlBlJSu4C5ZVbP/eQgLFN3A=;
+	s=k20260515; t=1781618945;
+	bh=nP3Udk8iy/Uza/C/ZQOR8nX+IzZC7biDMWzYcgbDqCw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=S1kG+q+Sm0gy2xtvtjfOIhCT55nRhAoaWjbEkFsnNJIjq4uPgoVn6/rxz+YE8FKL+
-	 75QQxHw3WnV3EahFX0EOx3BxEk5RZY1J+0yXmklLhg806b8auaIX+ooc6yrYFFaqZv
-	 uhrxkanWXUw0/JQigsXhGMlap+ie9NNi3uLssz+vAdm3qdyOGoST2sZjI8q1Pgwr2W
-	 yhYbD+Mzp4HWlMYcBpTZJA06H1AJgiDPi8+rvYs+qoryCRJgWPb5FRE9hsFvqzZHDG
-	 lUURWSe4YaEtrkVQ9g1WYknIgZ3mUhLffVDFqF2Sl6YqY9BVTPrzXocpk254qd8IO9
-	 7VYFFRb5IAkQg==
+	b=lhq+hq/Tv6VeWQkaOR9t1faUtH19+ZQBODdCRdubau7B2atKbyWt4Ru3CoWzd2JdI
+	 pART8OGFb+acXJ10rfRiV3QAeLbiTFGMIdDDy/VFfvP3XFrYXyVjq/NNrPowJiR8sB
+	 FQ4UUqJ1jmnZpnB0oVm3Yx8cf8bF1NwzZHrUMr+uYk8lVYfILz2OdizVq/gS2LVVNz
+	 3WU+/HulzLSbGPX7b6yd7oRVgdpKOPFd3kbR42RmR21ZxoVTHe0XyaiZt6Cp+iN4mZ
+	 rHluZL65N7J7jtDLwFU0kq8Ym1F6hcQnPLoYRipB9kwV0pOF+K9TCx/Hev/OT5oU/h
+	 KVd2DOKuwiMsQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 16 Jun 2026 16:08:23 +0200
-Subject: [PATCH RFC v2 07/18] fs: maintain a global device-to-superblock
- table
+Date: Tue, 16 Jun 2026 16:08:24 +0200
+Subject: [PATCH RFC v2 08/18] fs: add dedicated block device open helpers
+ for filesystems
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,7 +64,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260616-work-super-bdev_holder_global-v2-7-7df6b864028e@kernel.org>
+Message-Id: <20260616-work-super-bdev_holder_global-v2-8-7df6b864028e@kernel.org>
 References: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
 In-Reply-To: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
 To: Jan Kara <jack@suse.cz>
@@ -78,12 +78,12 @@ Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  linux-erofs@lists.ozlabs.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.16-dev-4090c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9141; i=brauner@kernel.org;
- h=from:subject:message-id; bh=aCQpDgovIStdL2twMuU6K5L0JfaSCl14DVz4s/14ctk=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQZRtzTmbZFL3r3nd+HQ57+dckpjymYuyo6RiLrxsJ5X
- q9+mba6dJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExES4CRYcvv+U1yXyJfO916
- N6+jiamsSz7++sGb74uONavzzrpX38rwPyqwSevGzBMLzmmIGkT6rmOYsFJh8Znz7+fo2EluvcG
- 0gx0A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10198; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=VbL4Tle8J7ig1J1vW7Q4LDcahS3KzHqARwjgFOGJJvY=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQZRtyrvO34XoC1JqOU69KTbX1bZoZFnev3dv5aK3txk
+ uCzGydEOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZymZ/hvzfHuhpdhZh339Zv
+ N5d7epthidjLgMPMfZtPSTOxyNrs62P4nxgYHNMY2G+kbtuetjbj9ZQjihIbndKfn77rIve06Lw
+ 2AwA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -94,22 +94,22 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:jack@suse.cz,m:hch@lst.de,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:brauner@kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jack@suse.cz,m:hch@lst.de,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:brauner@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3641-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3642-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	ALIAS_RESOLVED(0.00)[];
@@ -123,278 +123,293 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 00DB8690406
+X-Rspamd-Queue-Id: AA2B669040A
 
-fs_holder_ops recovers the owning superblock from bdev->bd_holder, which
-forces the holder to be exactly one superblock and prevents several
-superblocks from sharing one block device. That's what erofs is doing.
+Add fs_bdev_file_open_by_{dev,path}() and fs_bdev_file_release(). They
+open the device with fs_holder_ops and register a claim in the
+device-to-superblock table. Claims on the same (device, superblock)
+pair share one entry, so when a filesystem claims a device it already
+uses (xfs with its log on the data device), no second entry is added
+and each superblock will be acted on once.
 
-As a first step introduce a global dev_t-keyed rhltable mapping each
-device to the superblock(s) using it. The entry is preallocated in
-alloc_super() and registered under sb->s_dev by the set callback through
-set_anon_super() and set_bdev_super(), the two helpers every set
-callback assigns s_dev through. Registration is the final fallible act
-of a set callback, so an insert failure unwinds through sget_fc()'s
-existing set-failure path: the fs_context keeps ownership of s_fs_info
-and the callers' error paths stay correct. set_anon_super() releases
-the anonymous dev it allocated when registration fails. Unwinding
-through deactivate_locked_super() instead would run kill_sb() and free
-s_fs_info behind the caller's back: nfs and ceph free that object
-through a local pointer when sget_fc() fails and would double-free.
+The holder argument remains purely the block layer's exclusivity token:
+a superblock, or a file_system_type for a device shared by several
+superblocks of that type. The shared case only becomes usable once the
+fs_holder_ops callbacks resolve superblocks through the table instead
+of bdev->bd_holder.
 
-The superblock stashes the entry in sb->s_super_dev and
-kill_super_notify() drops the claim through it, so teardown doesn't
-depend on s_dev staying stable; an entry that was never registered is
-freed together with the superblock in destroy_super_work().
+Convert the main device, setup_bdev_super() and kill_block_super(),
+over: the open finds the entry registered by sget_fc() and claims it
+again. cramfs and romfs bypass kill_block_super() so they can handle
+MTD mounts and release the main device with a plain bdev_fput(), which
+would leave the claim behind: the (dev, sb) entry would never be
+unregistered and the passive reference it holds would keep the
+superblock alive forever. Convert their release paths in the same
+step.
 
-Each table entry holds a passive reference (s_passive) on its
-superblock, so the struct stays valid for as long as the entry is
-reachable. Entries are claim-counted through sd_ref: additional claims
-on the same (device, superblock) pair share the entry, and the unlink
-is deferred to the last put, so a later iteration cursor never resumes
-from a removed node.
+The frozen-device check stays in setup_bdev_super() for the primary
+device and is added to fs_bdev_register() for new claims, i.e. every
+additional device a filesystem opens through the helpers. Only a
+(device, superblock) pair the superblock claimed earlier may be
+reopened while frozen (xfs with its log on the data device): the freeze
+already covers that superblock through the existing claim, so nothing
+escapes it. Without the setup_bdev_super() check a device frozen before
+the mount even started (dm lock_fs, loop) could be mounted and written
+to (journal replay) under an active freeze, because the primary open
+reuses the entry registered by sget_fc() and never takes the new-claim
+path.
 
-The table is initialized from mnt_init(): the first superblocks (the
-tmpfs shm mount and rootfs) are created from start_kernel() long before
-any initcall runs, so an initcall would be too late.
-
-The table has no readers yet; the fs_holder_ops callbacks are switched
-over once all devices a filesystem claims are registered.
+Both checks read bd_fsfreeze_count only after the entry is published
+(by sget_fc() for the primary, by fs_bdev_register() for new claims)
+and pair with bdev_freeze() incrementing the count before walking the
+table: either the mount sees the elevated freeze count and fails with
+EBUSY, or the freeze finds the published entry and converges once
+SB_BORN is set.
 
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- fs/internal.h                  |   1 +
- fs/namespace.c                 |   2 +
- fs/super.c                     | 102 ++++++++++++++++++++++++++++++++++++++++-
- include/linux/fs/super_types.h |   2 +
- 4 files changed, 105 insertions(+), 2 deletions(-)
+ fs/cramfs/inode.c        |   2 +-
+ fs/romfs/super.c         |   2 +-
+ fs/super.c               | 154 ++++++++++++++++++++++++++++++++++++++++++++---
+ include/linux/fs/super.h |   7 +++
+ 4 files changed, 155 insertions(+), 10 deletions(-)
 
-diff --git a/fs/internal.h b/fs/internal.h
-index d77578d66d42..83eb3e2a0f85 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -137,6 +137,7 @@ extern int reconfigure_super(struct fs_context *);
- extern bool super_trylock_shared(struct super_block *sb);
- struct super_block *user_get_super(dev_t, bool excl);
- void put_super(struct super_block *sb);
-+void __init super_dev_init(void);
- extern bool mount_capable(struct fs_context *);
- int sb_init_dio_done_wq(struct super_block *sb);
- 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 3d5cd5bf3b05..7cef6dae0854 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -6262,6 +6262,8 @@ void __init mnt_init(void)
- 	if (!mount_hashtable || !mountpoint_hashtable)
- 		panic("Failed to allocate mount hash table\n");
- 
-+	super_dev_init();
-+
- 	kernfs_init();
- 
- 	err = sysfs_init();
+diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
+index 4edbfccd0bbe..d4cd03f4f60d 100644
+--- a/fs/cramfs/inode.c
++++ b/fs/cramfs/inode.c
+@@ -504,7 +504,7 @@ static void cramfs_kill_sb(struct super_block *sb)
+ 		sb->s_mtd = NULL;
+ 	} else if (IS_ENABLED(CONFIG_CRAMFS_BLOCKDEV) && sb->s_bdev) {
+ 		sync_blockdev(sb->s_bdev);
+-		bdev_fput(sb->s_bdev_file);
++		fs_bdev_file_release(sb->s_bdev_file, sb);
+ 	}
+ 	kfree(sbi);
+ }
+diff --git a/fs/romfs/super.c b/fs/romfs/super.c
+index ac55193bf398..43eb897197c0 100644
+--- a/fs/romfs/super.c
++++ b/fs/romfs/super.c
+@@ -587,7 +587,7 @@ static void romfs_kill_sb(struct super_block *sb)
+ #ifdef CONFIG_ROMFS_ON_BLOCK
+ 	if (sb->s_bdev) {
+ 		sync_blockdev(sb->s_bdev);
+-		bdev_fput(sb->s_bdev_file);
++		fs_bdev_file_release(sb->s_bdev_file, sb);
+ 	}
+ #endif
+ }
 diff --git a/fs/super.c b/fs/super.c
-index a771a0ad4c9a..ff5e305d0ab4 100644
+index ff5e305d0ab4..3d166c7f578a 100644
 --- a/fs/super.c
 +++ b/fs/super.c
-@@ -24,6 +24,7 @@
- #include <linux/export.h>
- #include <linux/slab.h>
- #include <linux/blkdev.h>
-+#include <linux/rhashtable.h>
- #include <linux/mount.h>
- #include <linux/security.h>
- #include <linux/writeback.h>		/* for the emergency remount stuff */
-@@ -272,6 +273,8 @@ static unsigned long super_cache_count(struct shrinker *shrink,
- 	return total_objects;
- }
+@@ -1633,6 +1633,145 @@ const struct blk_holder_ops fs_holder_ops = {
+ };
+ EXPORT_SYMBOL_GPL(fs_holder_ops);
  
-+static struct super_dev *super_dev_alloc(dev_t dev, struct super_block *sb);
-+
- static void destroy_super_work(struct work_struct *work)
- {
- 	struct super_block *s = container_of(work, struct super_block,
-@@ -279,6 +282,8 @@ static void destroy_super_work(struct work_struct *work)
- 	fsnotify_sb_free(s);
- 	security_sb_free(s);
- 	put_user_ns(s->s_user_ns);
-+	/* Only an unregistered entry is still owned by the superblock. */
-+	kfree(s->s_super_dev);
- 	kfree(s->s_subtype);
- 	for (int i = 0; i < SB_FREEZE_LEVELS; i++)
- 		percpu_free_rwsem(&s->s_writers.rw_sem[i]);
-@@ -392,6 +397,10 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
- 		goto fail;
- 	if (list_lru_init_memcg(&s->s_inode_lru, s->s_shrink))
- 		goto fail;
-+	s->s_super_dev = super_dev_alloc(0, s);
-+	if (!s->s_super_dev)
-+		goto fail;
-+
- 	s->s_min_writeback_pages = MIN_WRITEBACK_PAGES;
- 	return s;
- 
-@@ -421,6 +430,77 @@ void put_super(struct super_block *s)
- 	}
- }
- 
-+struct super_dev {
-+	dev_t			sd_dev;
-+	struct super_block	*sd_sb;
-+	refcount_t		sd_ref;
-+	struct rhlist_head	sd_node;
-+	struct rcu_head		sd_rcu;
-+};
-+
-+static struct rhltable super_dev_table;
-+static const struct rhashtable_params super_dev_params = {
-+	.key_len	= sizeof(dev_t),
-+	.key_offset	= offsetof(struct super_dev, sd_dev),
-+	.head_offset	= offsetof(struct super_dev, sd_node),
-+};
-+
-+static struct super_dev *super_dev_alloc(dev_t dev, struct super_block *sb)
++static struct super_dev *super_dev_lookup(dev_t dev, struct super_block *sb)
 +{
-+	struct super_dev *fsd;
++	struct super_dev *it;
++	struct rhlist_head *list, *pos;
 +
-+	fsd = kzalloc_obj(*fsd);
-+	if (!fsd)
-+		return NULL;
-+	fsd->sd_dev = dev;
-+	fsd->sd_sb = sb;
-+	refcount_set(&fsd->sd_ref, 1);
-+	return fsd;
-+}
++	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "suspicious super_dev_lookup() usage");
++	VFS_WARN_ON_ONCE(!dev);
++	VFS_WARN_ON_ONCE(!sb);
 +
-+static void super_dev_put(struct super_dev *fsd)
-+{
-+	/* Unlink only once unpinned, so a cursor never resumes from a removed node. */
-+	if (fsd && refcount_dec_and_test(&fsd->sd_ref)) {
-+		rhltable_remove(&super_dev_table, &fsd->sd_node, super_dev_params);
-+		put_super(fsd->sd_sb);
-+		kfree_rcu(fsd, sd_rcu);
++	list = rhltable_lookup(&super_dev_table, &dev, super_dev_params);
++	rhl_for_each_entry_rcu(it, pos, list, sd_node) {
++		if (it->sd_sb == sb)
++			return it;
 +	}
++
++	return NULL;
 +}
 +
-+void __init super_dev_init(void)
++static int fs_bdev_register(struct file *bdev_file, struct super_block *sb)
 +{
-+	if (rhltable_init(&super_dev_table, &super_dev_params))
-+		panic("VFS: Cannot initialise super_dev_table\n");
-+}
-+
-+static int super_dev_insert(struct super_dev *fsd)
-+{
++	struct super_dev *sb_dev __free(kfree) = NULL;
++	dev_t dev = file_bdev(bdev_file)->bd_dev;
 +	int err;
 +
-+	err = rhltable_insert(&super_dev_table, &fsd->sd_node, super_dev_params);
-+	if (!err)
-+		refcount_inc(&fsd->sd_sb->s_passive);
-+	return err;
-+}
++	scoped_guard(rcu) {
++		sb_dev = super_dev_lookup(dev, sb);
++		if (sb_dev && refcount_inc_not_zero(&sb_dev->sd_ref)) {
++			retain_and_null_ptr(sb_dev);
++			return 0;
++		}
++	}
 +
-+/* Register @sb under @sb->s_dev as the final fallible act of a set callback. */
-+static int super_dev_register(struct super_block *sb)
-+{
-+	struct super_dev *fsd = sb->s_super_dev;
-+	int err;
++	sb_dev = super_dev_alloc(dev, sb);
++	if (!sb_dev)
++		return -ENOMEM;
 +
-+	lockdep_assert_held(&sb_lock);
-+	VFS_WARN_ON_ONCE(!sb->s_dev);
-+	VFS_WARN_ON_ONCE(!fsd || fsd->sd_dev);
-+
-+	fsd->sd_dev = sb->s_dev;
-+	err = super_dev_insert(fsd);
++	err = super_dev_insert(sb_dev);
 +	if (err)
-+		fsd->sd_dev = 0;
++		return err;
++
++	/* Publish the entry before reading the count; pairs with bdev_freeze(). */
++	smp_mb();
++	if (atomic_read(&file_bdev(bdev_file)->bd_fsfreeze_count) > 0) {
++		err = -EBUSY;
++		super_dev_put(sb_dev);
++	}
++
++	retain_and_null_ptr(sb_dev);
 +	return err;
 +}
 +
- static void kill_super_notify(struct super_block *sb)
- {
- 	lockdep_assert_not_held(&sb->s_umount);
-@@ -440,6 +520,12 @@ static void kill_super_notify(struct super_block *sb)
- 	hlist_del_init(&sb->s_instances);
- 	spin_unlock(&sb_lock);
- 
-+	/* Drop sget_fc()'s claim; a never-registered entry stays with the sb. */
-+	if (sb->s_super_dev->sd_dev) {
-+		super_dev_put(sb->s_super_dev);
-+		sb->s_super_dev = NULL;
++/**
++ * fs_bdev_file_open_by_dev - claim a block device on behalf of a superblock
++ * @dev: block device number
++ * @mode: open mode
++ * @holder: block-layer exclusivity token (a superblock, or the file_system_type
++ *          when the device may be shared by several superblocks of that type)
++ * @sb: superblock to drive fs_holder_ops events for
++ *
++ * Open @dev with &fs_holder_ops and register that @sb uses it, so device
++ * removal/sync/freeze/thaw are propagated to @sb (and any other superblock
++ * sharing @dev).  Must be paired with fs_bdev_file_release().
++ *
++ * Return: an opened block-device file or an ERR_PTR().
++ */
++struct file *fs_bdev_file_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
++				      struct super_block *sb)
++{
++	struct file *bdev_file;
++	int err;
++
++	bdev_file = bdev_file_open_by_dev(dev, mode, holder, &fs_holder_ops);
++	if (IS_ERR(bdev_file))
++		return bdev_file;
++
++	err = fs_bdev_register(bdev_file, sb);
++	if (err) {
++		bdev_fput(bdev_file);
++		return ERR_PTR(err);
 +	}
++	return bdev_file;
++}
++EXPORT_SYMBOL_GPL(fs_bdev_file_open_by_dev);
 +
- 	/*
- 	 * Let concurrent mounts know that this thing is really dead.
- 	 * We don't need @sb->s_umount here as every concurrent caller
-@@ -750,6 +836,7 @@ struct super_block *sget_fc(struct fs_context *fc,
- 	}
- 	if (!s) {
- 		spin_unlock(&sb_lock);
++/**
++ * fs_bdev_file_open_by_path - claim a block device on behalf of a superblock
++ * @path: path to the block device
++ * @mode: open mode
++ * @holder: block-layer exclusivity token (a superblock, or the file_system_type
++ *          when the device may be shared by several superblocks of that type)
++ * @sb: superblock to drive fs_holder_ops events for
++ *
++ * Open the block device at @path with &fs_holder_ops and register that @sb
++ * uses it, so device removal/sync/freeze/thaw are propagated to @sb (and any
++ * other superblock sharing the device).  Must be paired with
++ * fs_bdev_file_release().
++ *
++ * Return: an opened block-device file or an ERR_PTR().
++ */
++struct file *fs_bdev_file_open_by_path(const char *path, blk_mode_t mode,
++				       void *holder, struct super_block *sb)
++{
++	struct file *bdev_file;
++	int err;
 +
- 		s = alloc_super(fc->fs_type, fc->sb_flags, user_ns);
- 		if (!s)
- 			return ERR_PTR(-ENOMEM);
-@@ -759,11 +846,13 @@ struct super_block *sget_fc(struct fs_context *fc,
- 	s->s_fs_info = fc->s_fs_info;
- 	err = set(s, fc);
- 	if (err) {
-+		VFS_WARN_ON_ONCE(s->s_super_dev->sd_dev);
- 		s->s_fs_info = NULL;
- 		spin_unlock(&sb_lock);
- 		destroy_unused_super(s);
- 		return ERR_PTR(err);
- 	}
-+	VFS_WARN_ON_ONCE(!s->s_super_dev->sd_dev);
- 	fc->s_fs_info = NULL;
- 	s->s_type = fc->fs_type;
- 	s->s_iflags |= fc->s_iflags;
-@@ -1217,7 +1306,16 @@ EXPORT_SYMBOL(free_anon_bdev);
- 
- int set_anon_super(struct super_block *s, void *data)
++	bdev_file = bdev_file_open_by_path(path, mode, holder, &fs_holder_ops);
++	if (IS_ERR(bdev_file))
++		return bdev_file;
++
++	err = fs_bdev_register(bdev_file, sb);
++	if (err) {
++		bdev_fput(bdev_file);
++		return ERR_PTR(err);
++	}
++	return bdev_file;
++}
++EXPORT_SYMBOL_GPL(fs_bdev_file_open_by_path);
++
++/**
++ * fs_bdev_file_release - release a block device claimed for a superblock
++ * @bdev_file: file returned by fs_bdev_file_open_by_{dev,path}()
++ * @sb: superblock the device was claimed for
++ *
++ * Drop one claim on the {dev, @sb} entry; the last claim unregisters it (a
++ * pinning cursor defers the actual unlink).  Then close the block device.
++ */
++void fs_bdev_file_release(struct file *bdev_file, struct super_block *sb)
++{
++	dev_t dev = file_bdev(bdev_file)->bd_dev;
++	struct super_dev *sb_dev;
++
++	rcu_read_lock();
++	sb_dev = super_dev_lookup(dev, sb);
++	rcu_read_unlock();
++	super_dev_put(sb_dev);
++	bdev_fput(bdev_file);
++}
++EXPORT_SYMBOL_GPL(fs_bdev_file_release);
++
+ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ 		struct fs_context *fc)
  {
--	return get_anon_bdev(&s->s_dev);
-+	int error;
-+
-+	error = get_anon_bdev(&s->s_dev);
-+	if (error)
-+		return error;
-+
-+	error = super_dev_register(s);
-+	if (error)
-+		free_anon_bdev(s->s_dev);
-+	return error;
- }
- EXPORT_SYMBOL(set_anon_super);
+@@ -1640,7 +1779,7 @@ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ 	struct file *bdev_file;
+ 	struct block_device *bdev;
  
-@@ -1303,7 +1401,7 @@ EXPORT_SYMBOL(get_tree_keyed);
- static int set_bdev_super(struct super_block *s, void *data)
- {
- 	s->s_dev = *(dev_t *)data;
--	return 0;
-+	return super_dev_register(s);
+-	bdev_file = bdev_file_open_by_dev(sb->s_dev, mode, sb, &fs_holder_ops);
++	bdev_file = fs_bdev_file_open_by_dev(sb->s_dev, mode, sb, sb);
+ 	if (IS_ERR(bdev_file)) {
+ 		if (fc)
+ 			errorf(fc, "%s: Can't open blockdev", fc->source);
+@@ -1654,20 +1793,19 @@ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ 	 * writable from userspace even for a read-only block device.
+ 	 */
+ 	if ((mode & BLK_OPEN_WRITE) && bdev_read_only(bdev)) {
+-		bdev_fput(bdev_file);
++		fs_bdev_file_release(bdev_file, sb);
+ 		return -EACCES;
+ 	}
+ 
+-	/*
+-	 * It is enough to check bdev was not frozen before we set
+-	 * s_bdev as freezing will wait until SB_BORN is set.
+-	 */
++	/* The sget_fc() entry is already published; pairs with bdev_freeze(). */
++	smp_mb();
+ 	if (atomic_read(&bdev->bd_fsfreeze_count) > 0) {
+ 		if (fc)
+ 			warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
+-		bdev_fput(bdev_file);
++		fs_bdev_file_release(bdev_file, sb);
+ 		return -EBUSY;
+ 	}
++
+ 	spin_lock(&sb_lock);
+ 	sb->s_bdev_file = bdev_file;
+ 	sb->s_bdev = bdev;
+@@ -1756,7 +1894,7 @@ void kill_block_super(struct super_block *sb)
+ 	generic_shutdown_super(sb);
+ 	if (bdev) {
+ 		sync_blockdev(bdev);
+-		bdev_fput(sb->s_bdev_file);
++		fs_bdev_file_release(sb->s_bdev_file, sb);
+ 	}
  }
  
- static int super_s_dev_set(struct super_block *s, struct fs_context *fc)
-diff --git a/include/linux/fs/super_types.h b/include/linux/fs/super_types.h
-index 68747182abf9..c8172558750f 100644
---- a/include/linux/fs/super_types.h
-+++ b/include/linux/fs/super_types.h
-@@ -30,6 +30,7 @@ struct mount;
- struct mtd_info;
- struct quotactl_ops;
- struct shrinker;
-+struct super_dev;
- struct unicode_map;
- struct user_namespace;
- struct workqueue_struct;
-@@ -132,6 +133,7 @@ struct super_operations {
- struct super_block {
- 	struct list_head			s_list;		/* Keep this first */
- 	dev_t					s_dev;		/* search index; _not_ kdev_t */
-+	struct super_dev			*s_super_dev;	/* sget_fc()'s device table claim */
- 	unsigned char				s_blocksize_bits;
- 	unsigned long				s_blocksize;
- 	loff_t					s_maxbytes;	/* Max file size */
+diff --git a/include/linux/fs/super.h b/include/linux/fs/super.h
+index f21ffbb6dea5..721d842e3b24 100644
+--- a/include/linux/fs/super.h
++++ b/include/linux/fs/super.h
+@@ -235,4 +235,11 @@ int freeze_super(struct super_block *super, enum freeze_holder who,
+ int thaw_super(struct super_block *super, enum freeze_holder who,
+ 	       const void *freeze_owner);
+ 
++struct file;
++struct file *fs_bdev_file_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
++				      struct super_block *sb);
++struct file *fs_bdev_file_open_by_path(const char *path, blk_mode_t mode,
++				       void *holder, struct super_block *sb);
++void fs_bdev_file_release(struct file *bdev_file, struct super_block *sb);
++
+ #endif /* _LINUX_FS_SUPER_H */
 
 -- 
 2.47.3
