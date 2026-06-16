@@ -1,74 +1,74 @@
-Return-Path: <linux-erofs+bounces-3625-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3624-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id JnKBLpQhMWr5cAUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3625-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:12:36 +0200
+	id po8BCZIhMWr0cAUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3624-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:12:34 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D89C668E0A2
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:12:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8037A68E09D
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 12:12:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=fMDiK1dI;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=fMDiK1dI;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3625-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3625-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=OSc920bD;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=OSc920bD;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3624-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3624-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gfjTq6Zxyz3bqh;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gfjTq1r4Vz3c2Z;
 	Tue, 16 Jun 2026 20:12:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781604751;
-	cv=none; b=FPvPRjqaD+kwp8G5T2JvWshOUCyElPBGV+OZ2Ccyifk7rU/UzwlBoLQa9iKcVtoQixIN87Us1Funu7XGBF2jfy4E2S1JtAZhTpr8syQfm/rIc39mL+dj9T5Ye+898nIssHhDd4IcVBEoDE1K24oGB8MBZNr0QUi9+mIGXufsYxup2qRIGs5moUFitSIP4aeJ3FdjgHvqVMIDcwQ/Y9WuAGi0IJCEaw/Zoxe9jkfpD7qZrOpjsRz663FnO1ubtA5zMOHnU35/cuIDSyCiGQhFhz9Mt1Ojb+HfX+CUOFH2Ri92d4vlQlgUxzsY1bE30WweqDS4eYJIX1hxWbbwOdfPrQ==
+	cv=none; b=JnXHNzxoS7pXlrmm3lf7Vge2QFy1YY8tn9fgcMKvTMqNImGnLTyjHX2RhuSqi49dDGfT7j+lRlwCkpsXYa601fkVf8zpjvbFSCFvs85kiFsV3ETPhMZmDP48149hE3rSITObh41zvhls8db+6ODGO3w4o9IiC1C9/C+CFa/FscbE597Hmf46daoJxkdq3mKxZ7JFgckHOGACtaN2mmihpen9nHxVmtmet+1Zj/Ez+h++jr5QdtOpruZAJVA+TP6z0i7CR3nua4gxDv3aUgKSTLMgFvZXKeyKRPFAcOniOoGflc/6DQ3F9hNcN+pQfx5PhuXoqnfDeiTCtjrCzFw5yg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1781604751; c=relaxed/relaxed;
-	bh=HfX4hKOxHGk+bf7dAxE3qPG38R5aFPeh/NdzY9CtdfI=;
+	bh=f97ABxHjRNMpwCISt1swTvlPaBA4vicFtsj/v71c+y4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=mQpUD7Rt0y74C6+YpSyES4dtceeStrYECvVcMeQcH6k51aDEB9odOJzaZ5XpsC6IjT3Zky+h+Hi90Er5RglMAFrG8D/lxqPusGnobkcI64BFINnpMMY62N1gVepXtyY3jfUORTaQ6vMKe6utHZGIfgDuQkq6w5A1rqjWcIRgT/lqPQZnud4VXHRpH0hK24a+wuq4fAFBxnbagTP9e4vtOTgUxIljCXQW3nLWyi1BC8QcNKI+YpTf9fJC38RuzV3SB64CcXFczSh2yPuFMs7xe8yNGj1qj614T6948zgHqeINLtP5cgmLLAJCWmAX4K+d4kZm0Aolm0Ay6cteXfcP4Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fMDiK1dI; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fMDiK1dI; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:content-type; b=d+fVyK5WN9qjvVvZUw4F7sxF6a0XYQQHK8UHlti/7ZboUeYxZxF2gjR79Zh9sSD4LYVksSorksXFwRlHkxXvSpcxUUeuVb+8LkG1+0e6v7Xz+ajCbOnF4f4N6sJkugi9FLLgesWAHorGqdp+oN1wL6LkbJaF5r37qDmUESdSsyOMP09xJonFUtiL547vjWLnmPYY1E1tcgy/iIQj/ty24nVt3egDowQJkHbZs6lt3cYnoKycfT4oX2tk1Nw0LzNGhDzyTdPNcaBbbQVZRvBPPKHgQLbJMOgvmlQtpNcd9Y6VbQxY/N9Axl81zhLoAw+kxcWX1jKvELVaqHG/y2lWyQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=OSc920bD; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=OSc920bD; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfjTq0xVSz3c2L
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2026 20:12:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfjTp1WVLz3bqh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jun 2026 20:12:29 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1781604747;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HfX4hKOxHGk+bf7dAxE3qPG38R5aFPeh/NdzY9CtdfI=;
-	b=fMDiK1dIiK2ngOrrtojhW9v+bvGs1SRd3JDXTfVdfrNKqWpXX7hVmNk9W6cYo4pekuE00G
-	zbw0z0nI9Ow55Uzap3J+dgyroG7rMybo/Mw9xudXn1RnTyV9hYy+NjAhRNM+Z2ZD0bPzUv
-	PCylh2h8ZZcLPEq9ynVMxkZnwxWn4ug=
+	bh=f97ABxHjRNMpwCISt1swTvlPaBA4vicFtsj/v71c+y4=;
+	b=OSc920bDM1ImEPrQ2VC+g6b9WKyYd+MPML/k8evlSd6V+LDL1qq2aRcm4NH+X0PU1BLNvK
+	+I+NGO9xqYRdPgIv7vUugtVITDvLZWFOPiP+IUK3KYsY3qqyX6HrPuTxZBDojVLthI6Vm9
+	aQQKuHFUNjJKtIANmC7Xx1kZN799rpE=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1781604747;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HfX4hKOxHGk+bf7dAxE3qPG38R5aFPeh/NdzY9CtdfI=;
-	b=fMDiK1dIiK2ngOrrtojhW9v+bvGs1SRd3JDXTfVdfrNKqWpXX7hVmNk9W6cYo4pekuE00G
-	zbw0z0nI9Ow55Uzap3J+dgyroG7rMybo/Mw9xudXn1RnTyV9hYy+NjAhRNM+Z2ZD0bPzUv
-	PCylh2h8ZZcLPEq9ynVMxkZnwxWn4ug=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=f97ABxHjRNMpwCISt1swTvlPaBA4vicFtsj/v71c+y4=;
+	b=OSc920bDM1ImEPrQ2VC+g6b9WKyYd+MPML/k8evlSd6V+LDL1qq2aRcm4NH+X0PU1BLNvK
+	+I+NGO9xqYRdPgIv7vUugtVITDvLZWFOPiP+IUK3KYsY3qqyX6HrPuTxZBDojVLthI6Vm9
+	aQQKuHFUNjJKtIANmC7Xx1kZN799rpE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-454-jgW8GiYSNzSI7PbtLwwkgg-1; Tue,
- 16 Jun 2026 06:12:21 -0400
-X-MC-Unique: jgW8GiYSNzSI7PbtLwwkgg-1
-X-Mimecast-MFC-AGG-ID: jgW8GiYSNzSI7PbtLwwkgg_1781604736
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-220-E0TD0ZO-MaSWI_Dt2BS9YQ-1; Tue,
+ 16 Jun 2026 06:12:23 -0400
+X-MC-Unique: E0TD0ZO-MaSWI_Dt2BS9YQ-1
+X-Mimecast-MFC-AGG-ID: E0TD0ZO-MaSWI_Dt2BS9YQ_1781604741
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A4EB180ACE5;
-	Tue, 16 Jun 2026 10:12:13 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE9AF1955D99;
+	Tue, 16 Jun 2026 10:12:20 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.50.44])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7A773180034F;
-	Tue, 16 Jun 2026 10:12:07 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 06FBE1800348;
+	Tue, 16 Jun 2026 10:12:14 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -92,9 +92,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 27/30] netfs: Check for too much data being read
-Date: Tue, 16 Jun 2026 11:08:16 +0100
-Message-ID: <20260616100821.2062304-28-dhowells@redhat.com>
+Subject: [PATCH v4 28/30] netfs: Limit the minimum trigger for progress reporting
+Date: Tue, 16 Jun 2026 11:08:17 +0100
+Message-ID: <20260616100821.2062304-29-dhowells@redhat.com>
 In-Reply-To: <20260616100821.2062304-1-dhowells@redhat.com>
 References: <20260616100821.2062304-1-dhowells@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
@@ -108,15 +108,16 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: zDms5acbsmYyDUTv_EbgvlkCSfyjJOWpgkZXRu0cyaE_1781604736
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: awyvVtnBym6rMbn2LCoxKcr2xQZoqejOdCZ2KpDArmI_1781604741
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.1
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_PASS,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.20 / 15.00];
@@ -124,13 +125,13 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3625-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3624-lists,linux-erofs=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -149,53 +150,58 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,manguebit.org:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D89C668E0A2
+X-Rspamd-Queue-Id: 8037A68E09D
 
-Put in a check in read subreq termination to detect more data being read
-for a subrequest than was requested.
+For really big read RPC ops that span multiple folios, netfslib allows the
+filesystem to give progress notifications to wake up the collector thread
+to do a collection of folios that have now been fetched, even if the RPC is
+still ongoing, thereby allowing the application to make progress.
+
+The trigger for this is that at least one folio has been downloaded since
+the clean point.  If, however, the folios are small, this means the
+collector thread is constantly being woken up - which has a negative
+performance impact on the system.
+
+Set a minimum trigger of 256KiB or the size of the folio at the front of
+the queue, whichever is larger.
+
+Also, fix the base to be the stream collection point, not the point at
+which the collector has cleaned up to (which is currently 0 until something
+has been collected).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Paulo Alcantara <pc@manguebit.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/read_collect.c      | 8 ++++++++
- include/trace/events/netfs.h | 1 +
- 2 files changed, 9 insertions(+)
+ fs/netfs/read_collect.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 802d1c40cce5..9efcc0e63a96 100644
+index 9efcc0e63a96..fdb6aebc0a7b 100644
 --- a/fs/netfs/read_collect.c
 +++ b/fs/netfs/read_collect.c
-@@ -543,6 +543,14 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq)
- 		break;
- 	}
+@@ -492,15 +492,15 @@ void netfs_read_collection_worker(struct work_struct *work)
+ void netfs_read_subreq_progress(struct netfs_io_subrequest *subreq)
+ {
+ 	struct netfs_io_request *rreq = subreq->rreq;
+-	struct netfs_io_stream *stream = &rreq->io_streams[0];
+-	size_t fsize = PAGE_SIZE << rreq->front_folio_order;
++	struct netfs_io_stream *stream = &rreq->io_streams[subreq->stream_nr];
++	size_t fsize = umax(PAGE_SIZE << rreq->front_folio_order, 256 * 1024);
  
-+	if (subreq->transferred > subreq->len) {
-+		subreq->transferred = 0;
-+		__set_bit(NETFS_SREQ_FAILED, &subreq->flags);
-+		__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
-+		trace_netfs_sreq(subreq, netfs_sreq_trace_too_much);
-+		subreq->error = -EIO;
-+	}
-+
- 	/* Deal with retry requests, short reads and errors.  If we retry
- 	 * but don't make progress, we abandon the attempt.
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_progress);
+ 
+ 	/* If we are at the head of the queue, wake up the collector,
+ 	 * getting a ref to it if we were the ones to do so.
  	 */
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 59f330003d02..cc29582f6245 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -134,6 +134,7 @@
- 	EM(netfs_sreq_trace_submit,		"SUBMT")	\
- 	EM(netfs_sreq_trace_superfluous,	"SPRFL")	\
- 	EM(netfs_sreq_trace_terminated,		"TERM ")	\
-+	EM(netfs_sreq_trace_too_much,		"!TOOM")	\
- 	EM(netfs_sreq_trace_wait_for,		"_WAIT")	\
- 	EM(netfs_sreq_trace_write,		"WRITE")	\
- 	EM(netfs_sreq_trace_write_skip,		"SKIP ")	\
+-	if (subreq->start + subreq->transferred > rreq->cleaned_to + fsize &&
++	if (subreq->start + subreq->transferred >= stream->collected_to + fsize &&
+ 	    (rreq->origin == NETFS_READAHEAD ||
+ 	     rreq->origin == NETFS_READPAGE ||
+ 	     rreq->origin == NETFS_READ_FOR_WRITE) &&
 
 
