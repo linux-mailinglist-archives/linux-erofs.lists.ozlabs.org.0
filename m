@@ -1,55 +1,56 @@
-Return-Path: <linux-erofs+bounces-3636-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3638-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FXzSG/RYMWrghQUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3636-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:08:52 +0200
+	id SV00C/lYMWrkhQUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3638-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:08:57 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C56C66903EE
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 539086903F9
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jun 2026 16:08:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=M5Ulyvr3;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3636-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3636-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XasbeRe8;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3638-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3638-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gfpkT4JcMz3c4P;
-	Wed, 17 Jun 2026 00:08:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gfpkY5tsQz3c4Y;
+	Wed, 17 Jun 2026 00:08:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781618929;
-	cv=none; b=nCpoXqsM20LPPYNEKVEi4kGkclxZIuN3hybwB1EV4HgvbAl5ZIO7PHJsDJ8LnGGm6729lA1CcV5EYNkTznqhmzp4FhLVgGVO1/1rcBUmggV+oyUMMh1Kabx+28T6MVwF1/5eAXlxEbM/kvVaM+tGCqUOUSHUapyO9WGjmYzVd7Z5f1HX5Z5mf9/Ke/lBaIWBnFmlRPqUsouxIlp0vKoqBdVfO4y1v1pto6p3St7Hk95lJRZIZuF+UD3LwsC/UgeXMUxGkYTtSrgKkEAjyeM9ETtIIHU4I9VkarGBu/49GvzhdHgdFQ71GcLDveydBEvES8ltpg3l+N4J/NRJJsh+Rw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781618933;
+	cv=none; b=PJJvBD7C/cn3rSLmJKswiL+3i+S5Bfjpyex12HWh4BJS4eC+kfcbNdohOP16gWyf/KZeQFL6pu5qrhUeJUakxAZT+Lohzy9EfRCyCfI83HgpAn5SGJ9sOXezluDdQHSgZBSRI52mLJE8+5iRr83cGQH24wayIVGKVm36Uf/iiO8oUWtBP0+c+o84y4hnaraiW4XrAjYEAsgUGoyZeOrfDYRryiK68YA4wavPDQW/7g3AGGtQyNEBNswmNH7i/fNzJvFjytghGD/BVPslAejnADgnO+hHTs8NiaIlVLsxGgHoNThVelG9bs7po8SL3Azz2gF7+dt7TG7AGwkMBrHuIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781618929; c=relaxed/relaxed;
-	bh=WjwR9vH2WMcKI4lWeyLWZRoEHjyG3qd8eI9XdYYTssg=;
+	t=1781618933; c=relaxed/relaxed;
+	bh=Jpn/L9xcaTdyM2ThetgELvjl4xXtdXDakn1/zaaFINs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aNRy0BOZyaYgtidoVotBfAMmTlq9/kck9ePGr1LGIk829sjTVRsjZSELtJepkcBGWvO4xI6zeZIKYuMZ7LqWTCYDs26/VDwHrRb7Cj8Wvz4qnjej/zXetRrMHVxMnOUnp+7Ec1m80+Z8gOgb4gQS3X4vob55RyTUaETGPu0x/UpCZebe5H2+0U2KQsEFfOSi03/GWz7IWm+aiQ++L0InrdRNJ4hAbt5FqUwSS1K2GiSG+1jKDzRHtu+Kt1VybU2kCRv9YUnqNVqOj5OS9e+QDTJ5lQNfU5sA1glCtjkWNEJJ9t8e3BaMcVpBmVeOnrjUJlSHHgQfB4EPD9dMS6Cosg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M5Ulyvr3; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+	 In-Reply-To:To:Cc; b=VithdXGyl8iQC6YvMINmN6XU93yZVwYG70d+z9N9hfAV8OzJzntUmsiewMEuidrW4g1xCpxhUClK7AfPWTvOhmp0CrAeBcfUsFWaNmoOR68ky/cqb46xon5PRVPfSCxD77/rWnJIXlij6v+iMYsppRrUQ0xyvlrUFjQT7UQ5oxtufFvzmpsjjAt8sZSOJGtugNJ62felA3iCNNKd/NaeSo/Q7pHSl5fSbOKnu8pwGYiOTQXV/ED43CXn2sy5bW38LzG3g8Gh5oqNmwoPyatqdadU6AzPIEfEIFExSa48hZ/0rMyy8lRv5HPjUBAvCS9Uf4KbbJfZXMNEwyB9dOT64w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XasbeRe8; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfpkS53Xfz3c3v
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2026 00:08:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gfpkX5HYsz2yv0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2026 00:08:52 +1000 (AEST)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A9470409D8;
+	by sea.source.kernel.org (Postfix) with ESMTP id 9232740B6A;
+	Tue, 16 Jun 2026 14:08:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087981F00ACA;
 	Tue, 16 Jun 2026 14:08:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6791F00AC4;
-	Tue, 16 Jun 2026 14:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781618926;
-	bh=WjwR9vH2WMcKI4lWeyLWZRoEHjyG3qd8eI9XdYYTssg=;
+	s=k20260515; t=1781618930;
+	bh=Jpn/L9xcaTdyM2ThetgELvjl4xXtdXDakn1/zaaFINs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=M5Ulyvr3daRP5zh6cUjMPi43jyuPuURwEOEBaRzTHiwelTGy8K2bTfBE0TK6fY9J1
-	 oWddHvGy4bkAg7UgN1bR3hLuGNEg8zCMs1zz+jZ6n/jZkEBScIyvoJMBqPd8557EfY
-	 67hi6jiK8fRG72FT6OYFCApiEkJi2NfI28GNq0VPn2rD6mQhb4OFIhyZ7zEhSjm3m9
-	 HTVjEJySwhBKTqrABFIE6IB1LpP92V3mvf/OF0OvzaZdoTgk5EDhYw6LQoqCWSCL+I
-	 JQYEz+RJt0819L4/hDh3W3sSg9nWrg9l9hp6xaF4ad5qRgCKBL1KWYF7DkyROTuV67
-	 s6ueMsJwUVBYA==
+	b=XasbeRe8OkjGBVexzq6zTIkmg/re74y42Zvv2USF/F3cgfnj9CjjCvuAlH6rGlwD2
+	 kRMl6g+ZMFHOg66znaAQ1UtXHBozcTo1wRUznpibHHc3H5zJ6MxcZyWtLSN16pzS0f
+	 5Y8BZ7fOMavOEBv5f7nU/DcID4xz5IZ7RBw0MbUSkX3k9878XLjHER4bFiZub3/OvF
+	 6Nzh619SBEbkCefFqXnszALnon4sL7BJ99e15Lc5t/JROEbsN7HmrneH5WkxdWNwei
+	 f16pAn7lUXznyYZKOux/KAY2Xkgzof8rVzfb8NfGvTZwgUwWVNTu2M131pS30BimMB
+	 GjwwIO+E2gvVQ==
 From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 16 Jun 2026 16:08:19 +0200
-Subject: [PATCH RFC v2 03/18] super: take lock after last reference count
+Date: Tue, 16 Jun 2026 16:08:20 +0200
+Subject: [PATCH RFC v2 04/18] fs, block: move blk_mode_t and fop_flags_t
+ into <linux/types.h>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,7 +64,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260616-work-super-bdev_holder_global-v2-3-7df6b864028e@kernel.org>
+Message-Id: <20260616-work-super-bdev_holder_global-v2-4-7df6b864028e@kernel.org>
 References: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
 In-Reply-To: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
 To: Jan Kara <jack@suse.cz>
@@ -77,11 +78,12 @@ Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
  linux-erofs@lists.ozlabs.org, 
  "Christian Brauner (Amutable)" <brauner@kernel.org>
 X-Mailer: b4 0.16-dev-4090c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4988; i=brauner@kernel.org;
- h=from:subject:message-id; bh=KF0v8pHPVEotJs4Vm14KV+E8jIKihwjzaTF127NKnwI=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQZRtw7Jz+vQe2eqESxmfqUV2y+rd/CI/wftyRMiHNf9
- 1ttUWhjRwkLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwES4pBm+F0awyQaUuy171exY
- n2I2z+xP49fS6+Z+GYV5hl+5Hh1m+F9vYrSkxc9+ySQv0YM1a4zTj1rHnxQNfcY7o3eJlo+JCBs A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1800; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=W0e283i/NPdnGyczxuKoL2hh/y1kkMtU22l4mrq4nMk=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQZRtzzMlaJ+nInff8J+WaFDmtvtU39m447cOk2x25Ra
+ pdu+xrXUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMJGGlwx/JS0F5rQknQ05InC6
+ Wm/q6iYGo9ta935e/LaDw0p+dfp+KUaGDpOSp3PZm9tm2xkZP9f20WNmnsPou73CrVjsxGu/jON
+ 8AA==
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -103,7 +105,7 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3636-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3638-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
@@ -121,180 +123,60 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C56C66903EE
+X-Rspamd-Queue-Id: 539086903F9
 
-__put_super() required the caller to hold sb_lock, so put_super()
-wrapped it. The per-device superblock table introduced later drops its
-passive references from contexts that do not hold sb_lock, so make
-put_super() self-locking: drop the count first and take sb_lock only for
-the final list_del.
+blk_mode_t and fop_flags_t are both plain 'unsigned int __bitwise' flag
+typedefs, exactly like the gfp_t, slab_flags_t and fmode_t that already
+live in <linux/types.h>. Move them there so they are available
+everywhere without having to drag in a subsystem header.
 
-With the count now dropped outside sb_lock a superblock can briefly sit
-on @super_blocks with s_passive == 0 before it is unlinked, so the list
-walkers (__iterate_supers(), iterate_supers_type(), user_get_super())
-switch to refcount_inc_not_zero() and skip it.
-
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
 ---
- fs/super.c | 63 ++++++++++++++++++++++++++++----------------------------------
- 1 file changed, 28 insertions(+), 35 deletions(-)
+ include/linux/blkdev.h | 2 --
+ include/linux/fs.h     | 2 --
+ include/linux/types.h  | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/super.c b/fs/super.c
-index 25dd72b550e0..a771a0ad4c9a 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -403,12 +403,17 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
- /* Superblock refcounting  */
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 9e95bdb8b323..cee548184a7b 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -126,8 +126,6 @@ struct blk_integrity {
+ 	unsigned char				pi_tuple_size;
+ };
  
- /*
-- * Drop a superblock's refcount.  The caller must hold sb_lock.
-+ * Drop a superblock's passive reference.  Must be called WITHOUT sb_lock held;
-+ * put_super() acquires sb_lock itself when the final reference is dropped.
-  */
--static void __put_super(struct super_block *s)
-+void put_super(struct super_block *s)
- {
- 	if (refcount_dec_and_test(&s->s_passive)) {
-+
-+		spin_lock(&sb_lock);
- 		list_del_init(&s->s_list);
-+		spin_unlock(&sb_lock);
-+
- 		WARN_ON(s->s_dentry_lru.node);
- 		WARN_ON(s->s_inode_lru.node);
- 		WARN_ON(s->s_mounts);
-@@ -416,20 +421,6 @@ static void __put_super(struct super_block *s)
- 	}
- }
- 
--/**
-- *	put_super	-	drop a temporary reference to superblock
-- *	@sb: superblock in question
-- *
-- *	Drops a temporary reference, frees superblock if there's no
-- *	references left.
-- */
--void put_super(struct super_block *sb)
--{
--	spin_lock(&sb_lock);
--	__put_super(sb);
--	spin_unlock(&sb_lock);
--}
+-typedef unsigned int __bitwise blk_mode_t;
 -
- static void kill_super_notify(struct super_block *sb)
- {
- 	lockdep_assert_not_held(&sb->s_umount);
-@@ -478,11 +469,7 @@ void deactivate_locked_super(struct super_block *s)
+ /* open for reading */
+ #define BLK_OPEN_READ		((__force blk_mode_t)(1 << 0))
+ /* open for writing */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 6da44573ce45..1c8fe40ad9a4 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1921,8 +1921,6 @@ struct dir_context {
+ struct io_uring_cmd;
+ struct offset_ctx;
  
- 		kill_super_notify(s);
+-typedef unsigned int __bitwise fop_flags_t;
+-
+ struct file_operations {
+ 	struct module *owner;
+ 	fop_flags_t fop_flags;
+diff --git a/include/linux/types.h b/include/linux/types.h
+index 608050dbca6a..ef026585420b 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -163,6 +163,8 @@ typedef u32 dma_addr_t;
+ typedef unsigned int __bitwise gfp_t;
+ typedef unsigned int __bitwise slab_flags_t;
+ typedef unsigned int __bitwise fmode_t;
++typedef unsigned int __bitwise blk_mode_t;
++typedef unsigned int __bitwise fop_flags_t;
  
--		/*
--		 * Since list_lru_destroy() may sleep, we cannot call it from
--		 * put_super(), where we hold the sb_lock. Therefore we destroy
--		 * the lru lists right now.
--		 */
-+		/* list_lru_destroy() may sleep; put_super() callers may not. */
- 		list_lru_destroy(&s->s_dentry_lru);
- 		list_lru_destroy(&s->s_inode_lru);
- 
-@@ -851,14 +838,17 @@ static void __iterate_supers(void (*f)(struct super_block *, void *), void *arg,
- 	struct super_block *sb, *p = NULL;
- 	bool excl = flags & SUPER_ITER_EXCL;
- 
--	guard(spinlock)(&sb_lock);
-+	spin_lock(&sb_lock);
- 
- 	for (sb = first_super(flags);
- 	     !list_entry_is_head(sb, &super_blocks, s_list);
- 	     sb = next_super(sb, flags)) {
- 		if (super_flags(sb, SB_DYING))
- 			continue;
--		refcount_inc(&sb->s_passive);
-+
-+		if (!refcount_inc_not_zero(&sb->s_passive))
-+			continue;
-+
- 		spin_unlock(&sb_lock);
- 
- 		if (flags & SUPER_ITER_UNLOCKED) {
-@@ -868,13 +858,14 @@ static void __iterate_supers(void (*f)(struct super_block *, void *), void *arg,
- 			super_unlock(sb, excl);
- 		}
- 
--		spin_lock(&sb_lock);
- 		if (p)
--			__put_super(p);
-+			put_super(p);
- 		p = sb;
-+		spin_lock(&sb_lock);
- 	}
-+	spin_unlock(&sb_lock);
- 	if (p)
--		__put_super(p);
-+		put_super(p);
- }
- 
- void iterate_supers(void (*f)(struct super_block *, void *), void *arg)
-@@ -903,7 +894,9 @@ void iterate_supers_type(struct file_system_type *type,
- 		if (super_flags(sb, SB_DYING))
- 			continue;
- 
--		refcount_inc(&sb->s_passive);
-+		if (!refcount_inc_not_zero(&sb->s_passive))
-+			continue;
-+
- 		spin_unlock(&sb_lock);
- 
- 		locked = super_lock_shared(sb);
-@@ -912,14 +905,14 @@ void iterate_supers_type(struct file_system_type *type,
- 			super_unlock_shared(sb);
- 		}
- 
--		spin_lock(&sb_lock);
- 		if (p)
--			__put_super(p);
-+			put_super(p);
- 		p = sb;
-+		spin_lock(&sb_lock);
- 	}
--	if (p)
--		__put_super(p);
- 	spin_unlock(&sb_lock);
-+	if (p)
-+		put_super(p);
- }
- 
- EXPORT_SYMBOL(iterate_supers_type);
-@@ -935,15 +928,17 @@ struct super_block *user_get_super(dev_t dev, bool excl)
- 		if (sb->s_dev != dev)
- 			continue;
- 
--		refcount_inc(&sb->s_passive);
-+		if (!refcount_inc_not_zero(&sb->s_passive))
-+			continue;
-+
- 		spin_unlock(&sb_lock);
- 
- 		locked = super_lock(sb, excl);
- 		if (locked)
- 			return sb;
- 
-+		put_super(sb);
- 		spin_lock(&sb_lock);
--		__put_super(sb);
- 		break;
- 	}
- 	spin_unlock(&sb_lock);
-@@ -1368,9 +1363,7 @@ static struct super_block *bdev_super_lock(struct block_device *bdev, bool excl)
- 	lockdep_assert_not_held(&bdev->bd_disk->open_mutex);
- 
- 	/* Make sure sb doesn't go away from under us */
--	spin_lock(&sb_lock);
- 	refcount_inc(&sb->s_passive);
--	spin_unlock(&sb_lock);
- 
- 	mutex_unlock(&bdev->bd_holder_lock);
- 
+ #ifdef CONFIG_PHYS_ADDR_T_64BIT
+ typedef u64 phys_addr_t;
 
 -- 
 2.47.3
