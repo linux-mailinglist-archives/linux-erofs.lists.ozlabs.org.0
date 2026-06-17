@@ -1,68 +1,77 @@
-Return-Path: <linux-erofs+bounces-3660-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3661-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hdUhBV1oMmo1zgUAu9opvQ
-	(envelope-from <linux-erofs+bounces-3660-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2026 11:26:53 +0200
+	id IQbLFiWvMmpc3gUAu9opvQ
+	(envelope-from <linux-erofs+bounces-3661-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2026 16:28:53 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AE15697E4A
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2026 11:26:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C8BE69A898
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jun 2026 16:28:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cZT3Af0T;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3660-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3660-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=intel.com header.s=Intel header.b=YwIqSUz6;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3661-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3661-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ggJQc3Xgbz2yfD;
-	Wed, 17 Jun 2026 19:26:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ggR761Gnnz2xLk;
+	Thu, 18 Jun 2026 00:28:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781688408;
-	cv=none; b=PW/EERFuuukcBDedBiFcupEGGcd0ctaPM0BwLK8+jCF3TQ/I/qF1htln9aClZoe65jiJUOMpZ9OBeuqartklXBI5pzK3Ybw/irzsEzmZK7GXK6dWk23UkpdNVxzhLyTdeN2C8dS9/V7uDYg1odRxbdpDUz6n48MVcLbgNnjjT0ViW8Po9Ra0+WNWCBS6qRaOcU0kvDCI8WIUCXGxyf8FZbKqvQfs6+A6UrzLPjUei9tSaiH3Ylf/pLUQ+fbPyYwllomf/np2F3LWV7ED4JsmismiIRgvG8v0Ss7dk1PnnUlDaAg0cl/msIXnwhIdnysurpOWKssfHxt1ZwofJm6q0w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781706530;
+	cv=none; b=m7VLV+2rAMI5NcIebHl9TN4w6nR8YtLLE81R/Sr1yK6XMy4bKe3amCVHmM0yZ1F9D4eZALOKBmwHopeeqO9lq/hZBHLWx4I9TtJyzEoocQgIAYKtnWNHMHYS/g8fuduHNna7ZEpqIPhm1yXOD1S/Uq30fsb8joNpyx3pzKFoEG+f77T3UkKH/XY8/YwVKUVuN6ywgBZ8KtuMc33G4ers6NK/KtnbPhlDHz97YUbiJ8oN0yg3aWAsdaMaydOB2loY7YIGqhKB/N6d70PpEhXaPr6+tahzRkZgUa8PlNWOXkGUAyyP8og/R0OeKSJxI0HBXB24LuoA/RH7+44ERxB+lQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781688408; c=relaxed/relaxed;
-	bh=hOhaP1OaoR+UZZSCRy5KHBEq3gQvQZdhNLr67J2uV+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n6vmBtAoZoMUz0K3jOU0sY7woo+tEs1OIcimfybw479AcwTHJfWC0aQw+97z90hmQdEKzW4vBLXeL3d0NQ2Klhe2oWQ0OWxQW1rwGgkzW7wUg9lNTN5NPhHcmtCivb3/Lpak3qh2DmrrKYrf0lSwhtL1P+bxE4BLrRzy9jMHZ/4BvCmDcSF54bJn9HBGZACA4cCx+D49YLPC8cZNW84dgtcYfneTzdTV+PhCSNQoYtU0dwHScSfekWhVAGKkgMtx9e8G2bJL2/BtwEg6SGlvyDP00O91MCG8zfTZtAHRUEnqMFWa+94cUk0Ce9/7bkhDXyRzfbl9NPCCwWaXWWNV2A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cZT3Af0T; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1781706530; c=relaxed/relaxed;
+	bh=vAMpGXHFuy3sfICo0U0yV6C46libuEph5dyHC4bxyEI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fTmE3+RPKy87kWMyazusEx+6uAiADV4MmLkz1HTQdkIs6hD11LHLlBOuwDEgb2eWnzBcfjG8/OyH3sON3349Ei8WLmi43M67MHFp0SxNqFPLfrv+mLdke3cy9qexLuu5mrAfsAqdMY5kDVet5qTunLC/CkfKC+OtOrA6iGr6QCzbmmqIOmHLckzTMEyGS6qoondeZvhTGQaaupKQqKpYOVuhlv9J297sfG7wA2HnWrWmxqjYEXurBKdCuSSeU2zVOdhSyn0O/54gLJAwMr/oyRdJmW5sGcyt7EKhlxIvSxbQ3pX2XdHd7G9uHV3NlKNzZrUgRnG75GdT2nD/l4RWkw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YwIqSUz6; dkim-atps=neutral; spf=pass (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ggJQb4sWPz2yb9
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jun 2026 19:26:47 +1000 (AEST)
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1F17D43DA7;
-	Wed, 17 Jun 2026 09:26:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F2F11F000E9;
-	Wed, 17 Jun 2026 09:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781688405;
-	bh=hOhaP1OaoR+UZZSCRy5KHBEq3gQvQZdhNLr67J2uV+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cZT3Af0T0IWUuc1r9zI/xA0uAIXw2Y2OWW3rXg0r1QNqlwNYVnaxcq5CFm933d6vy
-	 Kw2wr4iY9P+w7mar3VjaC73o/zB/yktfehj3+sX+2+pH7MwZ+1HYP1msnBdafBWbgz
-	 WFgAnKA8mih+A7/RYse4sBWDk/ae34tXmA5k03hDRITxIMtzG2AvieF33hAKzYqBTd
-	 ReNE7qTkwhpvwxdL6+ncAFA2XM5tPj/UP/tBGDGLIx1T3tXD1ByzQQedQnZSRXpGfv
-	 k6mDTiSBPJJmVTBRl9ttrTgvVk2AWyJnzFwp4Armi3Ga3IeOR9IWZeKMmaodqvjCyU
-	 lhJLdjD0o1CgA==
-Date: Wed, 17 Jun 2026 11:26:39 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org, 
-	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
-	Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org, Gao Xiang <xiang@kernel.org>, 
-	linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH RFC 2/8] fs: add a global device to super block hash table
-Message-ID: <20260617-hoffen-eschenholz-abmarsch-fc69ce9e1640@brauner>
-References: <20260602-work-super-bdev_holder_global-v1-0-bb0fd82f3861@kernel.org>
- <20260602-work-super-bdev_holder_global-v1-2-bb0fd82f3861@kernel.org>
- <20260616123443.GA21024@lst.de>
- <20260616-fragil-duktus-nachverfolgen-60f54584c206@brauner>
- <20260617062523.GA20041@lst.de>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ggR7318y7z2xHK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jun 2026 00:28:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781706527; x=1813242527;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ucl8/StmjDiavl9tinnIAfOBhzDyLSEI/A/KaidMW4I=;
+  b=YwIqSUz66mm8lrcg7tBSVVrUjKBWPz8hg2jUwz2gj0/HM8fgDPSX38uD
+   hsuSPeQ5c8PpUKD675TzjcOgUVm+UabjVKkaxp76fkKnuWXeGOFS43poR
+   Qi/YVfLx0kzcg6p8tDUaJg+wxUFGLuzD+C8HuromYmPhkqVk/dMvnhBSd
+   TDzBlsyY6ARcliYUaOHvfAKdmonfZWgCo1h2Byz0c5/i1dZeOGBpMdB1v
+   6EHRB0nBcyAUta5GQ/YWBTr3yxFR53IwVzk9XBmxdaly0n1iHdCSaRRNX
+   DUggLPpV510PmA78Oiy+3h/bvthlbuYKP6u1RtzG6lu/N6vzdrgpAWnws
+   g==;
+X-CSE-ConnectionGUID: 39q5SZJHTq2h4ClzuY0u6A==
+X-CSE-MsgGUID: xDLjR0K4SOG51Hq1iNCYYg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="85059372"
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="85059372"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 07:28:40 -0700
+X-CSE-ConnectionGUID: l049SbdvTfWg8rH+G4Kxww==
+X-CSE-MsgGUID: 0L2s8jSJSPeoCdJL37FHrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="248147282"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 17 Jun 2026 07:28:38 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wZrFs-00000000UYg-0efU;
+	Wed, 17 Jun 2026 14:28:36 +0000
+Date: Wed, 17 Jun 2026 22:28:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:fixes] BUILD SUCCESS
+ 27f2d085bd72abe4235689d34d8654cfc876d568
+Message-ID: <202606172251.DmnalBez-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -73,62 +82,92 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260617062523.GA20041@lst.de>
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.30 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hch@lst.de,m:jack@suse.cz,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3660-lists,linux-erofs=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3661-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,intel.com:dkim,intel.com:mid,intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2AE15697E4A
+X-Rspamd-Queue-Id: 7C8BE69A898
 
-> No, we don't need a secondary device number to sb mapping.  On the other
-> hand we do need the deviceloss, freeze etc upcalls to work for owners
-> that are not file systems like mdraid or dm, even if they have been
-> slow to pick this.  The whole idea of the holder ops is to abstract
-> away from who holds it instead of adding back the broken hard coding
-> of the superblock.  Otherwise you're just badly reinventing get_super.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+branch HEAD: 27f2d085bd72abe4235689d34d8654cfc876d568  erofs: fix EFSCORRUPTED on multi-algorithm images in z_erofs_map_sanity_check()
 
-No, the expanded version works for all device numbers. There's also
-no-hardcoding. And non-fs users may do whatever they want with their
-holder ops ofc. erofs always had the non 1:1 relationship between
-devices and filesystems and for that case it seems sane. I'm happy to
-let the series sit for a bit to gather input and do the security
-mediation patches first. The series are complementary.
+elapsed time: 22595m
+
+configs tested: 37
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha        allnoconfig    gcc-16.1.0
+alpha       allyesconfig    gcc-16.1.0
+arc         allmodconfig    gcc-16.1.0
+arc          allnoconfig    gcc-16.1.0
+arm          allnoconfig    clang-23
+arm64        allnoconfig    gcc-16.1.0
+csky         allnoconfig    gcc-16.1.0
+hexagon     allmodconfig    clang-23
+hexagon      allnoconfig    clang-23
+i386         allnoconfig    gcc-14
+loongarch    allnoconfig    clang-20
+m68k         allnoconfig    gcc-16.1.0
+microblaze   allnoconfig    gcc-16.1.0
+mips        allmodconfig    gcc-16.1.0
+mips         allnoconfig    gcc-16.1.0
+nios2       allmodconfig    gcc-11.5.0
+nios2        allnoconfig    gcc-11.5.0
+openrisc    allmodconfig    gcc-16.1.0
+openrisc     allnoconfig    gcc-16.1.0
+parisc      allmodconfig    gcc-16.1.0
+parisc       allnoconfig    gcc-16.1.0
+parisc      allyesconfig    gcc-16.1.0
+powerpc     allmodconfig    gcc-16.1.0
+powerpc      allnoconfig    gcc-16.1.0
+riscv        allnoconfig    gcc-16.1.0
+s390        allmodconfig    clang-23
+s390         allnoconfig    clang-23
+s390        allyesconfig    gcc-16.1.0
+sh          allmodconfig    gcc-16.1.0
+sh           allnoconfig    gcc-16.1.0
+sh          allyesconfig    gcc-16.1.0
+sparc        allnoconfig    gcc-16.1.0
+sparc64     allmodconfig    clang-20
+um           allnoconfig    clang-16
+um          allyesconfig    gcc-14
+x86_64       allnoconfig    clang-22
+xtensa       allnoconfig    gcc-16.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
