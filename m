@@ -1,48 +1,60 @@
-Return-Path: <linux-erofs+bounces-3663-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3664-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 48mbGqeXM2qvDwYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3663-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	id nyU7OaeXM2qwDwYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3664-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
 	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2026 09:00:55 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42EF069DF58
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2026 09:00:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E6B969DF59
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2026 09:00:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=SU3Kgypi;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3663-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3663-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=huawei.com header.s=dkim header.b=IvilxN17;
+	dkim=pass header.d=huawei.com header.s=dkim header.b=IvilxN17;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3664-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3664-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=huawei.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ggs7j2btRz2yfD;
-	Thu, 18 Jun 2026 17:00:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ggs7k4HDGz2xM7;
+	Thu, 18 Jun 2026 17:00:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781766049;
-	cv=none; b=XCGY7bMj3zMoJNWz5aWSCGNMwPUzY8mKedkpPPxUt9xUM6LbfbiZHh/7Y/VVOKFhMudz8vBHKkZ4B9MB6Fsu8LhgIFmxjdFVEiwu+vKjNSkUyFJ+ouy//hEK25sERGsG+M26xb41MgvrC84Z6hbwb0n0mxedHmqC63TiSJlLyqUyHzJgTbRBdYtk7gKELJ3bzfIWl7bo1qTosa+OzxbC+uisG5e9926DvRfEPIs7kWMTC0eLmI6t3Tp4oapJODzlyH9WhurD1UXoL8QyhY/4/rqQ+kYOJPzeMA77YG1IwaONDiS/nZAUQgCftPAnXg5XpkCYvFITaQMkYjcINo90IQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781766050;
+	cv=none; b=ZoSYCBFqK6A2hseiQd8SPjun2kspptxNXPKv04HQpyE3ISaq+Q9tRsJHMv55q+5bUoPhXo3GjcyjOtfjwcj7X3pgbN0ARCg3O3nVuFaZi2Lgcguz/LNpEp0djYJz9kjQaZfFRttrxjsiQrBYziBC26yZC5RREnU2GyCQ41OBYttHsG7Wew0ahpvTP1IFM416LOHxczX0Njor/TI6ntg942eaRdlNnH7wTwmBbTh2ImPrhn71h63zKV30M7H8TkFPdPqtefTg/HIIrPkCh7oF9g/g6UFnUW82juUMKExZUjNnIA3ow1sakW9PZ7MZTgZZ2BDtkJcuU/xx6MqIfQIVwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781766049; c=relaxed/relaxed;
-	bh=6mwJU1kGJiQ3XPOnrDchdhkD2qiU59ejcqlwBkjki9Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fFRZkO6UZaOoFYIwMfqyu0a+jSU/Cs/LZ7dbHtNu4bLlDF4RGF0Sz2leUUUmgeRlvQuW3QJezO6S0m9MXAYipI0SdbjXXZ+6U8GS1LbYZdWUNSvlOwGJxB3uK9TcVCGTqpLRe1tj2nKxqH5qXJx6qaDsP+XSWYCcd/sWikWioZTthChYoj6tGKzIgCpbPsGW1N/RggP7if62QD3uIx46Vf3Q2AGxS7jtYgfRILoZIWXHbOZH9o+WbhJMqngw1x06Vm8n2yoxP2szIYobYTzoqfrn7QhMPp63UHiz7rwXmfVPcjxYnPd6hs5790UhKMYxAZaWHw0zp5m0ZzUCp0KMiw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=SU3Kgypi; dkim-atps=neutral; spf=pass (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+	t=1781766050; c=relaxed/relaxed;
+	bh=sv4nRO/s6qNnmUB5IewXcyNfxJ1Ke3DJiwuXmGOkFyo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wx3OGOPnX/FoQZRqpuxv1UwXTiVBjUVhTc+dUlxbigoBfWq53U5P8UAH6vIN2bLpX9tQzqq+bQbXH7r3mheqZlcLPvzi3udw/QCMAgDNPJI+zo2CYK+4V8I1Uf6fai9kS0AjDBgyuVzqmN58G0AUTMucsLWAT/o46M9FIrNwRx1JWlFvYfgPDogdhCDmnWy3cZfKAU0pWUgiHSofnUDU9+jpQIL5evZo/Ur/2L8+VMFnwtfD/WD3ogldqN6Kz8e8J+1gYEyT9VJSxbpqtpASdnozKtJbzZIqo/mvHi06ozrj0x+VQYf6nhWw+23ZmKYrv7+2VLRjpK2Ol2ULDbBzbA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=IvilxN17; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=IvilxN17; dkim-atps=neutral; spf=pass (client-ip=113.46.200.217; helo=canpmsgout02.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ggs7f0CFLz2xM7
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ggs7f5Hg1z2yRF
 	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jun 2026 17:00:44 +1000 (AEST)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=6mwJU1kGJiQ3XPOnrDchdhkD2qiU59ejcqlwBkjki9Q=;
-	b=SU3KgypiYmo1ATYJqOIDQ96bi7bClGJefwkHgPyCfNJIfMxWQuVyBEkm9HKm9C+GaT50bsZio
-	wPAXe0ryKwqy04v8SV8k7xYshJKdK42bGd7DY0ZUPZPOx+pjkDNjOgW0jJLtP2mR/2vTfAspx7Q
-	oIHKEeyKdy2oYfn+m8SAGA4=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4ggryJ196Fz1cywm;
-	Thu, 18 Jun 2026 14:52:40 +0800 (CST)
+	bh=sv4nRO/s6qNnmUB5IewXcyNfxJ1Ke3DJiwuXmGOkFyo=;
+	b=IvilxN17zQkVoCQM3HZWpeEfNknoXCF24H3OYvAlXTxiwquE72oLi/8UJqMHGi+HNt8M/j0h4
+	6x804sobRK09LfLmJ/GiTxPewCJgmukK6p0IzU+cYH39TcDLYRl2b623s+r+wDvlCMec7NLLl/K
+	D40pbcGDHYG59pcXch8V2No=
+Received: from canpmsgout01.his.huawei.com (unknown [172.19.92.178])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4ggrxm2W0XzcbXZ;
+	Thu, 18 Jun 2026 14:52:12 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=sv4nRO/s6qNnmUB5IewXcyNfxJ1Ke3DJiwuXmGOkFyo=;
+	b=IvilxN17zQkVoCQM3HZWpeEfNknoXCF24H3OYvAlXTxiwquE72oLi/8UJqMHGi+HNt8M/j0h4
+	6x804sobRK09LfLmJ/GiTxPewCJgmukK6p0IzU+cYH39TcDLYRl2b623s+r+wDvlCMec7NLLl/K
+	D40pbcGDHYG59pcXch8V2No=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4ggrxf1cJ2z1T4hX;
+	Thu, 18 Jun 2026 14:52:06 +0800 (CST)
 Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0ABEF405D1;
+	by mail.maildlp.com (Postfix) with ESMTPS id 5775F40577;
 	Thu, 18 Jun 2026 15:00:38 +0800 (CST)
 Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
  (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
@@ -52,10 +64,12 @@ From: Yifan Zhao <zhaoyifan28@huawei.com>
 To: <linux-erofs@lists.ozlabs.org>, <hsiangkao@linux.alibaba.com>
 CC: <yekelu1@huawei.com>, <jingrui@huawei.com>, <zhukeqian1@huawei.com>,
 	<zhaoyifan28@huawei.com>
-Subject: [RFC PATCH 0/3] erofs-utils: introduce file-merge incremental build
-Date: Thu, 18 Jun 2026 14:59:19 +0800
-Message-ID: <20260618065922.1004653-1-zhaoyifan28@huawei.com>
+Subject: [RFC PATCH 1/3] erofs-utils: lib: directly propagate vfile errors
+Date: Thu, 18 Jun 2026 14:59:20 +0800
+Message-ID: <20260618065922.1004653-2-zhaoyifan28@huawei.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260618065922.1004653-1-zhaoyifan28@huawei.com>
+References: <20260618065922.1004653-1-zhaoyifan28@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -84,18 +98,18 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3663-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3664-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	DKIM_TRACE(0.00)[huawei.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
@@ -105,66 +119,42 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:mid,huawei.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:email,huawei.com:mid,huawei.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 42EF069DF58
+X-Rspamd-Queue-Id: 4E6B969DF59
 
-This series adds an incremental file-merge mode for mkfs.erofs.
+Propagate negative vfile ops errors directly instead of using -errno in
+z_erofs_compress_segment().
 
-This is motivated by layered microVM snapshots (memory and rootfs)
-backed by EROFS external devices.  With blob indexes, mkfs can describe
-file contents at block granularity and let a new layer store only
-modified ranges while reusing unchanged data from lower images.
+Assisted-by: Codex:GPT-5.5
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ lib/compress.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-This series reuses the existing incremental build interface and adds a
-new file-merge mode.  In this mode, when a source file exists in the
-upper directory and a same-name file exists in the lower image, mkfs
-treats holes in the sparse upper file as ranges that should inherit
-data from the lower file.  Data ranges in the upper file are promoted
-into the new image, while compatible clean lower ranges can be reused.
-
-For compressed files, mkfs walks the sparse upper source and the lower
-extent mapping together.  If a lower compressed extent is completely
-unchanged by the upper source, it can be inherited directly.  If upper
-data appears inside a lower extent, mkfs keeps the clean prefix when
-possible and recompresses the promoted dirty suffix from the upper
-source.  For uncompressed data, mkfs builds a logical source view that
-selects the lower or upper backing file per range.
-
-This allows incremental images to describe merged file contents without
-materializing entire files in the new layer.  It is especially useful
-for layered microVM snapshot images backed by multiple external devices.
-
-The interface is still open to discussion.  It currently relies on
-sparse source files to encode the inherit semantics.  In addition, mkfs
-still lacks an interface to split blob data and blob indexes out of the
-incremental build output, which needs further discussion.
-
-Yifan Zhao (3):
-  erofs-utils: lib: directly propagate vfile errors
-  erofs-utils: refactor inode data source vfiles
-  erofs-utils: support incremental file merge
-
- include/erofs/blobchunk.h |   4 +-
- include/erofs/importer.h  |   1 +
- include/erofs/internal.h  |  33 ++--
- lib/Makefile.am           |   4 +-
- lib/blobchunk.c           |  24 +--
- lib/compress.c            | 224 ++++++++++++++++++++++-
- lib/file_merge.c          | 118 ++++++++++++
- lib/inode.c               | 369 ++++++++++++++++++++++++++++----------
- lib/liberofs_compress.h   |   5 +
- lib/liberofs_file_merge.h |  22 +++
- lib/liberofs_rebuild.h    |   3 +-
- lib/rebuild.c             |  97 ++++++++--
- lib/remotes/s3.c          |  25 +--
- lib/tar.c                 |  23 +--
- man/mkfs.erofs.1          |  11 +-
- mkfs/main.c               |  17 +-
- 16 files changed, 826 insertions(+), 154 deletions(-)
- create mode 100644 lib/file_merge.c
- create mode 100644 lib/liberofs_file_merge.h
-
+diff --git a/lib/compress.c b/lib/compress.c
+index ea07409..e7c60b2 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -1291,14 +1291,16 @@ int z_erofs_compress_segment(struct z_erofs_compress_sctx *ctx,
+ 	while (ctx->remaining) {
+ 		const u64 rx = min_t(u64, ctx->remaining,
+ 				     Z_EROFS_COMPR_QUEUE_SZ - ctx->tail);
+-		int ret;
++		ssize_t ret;
+ 
+ 		ret = (offset == -1 ?
+ 			erofs_io_read(vf, ctx->queue + ctx->tail, rx) :
+ 			erofs_io_pread(vf, ctx->queue + ctx->tail, rx,
+ 				       ictx->fpos + offset));
++		if (ret < 0)
++			return ret;
+ 		if (ret != rx)
+-			return -errno;
++			return -EIO;
+ 
+ 		ctx->remaining -= rx;
+ 		ctx->tail += rx;
 -- 
 2.47.3
 
