@@ -1,59 +1,48 @@
-Return-Path: <linux-erofs+bounces-3675-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3677-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3FXxKE0ZNGr0OQYAu9opvQ
-	(envelope-from <linux-erofs+bounces-3675-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2026 18:14:05 +0200
+	id FpJZMiSONGrcbAYAu9opvQ
+	(envelope-from <linux-erofs+bounces-3677-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2026 02:32:36 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FAFB6A1863
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jun 2026 18:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECCD46A33DA
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jun 2026 02:32:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=RxR9rWiB;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3675-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3675-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=AwCo05cI;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3677-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3677-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gh5Pw1TXgz2ytj;
-	Fri, 19 Jun 2026 02:13:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ghJTB6YZwz2yrX;
+	Fri, 19 Jun 2026 10:32:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781799236;
-	cv=none; b=T3IGahm4etP+d37msgFalP0DfT3jCB4oyIyN9ToXTWnA4u5eYE9hCCBNNtK1PS7egHp35ZrMlBeG8qdHe88xB85fPEaMTJuVA9yTyvZ7h01rilYMPrn4pxGKr3nAXR3wlBrZk8auCWEcPoXKQ+kYGZeD6nT4WijXh8jMD5NhodGOM9TrN0zulRmzkhBZeAnMecRX6XMftzayEFxu5HkYTRbbE6OxBfy6A7jhn8otFOFPtr3cCPf44oeCRG7DmwoSFw99MUqfOQ0GYcjCQ5lfRuIP4554PUirjiYNL0KK5PYKsKbASmx0Q1vcDEndWwJaMxiFMPTFPXMvzpPYqUS9Zg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1781829150;
+	cv=none; b=GN2YaJ0msNam1ReUX4CXzs3zFNcsx6xcdsMLPIMtuPmp8mMKLtqNYx13Nbz60RekZ/ZzXPBjGewuZDbnw4tEPGHwY1N+tJZHLn5++yDqI8FLCHi1bcP9qJL5pP1vC+pUYfTS3AsrEVOweS6PQyut5raiASh8pi/SN3aIIVTC0d08DPwq3nmJhYnQFi5lPIIX/iD9kTAKFCKinpbyVyyG1wd817BenCm+LJ6yX3EQJEdC6Hkxlon1Shj4rYofBxB4Ck11HO0l3umYJ7klyUX33k9+2Thy2JM8ZuWEl4/ybgNhLbNA1dZ7uFqPBLDk/zH/puOzrlLhtj505RWbqqxE+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1781799236; c=relaxed/relaxed;
-	bh=yIFvXLcBExm9V2ghigl9PhDQEh1Tujlxv5Eg+Rt+6F8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b7/Ut/aUnloAQcLwFlqaEBS9FU79613Bn53p+3oHxPP7PgXiiSNe9EYgxzrOK1DZ0IybXSdYxrdO+vMhJk90tqY1Bp9rmHzODI1DCGD/5vwQPudpVW64J8rwrdxtHWzaGxvz+AR1dxZLlJ15CoggL4SnRoXHvj+WUE8bEcYie8QfPm8Wha3Sl1DOoLEt2H7qAshYfu9ndLMyEWbhx6MAE4e7Qym9dAg4WB8wOjj9/X4zuwxI+W8wZyil9xm5gUzWNncDNzyXMCmleukdft01MIUB2zFR34+i7zW5nkBYbvKSR+RENGo9MZgtqlcpHGd8Di65psl8izT32gs4T54Yxw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RxR9rWiB; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=devnull+aruiz.redhat.com@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+	t=1781829150; c=relaxed/relaxed;
+	bh=W7eCEKpqf5JF6XjeNMziwkoCKNiPryZaEvvADeFGevQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WO1SykuSmowCr0ASxprrVmPCU+SVJWqHjrQlZyYHryQaJbtpjZ1FIh/1OsvqdB1KVwu2SEnC6p31M7+S4mmZ5+S0M/9XI/EMNNiuVDV24blfEMj8RM8oUekoT6/NOpHUhURVlHHHIUyFsU4u44K6ZLekPknSQ1Cuw2dcmZFgzAMyGGjx7rnUFHLynoCydHDjZ2Xdt1XPF/fIXj32ctZT9g6xVNxbs6Evvu75laLP5TLmvDTC7GkhSnUtcyP1uLexIhyq8e0pkt5PL8Otp5rH8R8290JOixm0NhB6IhuQ/5TIQNCa07eao25WPiBdDoh/6N+INyOEZpnLivH7KXkIOQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=AwCo05cI; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gh5Pt6Q3dz2yRM
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2026 02:13:54 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9D1FB44357;
-	Thu, 18 Jun 2026 16:13:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79289C2BCF4;
-	Thu, 18 Jun 2026 16:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781799231;
-	bh=7NYTBhkmj2Rr8b8068lxoBsflcbEvf21KYt+cWMGNtI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RxR9rWiBOWNdEBiRXl1JHjXLCWfNJG+LZjuzYi+cksaUuQNUO61Ok3BssAwSx7cOx
-	 UAh4RrmeODOv7CxG7oPIRZ4uTj4+NNiKZvKuM4sVSxu7nx064x71omLg88onwk9yNv
-	 JWkiSi8cvdYT8L9iXnr8rnznCoqnLy2Y84+gCrT8FN25NmdGJTOT3NwWfpoSJT/NQZ
-	 1SRP3iRmFPdvLy+4aHrbMR/ZlVMYVhdi/b2r1Yt/vrUvXejA32DNabCHn+fr/Iqj5A
-	 xaEmLSE0r6NCrOIOcG36Wa+Lp4OQj2nVv6Q4DxQKBJZgSGqAJFl1EpdOR45AbII+2J
-	 KuHAA+oCJBgiw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB0DCD98F8;
-	Thu, 18 Jun 2026 16:13:51 +0000 (UTC)
-From: Alberto Ruiz via B4 Relay <devnull+aruiz.redhat.com@kernel.org>
-Date: Thu, 18 Jun 2026 17:13:45 +0100
-Subject: [PATCH RFC 2/2] erofs: add KUnit test for memory-backed compressed
- mount
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ghJT829Lsz2ySW
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jun 2026 10:32:26 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1781829142; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=W7eCEKpqf5JF6XjeNMziwkoCKNiPryZaEvvADeFGevQ=;
+	b=AwCo05cIQBqdI3FyAmknsHvhMl0PEtO06DKRxW76xX4PHWm5N5LTOroXiQyPwLcMwXamPcdHffUcZvyNmZgoAizIgY8IItY6hjYkd+nrxUIu+rE5Fo6eJsazQQ2BvwuwK7vT/UpAlAIXjDUmJGrIw5rPhK0GwfAF3ZYrZkKm3Eo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5847GC_1781829140;
+Received: from 30.120.66.214(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5847GC_1781829140 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 19 Jun 2026 08:32:21 +0800
+Message-ID: <20a4402b-6084-4d78-8674-66020db538a6@linux.alibaba.com>
+Date: Fri, 19 Jun 2026 08:32:19 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -65,280 +54,210 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260618-erofs-memback-v1-2-5aa7006a241a@redhat.com>
-References: <20260618-erofs-memback-v1-0-5aa7006a241a@redhat.com>
-In-Reply-To: <20260618-erofs-memback-v1-0-5aa7006a241a@redhat.com>
-To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/2] RFC: erofs: memory-backed mount for
+ non-page-aligned ranges
+To: aruiz@redhat.com, Gao Xiang <xiang@kernel.org>, Chao Yu
+ <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
  Chunhai Guo <guochunhai@vivo.com>
-Cc: linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
- Javier Martinez Canillas <javierm@redhat.com>, 
- Brian Masney <bmasney@redhat.com>, Eric Curtin <ericcurtin17@gmail.com>, 
- Alberto Ruiz <aruiz@redhat.com>
-X-Mailer: b4 0.15.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781799229; l=8348;
- i=aruiz@redhat.com; s=20260612; h=from:subject:message-id;
- bh=b9t0SkET5XJY4KK4sxjXiSKjgiQdXm9lWMdLqHk7s2k=;
- b=tbONYBa2EzQSjsUjfTnKYiQ6NLw3Y1EmK9ph1Pt6looSCrto6gVgu7pG38FrLeu/YehLWJG86
- M0S710t0tL9CWy3m1en95zZgJq1Spdp6T/WvwEc4bAkU6HSRztDrp9u
-X-Developer-Key: i=aruiz@redhat.com; a=ed25519;
- pk=d1doFQwve1B/jU9nG5oPl1W5d+t+iFrjkkwk/hD97Ow=
-X-Endpoint-Received: by B4 Relay for aruiz@redhat.com/20260612 with
- auth_id=818
-X-Original-From: Alberto Ruiz <aruiz@redhat.com>
-Reply-To: aruiz@redhat.com
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Cc: linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Brian Masney <bmasney@redhat.com>, Eric Curtin <ericcurtin17@gmail.com>
+References: <20260618-erofs-memback-v1-0-5aa7006a241a@redhat.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260618-erofs-memback-v1-0-5aa7006a241a@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linux-kernel@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:javierm@redhat.com,m:bmasney@redhat.com,m:ericcurtin17@gmail.com,m:aruiz@redhat.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-3675-lists,linux-erofs=lfdr.de,aruiz.redhat.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3677-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[devnull@kernel.org,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:aruiz@redhat.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linux-kernel@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:javierm@redhat.com,m:bmasney@redhat.com,m:ericcurtin17@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[redhat.com,kernel.org,gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,lists.ozlabs.org,redhat.com,gmail.com];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[aruiz@redhat.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-erofs@lists.ozlabs.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-erofs];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1FAFB6A1863
+X-Rspamd-Queue-Id: ECCD46A33DA
 
-From: Alberto Ruiz <aruiz@redhat.com>
+Hi Alberto,
 
-Add a KUnit test that exercises the EROFS memback mount path with a
-compressed (LZ4) image. The test embeds a minimal 8 KiB EROFS image
-containing a single file with known content ("The quick brown fox. "
-repeated 250 times), mounts it via erofs_memback_set_pending(), reads
-back the decompressed file data, and verifies it byte-for-byte.
+On 2026/6/19 00:13, Alberto Ruiz via B4 Relay wrote:
+> This series adds a memory-backed ("memback") mode to EROFS that
+> allows mounting an EROFS image directly from a kernel memory region
+> without going through the block layer.
+> 
+> I am sending this as an RFC to get EROFS maintainer feedback on
+> this approach before building the full initramfs series on top of
+> it.  The memback mode may also be useful for other use cases beyond
 
-Since erofs_memback_set_pending() is __init, the test uses
-kunit_test_init_section_suites() so it runs during kernel init.
+First, thanks for your interest and efforts. On my side I'm glad
+if EROFS can be used for the initramfs use case (for many years!).
 
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Alberto Ruiz <aruiz@redhat.com>
----
- fs/erofs/Kconfig        |  11 ++++
- fs/erofs/Makefile       |   1 +
- fs/erofs/memback_test.c | 151 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
+> initramfs where EROFS images need to be served directly from
+> memory, though it may need further hardening for more general use
+> cases.
+> 
+> Previous review feedback on the initramfs patches raised concerns
+> about the block layer dependency — this series addresses that by
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 97c48ebe8458..adf26e67924c 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -213,3 +213,14 @@ config EROFS_FS_PAGE_CACHE_SHARE
- 	  content fingerprints on the same machine.
- 
- 	  If unsure, say N.
-+
-+config EROFS_FS_MEMBACK_KUNIT_TEST
-+	bool "Test EROFS memory-backed mount" if !KUNIT_ALL_TESTS
-+	depends on EROFS_FS=y && EROFS_FS_ZIP && KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  KUnit test for the EROFS memory-backed mount path. Embeds a small
-+	  LZ4-compressed EROFS image and verifies that it can be mounted and
-+	  read via the memback interface during kernel init.
-+
-+	  Say N unless you are running KUnit tests.
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 8f3b73835328..b98c95e96e85 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -12,3 +12,4 @@ erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
- erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
- erofs-y += memback.o
- erofs-$(CONFIG_EROFS_FS_PAGE_CACHE_SHARE) += ishare.o
-+obj-$(CONFIG_EROFS_FS_MEMBACK_KUNIT_TEST) += memback_test.o
-diff --git a/fs/erofs/memback_test.c b/fs/erofs/memback_test.c
-new file mode 100644
-index 000000000000..9661b76cfa0f
---- /dev/null
-+++ b/fs/erofs/memback_test.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KUnit tests for EROFS memory-backed mount (memback).
-+ *
-+ * Embeds a minimal LZ4-compressed EROFS image and verifies that the memback
-+ * path can mount it and serve decompressed file data correctly.
-+ */
-+#include <kunit/test.h>
-+#include <linux/fs.h>
-+#include <linux/init.h>
-+#include <linux/init_syscalls.h>
-+#include <linux/namei.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/mount.h>
-+#include "internal.h"
-+
-+#define EROFS_MEMBACK_TEST_DIR "/erofs_memback_test"
-+#define EROFS_MEMBACK_TEST_FILE EROFS_MEMBACK_TEST_DIR "/testfile"
-+
-+/*
-+ * "The quick brown fox. " repeated 250 times = 5250 bytes, LZ4-compressed
-+ * into a 2-block (4096 x 2) EROFS image by:
-+ *   mkfs.erofs -zlz4 -b4096 -x-1 image.img testdir/
-+ *
-+ * The full image is 8192 bytes but only 384 bytes are non-zero.  We store
-+ * just the two non-zero regions (superblock+metadata at offset 1024 and
-+ * compressed data at offset 8140) and reconstruct the image at runtime.
-+ *
-+ * The image is placed at a non-page-aligned offset (3 × 512 = 1536 bytes)
-+ * within the allocation to exercise the non-page-aligned memback path.
-+ */
-+#define EROFS_TEST_IMAGE_SIZE 8192
-+#define EROFS_TEST_IMAGE_OFFSET 1536
-+
-+static const unsigned char erofs_test_metadata[] __initconst = {
-+	0xe2, 0xe1, 0xf5, 0xe0, 0xee, 0x93, 0xd1, 0x4a, 0x03, 0x00, 0x00, 0x00,
-+	0x0c, 0x00, 0x24, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x5d, 0x77, 0x31, 0x6a, 0x00, 0x00, 0x00, 0x00, 0xac, 0xb1, 0x04, 0x00,
-+	0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x2c, 0x51, 0x16, 0x54, 0xcc, 0x6a, 0x43, 0xdd, 0x96, 0xc4, 0x3e, 0x45,
-+	0x16, 0x53, 0x0e, 0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-+	0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00,
-+	0xed, 0x41, 0x00, 0x00, 0x2f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0xff, 0xff, 0xff, 0xff, 0x01, 0x00, 0x00, 0x00, 0xe8, 0x03, 0x00, 0x00,
-+	0xe8, 0x03, 0x00, 0x00, 0x50, 0x77, 0x31, 0x6a, 0x00, 0x00, 0x00, 0x00,
-+	0x7c, 0x8d, 0x20, 0x14, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24, 0x00, 0x02, 0x00,
-+	0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x25, 0x00, 0x02, 0x00,
-+	0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x27, 0x00, 0x01, 0x00,
-+	0x2e, 0x2e, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x66, 0x69, 0x6c, 0x65, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0xa4, 0x81, 0x00, 0x00,
-+	0x82, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-+	0x02, 0x00, 0x00, 0x00, 0xe8, 0x03, 0x00, 0x00, 0xe8, 0x03, 0x00, 0x00,
-+	0x50, 0x77, 0x31, 0x6a, 0x00, 0x00, 0x00, 0x00, 0x2d, 0x3a, 0x37, 0x14,
-+	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x01, 0x00, 0x00, 0x00, 0x00, 0x10, 0x82, 0x04,
-+};
-+
-+static const unsigned char erofs_test_cdata[] __initconst = {
-+	0xff, 0x06, 0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, 0x6b,
-+	0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e, 0x20, 0x66, 0x6f, 0x78, 0x2e,
-+	0x20, 0x15, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-+	0xff, 0x69, 0x50, 0x66, 0x6f, 0x78, 0x2e, 0x20,
-+};
-+
-+#define EXPECTED_PATTERN "The quick brown fox. "
-+#define EXPECTED_PATTERN_LEN 21
-+#define EXPECTED_REPEATS 250
-+#define EXPECTED_FILE_SIZE (EXPECTED_PATTERN_LEN * EXPECTED_REPEATS)
-+
-+static void __init erofs_memback_test_mount_compressed(struct kunit *test)
-+{
-+	void *buf;
-+	struct file *file;
-+	char *readbuf;
-+	ssize_t nread;
-+	int ret, i;
-+
-+	buf = kzalloc(EROFS_TEST_IMAGE_OFFSET + EROFS_TEST_IMAGE_SIZE,
-+		      GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
-+	memcpy(buf + EROFS_TEST_IMAGE_OFFSET + 1024, erofs_test_metadata,
-+	       sizeof(erofs_test_metadata));
-+	memcpy(buf + EROFS_TEST_IMAGE_OFFSET + 8140, erofs_test_cdata,
-+	       sizeof(erofs_test_cdata));
-+
-+	erofs_memback_set_pending(buf + EROFS_TEST_IMAGE_OFFSET,
-+				  EROFS_TEST_IMAGE_SIZE);
-+
-+	ret = init_mkdir(EROFS_MEMBACK_TEST_DIR, 0700);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	ret = init_mount("none", EROFS_MEMBACK_TEST_DIR, "erofs", MS_RDONLY,
-+			 NULL);
-+	if (ret) {
-+		init_rmdir(EROFS_MEMBACK_TEST_DIR);
-+		kfree(buf);
-+		KUNIT_FAIL(test, "init_mount failed: %d", ret);
-+		return;
-+	}
-+
-+	file = filp_open(EROFS_MEMBACK_TEST_FILE, O_RDONLY, 0);
-+	if (IS_ERR(file)) {
-+		init_umount(EROFS_MEMBACK_TEST_DIR, 0);
-+		init_rmdir(EROFS_MEMBACK_TEST_DIR);
-+		kfree(buf);
-+		KUNIT_FAIL(test, "filp_open failed: %ld", PTR_ERR(file));
-+		return;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, (int)i_size_read(file_inode(file)),
-+			EXPECTED_FILE_SIZE);
-+
-+	readbuf = kzalloc(EXPECTED_FILE_SIZE, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, readbuf);
-+
-+	nread = kernel_read(file, readbuf, EXPECTED_FILE_SIZE, &file->f_pos);
-+	KUNIT_EXPECT_EQ(test, (int)nread, EXPECTED_FILE_SIZE);
-+
-+	for (i = 0; i < EXPECTED_REPEATS && nread == EXPECTED_FILE_SIZE; i++)
-+		KUNIT_EXPECT_MEMEQ(test, readbuf + i * EXPECTED_PATTERN_LEN,
-+				   EXPECTED_PATTERN, EXPECTED_PATTERN_LEN);
-+
-+	kfree(readbuf);
-+	fput(file);
-+	init_umount(EROFS_MEMBACK_TEST_DIR, 0);
-+	init_rmdir(EROFS_MEMBACK_TEST_DIR);
-+	kfree(buf);
-+}
-+
-+static struct kunit_case erofs_memback_test_cases[] __initdata = {
-+	KUNIT_CASE(erofs_memback_test_mount_compressed),
-+	{},
-+};
-+
-+static struct kunit_suite __refdata erofs_memback_test_suite = {
-+	.name = "erofs_memback",
-+	.test_cases = erofs_memback_test_cases,
-+};
-+kunit_test_init_section_suites(&erofs_memback_test_suite);
-+
-+MODULE_DESCRIPTION("EROFS memback KUnit test suite");
-+MODULE_LICENSE("GPL");
+Could you have a pointer where "concerns about the block layer
+dependency" comes from? I don't notice that on the mailing list.
 
--- 
-2.53.0
+> providing a direct memory-backed path.  It also adds support for
 
+But I think EROFS subsystem can not decide itself if we could
+land this functionality or not, in any case we should have a
+discussion with VFS/MM folks first to know if the rough
+direction is acceptable or not.  And we also need to know
+what's the concerns before we draft a version.
+
+There may have some barriers on my side to land this feature:
+
+  - erofs_memback_set_pending() can be used to set an arbitary
+    kernel virt address.  I don't think it's a good direction
+    to be honest, for example, previously cramfs gets some
+    arbitary address using mtd_point() and implement XIP feature
+    but I think it's quite outdated.
+
+    Yes, I've seen erofs_memback_set_pending() can only be used
+    for specific cases since it has __init annotation, but it
+    also limits _the other potential use cases_.
+
+  - currently modern memory backends (memory devices like PMEM
+    and CXL) all use Linux DAX infrastructure, which means we
+    shouldn't bypass the DAX infrastructure to operate arbitary
+    memory address directly.
+
+That is my own opinion at least, but if MM/FS folks think EROFS
+can work on arbitary kernel virt address instead, I'm fine, but
+I think it's highly impossible.
+
+So at least on this part, I wonder if we should enhance ramdax
+(drivers/nvdimm/ramdax.c) to support initramfs use cases and
+make EROFS to use ramdax + DAX infrastrure to mount initramfs
+instead.
+
+> non-page-aligned memory ranges, which is the common case for
+> initramfs images packed at arbitrary cpio boundaries.  Supporting
+
+That is another issue I would like to discuss:
+
+If EROFS filesystem data is page aligned, we can just use the
+initramfs memory directly and so that no page cache is needed.
+
+And in that cases, no double cache anymore (see "ramfs and
+ramdisk" section in https://www.kernel.org/doc/Documentation/filesystems/ramfs-rootfs-initramfs.txt).
+
+> non-page-aligned ranges is essential for true zero-copy access —
+
+I guess that is not true: I've looked the code, basically the
+code uses the page cache (double caching), and the unaligned
+data will be copied into page cache (aligned data) first.
+
+Since mmap use cases need page aligned buffers, and in practice
+of the linux kernel, it will be page cache or DAX.  So in order
+to do that, unaligned initramfs needs do double caching and an
+extra copy at least to fulfill the requirement.
+
+> requiring page alignment would force a copy into an aligned buffer
+> before the data can be used, defeating the purpose.
+
+same as above.
+
+Anyway, I wonder if we could avoid non-page-aligned initramfs so
+that ramdax can be enhanced to be used directly.
+
+> 
+> The full initramfs integration (init/ changes) that wires up the
+> EROFS initrd detection and layered mount is available for reference
+> here[0]. It implements support for interleaved cpio and EROFS
+> layers, it supports cpio CPU microcode update prefix, and uses
+> overlayfs+tmpfs for write support.
+
+If that's why EROFS is unaligned, and we just add some padding
+between cpio and erofs image (I think the padding is small than
+4k)? or can cpio CPU microcode update prefix placed after the
+erofs image?
+
+> 
+> This series was developed with the assistance of Claude Opus 4.6.
+> All patches carry an Assisted-by tag. I am providing the kunit
+> testing and I have tested this change against the initramfs series
+> to boot an EROFS initramfs. I welcome feedback on the approach and
+> implementation.
+
+Yes, the generated code can work but IMHO it doesn't mean it's well
+suitable for upstream...
+
+It's just my own humble opinion, but I expect VFS/MM folks could
+have similar thoughts.  However, I'm also interested if EROFS can
+be used for initramfs, as long as we have a proper way to implement
+that.
+
+Thanks,
+Gao Xiang
+
+> 
+> Patch 1 adds the core memback implementation.
+> Patch 2 adds a KUnit test that mounts a compressed EROFS image at a
+> non-page-aligned offset and verifies decompressed file contents.
+> 
+> [0] https://github.com/aruiz/linux/tree/wip/erofs-initramfs-memback
+> 
+> Signed-off-by: Alberto Ruiz <aruiz@redhat.com>
+> ---
+> Alberto Ruiz (2):
+>        erofs: add memory-backed mode for non-page-aligned mount
+>        erofs: add KUnit test for memory-backed compressed mount
+> 
+>   fs/erofs/Kconfig        |  11 ++++
+>   fs/erofs/Makefile       |   2 +
+>   fs/erofs/data.c         |  33 +++++++++-
+>   fs/erofs/internal.h     |  53 +++++++++++----
+>   fs/erofs/memback.c      | 169 ++++++++++++++++++++++++++++++++++++++++++++++++
+>   fs/erofs/memback_test.c | 151 ++++++++++++++++++++++++++++++++++++++++++
+>   fs/erofs/super.c        |  38 +++++++++--
+>   fs/erofs/zdata.c        |  16 +++--
+>   8 files changed, 447 insertions(+), 26 deletions(-)
+> ---
+> base-commit: 6b5a2b7d9bc156e505f09e698d85d6a1547c1206
+> change-id: 20260617-erofs-memback-0ae2448ba2cc
+> 
+> Best regards,
+> --
+> Alberto Ruiz <aruiz@redhat.com>
+> 
 
 
