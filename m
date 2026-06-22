@@ -1,103 +1,66 @@
-Return-Path: <linux-erofs+bounces-3715-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3716-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GmdNHaM9OWpPpAcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3715-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 15:50:27 +0200
+	id EJl2LBJROWoOqgcAu9opvQ
+	(envelope-from <linux-erofs+bounces-3716-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 17:13:22 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 960E16B0029
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 15:50:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 23E6B6B0A08
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 17:13:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=sCPFn2d7;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6sw3sDYH;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=sCPFn2d7;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6sw3sDYH;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3715-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3715-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=none;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="K/V1Z2hh";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3716-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3716-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gkV2S3YRWz2xyh;
-	Mon, 22 Jun 2026 23:50:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gkWt65QB3z2yVZ;
+	Tue, 23 Jun 2026 01:13:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782136224;
-	cv=none; b=TScs9ZiIb/XA7zgi9jeTjf69yQsZF/xH3HYM+5coCEI26O8jkZPpwNhog77VPl+QkBo/64XNyftZ6ScwVxxpRhldE9ypXtVycluvLhgab74wRCf+tPFBSEECKjgtpnitnnMnCwMkkba8YjS8JhSgt43T5wiU/QL3iut9VyAJN7oCOO0HwVOGGO6eqeAmiSRuZllLmCRgrs4G9NVT6xz1h0+NWPBy2jeQAVGeLmB8Eq4qS1BKYBAIitw5YAGqiAv5PAobtBncABAIshrjr1e9HQvmb60X1BR712I7/J+fqYk1ifnWF+7qieVquafR8BRj0d101v3KOvAK7tlxSHubag==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782141198;
+	cv=none; b=bCi/TmdBRCgBCGaZ343grq+BgPQnJDVzcR4l5EN4JMD9Bzqs3P9pajtOf9gNvSTw1OotNj/O3fRHXIP44+negHPp/RShnGeyw+rVh663To7/XCWBP7fo1QJ3F3vJSC6OU1L4+748sjlJTa4ySlO4ehPsLmSx4jMP9dgSqmyD3x7sXysWU/TJn+qwaO3nASE43n1W5KM+D47tx8vOjpbiEhqk6fvtPjWdj0B318dT5GLxu9ATTsE3FIfKewXhkIsL6jsSf5kQP0pRrYgPpLg/3QRjTcfg6rjYE9LRvHyKFvaexs3gqjQRkMxAN3z1HMb9oldPreUEEvJ9N70cRSrqeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782136224; c=relaxed/relaxed;
-	bh=pwdldaccHLqFQeaduzHyGoRmVSJHAn2p6cOpABQhxBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eB7EmLc+NPsM5UVPOWZ8MIrcmvAufxE0DPs7abgYkvWuy9Wp4IBehoaeAEOkFnq2i5qtfnWm2Fo42dotEugUWMYrQgqrvpDgJwDg+UZY/NG3+bFcGDrdoopoPFZGEUlf+1Ev3HJcfeGhKQHgpg1u/smCjPGHIVh4aZSH2XpP8kogmDC7+v33supHTts1P8iXEuVfSoQtKTb1AbRaY5xDeYm5ujEKwQWNCJJmG4/GKxFXXfGvreu0J3EMoqLJPS2XL1IuE+t80Yzi7/B656FjVz/O8Y44P9D6mt0A+EAwg6HYURGUjjB3BlC6WBd0SlWzarCqLZeUBWspeTI8zoWGJA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=sCPFn2d7; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6sw3sDYH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=sCPFn2d7; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6sw3sDYH; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	t=1782141198; c=relaxed/relaxed;
+	bh=T2jW4l/fJrbfv9Ss+G416BdWermJV6II77JXcY0a4Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fOAdhlZE7L3CScTun5jtCDurPyg/lnyWmLws0Pp/Ib7A1LUH7YS1t4HywkSKqT18sBsXYInqCkZCRpwmFjO5W3kEtT3R/uAjPSICI8qSe+DAiyGRRlzgGFG2/KVVuiRpqUH5qDMZXbXEXIMdKF1qr+D+h1fiKy3xKDC7O1vnXdsTOxRGdXSQMxj0l8wvbA5v/yofR+RX2UU2qpUZxmgqkTtmCAbbSDM7o+mrp1CbIEOju+aBi5eqmT6uYZ37ncKhXSmVg7Gk9j5qEbHSDwYvDYZPQNICQalnmwxP28S5lMcSfdrT8OPJsabs4KpDIbCArr2v5xDb0WrXdZ3YwPSLsg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K/V1Z2hh; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkV2R51tFz2xSN
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Jun 2026 23:50:23 +1000 (AEST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 96F58704BB;
-	Mon, 22 Jun 2026 13:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1782136218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwdldaccHLqFQeaduzHyGoRmVSJHAn2p6cOpABQhxBg=;
-	b=sCPFn2d70ytK8uM+7am/4lVCEEva5/832BbzPLucrCQbcZbl9sCqMV5LCloY/u+fwJUWdP
-	LAca2z1K/BesNFEHPBLcxVk1BWThf0t9EVogsScb4UGmjjsBPT1H4l6dI5j/Khk2v9XFSv
-	yz/liunQfedntcKIGiSIR7RX5WsIiTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1782136218;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwdldaccHLqFQeaduzHyGoRmVSJHAn2p6cOpABQhxBg=;
-	b=6sw3sDYHD0rKJ4cuy1fcFkpAZVhKTEnqqZgTXwYApQ5e9qJFAvoXjArJ3IjEF51c053v4h
-	Tm81i5hE95XEHDCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1782136218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwdldaccHLqFQeaduzHyGoRmVSJHAn2p6cOpABQhxBg=;
-	b=sCPFn2d70ytK8uM+7am/4lVCEEva5/832BbzPLucrCQbcZbl9sCqMV5LCloY/u+fwJUWdP
-	LAca2z1K/BesNFEHPBLcxVk1BWThf0t9EVogsScb4UGmjjsBPT1H4l6dI5j/Khk2v9XFSv
-	yz/liunQfedntcKIGiSIR7RX5WsIiTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1782136218;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwdldaccHLqFQeaduzHyGoRmVSJHAn2p6cOpABQhxBg=;
-	b=6sw3sDYHD0rKJ4cuy1fcFkpAZVhKTEnqqZgTXwYApQ5e9qJFAvoXjArJ3IjEF51c053v4h
-	Tm81i5hE95XEHDCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D44F779A8;
-	Mon, 22 Jun 2026 13:50:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zTB6Ipo9OWpjOgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 22 Jun 2026 13:50:18 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 48C4CA093E; Mon, 22 Jun 2026 15:50:10 +0200 (CEST)
-Date: Mon, 22 Jun 2026 15:50:10 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>, 
-	Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	linux-ext4@vger.kernel.org, Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH RFC v2 03/18] super: take lock after last reference count
-Message-ID: <p22dytpj26jz72sqohiqrhkacrc4r5wt7soanows744el5jzqb@3236bcjzmilk>
-References: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
- <20260616-work-super-bdev_holder_global-v2-3-7df6b864028e@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkWt547NVz2xl6
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 01:13:17 +1000 (AEST)
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 1E17E4338B;
+	Mon, 22 Jun 2026 15:13:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7886E1F000E9;
+	Mon, 22 Jun 2026 15:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782141195;
+	bh=T2jW4l/fJrbfv9Ss+G416BdWermJV6II77JXcY0a4Ag=;
+	h=Date:From:To:Cc:Subject;
+	b=K/V1Z2hhCSUkLtZK3OWFKD/OJNNUisbP4555e3jVS4L2Xdnupn9Yihhjn9IEc1H6x
+	 d1r5TpkkaLL7PD27NjeSb+wFQrkj/pHhFHcWVaGxkFQpRPVfiJKTl9yzWT7HYEHUSZ
+	 W+J33IFbgsJPauMkfZr3q+WIduQI1z8WugrbvF1dXVFOw0LniqQ9M8YMlSrZnVct9d
+	 Ziub20HkdpiOVACKZ+lyZAipojsPZKaegecwf+tOoj/ZMFlmyzDHjWPNJwRt4YW5qO
+	 vofeih8B4ZqeKEmVavcYtRFWkeSl/9d3n+iXbHVp1Vep1lBu9E0CipzddWVOuz/5tg
+	 jFSvbjiw5L2Hg==
+Date: Mon, 22 Jun 2026 23:13:07 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Zhan Xusheng <zhanxusheng@xiaomi.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>
+Subject: [GIT PULL] erofs updates for 7.2-rc1
+Message-ID: <ajlRA7jYcsnYPXiw@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Zhan Xusheng <zhanxusheng@xiaomi.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -109,85 +72,126 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260616-work-super-bdev_holder_global-v2-3-7df6b864028e@kernel.org>
-X-Spam-Level: 
-X-Spam-Score: -4.01
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.20 / 15.00];
+X-Spamd-Result: default: False [-1.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:jack@suse.cz,m:hch@lst.de,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	DMARC_NA(0.00)[suse.cz];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3715-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3716-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[xiang@kernel.org,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:torvalds@linux-foundation.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:chao@kernel.org,m:zhanxusheng@xiaomi.com,m:lihongbo22@huawei.com,m:jefflexu@linux.alibaba.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[xiang@kernel.org,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,suse.cz:dkim,suse.cz:email,suse.cz:from_mime]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 960E16B0029
+X-Rspamd-Queue-Id: 23E6B6B0A08
 
-On Tue 16-06-26 16:08:19, Christian Brauner wrote:
-> __put_super() required the caller to hold sb_lock, so put_super()
-> wrapped it. The per-device superblock table introduced later drops its
-> passive references from contexts that do not hold sb_lock, so make
-> put_super() self-locking: drop the count first and take sb_lock only for
-> the final list_del.
-> 
-> With the count now dropped outside sb_lock a superblock can briefly sit
-> on @super_blocks with s_passive == 0 before it is unlinked, so the list
-> walkers (__iterate_supers(), iterate_supers_type(), user_get_super())
-> switch to refcount_inc_not_zero() and skip it.
-> 
-> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+Hi Linus,
 
-Looks good, just one style nit below. Feel free to add:
+Sorry for late email this time, but could you consider these
+commits for 7.2-rc1?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+The most notable change is the removal of the fscache backend: it
+has been deprecated for almost two years, mainly because EROFS
+file-backed mounts and fanotify pre-content hooks (together with
+erofs-utils) now provide better functionality and simpler codebase.
+In addition, fscache has depended on netfslib for years, which is
+undesirable for EROFS since it is a local filesystem. More details
+are shown in [1].
 
-> -static void __put_super(struct super_block *s)
-> +void put_super(struct super_block *s)
->  {
->  	if (refcount_dec_and_test(&s->s_passive)) {
-> +
+In addition, sparse support has been added to the pcluster layout,
+which is helpful for large sparse AI datasets, and map requests for
+chunk-based inodes have been optimized to be more efficient as well.
+There are also the usual fixes and cleanups.
 
-I'd delete this empty line.
+All commits have been in -next and no potential merge conflict is
+observed.
 
-> +		spin_lock(&sb_lock);
->  		list_del_init(&s->s_list);
-> +		spin_unlock(&sb_lock);
-> +
+Thanks,
+Gao Xiang
 
+[1] https://lore.kernel.org/r/20260622013622.934174-1-hsiangkao@linux.alibaba.com
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+The following changes since commit 4549871118cf616eecdd2d939f78e3b9e1dddc48:
+
+  Linux 7.1-rc7 (2026-06-07 15:37:58 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-7.2-rc1
+
+for you to fetch changes up to 803d09a554055aba160a62abd1e4b1260b899dc1:
+
+  erofs: handle 48-bit blocks_hi for compressed inodes (2026-06-22 18:50:36 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Report more consecutive chunks of the same type
+   for each iomap request
+
+ - Add sparse support for the pcluster layout
+
+ - Update the EROFS documentation overview
+
+ - Remove the deprecated fscache backend
+
+ - Various fixes and cleanups
+
+----------------------------------------------------------------
+Gao Xiang (7):
+      erofs: clean up erofs_ishare_fill_inode()
+      erofs: update the overview of the documentation
+      erofs: call erofs_exit_ishare() before rcu_barrier()
+      erofs: introduce erofs_map_chunks()
+      erofs: add sparse support to pcluster layout
+      erofs: simplify RCU read critical sections
+      erofs: remove fscache backend entirely
+
+Zhan Xusheng (2):
+      erofs: add folio order to trace_erofs_read_folio
+      erofs: handle 48-bit blocks_hi for compressed inodes
+
+ Documentation/filesystems/erofs.rst | 138 ++++----
+ fs/erofs/Kconfig                    |  21 +-
+ fs/erofs/Makefile                   |   1 -
+ fs/erofs/data.c                     | 135 ++++----
+ fs/erofs/erofs_fs.h                 |   2 +
+ fs/erofs/fscache.c                  | 664 ------------------------------------
+ fs/erofs/inode.c                    |   7 +-
+ fs/erofs/internal.h                 |  72 +---
+ fs/erofs/ishare.c                   |  47 ++-
+ fs/erofs/super.c                    |  98 ++----
+ fs/erofs/zdata.c                    |  38 +--
+ fs/erofs/zmap.c                     |  33 +-
+ include/trace/events/erofs.h        |   9 +-
+ 13 files changed, 231 insertions(+), 1034 deletions(-)
+ delete mode 100644 fs/erofs/fscache.c
 
