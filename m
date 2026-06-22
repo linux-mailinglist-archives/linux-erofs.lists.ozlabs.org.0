@@ -1,105 +1,77 @@
-Return-Path: <linux-erofs+bounces-3720-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3721-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HWwYEzhkOWrerQcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3720-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 18:35:04 +0200
+	id p83mMmaBOWpQugcAu9opvQ
+	(envelope-from <linux-erofs+bounces-3721-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 20:39:34 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C9886B1285
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 18:35:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B68B6B1D0C
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jun 2026 20:39:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Wttf5jNj;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=yf5ZI00v;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="Sc6A4Dw/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=vwqQhrF0;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3720-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3720-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=none;
+	dkim=pass header.d=intel.com header.s=Intel header.b=hbcQA5Zu;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3721-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3721-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gkYhN6VpWz2yVZ;
-	Tue, 23 Jun 2026 02:35:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gkcS14mFsz2yVd;
+	Tue, 23 Jun 2026 04:39:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782146100;
-	cv=none; b=XdsAoB5VVkNnJz24cuYrsf4Pimm863MnFfUGUbWKVlyWX/faCLNKg2+RY5nDnQS+lKu9CyJSPE/FegsRikNIbMe0cJHVZX0CSa2S2YAv8UnUJm14CIwbbdeps+F0xCcM40CMbrb6LXALN75LMasedeHFvvPyR3I+q+OTNIkpL3l0Qlp/8oKPqo88TlOKfwvI1eHBrqd7yAqerV/7eABBA7BQ6XYdpeW1isjhxSH87fA1Y1mJ8XFHzr7OyX9mfhD4m7JVCOOKSFfn7v8EeE5go1p+U1x8oz0rCPalPn7RYlTbPnPVytJJqdU/0imem4UUn7EKj3aOSMGc5juL77S09w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782153569;
+	cv=none; b=e2bkE7zlkLfkeuER7nq4lTU/S5LgPx/c7keIMPwKN1j/5CiFv2V2OtgTts8sDDo8j2bAqpL11NlKw3AT0/41IKbJPi1hx4hRNQOB2rldagH2odo6C4TgDDK+3egqVfnejxp7bCXacCEu9IJGTlgw/zZll+9LKYUSnh1yLOyxFy8xgHPrPBfkBEroTh/U6xFDm3MYuMEpTXuSb4cRYBp+6AkhvNBDAzYwkwZ0ZH3CXoz5SoRGSTExqwcnqphMewHq72JfUYBaLwIcR0ruZ3fB1ZGcQG9H2nnji9QWKJdnlY7zGPLph+UqklshMMxuCOV9AC1nd3ZaRST/Ic+H/DzEFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782146100; c=relaxed/relaxed;
-	bh=zOyzIKJqX7tZFMtlqztdiIbczyvu/PCMQorXmmY+s9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGufeK8GOkNhJB+YK0g57x+YLH+RH3o/6dvHvJW0QLdk8CBf6WZ+2dYRCQJpKJ6tcSH8L/SZ6auxaQXm7hlaJeccVbG/EOkugtk45PGt2STN7SxLQQqN8EinBztkULGSG1AI/xeIOxo7k4l00rpAPNPjo6Kj7zYQyZIdl6u8iqs9f20VZL6cM33o/rMbaeatEZnWCMrK+OlLaIGWbK/LHqafJnIpYoCZeFGs7TQjKvRMVc/tSm/gvXDQ1D4Xq28Le6Igc433zTH/xrlXN9hOj3xdtKQ7h+vlAOklXfcG5FDIP4OwAhsBlFFQff6VIMYe+GlkQ0Mhld5UlFwyeiWDRw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Wttf5jNj; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=yf5ZI00v; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Sc6A4Dw/; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=vwqQhrF0; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1782153569; c=relaxed/relaxed;
+	bh=KUQjFykSg7tlUCDJadzCS3+xK9/AdRWzudcaEhCUCUo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GjtTtakn/B+T9iKNS6ReD5cDS1HrD+ujrJ9t+4xAsEzi5ZG52U9dkfN83TjaLH+qbyrenUp1a1ekRGF0LGXOjomaOQl/a6zYfumLXZa6KDGofmc9hrZk0kBdg3via2yqHcjkzVswT0S0V4eHxq+R6u6tf+JSk7cmFVFJYUmGmtE8IK0K9R3N6TFCSax1ZxVt8ML89wlPTFeNrOEyU9ryuHg8Zc8Guq3Hy63SyVS/rQR/SCyIwYObGPDEcECLIOoMwvMPnWZhM1CBfA8PH+u0kS7K+b5mTT+VIyWpM+wcfoG7zTcXIZLVyrzrs+d42C5QAN/FZ6zhcHfq20I3P8u74Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hbcQA5Zu; dkim-atps=neutral; spf=pass (client-ip=192.198.163.8; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkYhN11yFz2xl6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 02:34:59 +1000 (AEST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BD9CD75B12;
-	Mon, 22 Jun 2026 16:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1782146097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOyzIKJqX7tZFMtlqztdiIbczyvu/PCMQorXmmY+s9w=;
-	b=Wttf5jNjQA9DKN6ckwrKQGIE2piT+zrUI8ktk1AaEcq4AjCir3O3KjiLBTfhcvVN33l2i5
-	r6ezZQC/RENxOtoNaFMmsWcGPubbPZKoGFBAkUlB6zd+YahkQsjGXUQoOgRazL3G6Opv6b
-	iFHcDj85S+palLxzUQE0yil/Wmn+nGI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1782146097;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOyzIKJqX7tZFMtlqztdiIbczyvu/PCMQorXmmY+s9w=;
-	b=yf5ZI00vPNh0BcAOmLoS1qx84bokNY9IUkRbKtaAbDcQMyWGvZK32r9i+5OEwLCC0Gqjqe
-	qBVXFs8oRrvCeCDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1782146096; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOyzIKJqX7tZFMtlqztdiIbczyvu/PCMQorXmmY+s9w=;
-	b=Sc6A4Dw/TGIsMWPgC/z20PyGSzMZXPLnPzOtCPbOPpomuS41q/qQZv748sXOU0aVeINc0t
-	FQHPIqksKweksAUy3y6mHZaXHcqK4kCUMOx2IAvNXGDdlwHZ1VyIZQWjOj5WsytX+746Pk
-	meg+eE6S+ZWhqCSFLshWQ247Uoc6WHg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1782146096;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOyzIKJqX7tZFMtlqztdiIbczyvu/PCMQorXmmY+s9w=;
-	b=vwqQhrF0Eqf2paPnD2EIyxxgK0g+9g5ihen5K17JO9lQ61F2qmftn9ds+5MsCdWo77MNwq
-	ghsmUf9Z20qn0qBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B1FB2779A8;
-	Mon, 22 Jun 2026 16:34:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D0dyKzBkOWrZWQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 22 Jun 2026 16:34:56 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 4EB2EA093E; Mon, 22 Jun 2026 18:34:56 +0200 (CEST)
-Date: Mon, 22 Jun 2026 18:34:56 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>, 
-	Jens Axboe <axboe@kernel.dk>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	linux-ext4@vger.kernel.org, Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH RFC v2 08/18] fs: add dedicated block device open helpers
- for filesystems
-Message-ID: <7unybrw7f6nmn5nfxiaxgqm2reneybunc6nha256oez6siixkg@qzdhk474mx7h>
-References: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org>
- <20260616-work-super-bdev_holder_global-v2-8-7df6b864028e@kernel.org>
- <xlfnmwv2upjia6ozd4z5l5icaewor4a6cgkafnigulndzmt6r7@rhay3h3wablo>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkcRx4L1wz2yVZ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 04:39:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782153566; x=1813689566;
+  h=date:from:to:cc:subject:message-id;
+  bh=cdeHKk7LIi4IkmWPErnYa2y67GXzj0XJaj4sLxNaNKU=;
+  b=hbcQA5ZuziRhNpFpeFl25QEM3Au5Rh8SAkW8Cc4O2SxDAZlOB9GIKCh2
+   NyHGD45YGT52Y1EtNZ6UHv2Lq4tmmuNsCDpvB+YyMVJiLSX6riH6pM5P3
+   Qjm9sxmPLaYKYitvYj+mZysaroXd4huCNummMfVgC3SDJ3NQ45XpzITVx
+   7KQQc+5NbKbz1+TgFsuRE01w6od31HZcGUXSuw4nPZbXmbZo98bZUTVpA
+   nBAkqcY85pH1v/CRnLKJCQvJxy0ne5/x2QCG8PCv5DGYIG0eiREb2QpZk
+   5UlI+LnO+RTQk44FTu/O619a5uwt+JSXwLkFyPxASttdyphO78pvMXBuV
+   A==;
+X-CSE-ConnectionGUID: tc175RA6RTae4muLy9zR1A==
+X-CSE-MsgGUID: 3k32FLY1TZOUqZycwz/Mcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="100443384"
+X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
+   d="scan'208";a="100443384"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 11:39:18 -0700
+X-CSE-ConnectionGUID: qvkRJP+KSP+akoCYyqNYXw==
+X-CSE-MsgGUID: d/pVOUTqTKSnyCN1hgWxiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
+   d="scan'208";a="253194308"
+Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 22 Jun 2026 11:39:16 -0700
+Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wbjY9-000000001j1-1G0U;
+	Mon, 22 Jun 2026 18:39:13 +0000
+Date: Tue, 23 Jun 2026 02:38:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ c37460cd9b2fcb61ec66b7eb4fde737e65ec2a56
+Message-ID: <202606230248.AqThRF0y-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -110,132 +82,265 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xlfnmwv2upjia6ozd4z5l5icaewor4a6cgkafnigulndzmt6r7@rhay3h3wablo>
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.20 / 15.00];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:jack@suse.cz,m:hch@lst.de,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	DMARC_NA(0.00)[suse.cz];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-3720-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-3721-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:email,suse.cz:from_mime]
+	ALIAS_RESOLVED(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:mid,intel.com:from_mime,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5C9886B1285
+X-Rspamd-Queue-Id: 4B68B6B1D0C
 
-On Mon 22-06-26 18:28:50, Jan Kara wrote:
-> On Tue 16-06-26 16:08:24, Christian Brauner wrote:
-> > Add fs_bdev_file_open_by_{dev,path}() and fs_bdev_file_release(). They
-> > open the device with fs_holder_ops and register a claim in the
-> > device-to-superblock table. Claims on the same (device, superblock)
-> > pair share one entry, so when a filesystem claims a device it already
-> > uses (xfs with its log on the data device), no second entry is added
-> > and each superblock will be acted on once.
-> > 
-> > The holder argument remains purely the block layer's exclusivity token:
-> > a superblock, or a file_system_type for a device shared by several
-> > superblocks of that type. The shared case only becomes usable once the
-> > fs_holder_ops callbacks resolve superblocks through the table instead
-> > of bdev->bd_holder.
-> > 
-> > Convert the main device, setup_bdev_super() and kill_block_super(),
-> > over: the open finds the entry registered by sget_fc() and claims it
-> > again. cramfs and romfs bypass kill_block_super() so they can handle
-> > MTD mounts and release the main device with a plain bdev_fput(), which
-> > would leave the claim behind: the (dev, sb) entry would never be
-> > unregistered and the passive reference it holds would keep the
-> > superblock alive forever. Convert their release paths in the same
-> > step.
-> > 
-> > The frozen-device check stays in setup_bdev_super() for the primary
-> > device and is added to fs_bdev_register() for new claims, i.e. every
-> > additional device a filesystem opens through the helpers. Only a
-> > (device, superblock) pair the superblock claimed earlier may be
-> > reopened while frozen (xfs with its log on the data device): the freeze
-> > already covers that superblock through the existing claim, so nothing
-> > escapes it. Without the setup_bdev_super() check a device frozen before
-> > the mount even started (dm lock_fs, loop) could be mounted and written
-> > to (journal replay) under an active freeze, because the primary open
-> > reuses the entry registered by sget_fc() and never takes the new-claim
-> > path.
-> > 
-> > Both checks read bd_fsfreeze_count only after the entry is published
-> > (by sget_fc() for the primary, by fs_bdev_register() for new claims)
-> > and pair with bdev_freeze() incrementing the count before walking the
-> > table: either the mount sees the elevated freeze count and fails with
-> > EBUSY, or the freeze finds the published entry and converges once
-> > SB_BORN is set.
-> > 
-> > Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: c37460cd9b2fcb61ec66b7eb4fde737e65ec2a56  erofs: remove fscache backend entirely
 
-...
+elapsed time: 901m
 
-> > +/**
-> > + * fs_bdev_file_release - release a block device claimed for a superblock
-> > + * @bdev_file: file returned by fs_bdev_file_open_by_{dev,path}()
-> > + * @sb: superblock the device was claimed for
-> > + *
-> > + * Drop one claim on the {dev, @sb} entry; the last claim unregisters it (a
-> > + * pinning cursor defers the actual unlink).  Then close the block device.
-> > + */
-> > +void fs_bdev_file_release(struct file *bdev_file, struct super_block *sb)
-> > +{
-> > +	dev_t dev = file_bdev(bdev_file)->bd_dev;
-> > +	struct super_dev *sb_dev;
-> > +
-> > +	rcu_read_lock();
-> > +	sb_dev = super_dev_lookup(dev, sb);
-> > +	rcu_read_unlock();
-> > +	super_dev_put(sb_dev);
-> > +	bdev_fput(bdev_file);
-> > +}
-> > +EXPORT_SYMBOL_GPL(fs_bdev_file_release);
-> 
-> Why don't you use sb->s_super_dev in this function?
+configs tested: 210
+configs skipped: 2
 
-Nevermind, I've realized sb can hold multiple bdevs so this is really
-needed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I'd still prefer the __free handling in fs_bdev_register() sorted out but
-regardless feel free to add:
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+alpha                               defconfig    gcc-16.1.0
+arc                              allmodconfig    clang-23
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    clang-23
+arc                              allyesconfig    gcc-16.1.0
+arc                                 defconfig    gcc-16.1.0
+arc                   randconfig-001-20260622    gcc-8.5.0
+arc                   randconfig-002-20260622    gcc-8.5.0
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    clang-23
+arm                                 defconfig    gcc-16.1.0
+arm                   randconfig-001-20260622    gcc-8.5.0
+arm                   randconfig-002-20260622    gcc-8.5.0
+arm                   randconfig-003-20260622    gcc-8.5.0
+arm                   randconfig-004-20260622    gcc-8.5.0
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-16.1.0
+arm64                               defconfig    gcc-16.1.0
+arm64                 randconfig-001-20260622    gcc-8.5.0
+arm64                 randconfig-002-20260622    gcc-8.5.0
+arm64                 randconfig-003-20260622    gcc-8.5.0
+arm64                 randconfig-004-20260622    gcc-8.5.0
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                                defconfig    gcc-16.1.0
+csky                  randconfig-001-20260622    gcc-8.5.0
+csky                  randconfig-002-20260622    gcc-8.5.0
+hexagon                          allmodconfig    gcc-16.1.0
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon                             defconfig    gcc-16.1.0
+hexagon                        randconfig-001    gcc-11.5.0
+hexagon               randconfig-001-20260622    gcc-11.5.0
+hexagon               randconfig-001-20260622    gcc-8.5.0
+hexagon                        randconfig-002    gcc-11.5.0
+hexagon               randconfig-002-20260622    gcc-11.5.0
+hexagon               randconfig-002-20260622    gcc-8.5.0
+i386                             allmodconfig    clang-22
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-16.1.0
+i386                             allyesconfig    clang-22
+i386        buildonly-randconfig-001-20260622    gcc-14
+i386        buildonly-randconfig-002-20260622    gcc-14
+i386        buildonly-randconfig-003-20260622    gcc-14
+i386        buildonly-randconfig-004-20260622    gcc-14
+i386        buildonly-randconfig-005-20260622    gcc-14
+i386        buildonly-randconfig-006-20260622    gcc-14
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260622    clang-22
+i386                  randconfig-002-20260622    clang-22
+i386                  randconfig-003-20260622    clang-22
+i386                  randconfig-004-20260622    clang-22
+i386                  randconfig-005-20260622    clang-22
+i386                  randconfig-006-20260622    clang-22
+i386                  randconfig-007-20260622    clang-22
+i386                  randconfig-011-20260622    gcc-14
+i386                  randconfig-012-20260622    gcc-14
+i386                  randconfig-013-20260622    gcc-14
+i386                  randconfig-014-20260622    gcc-14
+i386                  randconfig-015-20260622    gcc-14
+i386                  randconfig-016-20260622    gcc-14
+i386                  randconfig-017-20260622    gcc-14
+loongarch                        allmodconfig    clang-19
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch                           defconfig    clang-23
+loongarch                      randconfig-001    gcc-11.5.0
+loongarch             randconfig-001-20260622    gcc-11.5.0
+loongarch             randconfig-001-20260622    gcc-8.5.0
+loongarch                      randconfig-002    gcc-11.5.0
+loongarch             randconfig-002-20260622    gcc-11.5.0
+loongarch             randconfig-002-20260622    gcc-8.5.0
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    clang-23
+m68k                                defconfig    clang-23
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+microblaze                          defconfig    clang-23
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+mips                        qi_lb60_defconfig    clang-17
+nios2                            allmodconfig    clang-20
+nios2                             allnoconfig    clang-23
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    clang-23
+nios2                          randconfig-001    gcc-11.5.0
+nios2                 randconfig-001-20260622    gcc-11.5.0
+nios2                 randconfig-001-20260622    gcc-8.5.0
+nios2                          randconfig-002    gcc-11.5.0
+nios2                 randconfig-002-20260622    gcc-11.5.0
+nios2                 randconfig-002-20260622    gcc-8.5.0
+openrisc                         allmodconfig    clang-20
+openrisc                          allnoconfig    clang-23
+openrisc                          allnoconfig    gcc-16.1.0
+openrisc                            defconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-23
+parisc                            allnoconfig    gcc-16.1.0
+parisc                           allyesconfig    clang-17
+parisc                              defconfig    gcc-16.1.0
+parisc                         randconfig-001    gcc-14.3.0
+parisc                randconfig-001-20260622    gcc-14.3.0
+parisc                         randconfig-002    gcc-14.3.0
+parisc                randconfig-002-20260622    gcc-14.3.0
+parisc64                            defconfig    clang-23
+powerpc                     akebono_defconfig    clang-23
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-23
+powerpc                           allnoconfig    gcc-16.1.0
+powerpc                        randconfig-001    gcc-14.3.0
+powerpc               randconfig-001-20260622    gcc-14.3.0
+powerpc                        randconfig-002    gcc-14.3.0
+powerpc               randconfig-002-20260622    gcc-14.3.0
+powerpc64                      randconfig-001    gcc-14.3.0
+powerpc64             randconfig-001-20260622    gcc-14.3.0
+powerpc64                      randconfig-002    gcc-14.3.0
+powerpc64             randconfig-002-20260622    gcc-14.3.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                             allnoconfig    gcc-16.1.0
+riscv                            allyesconfig    clang-23
+riscv                               defconfig    gcc-16.1.0
+s390                             allmodconfig    clang-17
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-16.1.0
+s390                                defconfig    gcc-16.1.0
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-23
+sh                                allnoconfig    gcc-16.1.0
+sh                               allyesconfig    clang-17
+sh                                  defconfig    gcc-14
+sparc                             allnoconfig    clang-23
+sparc                             allnoconfig    gcc-16.1.0
+sparc                               defconfig    gcc-16.1.0
+sparc                          randconfig-001    gcc-16.1.0
+sparc                 randconfig-001-20260622    gcc-16.1.0
+sparc                          randconfig-002    gcc-16.1.0
+sparc                 randconfig-002-20260622    gcc-16.1.0
+sparc                       sparc32_defconfig    gcc-16.1.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64                        randconfig-001    gcc-16.1.0
+sparc64               randconfig-001-20260622    gcc-16.1.0
+sparc64                        randconfig-002    gcc-16.1.0
+sparc64               randconfig-002-20260622    gcc-16.1.0
+um                               allmodconfig    clang-17
+um                                allnoconfig    clang-16
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-16.1.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                             randconfig-001    gcc-16.1.0
+um                    randconfig-001-20260622    gcc-16.1.0
+um                             randconfig-002    gcc-16.1.0
+um                    randconfig-002-20260622    gcc-16.1.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-22
+x86_64                            allnoconfig    clang-22
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-22
+x86_64               buildonly-randconfig-001    clang-22
+x86_64      buildonly-randconfig-001-20260622    clang-22
+x86_64               buildonly-randconfig-002    clang-22
+x86_64      buildonly-randconfig-002-20260622    clang-22
+x86_64               buildonly-randconfig-003    clang-22
+x86_64      buildonly-randconfig-003-20260622    clang-22
+x86_64               buildonly-randconfig-004    clang-22
+x86_64      buildonly-randconfig-004-20260622    clang-22
+x86_64               buildonly-randconfig-005    clang-22
+x86_64      buildonly-randconfig-005-20260622    clang-22
+x86_64               buildonly-randconfig-006    clang-22
+x86_64      buildonly-randconfig-006-20260622    clang-22
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260622    clang-22
+x86_64                randconfig-002-20260622    clang-22
+x86_64                randconfig-003-20260622    clang-22
+x86_64                randconfig-004-20260622    clang-22
+x86_64                randconfig-005-20260622    clang-22
+x86_64                randconfig-006-20260622    clang-22
+x86_64                randconfig-011-20260622    clang-22
+x86_64                randconfig-012-20260622    clang-22
+x86_64                randconfig-013-20260622    clang-22
+x86_64                randconfig-014-20260622    clang-22
+x86_64                randconfig-015-20260622    clang-22
+x86_64                randconfig-016-20260622    clang-22
+x86_64                randconfig-071-20260622    gcc-14
+x86_64                randconfig-072-20260622    gcc-14
+x86_64                randconfig-073-20260622    gcc-14
+x86_64                randconfig-074-20260622    gcc-14
+x86_64                randconfig-075-20260622    gcc-14
+x86_64                randconfig-076-20260622    gcc-14
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-23
+xtensa                            allnoconfig    gcc-16.1.0
+xtensa                           allyesconfig    clang-20
+xtensa                generic_kc705_defconfig    gcc-16.1.0
+xtensa                         randconfig-001    gcc-16.1.0
+xtensa                randconfig-001-20260622    gcc-16.1.0
+xtensa                         randconfig-002    gcc-16.1.0
+xtensa                randconfig-002-20260622    gcc-16.1.0
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
