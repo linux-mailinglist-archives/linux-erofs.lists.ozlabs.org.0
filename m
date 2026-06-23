@@ -1,56 +1,48 @@
-Return-Path: <linux-erofs+bounces-3729-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3730-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id PtqdEfn1OWrRzQcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3729-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 04:56:57 +0200
+	id hSrgIrv4OWpMzgcAu9opvQ
+	(envelope-from <linux-erofs+bounces-3730-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 05:08:43 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C83D6B3A6D
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 04:56:56 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD1786B3B80
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 05:08:41 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=zjuU89t7;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3729-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3729-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b="bte6f/g0";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3730-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3730-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gkqTy0r1cz2xwP;
-	Tue, 23 Jun 2026 12:56:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gkqlW1ylBz2y71;
+	Tue, 23 Jun 2026 13:08:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782183414;
-	cv=none; b=byXu3J3OAYyhxxP24MfsabbVSpsQH45YjDJGlZyGXXpm3cz0k73uIeGHVySgnSAF+GLyBHWg4pEAVH5mgJfXi2Mmt8/5HnMuYPZI62W/cTluA8/ksv7zf5sCdrVQAXMVXEB92oayax6SC+e93kKffaIJzA5/nUi1xm4xlu8N3mtP3SFACntBj42cvgwc5ciWJW7AbZBTvBc/Ys3s2vei6HrBV+fMZvxe8MfCbSafbd1/83ncuKI+XbtVx+A555snjZoC8nDiIy2Smv0ptSOBCNZuGCLKOOqCdlIRWXcT/JHNaXrq78uOYnq93lrgj1Mjdwq3rObvW2HI7x2YaS3Mxw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782184119;
+	cv=none; b=Z0lsCz5ESUWeqECJ/7lrljWu6wpjJS6OzGcyPI/5xtKEuleRKOrcmJdW9X6kDKu7F+XBjf+SrVoni/tDNRWSHCqeQsyc/WP9ZaA+/kz8KOw6jkrySh7RjARiZDgj8Z7MNmbz7Ix9JBHdOHmE7rrUnq4/65WKc81c/Dtc1RSVJDBVf38BjdSpDNiplNCU0Ib/hsbRpIB2AMYexoXmoSff2byuwIZPzAXwwyjT1OxEXNm0eHHDU6dBOQaMZ/QEGs+heXYgtKrX6iLmR43fJQL7FQKVtSDZyamMSq9ewUlEJx7z/p68gwMMjMhSJIRz311Db2Vp7PUCwCR733A1BYYPyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782183414; c=relaxed/relaxed;
-	bh=3FP7inGyWy0E6+I1Eu/AJAPBgjw2ccMJU9V06wXPaqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=N09uAUSUtG5plvC1k3HgKZQk77tRfrOWKeUqpgUaQob/jZyRw86KwnkKJIksrDThmv+KlNgbKAf0PU1/CnNIaTF11u1g8ZLJAyLTJVwsPoS7vqAq+fgN6OCLuVpmlV0WxnzjReuEmrmZV+HfrOYMNkn33euSJdMTI0VGA6U6Bm2khuaJ7UEZS8baeRsHpXBrKm72OZrUzV74OJW2D2DUEgR2+ulXsEqX9OjaV2iPM8qiccLhaa0V8EFlbIQJExgfS1QzDH3OXKrO1sscSemey90lokJVNcXevo2nkYo6ZLhcC5KwRVdQRIu0Fvp7g+BhBRzlVNsqylCUaU5iCKlgGg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=zjuU89t7; dkim-atps=neutral; spf=pass (client-ip=113.46.200.226; helo=canpmsgout11.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+	t=1782184119; c=relaxed/relaxed;
+	bh=zHiDri9KzHNlCTTPg63+52RFsjBrh001hiLblpMgP9A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Ztz4D8WNC4Yuf3dMUWWF/7aHgaSsdnW1eoIzZ5M6jBGAgJlWUYs6KS/mDLp0D5ONB3ft9SnB7CXNci6b5y3UAKCIpF1j/rXbr6zDY358Ah+SrqsBZHcVmm8xiZwQ5oztk6qt44FzN/PHuiJMggjL7eUgUtUugTAUzrQ52npVEcFSbeMg4/6INVGI9XSmA5yw1U4FIWutSZqdP7UxOmZuDi0G0VkkhF/2dthGQ/XiwnVNLo/XCUPLT1ZL1sUaxAV/niw48pcrXUPz38P7B1Y9sfrtr1gpldDzDNDIHBhc5rM+lDh8PbNsJw0NDOj/nV8KmiitPY7cfw9vD/xk78eMgw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bte6f/g0; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkqTx2LYfz2xnQ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 12:56:53 +1000 (AEST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=3FP7inGyWy0E6+I1Eu/AJAPBgjw2ccMJU9V06wXPaqI=;
-	b=zjuU89t7Sp/UZRwcTT5ZJlcHRAgH1jMiQDzH8dqXcExtejF+xNLbKCrbbFpM07HzYeAqASvqZ
-	s9UUwgbGhwD6mtIg1EVFBv55C9dOL0wKm9+SkOwXW1MgzMhKdY7F1WG9jir3vdmxJPt1q3Bh3iA
-	jy48XyDN6D5YJlt1S+YItdM=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gkqJT4mvszKm5J;
-	Tue, 23 Jun 2026 10:48:41 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2FC5D40563;
-	Tue, 23 Jun 2026 10:56:46 +0800 (CST)
-Received: from [100.102.28.251] (100.102.28.251) by
- kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 23 Jun 2026 10:56:45 +0800
-Message-ID: <7d47c915-7db4-4510-8d62-5fda278b0ed6@huawei.com>
-Date: Tue, 23 Jun 2026 10:56:45 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkqlT09mKz2xwP
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 13:08:35 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782184111; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=zHiDri9KzHNlCTTPg63+52RFsjBrh001hiLblpMgP9A=;
+	b=bte6f/g0Wf3HRQUPpBmtaj8BanNj8OpvR7JWSuP3jTvwLHNFjCrYMFkdZTK4OlxpKbn2xVD9TW1C6BBLnyiQr7N0OHPjWPXEJPWnwcKOhhGN0PlobyuAtMQJAZta4CFD6KRBmemOHDaVYcCaLKGA2z3LcY/v5QWExytwwUJso1s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X5SX67O_1782184109;
+Received: from 30.221.132.85(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5SX67O_1782184109 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jun 2026 11:08:29 +0800
+Message-ID: <a5230f86-74af-4fab-8806-a118a0cf3a98@linux.alibaba.com>
+Date: Tue, 23 Jun 2026 11:08:28 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,113 +55,126 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH 2/2] erofs-utils: lib: honor rebuild whiteouts for
- recreated dirs
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-CC: <zhukeqian1@huawei.com>
-References: <20260622034248.1047783-1-zhaoyifan28@huawei.com>
- <20260622034248.1047783-2-zhaoyifan28@huawei.com>
- <7f1e369d-f3fe-4aab-976b-29c5e765fca3@linux.alibaba.com>
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-In-Reply-To: <7f1e369d-f3fe-4aab-976b-29c5e765fca3@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: erofs: is z_erofs_put_pcluster()'s sbi access in the same UAF
+ window as 1aee05e814d2?
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Zhan Xusheng <zhanxusheng1024@gmail.com>
+Cc: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Jianan Huang <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Zhan Xusheng <zhanxusheng@xiaomi.com>
+References: <20260623024946.3420476-1-zhanxusheng@xiaomi.com>
+ <0e2df016-dc1a-4dc5-8461-5a778f029247@linux.alibaba.com>
+In-Reply-To: <0e2df016-dc1a-4dc5-8461-5a778f029247@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [100.102.28.251]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+X-Spamd-Result: default: False [-8.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3730-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3729-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:zhukeqian1@huawei.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,lists.ozlabs.org,vger.kernel.org,xiaomi.com];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:zhanxusheng1024@gmail.com,m:xiang@kernel.org,m:chao@kernel.org,m:jnhuang95@gmail.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:zhanxusheng@xiaomi.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	HAS_XOIP(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TAGGED_RCPT(0.00)[linux-erofs];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,huawei.com:dkim,huawei.com:email,huawei.com:mid,huawei.com:from_mime]
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5C83D6B3A6D
+X-Rspamd-Queue-Id: AD1786B3B80
 
 
-On 2026/6/22 11:58, Gao Xiang wrote:
->
->
-> On 2026/6/22 11:42, Yifan Zhao wrote:
->> When rebuilding from upper to lower, a whiteout below an already
->> recreated directory should keep that directory but stop older lower
->> entries from being merged into it.
->>
->> Mark the existing directory opaque before applying the generic
->> non-directory bailout.
->>
->> Reported-by: cayoub-oai <276123840+cayoub-oai@users.noreply.github.com>
->
-> I hope it could be a real email if the reporter
-> can give us, which helps us to give the exact
-> credits too..
->
->> Closes: https://github.com/erofs/erofs-utils/issues/49
->> Assisted-by: Codex:GPT-5.5
->> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
->> ---
->>   lib/rebuild.c | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/lib/rebuild.c b/lib/rebuild.c
->> index 51dfe18..108a464 100644
->> --- a/lib/rebuild.c
->> +++ b/lib/rebuild.c
->> @@ -401,7 +401,13 @@ static int erofs_rebuild_dirent_iter(struct 
->> erofs_dir_context *ctx)
->>               .nid = ctx->de_nid
->>           };
->>           ret = erofs_read_inode_from_disk(&src);
->> -        if (ret || !S_ISDIR(src.i_mode))
->> +        if (ret)
->> +            goto out;
->
->         if (S_ISDIR(d->inode->i_mode) &&
->             erofs_inode_is_whiteout(&src))
->
-> I guess?  If the upper is not a directory, I think
-> it should be ignored instead?
->
-S_ISDIR has already been checked earlier in this block, so I think 
-current logic is enouth.
 
+On 2026/6/23 10:52, Gao Xiang wrote:
+> 
+> 
+> On 2026/6/23 10:49, Zhan Xusheng wrote:
+>> From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+>>
+>> Hi Xiang,
+>>
+>> Following the race model established by commit 1aee05e814d2 ("erofs: fix
+>> use-after-free on sbi->sync_decompress") -- i.e. unmount does not drain
+>> the async decompress kworker, and unlocking the output folios lets inode
+>> eviction (truncate_inode_pages waits on the locked folios) and thus the
+>> unmount path proceed to kfree(sbi) -- I'd like to ask about another sbi
+>> access that also happens after the unlock, in the same kworker.
+>>
+>> In z_erofs_decompress_pcluster():
+>>
+>>     erofs_onlinefolio_end(page_folio(page), err, true);  /* unlock */
+>>     ...
+>>     z_erofs_put_pcluster(sbi, pcl, try_free);
+>>
+>> and in z_erofs_put_pcluster():
+>>
+>>     if (try_free && xa_trylock(&sbi->managed_pslots)) {
+>>         free = __erofs_try_to_release_pcluster(sbi, pcl);
+>>         xa_unlock(&sbi->managed_pslots);
+>>     }
+>>
+>> So in the try_free path it dereferences sbi->managed_pslots after the
+>> output folios have been unlocked, which on control-flow alone looks
+>> similar to the UAF fixed by 1aee05e814d2.
+>>
+>> What makes me unsure, though, is a difference from the sync_decompress
+>> case: sync_decompress is just a plain sbi member, whereas here
+>> z_erofs_put_pcluster() is still operating on a live pcluster that is
+>> registered in sbi->managed_pslots / the managed cache. So it's not clear
+>> to me whether the pcluster / managed-cache lifetime rules implicitly pin
+>> the filesystem instance and keep sbi valid across this window.
+>>
+>> This also seems much harder to hit than the sync_decompress case: it is
+>> conditional (try_free, i.e. non-managed compressed pages, plus the
+>> pcluster refcount reaching zero), the window between the unlock and
+>> put_pcluster is narrow, and unmount still has evict_inodes/put_super work
+>> to do before kfree(sbi) -- which may be why syzbot didn't reach it.
+>>
+>> Is there any guarantee that sbi stays valid here after the output folios
+>> are unlocked (e.g. via pcluster / managed-cache lifetime or RCU), or
+>> could unmount race with this path similarly to 1aee05e814d2? I'm asking
+>> rather than sending a patch since I couldn't convince myself either way.
+> 
+> No, this is totally false-positive.
+
+In short, I saw some similar report from LLMs, but I think
+erofs_shrinker_unregister() should block this from kfree(sbi)
+by design.
 
 Thanks,
+Gao Xiang
 
-Yifan
+> 
+>>
+>> Thanks,
+>>    Zhan Xusheng
+> 
 
-> Thanks,
-> Gao Xiang
 
