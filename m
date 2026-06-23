@@ -1,57 +1,71 @@
-Return-Path: <linux-erofs+bounces-3734-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3735-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mqvrOu8rOmoX3QcAu9opvQ
-	(envelope-from <linux-erofs+bounces-3734-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 08:47:11 +0200
+	id XnVMDJ2POmpQAAgAu9opvQ
+	(envelope-from <linux-erofs+bounces-3735-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 15:52:29 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12EDC6B4A11
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 08:47:11 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 209BF6B79CA
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jun 2026 15:52:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=xMyCMmjD;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3734-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3734-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	dkim=pass header.d=infradead.org header.s=bombadil.20210309 header.b=jn5S83jL;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3735-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3735-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=lst.de (policy=none);
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gkwbd04W2z2y71;
-	Tue, 23 Jun 2026 16:47:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gl62K2tVTz2y71;
+	Tue, 23 Jun 2026 23:52:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782197228;
-	cv=none; b=dpPES/9r05mYNLKMD14yROruSLVGAFrTaGEe2m5vxXmpZg9jEHPPEszDaOtA9E2lvd/6CZ2+oz94TbHYmafQee2bVIwTThiXa5A6H5Sir65lmGouBaNtuFj0dctN49mUrFJmk8aJZgDALzvytgKjGQ3xmOc4Mgi4f+EIAgA0j6mRKLiMX4iMtcRsAOwhsJQeGW1MO/yKWISTWDWhGJCxcuh7Bt6GuLBkbMdfU9V6RAiKUUiYO7FJS+7s+KiaHoHsd2IMh3LQgnMLakIyPl7MZ9rhzTNnH5gml2gAMS6vhofIzeNgDh2OTv6yFQ0KDSGafxBeL8ylcIldyIHRVUllKg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782222745;
+	cv=none; b=bnFkM44Tx63xcdQKpKv/Yk2935WPahNzHs4CApJYqBw0bjzfFvjEiy3aIcWdqTcGd07TzUVuvZdra2dFDeasUXhSt+SI5bc97xwl9NozS8Amo7becuo6uKh0Xs1tt3gXWS3Iym8T6QVrmnj7lEnCHmy8TG5gyoecArAKl9b5yySn/LbFxoOKMBVuNJtOqm4lu4ZLL6HvIALQf3A0zeNxU6HiSpPzD5w4MC3K+VCiwgSI3AjW0uA4nT3+HgMmJKXGtV9O6c6Y17J49y5kn89of16py6SCb/xeFylewKFggOM+tzjEJcMctewCk/Ks8y8NW6ddKbujEq+C1B8Be4eCMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782197228; c=relaxed/relaxed;
-	bh=Xn117A7+a9k6cNgDkcElF85GgSiQTqeeBA9R5N3yXgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JMuBjwMWdJlBzaND8JxEahGO+uRzAurwJsqyICZkwM/O0lkbq0PRM4UNwVGTSPzdYMNdsUsWgI2nwoocbzS/fNHmNOGdAfVhniRVqgU2ZuTj4CeP8ooCuHOLTCL3dTJHoTxwikQpl0hf8l/IIvziO5mbWyAhrCTfwQ/+aasMQL/KBf2tnv86ePyX4K4d/QFfciXGBtm7ihjIXhsYSX8DYUuSAD/SOBKC1ZLT1bnJjJoWwGBjKG6N8RTtL2+tIgIaEba9uuh9nJAOhzQ3+OIqowb60JAktXouY6O9k0xTuT6tV2n8rPo0NIOVZuVMWxvraj2Yll+BrvAd/BvrTwII3Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=xMyCMmjD; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	t=1782222745; c=relaxed/relaxed;
+	bh=PoOEKS+eDTfInw4OHh9azlmGlb94rL+G6EWiMKCHpNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dt53gMImF5eW2izcToeneCqizsPrRAgtyQzQEOi68PEmyJhZXTxN3jnkyXe361dJ+Hysfloe9E4EiWMyr4nynGVWdSyFoV+aN1YJJfPF4Hjwd1IVbY7x0ayzsV8H1bDLqIMoW/+0z0A/CmW+sWdZujVIuBL6RSTHBYGrfJQ34JpH2eI6TbmpC3MouiX9JdGby1CXcsv3ksFT5xQL4EUb/47F2adJ5+cyWWrGce3GKSvUs/aOR+cHQ9ZAuitIOamKRblSHL+YvWV41aZiiFBDFUYFsTr++kZYmv1rn/j/VNFA4L0AEzJsp9TjyzQVUO/geITiLOmnaO0vN5bXHVQalg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=lst.de; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jn5S83jL; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+1ce5920da89166e1197d+8339+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gkwbb0GnLz2xl6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 16:47:06 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782197222; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Xn117A7+a9k6cNgDkcElF85GgSiQTqeeBA9R5N3yXgE=;
-	b=xMyCMmjDLQ5P14f41q6UNBwOEZ3smkzBkhZAl+IFiLflClp9uL3nV9gS2VxZPajOMOPQRjqp0q6j/S2+byizOBdMghp3wHgEpTRQJcJwpgEx0d2af5SA5SbxjPJIHPFsuOiessG1E/jAnVjtnCdeCMSwtB+kVrjKZgzCIJM+qew=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X5T4-1G_1782197216;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5T4-1G_1782197216 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Jun 2026 14:47:01 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Yifan Zhao <zhaoyifan28@huawei.com>,
-	Bastian Schmitz <bastian.schmitz@vorwerk.de>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v3 1/2] erofs-utils: lib: don't abort on compression fallback
-Date: Tue, 23 Jun 2026 14:46:55 +0800
-Message-ID: <20260623064655.3252148-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20260623025334.1049210-1-zhaoyifan28@huawei.com>
-References: <20260623025334.1049210-1-zhaoyifan28@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gl62H07Lhz2xM7
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 23:52:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=PoOEKS+eDTfInw4OHh9azlmGlb94rL+G6EWiMKCHpNM=; b=jn5S83jLuCl3m+DKs0KX2qnWLx
+	m2yF7h06gH9mTy/pDA92JeRc2O5jP05jl4ogvEK0WS/W+H2H/z3IkvpjXXgmHUpvHT3sptVLvL7Br
+	bdj61w5J3Idd4NY/Zsc55aMTtERBE7uWQwMF+2/Q1aC0sRMqxRDKFRxBcc5cshUtO69Ggren/x0SY
+	h8pgGlgpkm4+nUORnZ/nDCZO9pXSB6IVG3ZOpm0ZJOk3keO0M185jKz4nbdMD+4nbb5wRCPkOSlA3
+	1v37DXKZK7FKgA7oHSLZygJ36ECcR5KQ52Enk4r4EyA8A3DUt7SoRgfLPxdwc+/PDcp90jw/dz7GC
+	VNZ4Ipsw==;
+Received: from [2001:4bb8:2f6:ef61:5b2b:8638:3844:9408] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wc1Xy-00000006NCY-17nf;
+	Tue, 23 Jun 2026 13:52:14 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Cc: Kelu Ye <yekelu1@huawei.com>,
+	Yifan Zhao <zhaoyifan28@huawei.com>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Hyunchul Lee <hyc.lee@gmail.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	fuse-devel@lists.linux.dev,
+	ntfs3@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: don't build bios/contexts over multiple iomaps v2
+Date: Tue, 23 Jun 2026 15:51:35 +0200
+Message-ID: <20260623135208.1812933-1-hch@lst.de>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,144 +78,61 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-7.70 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [1.40 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.19)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3734-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:djwong@kernel.org,m:yekelu1@huawei.com,m:zhaoyifan28@huawei.com,m:ritesh.list@gmail.com,m:joannelkoong@gmail.com,m:linkinjeon@kernel.org,m:sj1557.seo@samsung.com,m:hyc.lee@gmail.com,m:almaz.alexandrovich@paragon-software.com,m:miklos@szeredi.hu,m:fuse-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:riteshlist@gmail.com,m:hyclee@gmail.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3735-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,vorwerk.de:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[huawei.com,gmail.com,kernel.org,samsung.com,paragon-software.com,szeredi.hu,lists.linux.dev,lists.ozlabs.org,vger.kernel.org];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,lst.de:mid,lst.de:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 12EDC6B4A11
+X-Rspamd-Queue-Id: 209BF6B79CA
 
-From: Yifan Zhao <zhaoyifan28@huawei.com>
+Hi all,
 
-File-level compression fallback is control flow, not a real error.
-Return an erofs-specific status code for it instead of overloading
--ENOSPC, which can also report real space failures.
+this patch changes how iomap submits bios for reads.  The old behavior
+to build up bios across iomap was already considered problematic for
+a while, but we now ran into a erofs bug because of it, so it's time
+to finally fix it.
 
-Keep the global compression context reusable for that fallback while
-preserving the fatal state for real errors.
+It would be great to get the fix into 7.2 as the fixed bug can be
+triggered by users.
 
-Fixes: a729584ef975 ("erofs-utils: mkfs: avoid hanging if fragment is on and tmpdir is full")
-Reported-by: Bastian Schmitz <bastian.schmitz@vorwerk.de>
-Closes: https://github.com/erofs/erofs-utils/issues/50
-Assisted-by: Codex:GPT-5.5
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/err.h |  3 +++
- lib/compress.c      | 10 +++++++---
- lib/inode.c         |  6 +++---
- 3 files changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/include/erofs/err.h b/include/erofs/err.h
-index 7dacc917a4c1..bf5a4e1cf9b7 100644
---- a/include/erofs/err.h
-+++ b/include/erofs/err.h
-@@ -53,6 +53,9 @@ static inline void * ERR_CAST(const void *ptr)
- 	return (void *) ptr;
- }
- 
-+/* EROFS-specific error codes */
-+#define EROFS_RETCODE_FALLBACK		MAX_ERRNO
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/lib/compress.c b/lib/compress.c
-index ea07409defef..0f448e400a2d 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1375,7 +1375,7 @@ int erofs_commit_compressed_file(struct z_erofs_compress_ictx *ictx,
- 	    legacymetasize >= inode->i_size) {
- 		z_erofs_dedupe_ext_commit(true);
- 		z_erofs_dedupe_commit(true);
--		ret = -ENOSPC;
-+		ret = EROFS_RETCODE_FALLBACK;
- 		goto err_free_meta;
- 	}
- 	z_erofs_dedupe_ext_commit(false);
-@@ -2031,7 +2031,11 @@ err_free_idata:
- out:
- #ifdef EROFS_MT_ENABLED
- 	pthread_mutex_lock(&ictx->mutex);
--	ictx->seg_num = ret < 0 ? INT_MAX : 0;
-+	if (ret < 0 && ret != EROFS_RETCODE_FALLBACK)
-+		/* mark as failed to avoid further processing */
-+		ictx->seg_num = INT_MAX;
-+	else
-+		ictx->seg_num = 0;
- 	pthread_cond_signal(&ictx->cond);
- 	pthread_mutex_unlock(&ictx->mutex);
- #endif
-@@ -2044,7 +2048,7 @@ int erofs_begin_compress_dir(struct erofs_importer *im,
- {
- 	if (!im->params->compress_dir ||
- 	    inode->i_size < Z_EROFS_LEGACY_MAP_HEADER_SIZE)
--		return -ENOSPC;
-+		return EROFS_RETCODE_FALLBACK;
- 
- 	inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
- 	erofs_sb_set_fragments(inode->sbi);
-diff --git a/lib/inode.c b/lib/inode.c
-index c225faa121e7..4c2d094bac7e 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1507,7 +1507,7 @@ static int erofs_mkfs_job_write_file(struct erofs_mkfs_job_ndir_ctx *ctx)
- 
- 	if (ctx->ictx) {
- 		ret = erofs_write_compressed_file(ctx->ictx);
--		if (ret != -ENOSPC)
-+		if (ret != EROFS_RETCODE_FALLBACK)
- 			goto out;
- 		if (lseek(ctx->fd, ctx->fpos, SEEK_SET) < 0) {
- 			ret = -errno;
-@@ -1594,7 +1594,7 @@ static int erofs_mkfs_create_directory(const struct erofs_mkfs_btctx *ctx,
- 		inode->datalayout = EROFS_INODE_FLAT_INLINE;
- 
- 		ret = erofs_begin_compress_dir(ctx->im, inode);
--		if (ret && ret != -ENOSPC)
-+		if (ret && ret != EROFS_RETCODE_FALLBACK)
- 			return ret;
- 	} else {
- 		DBG_BUGON(inode->datalayout != EROFS_INODE_FLAT_PLAIN);
-@@ -2391,7 +2391,7 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_importer *im,
- 		ret = erofs_write_compressed_file(ictx);
- 		if (!ret)
- 			goto out;
--		if (ret != -ENOSPC)
-+		if (ret != EROFS_RETCODE_FALLBACK)
- 			 return ERR_PTR(ret);
- 
- 		ret = lseek(fd, 0, SEEK_SET);
--- 
-2.43.5
-
+Changes since v1:
+ - don't submit fuse context after each iteration
+ - consolidate some code to support the above
+ - fix a bug in the fs PI support found while doing the above
 
