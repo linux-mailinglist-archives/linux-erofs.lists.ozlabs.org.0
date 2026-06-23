@@ -1,61 +1,61 @@
-Return-Path: <linux-erofs+bounces-3743-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3744-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TDQeBYodO2rtQwgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3743-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 01:58:02 +0200
+	id AuLCIqIdO2r2QwgAu9opvQ
+	(envelope-from <linux-erofs+bounces-3744-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 01:58:26 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 246426BAA30
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 01:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A51696BAA3E
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 01:58:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TNsrka6j;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3743-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3743-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Jx5jXtLO;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3744-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3744-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4glMT24Dnmz2yRC;
-	Wed, 24 Jun 2026 09:57:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4glMTW3P31z2yY1;
+	Wed, 24 Jun 2026 09:58:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782259078;
-	cv=none; b=PDZWt2Ul/X6rVwfIsY8bjRTAu2JDouD26DoccPhwh6HE8ljl9unmsiQllA0dSrv6IcrC01O0zqSg5sVQBGbQDrYlrmKC5Ifx29scBVXjE4agMwq1aYS4gB0HGn5Jx/Sq1nwdP75tLrZvEsjAf5lMwQaLwOf6Xnq6t5vrtAt1unHnuu/zwr6ITqLkqH+951q3DVLu0S1sv0XZ6hLFIi9PlwPD2mokX12vdaRGpVAcmUFBFhYuV9xJcn2pZFxeahE0nynMuGzWp1qvRzLbzzMBgBGpbdr+d9SGOND8WU3Dyyta+9zQ2TM7uWPJoN0tNoppdFKvaLTizszHU+6/CkCgug==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782259103;
+	cv=none; b=J3q1XfxkF8JonS4/d/Sanj4R4w7/Som/jpW3uQOQmgXzQ4+MyNbvqni4G4znEKMZWjv5Vp/UkXj247lN/v3fRQvRRjl/ENEtAkmb5xj/oEHqFNUkbuV6IcT5p3Nf4xZ4PGp6UlLjr8xqyuQSZH9iVyYpTR1aA7ypSgj8u0hMZOb3WLLiY5eRYJBN1USUL18FddTrBUtgBZxNmsDYBYYo369a6uYu1nxyNUvHHHnoPo+M3OzZVebyQMAk28evJDG5Y1zh4Bwh04aS2Ru4I7aC/ULLrWVPQyrRv499cbEbyOW2+Jn2sASxgbn4SQQAeiZXSfKf3AQMj6ts+WVlx9A+0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782259078; c=relaxed/relaxed;
-	bh=vo3jkQBWmueCqXflda8hT63tzPuxvWggLYs1HwSrVm4=;
+	t=1782259103; c=relaxed/relaxed;
+	bh=O5yRpEyknAxQBuWx/gb9cR/auuwDKfX3rH28YfAhJjA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hk9nnVKkeq8kxJe9cSKLq0Ph0igvj9v8u1D1tO3EeaL/F2jYbclze2AJ8HqwI3lSQOfrBc8CrQQA2swtsFii+7RordHWylrHbZZUWFhrJuVQbKccf922+/AcmfTd6yXvaOh2WFOQbP522qLmARc7g3296fKp2vFF7qr16NDNhjVKcvAR3tgDX7FLe9cLWuTsIALA3bNNTuK4QPxOIzLm/w8KMsLKOr2LPIfd5kcNKWIapSYIbgilIOBkbfp5OlQVoDVHiYorQ9bYRSr4+2f8Z+vl+j6r3Y9iEwanpR8vbgAUufxj4zOXyV2wUkyb7yd2F/rCamDgG51ksozRjL71DQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TNsrka6j; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=linkinjeon@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+	 To:Cc:Content-Type; b=aFoZ/en9RA1J7+T2TJU7ETLEEtm+GAZCMyhA1VZQhGDHlExU0FNWa+0R7HS73tjcA5zJLV5n8nZOlVWc4C415ONWw8rIspNyrvHXTJyTJ319+A67CXvjw9FcGuS7aztcjKYZnqV8W25A67jpiDnqQifoubAhPgGvYHuXFvvuY1AYkUeHoBeA7Dl/RSf7V0IAbxhHgp23Q7g9UvuP3o5uHXGfmVlVlQTSiL40xPO4VXbFbvu1cYqCYVN2AB/qE/fFw2m3zTcv9yU+0FVX4AKKUsCjoCe4puvmsX9qBl97IV7qh/lWwi3lG5H9D5JII9zRUKmC404uTY5V7uKI9E3oew==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jx5jXtLO; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=linkinjeon@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4glMT15rVBz2xJT
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jun 2026 09:57:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4glMTV4W0Qz2xJT
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jun 2026 09:58:22 +1000 (AEST)
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C88A64027D
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 23:57:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E9FE1F00AC4
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 23:57:54 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E3DFE60138
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 23:58:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7691F00ACA
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 23:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782259074;
-	bh=vo3jkQBWmueCqXflda8hT63tzPuxvWggLYs1HwSrVm4=;
+	s=k20260515; t=1782259099;
+	bh=O5yRpEyknAxQBuWx/gb9cR/auuwDKfX3rH28YfAhJjA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=TNsrka6jYQMLueD/PdSasDs+OjVGkeRSLwKwpfhI7Ix02RkrecnNvRB2Nhyi0eicc
-	 NiY9OQO6xlDnlj2Z3HsYdZBLqRAJ8/cA1Fjd3YOmJAlv7+KL850tbn2Vi0rmiNog2O
-	 dHpCe9cDf6OMbjE3pPD+XkTxyBIRJkfsR5LJZ9VXiZUPWNSi0ykS52jrP2QKLtzzXF
-	 k48+AlWo/FsLD3jxA2JOLBh1lSJRhd3wLl6p8zumHUcrysJGzu4tAHJz1P9uBGniuY
-	 kSrEJNzPNHQ7E17CWo2tM8WOPrXeIhG8su2u3MVTkx1I7QOdrwvNQyl69wO5Nua3jz
-	 j7lfsBCz1ODXg==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-befee9e5ef7so49157966b.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 16:57:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/V4cWaYe2VxHZTSMSr5iXkF3DDMVAp1PGCD+aexUix28ZTEvHGFCNhp41uFWfH0reFHLrX8HrRq0PliQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwE3rzKxrtVgd2DHmfc33R7D9byiTz63I7jnVxRncjgp7EoKrUz
-	oFbUB1lSVzTw7Ue4XqPNA1fc1kyHWVtCjpKltVHkgIcaomMw+8SugrvFr2ltGRk/IeUM64N8qV9
-	yV8L1lgmGn47ayLR/yWrjoMngJRRw9Bs=
-X-Received: by 2002:a17:907:db18:b0:c0d:a1e4:882a with SMTP id
- a640c23a62f3a-c119de5e576mr32644966b.5.1782259073275; Tue, 23 Jun 2026
- 16:57:53 -0700 (PDT)
+	b=Jx5jXtLO6qD0eU852kbyhOE7cZg+TuQFr1lFPhjF0se8P1kGZJiypZ2BNLzLIAxC+
+	 ePk7KO0AzySggx0z7lemEvppffSjKFrQA3d0sqsYu6qeOKKNd//o6wc1ciWaoNR2tP
+	 AQIjTOgThLXS//DkR+tJ3Zf05BozViiHqEq5wVM4TB/8NMF01N+zQCQRGJQKjFHrqL
+	 9rhENPAvHOlArt8b0KZYpXNw2D5Ph4nxYhjxMsuD1fN49GwqptBWDVMkef+8c65x/A
+	 JxBsfKb27BVKFsQ/H7A4d84hZWAcR+f1lZ6W6Ce8RvI3JabFlb64HX8FXjkQjawBl7
+	 IrDVkdLVshccw==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-bec43ee8ff0so68248466b.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jun 2026 16:58:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ97FKiCnp98s/fNpkTllMz6nDaUNr9rzSmj1nOpkLcJPbkc9v6GlW7RinGngy60uvuM35aGUR6WfHs3tQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzIh7d7kHgE9AXb6JrRC9ZCjE+HV9sQOKuUz9rNP9Qp47G9p8Tf
+	UAvM15Wf0agNhRgxYR8cOYfhpXS/8Vl6jiVAik0CcoIuoSR4TWb08nZmOmmD1nxGHXzgkaRcdQN
+	cSI1pSe9vnrUuAn7GurXnBCskxTF7mE0=
+X-Received: by 2002:a17:907:74b:b0:bee:c13f:7ebd with SMTP id
+ a640c23a62f3a-c1030fa35a0mr276264466b.16.1782259098316; Tue, 23 Jun 2026
+ 16:58:18 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -67,14 +67,14 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260623135208.1812933-1-hch@lst.de> <20260623135208.1812933-2-hch@lst.de>
-In-Reply-To: <20260623135208.1812933-2-hch@lst.de>
+References: <20260623135208.1812933-1-hch@lst.de> <20260623135208.1812933-3-hch@lst.de>
+In-Reply-To: <20260623135208.1812933-3-hch@lst.de>
 From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Wed, 24 Jun 2026 08:57:40 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-egHG+EKwpOn1c5drMuuMiv_BNgNRtAZCjscShXwbofA@mail.gmail.com>
-X-Gm-Features: AVVi8Cc6T1k2fn50nfPiKDEdqJoYNhysDxZSt3v-_fDgmbnKqkaZpC3l_SiSFfk
-Message-ID: <CAKYAXd-egHG+EKwpOn1c5drMuuMiv_BNgNRtAZCjscShXwbofA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] iomap: consolidate bio submission
+Date: Wed, 24 Jun 2026 08:58:06 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd_8W=S8WmK5J7dnm-j0QycJHAdPOdeuSg6EbwSYgHg0WQ@mail.gmail.com>
+X-Gm-Features: AVVi8CeHD55lDgJcabqaov8VHEMJrqVQlqyVWrCatN-0pn2R5gDSUfP8EbUYUjs
+Message-ID: <CAKYAXd_8W=S8WmK5J7dnm-j0QycJHAdPOdeuSg6EbwSYgHg0WQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] iomap: submit read bio after each extent
 To: Christoph Hellwig <hch@lst.de>
 Cc: Christian Brauner <brauner@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Kelu Ye <yekelu1@huawei.com>, 
 	Yifan Zhao <zhaoyifan28@huawei.com>, Ritesh Harjani <ritesh.list@gmail.com>, 
@@ -101,7 +101,7 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-3743-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3744-lists,linux-erofs=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -123,28 +123,31 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,lst.de:email,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,lst.de:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,huawei.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 246426BAA30
+X-Rspamd-Queue-Id: A51696BAA3E
 
 On Tue, Jun 23, 2026 at 10:52=E2=80=AFPM Christoph Hellwig <hch@lst.de> wro=
 te:
 >
-> Add a iomap_bio_submit_read_endio helper factored out of
-> iomap_bio_submit_read to that all ->submit_read implementations for
-> iomap_read_ops that use iomap_bio_read_folio_range can shared the
-> logic.
+> Currently the iomap buffered read path tries to build up read context
+> (i.e. bios for the typical block based case) over multiple iomaps as
+> long as the sector matches.  This does not take into account files
+> that can map to multiple different devices.  While this could be fixed
+> by a bdev check in iomap_bio_read_folio_range, the building up of I/O
+> over iomaps actually was a problem for the not yet merged ext2 iomap
+> port, as that does want to send out I/O at the end of an indirect
+> block mapped range.
 >
-> Right now that logic is mostly trivial, but already has a bug for XFS
-> because the XFS version is too trivial:  file system integrity validation
-> needs a workqueue context and thus can't happen from the default iomap
-> bi_end_io I/O handler.  Unfortunately the iomap refactoring just before
-> fs integrity landed moved code around here and the call go misplaced,
-> meaning it never got called.  The PI information still is verified by
-> the block layer, but the offloading is less efficient (and the future
-> userspace interface can't get at it).
+> So instead of adding more checks move over to a model where a bio only
+> spans a single iomap.  Change ->submit_read to be called after each
+> iteration, and pass a force argument to indicate that the bio must
+> be submitted set on the last iteration.  Switch the bio based users
+> to always submit, while keeping the single submit for fuse.
 >
-> Fixes: 0b10a370529c ("iomap: support T10 protection information")
+> Fixes: dfeab2e95a75 ("erofs: add multiple device support")
+> Reported-by: Kelu Ye <yekelu1@huawei.com>
+> Reported-by: Yifan Zhao <zhaoyifan28@huawei.com>
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 for ntfs, exfat part.
 Acked-by: Namjae Jeon <linkinjeon@kernel.org>
