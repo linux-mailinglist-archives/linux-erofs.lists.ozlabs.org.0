@@ -1,52 +1,54 @@
-Return-Path: <linux-erofs+bounces-3748-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3750-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4zRmOq7dO2qseQgAu9opvQ
-	(envelope-from <linux-erofs+bounces-3748-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 15:37:50 +0200
+	id DOjCNR7kO2qyewgAu9opvQ
+	(envelope-from <linux-erofs+bounces-3750-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 16:05:18 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC32D6BEAF0
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 15:37:49 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9666A6BEEC4
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Jun 2026 16:05:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3748-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3748-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=lst.de (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3750-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3750-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gljfw3vxrz2yVv;
-	Wed, 24 Jun 2026 23:37:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4glkGf0J5kz2yVv;
+	Thu, 25 Jun 2026 00:05:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782308264;
-	cv=none; b=YmtAa7jILvOkr2X95PrqanM4fI/FrZawEnd3aCOfZkSPIpeEc0VX8OxPbKBfpy5JHpsL/2T4XFNgqNI4Tz4fbUlP53yxzDhmky2DEYMbKwnclzcJz+7w2CPXfQl0SxLRLCiMVRVGuLpplA7Jo1z1sTNwmr7FReIXiAnG59dWCYUwm4g9IwuPBBy/xxpTKWGI9f5vAcnaIFJpf2x1st159n4h94utqDLYpyv0SagMrTvoX5kfzu87xHUlYc0QxXaeOJw5bz5cxCM+JbajLJm7gsYtGV9CTYFPHpjWFZ8BQsmjdoVhtsQd9nz/3E76v/ysH05gt5w3DQkTPuVlGFnoVQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782309913;
+	cv=none; b=Oawl+xklNpijxYSidHcwPcQEuI+gOHIQNp0ps8hnP0BPuT+Vs03CrGIutgDctDhbLx7VwygIlAcdXRTByr2fVqzNlG4unNmhzycNvftU49iLEJSGfIw7XCFqbOVfyVLMrDsWNhPGIGIauDNSDN7pO59nwiAp8DsRv0PjtG7AVsSX2w83sIWPehF39MUm6ROiGNwwdn+RLa0g6gnLXlNKvemD6Xyu4+2eSGRR6OWFClcwl/Dp3Ao3GqYUqyQ6y/p8IB4oxhxgPo4PU4+pI1VJCRf8gdP9SEveSx4xt7MY4OlojSzNDCtxigh7rv2fWLPitOBhj1FM+/v1Gt2uq2zZAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782308264; c=relaxed/relaxed;
-	bh=AxUabnhGGsOhWMcdB79xrc6powKU3CRd9EQgnQ4xhTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eKCuk5PhLAjm0ilJ16aYL1tSnQCmLi/sT5KVyDZrlpHRHcLl3BJp0G4SrzfmuqEMHf1mpVKfh9cwjfv94rlJWp9uWw1SyMhjHj84N/ht0B06NT1AzZ/UEnXR8P1h2+lakitgoGFsqEmyrrx7VcPNX+3kgtUgyKluS9jn7vuN8gnPETztge2ALuoxzvHS2+wNZ3EpC9csHtsTPTV+ua9/jBX5UJQAWNqa8/yQ9xWBUTDW8dk1pTf06ThLTeAEk6IG5mXJ7qBrVO+HQ5IsJkDHzQbVrH4B/GDrhIXxDX509lyoBGrSe4UyhphEqQHhspcyZ8hSDZi3uPyrkXT0xjldSA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.79; helo=out28-79.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Received: from out28-79.mail.aliyun.com (out28-79.mail.aliyun.com [115.124.28.79])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1782309913; c=relaxed/relaxed;
+	bh=0V+CejDYq6egdbTs/Ni/cpGwJBJ5NgllGYau6siJ+rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0OG8JzJNueYhEXSijlBee7tHdk3c7Sdwz+5+1uT5yuX8GXSS4YgMdBahkrmXnrAKzDBtfNXLYlt3/OOvvHRaW1hOgK1QEbfmKNxEYQlr6ehlhFc0s91ahqiGOP1T7+IitFt8X+MLWHsZoxdhyJlwJazdssXuJojqVFb1slDMg00SEUph3K75en4HtVs037B332Y/fnfZFEzXOs+yaBaqtEq48ewbXO3bSXWiL5o+pBYm4bi/PkbCLQqHXSky5/dPDeyBqZ3LRMCcAweD36wpKBRhU4Ydp9P76ZMkRTAw0OaaMEAvrHqSHUSti9yoKeT7FH2ZPcx1PrlzKpPc8m0ig==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org) smtp.mailfrom=lst.de
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gljft1yDSz2ySg
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Jun 2026 23:37:40 +1000 (AEST)
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436259|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.00687922-0.00142645-0.991694;FP=9880702056456000659|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037071049;MF=hudson@cyzhu.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.i4Wq2Tr_1782308253;
-Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.i4Wq2Tr_1782308253 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Jun 2026 21:37:33 +0800
-From: Chengyu <hudson@cyzhu.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH 2/2] mount: rename erofsmount_nbd_ctx to erofsmount_ctx
-Date: Wed, 24 Jun 2026 21:37:32 +0800
-Message-ID: <20260624133732.18218-3-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20260624133732.18218-1-hudson@cyzhu.com>
-References: <20260619041922.64521-1-hudson@cyzhu.com>
- <20260624133732.18218-1-hudson@cyzhu.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4glkGc5JQDz2ySg
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jun 2026 00:05:11 +1000 (AEST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 786DA68B05; Wed, 24 Jun 2026 16:05:05 +0200 (CEST)
+Date: Wed, 24 Jun 2026 16:05:05 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+	Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH RFC v2 01/18] xfs: fix the error unwind in
+ xfs_open_devices()
+Message-ID: <20260624140505.GA7692@lst.de>
+References: <20260616-work-super-bdev_holder_global-v2-0-7df6b864028e@kernel.org> <20260616-work-super-bdev_holder_global-v2-1-7df6b864028e@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,285 +60,70 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
-	version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260616-work-super-bdev_holder_global-v2-1-7df6b864028e@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.00 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.40 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	R_DKIM_NA(0.00)[];
-	DMARC_NA(0.00)[cyzhu.com];
-	ALIAS_RESOLVED(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hudson@cyzhu.com,linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:jack@suse.cz,m:hch@lst.de,m:axboe@kernel.dk,m:viro@zeniv.linux.org.uk,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:cem@kernel.org,m:linux-xfs@vger.kernel.org,m:clm@fb.com,m:dsterba@suse.com,m:linux-btrfs@vger.kernel.org,m:tytso@mit.edu,m:linux-ext4@vger.kernel.org,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3748-lists,linux-erofs=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3]
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3750-lists,linux-erofs=lfdr.de];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,lst.de:mid,lst.de:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EC32D6BEAF0
+X-Rspamd-Queue-Id: 9666A6BEEC4
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+On Tue, Jun 16, 2026 at 04:08:17PM +0200, Christian Brauner wrote:
+> Since the rt and log block devices are closed in xfs_free_buftarg() the
+> buftarg owns the device file. The error unwind does not respect that:
+> when the log buftarg allocation fails, out_free_rtdev_targ frees the rt
+> buftarg - releasing rtdev_file - and then falls through to
+> out_close_rtdev and releases it a second time.
+> 
+> The unwind also leaves mp->m_rtdev_targp and mp->m_ddev_targp pointing
+> to the freed buftargs. The failed mount continues into
+> deactivate_locked_super() -> xfs_kill_sb() -> xfs_mount_free(), which
+> frees them again.
+> 
+> Clear the buftarg pointers once the unwind freed them and clear
+> rtdev_file once the rt buftarg owns it, so nothing is released twice.
+> 
+> Reachable when a buftarg allocation fails after the data buftarg was
+> set up: an I/O error in sync_blockdev() or an allocation failure in
+> xfs_init_buftarg() while mounting with external rt and log devices.
 
-The struct is shared by NBD, ublk and fanotify paths, so the
-nbd-specific name was misleading.
+Looks good:
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
----
- mount/main.c | 79 +++++++++++++++++++++++++++-------------------------
- 1 file changed, 41 insertions(+), 38 deletions(-)
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-diff --git a/mount/main.c b/mount/main.c
-index 2b8f6f4..0941b0a 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -772,13 +772,13 @@ err_out:
- 	return err;
- }
- 
--struct erofsmount_nbd_ctx {
--	struct erofs_vfile _vd;		/* virtual device */
--	struct erofs_vfile sk;		/* socket file */
-+struct erofsmount_ctx {
-+	struct erofs_vfile _vd;		/* backing source */
-+	struct erofs_vfile sk;		/* NBD socket (NBD backend only) */
- 	struct erofs_vfile *vd;
- };
- 
--static int erofsmount_open_source(struct erofsmount_nbd_ctx *ctx,
-+static int erofsmount_open_source(struct erofsmount_ctx *ctx,
- 				  struct erofsmount_source *source)
- {
- 	int err;
-@@ -817,7 +817,7 @@ static int erofsmount_open_source(struct erofsmount_nbd_ctx *ctx,
- 
- static void *erofsmount_nbd_loopfn(void *arg)
- {
--	struct erofsmount_nbd_ctx *ctx = arg;
-+	struct erofsmount_ctx *ctx = arg;
- 	int err;
- 
- 	while (1) {
-@@ -863,7 +863,7 @@ out:
- 
- static int erofsmount_startnbd(int nbdfd, struct erofsmount_source *source)
- {
--	struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
-+	struct erofsmount_ctx ctx = { .vd = &ctx._vd };
- 	uintptr_t retcode;
- 	pthread_t th;
- 	int err, err2;
-@@ -1190,7 +1190,7 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
- #endif
- 
- #ifdef S3EROFS_ENABLED
--static int erofsmount_reattach_s3(struct erofsmount_nbd_ctx *ctx, char *source)
-+static int erofsmount_reattach_s3(struct erofsmount_ctx *ctx, char *source)
- {
- 	char *tokens[5] = {0}, *p = source;
- 	char *bucket = NULL, *key = NULL;
-@@ -1253,13 +1253,13 @@ err_out:
- 	return err;
- }
- #else
--static int erofsmount_reattach_s3(struct erofsmount_nbd_ctx *ctx, char *source)
-+static int erofsmount_reattach_s3(struct erofsmount_ctx *ctx, char *source)
- {
- 	return -EOPNOTSUPP;
- }
- #endif
- 
--static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
-+static int erofsmount_reattach_gzran_oci(struct erofsmount_ctx *ctx,
- 					 char *source)
- {
- 	char *tokens[6] = {0}, *p = source, *space, *oci_source;
-@@ -1313,7 +1313,7 @@ static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
- 	return err;
- }
- 
--static int erofsmount_open_recovery_source(struct erofsmount_nbd_ctx *ctx,
-+static int erofsmount_open_recovery_source(struct erofsmount_ctx *ctx,
- 					   FILE *f)
- {
- 	char *line = NULL, *source;
-@@ -1398,7 +1398,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofsmount_source *source)
- 		return -errno;
- 
- 	if ((*pid = fork()) == 0) {
--		struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
-+		struct erofsmount_ctx ctx = { .vd = &ctx._vd };
- 		char *recp;
- 
- 		/* Otherwise, NBD disconnect sends SIGPIPE, skipping cleanup */
-@@ -1478,7 +1478,7 @@ static int ublk_dev_id_from_path(const char *path)
- 
- static int erofsmount_ublk_reattach(int dev_id)
- {
--	struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
-+	struct erofsmount_ctx ctx = { .vd = &ctx._vd };
- 	char *recp;
- 	FILE *f;
- 	int err;
-@@ -1525,9 +1525,9 @@ static int erofsmount_ublk_reattach(int dev_id)
- 
- static int erofsmount_reattach(const char *target)
- {
--	struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
-+	struct erofsmount_ctx ctx = { .vd = &ctx._vd };
- 	char *identifier;
--	int nbdnum, err;
-+	int dev_id, err;
- 	struct stat st;
- 	FILE *f;
- 
-@@ -1538,17 +1538,17 @@ static int erofsmount_reattach(const char *target)
- 	if (!S_ISBLK(st.st_mode))
- 		return -ENOTBLK;
- 
--	nbdnum = ublk_dev_id_from_path(target);
--	if (nbdnum >= 0)
--		return erofsmount_ublk_reattach(nbdnum);
-+	dev_id = ublk_dev_id_from_path(target);
-+	if (dev_id >= 0)
-+		return erofsmount_ublk_reattach(dev_id);
- 
- 	if (major(st.st_rdev) != EROFS_NBD_MAJOR)
- 		return -ENOTBLK;
- 
--	nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
--	if (nbdnum < 0)
--		return nbdnum;
--	identifier = erofs_nbd_get_identifier(nbdnum);
-+	dev_id = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
-+	if (dev_id < 0)
-+		return dev_id;
-+	identifier = erofs_nbd_get_identifier(dev_id);
- 	if (IS_ERR(identifier)) {
- 		identifier = NULL;
- 	} else if (identifier && *identifier == '\0') {
-@@ -1559,7 +1559,7 @@ static int erofsmount_reattach(const char *target)
- 	if (!identifier) {
- 		char *recp;
- 
--		if (asprintf(&recp, EROFSMOUNT_NBD_REC_FMT, nbdnum) <= 0) {
-+		if (asprintf(&recp, EROFSMOUNT_NBD_REC_FMT, dev_id) <= 0) {
- 			err = -ENOMEM;
- 			goto err_identifier;
- 		}
-@@ -1577,7 +1577,7 @@ static int erofsmount_reattach(const char *target)
- 	if (err)
- 		goto err_identifier;
- 
--	err = erofs_nbd_nl_reconnect(nbdnum, identifier);
-+	err = erofs_nbd_nl_reconnect(dev_id, identifier);
- 	if (err >= 0) {
- 		ctx.sk.fd = err;
- 		if (fork() == 0) {
-@@ -2191,7 +2191,7 @@ static int erofsmount_ublk(struct erofsmount_source *source,
- 	}
- 
- 	if (pid == 0) {
--		struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
-+		struct erofsmount_ctx ctx = { .vd = &ctx._vd };
- 		struct erofs_ublk_dev_info info;
- 		struct stat st;
- 
-@@ -2275,7 +2275,7 @@ static int erofsmount_ublk(struct erofsmount_source *source,
- int erofsmount_umount(char *target)
- {
- 	char *device = NULL, *mountpoint = NULL;
--	int err, fd, nbdnum;
-+	int err, fd, dev_id;
- 	struct stat st;
- 	FILE *mounts;
- 	size_t n;
-@@ -2347,19 +2347,22 @@ int erofsmount_umount(char *target)
- 
- 	if (isblk && !mountpoint && S_ISBLK(st.st_mode)) {
- 		if (major(st.st_rdev) == EROFS_NBD_MAJOR) {
--			nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
--			err = erofs_nbd_nl_disconnect(nbdnum);
-+			dev_id = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
-+			err = erofs_nbd_nl_disconnect(dev_id);
- 			if (err != -EOPNOTSUPP)
- 				goto err_out;
--		} else if ((nbdnum = ublk_dev_id_from_path(target)) >= 0) {
--			err = erofs_ublk_del_dev_by_id(nbdnum);
--			goto err_out;
-+		} else {
-+			dev_id = ublk_dev_id_from_path(target);
-+			if (dev_id >= 0) {
-+				err = erofs_ublk_del_dev_by_id(dev_id);
-+				goto err_out;
-+			}
- 		}
- 	}
- 
- 	/* XXX: ublk doesn't have autoclose feature */
--	nbdnum = ublk_dev_id_from_path(device);
--	if (nbdnum >= 0) {
-+	dev_id = ublk_dev_id_from_path(device);
-+	if (dev_id >= 0) {
- 		if (mountpoint) {
- 			err = umount(mountpoint);
- 			if (err) {
-@@ -2367,7 +2370,7 @@ int erofsmount_umount(char *target)
- 				goto err_out;
- 			}
- 		}
--		err = erofs_ublk_del_dev_by_id(nbdnum);
-+		err = erofs_ublk_del_dev_by_id(dev_id);
- 		goto err_out;
- 	}
- 
-@@ -2398,8 +2401,8 @@ int erofsmount_umount(char *target)
- 	if (err < 0)
- 		err = -errno;
- 	else if (S_ISBLK(st.st_mode) && major(st.st_rdev) == EROFS_NBD_MAJOR) {
--		nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
--		err = erofs_nbd_nl_disconnect(nbdnum);
-+		dev_id = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
-+		err = erofs_nbd_nl_disconnect(dev_id);
- 		if (err == -EOPNOTSUPP)
- 			err = erofs_nbd_disconnect(fd);
- 	}
-@@ -2413,7 +2416,7 @@ err_out:
- 
- static int erofsmount_disconnect(const char *target)
- {
--	int nbdnum, err, fd;
-+	int dev_id, err, fd;
- 	struct stat st;
- 
- 	err = lstat(target, &st);
-@@ -2423,8 +2426,8 @@ static int erofsmount_disconnect(const char *target)
- 	if (!S_ISBLK(st.st_mode) || major(st.st_rdev) != EROFS_NBD_MAJOR)
- 		return -ENOTBLK;
- 
--	nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
--	err = erofs_nbd_nl_disconnect(nbdnum);
-+	dev_id = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
-+	err = erofs_nbd_nl_disconnect(dev_id);
- 	if (err == -EOPNOTSUPP) {
- 		fd = open(target, O_RDWR);
- 		if (fd < 0) {
--- 
-2.47.1
+I actually have a major rework of this area pending, but it probably
+won't land for 7.2, so we might as well get this local fix in ASAP.
 
 
