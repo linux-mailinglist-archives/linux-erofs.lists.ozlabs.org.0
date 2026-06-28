@@ -1,57 +1,56 @@
-Return-Path: <linux-erofs+bounces-3773-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3775-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1dDDOqE9P2rWQAkAu9opvQ
-	(envelope-from <linux-erofs+bounces-3773-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Jun 2026 05:04:01 +0200
+	id alvvAyUyQWq9mAkAu9opvQ
+	(envelope-from <linux-erofs+bounces-3775-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Jun 2026 16:39:33 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A706D0D34
-	for <lists+linux-erofs@lfdr.de>; Sat, 27 Jun 2026 05:03:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 209DF6D41C5
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Jun 2026 16:39:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=sU3dPbyV;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3773-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3773-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=O1glBJHR;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3775-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3775-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gnHSC1VdXz2xWP;
-	Sat, 27 Jun 2026 13:03:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gpBrG463Vz2xjd;
+	Mon, 29 Jun 2026 00:39:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782529435;
-	cv=none; b=fFPlxkq4NMCb7PR/9Pa8D9Gn3gLPwTLe9LdIlzntBtVjH1MhUG/BgfXb19zY7OH05EvCZkHiYht/0jHsD9XL8Z3AZ5FJkdVrwvfDMc5WPsJVfEYQVujEQN8g2lXtYhs59edYGXZ4o7P3z+lTCONE7x8FBep0VqZpsCfgol+hEd1QMlKcsverHtkOKC7P8gpx1MyHAyD4h/fMFsgKAF4J+/7PJ9NdH5GjxuxoZNlA015L6KD8CtMN58+Zobv7B5A9BJVwdalwxe3VsnKeePoYlw1ToeK/OfS+UI0bFnYJFKHH8MA/LFz7D2WpukJh3cZkMidIsSmGAD5Ni6SwvX0OAA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782657566;
+	cv=none; b=UyTYNKMpLcrwaiVCxXucEpmTrXWjPM7TbpR54BN/l3rX+zKh4/k1uPxNBS60DXp0PUr8t83HMajj/TLvbpgw1kG7DTsv7WAK+wOPyvF5o8xQASXScWwLLVL5InXvQUFTTxqS1T8CcTojJktJr/L4JyaMI3sDSw7whk+RwLD/jA/nlFOs2N1Be68bn6naCBvDwM5Oxm5Npc2PlJLDJ517WSlsQ407IIFLi++tF8nqGq2OgrqiEruQEmVAWbOouLBy2LIdAlSYZDAoc1QKznLDP6G/EccFjLA8DHjsoP4UAfVQppZZ1fk8aQqLvMTIRbiSuLaEn38xAlKJrYMj3xFrNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782529435; c=relaxed/relaxed;
-	bh=Dnvt4sIXi/LLJB7q8UUBZTuvwgnFHWhoXczkTMAu6vA=;
+	t=1782657566; c=relaxed/relaxed;
+	bh=YrYYmwuKcGBe5qSQoZ8Ad5cBs/ef66qbP91l+GGZMBk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dBiz+hLrNVpjhcNoN3MfK2JB07hfZOUsvPRU+eaBqaOcIMnP3gdKmFahpCACLu/xUp0kqfQvcYNZKFZxhU6/MjqH1ZGARrqcI8P3jDlu4zMAAB88UvRcXDs34lW4BW+hOL2hBh0n1QdICMdEmxmWrPGjMRivMCJlfGn9zM1OK9tWgACQ3LfeFnomgc2X1AV7Q+7cB0zhVYzYAkipVzj3vBGTYpzyhQrvcLCujVR4GwLua27+khWo9EKoVPykB6DnOhaQytdFXV/tcAxF7ICl6VsBVyKxcc3k2HAML6RNlZdLISHyaIUMrIXVnF/vtpC0QN1W0GTPsVp3/c5VwmJugQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sU3dPbyV; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	 MIME-Version; b=boF0Q/aoYFk4BQLg+OEbNpp77Q1MXH/pel2asdw7PQLyBtnp32D+aYis5kg6dI7qY/cjSm76V/JO9jpAC1CJmbywY2G8WCmNwr9Q4vNEfDChYeLauq/t47+dHaPxSc5gtl9+XXW6Pa4bPWPczSfpJj5lazd5glwXPMhpxYDD3Ss69lvPIFa8UrsjqsZDhhVkPT6b/IgvyiPwyTsLlDm78Wtz+26N11AqS93Z4mnW3NBi3j6aZnl+bqWmW3ZNA/2UCRsRbbU8nNAZCVHxl1A964bskNuxU6EAQ6jk54eomXYky9e/bLppqpOIgejkSkLK65UyCCh8SiNF5gZ0eVkN3w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=O1glBJHR; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gnHS76SP9z2xVK
-	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Jun 2026 13:03:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gpBrC6vzVz2xM7
+	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jun 2026 00:39:22 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1782529425; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Dnvt4sIXi/LLJB7q8UUBZTuvwgnFHWhoXczkTMAu6vA=;
-	b=sU3dPbyVddpmQi9V4KWmKFgEnF2iNCeiOudF74OxVu4FP8fKkz0z+D6p6uRi001dRb2dg6bJuFuD5wQTpjWGLoy514Vj3rF09EJ98lueFe6ze2sGIzogb+eye/kltHI+RaMmJQGEPx3ZxcQI/Qa1W41FE8e4mXGzCfMNi8S1Nu8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X5g7tg1_1782529419;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5g7tg1_1782529419 cluster:ay36)
+	t=1782657557; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=YrYYmwuKcGBe5qSQoZ8Ad5cBs/ef66qbP91l+GGZMBk=;
+	b=O1glBJHR0k9QfDC6j9Svy0wCNHqr/nvLAI64q2ijMEwLuowAJrJYBH4iSDh6gI7UUHYNjlxjrTh0I+93D4EFQ3GgCZrFP2JCA8pkLQjNEOlEnSzShBq3/s+y39L5B9UgLRBQcfWyblYZ7BjTPZBaakcTdFI0UOazLrPDyZdmUFs=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X5kT1Q0_1782657551;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5kT1Q0_1782657551 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 27 Jun 2026 11:03:43 +0800
+          Sun, 28 Jun 2026 22:39:14 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: oliver.yang@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>,
+Cc: Chengyu Zhu <hudsonzhu@tencent.com>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v4] erofs-utils: fsck: add `--xattr-inode-digest` support
-Date: Sat, 27 Jun 2026 11:03:39 +0800
-Message-ID: <20260627030339.2577674-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 1/2] erofs-utils: mount: support ublk recovery
+Date: Sun, 28 Jun 2026 22:39:09 +0800
+Message-ID: <20260628143910.1062931-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20260626135206.1594849-1-hsiangkao@linux.alibaba.com>
-References: <20260626135206.1594849-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260624133732.18218-1-hudson@cyzhu.com>
+References: <20260624133732.18218-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,441 +73,334 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3773-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3775-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_THREE(0.00)[3];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,tencent.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime]
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D7A706D0D34
+X-Rspamd-Queue-Id: 209DF6D41C5
 
 From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-Add a new `--xattr-inode-digest` option to verify per-inode digests
-embedded by `mkfs.erofs --xattr-inode-digest`.
-
-For each regular inode with non-zero size, the stored digest xattr is
-compared against a freshly computed SHA-256 of the inode data:  Any
-mismatch is reported as filesystem corruption.
-
-Note that enabling this option also forces extraction.
+Allow users to reattach to an existing ublk device after deamon crashes.
 
 Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-v4:
- - fix a false-positive compiler warning.
- fsck/main.c           | 129 +++++++++++++++++++++++++++++++++++++-----
- include/erofs/xattr.h |   3 +
- lib/xattr.c           |  56 ++++++++++++++++--
- man/fsck.erofs.1      |   4 ++
- 4 files changed, 174 insertions(+), 18 deletions(-)
+ lib/backends/ublk.c |  33 +++++++---
+ mount/main.c        | 142 +++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 143 insertions(+), 32 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 759ca7df6722..b63fd135d7ad 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -15,9 +15,12 @@
- #include "erofs/xattr.h"
- #include "../lib/compressor.h"
- #include "../lib/liberofs_compress.h"
-+#include "../lib/sha256.h"
+diff --git a/lib/backends/ublk.c b/lib/backends/ublk.c
+index a8ecad9fc031..090c6d5bd1e8 100644
+--- a/lib/backends/ublk.c
++++ b/lib/backends/ublk.c
+@@ -258,8 +258,15 @@ static unsigned int erofsublk_formalize_cmd_op(unsigned int op)
+ 	DBG_BUGON(_IOC_DIR(op) != 0);
+ 	DBG_BUGON(_IOC_SIZE(op) != 0);
  
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
+-	if (op < ARRAY_SIZE(ctrl_cmd_op) && !erofs_ublk_use_legacy_cmds)
+-		return ctrl_cmd_op[op];
++	if (!erofs_ublk_use_legacy_cmds) {
++		/* IO opcodes live above the ctrl table and need explicit encoding */
++		if (op == UBLK_IO_FETCH_REQ)
++			return UBLK_U_IO_FETCH_REQ;
++		if (op == UBLK_IO_COMMIT_AND_FETCH_REQ)
++			return UBLK_U_IO_COMMIT_AND_FETCH_REQ;
++		if (op < ARRAY_SIZE(ctrl_cmd_op))
++			return ctrl_cmd_op[op];
++	}
+ 	return op;
+ }
  
-+static char erofsfsck_nullstr[] = "";
-+
- struct erofsfsck_dirstack {
- 	erofs_nid_t dirs[PATH_MAX];
- 	int top;
-@@ -29,6 +32,7 @@ struct erofsfsck_cfg {
- 	u64 logical_blocks;
- 	char *extract_path;
- 	size_t extract_pos;
-+	char *digest_xattr_name;
- 	mode_t umask;
- 	bool superuser;
- 	bool corrupted;
-@@ -64,6 +68,7 @@ static struct option long_options[] = {
- 	{"nid", required_argument, 0, 15},
- 	{"path", required_argument, 0, 16},
- 	{"no-sbcrc", no_argument, 0, 512},
-+	{"xattr-inode-digest", no_argument, 0, 17},
- 	{0, 0, 0, 0},
- };
+@@ -492,8 +499,14 @@ static int ublk_get_dev_info(struct erofs_ublk_dev *dev, int dev_id)
+ 	int ret;
  
-@@ -117,6 +122,7 @@ static void usage(int argc, char **argv)
- 		" --nid=#                check or extract from the target inode of nid #\n"
- 		" --path=X               check or extract from the target inode of path X\n"
- 		" --no-sbcrc             bypass the superblock checksum verification\n"
-+		" --xattr-inode-digest   verify per-inode digests recorded as extended attributes\n"
- 		" --[no-]xattrs          whether to dump extended attributes (default off)\n"
- 		"\n"
- 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
-@@ -257,6 +263,10 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
- 		case 16:
- 			fsckcfg.inode_path = optarg;
- 			break;
-+		case 17:
-+			fsckcfg.digest_xattr_name = erofsfsck_nullstr;
-+			fsckcfg.check_decomp = true;
-+			break;
- 		case 512:
- 			fsckcfg.nosbcrc = true;
- 			break;
-@@ -503,7 +513,8 @@ out:
+ 	ret = ublk_dev_ctrl_cmd(dev, UBLK_CMD_GET_DEV_INFO, &cmd);
+-	if (ret < 0)
+-		erofs_err("GET_DEV_INFO failed: %s", strerror(-ret));
++	if ((ret == -ENODEV || ret == -EOPNOTSUPP) &&
++	    !erofs_ublk_use_legacy_cmds) {
++		erofs_ublk_use_legacy_cmds = true;
++		ret = ublk_dev_ctrl_cmd(dev, UBLK_CMD_GET_DEV_INFO, &cmd);
++		if (ret < 0)
++			erofs_err("GET_DEV_INFO failed for device %d: %s",
++				  dev_id, erofs_strerror(ret));
++	}
  	return ret;
  }
  
--static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
-+static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
-+				   struct sha256_state *digest)
- {
- 	struct erofs_map_blocks map = {
- 		.buf = __EROFS_BUF_INITIALIZER,
-@@ -546,11 +557,24 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 		if (map.m_la >= inode->i_size || !needdecode)
- 			continue;
- 
--		if (outfd >= 0 && !(map.m_flags & EROFS_MAP_MAPPED)) {
--			ret = lseek(outfd, map.m_llen, SEEK_CUR);
--			if (ret < 0) {
--				ret = -errno;
--				goto out;
-+		if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+			if (digest) {
-+				static const char zeros[4096];
-+				u64 remain = map.m_llen;
-+
-+				while (remain > 0) {
-+					u64 chunk = remain > sizeof(zeros) ?
-+						    sizeof(zeros) : remain;
-+					erofs_sha256_process(digest,
-+						(const u8 *)zeros, chunk);
-+					remain -= chunk;
-+				}
-+			} else if (outfd >= 0) {
-+				ret = lseek(outfd, map.m_llen, SEEK_CUR);
-+				if (ret < 0) {
-+					ret = -errno;
-+					goto out;
-+				}
- 			}
- 			continue;
- 		}
-@@ -596,6 +620,9 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 			if (ret)
- 				goto out;
- 
-+			if (digest)
-+				erofs_sha256_process(digest,
-+					(const u8 *)buffer, map.m_llen);
- 			if (outfd >= 0 && write(outfd, buffer, map.m_llen) < 0)
- 				goto fail_eio;
- 		} else {
-@@ -609,6 +636,9 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
- 				if (ret)
- 					goto out;
- 
-+				if (digest)
-+					erofs_sha256_process(digest,
-+						(const u8 *)raw, count);
- 				if (outfd >= 0 && write(outfd, raw, count) < 0)
- 					goto fail_eio;
- 				map.m_llen -= count;
-@@ -643,7 +673,7 @@ static inline int erofs_extract_dir(struct erofs_inode *inode)
- 	erofs_dbg("create directory %s", fsckcfg.extract_path);
- 
- 	/* verify data chunk layout */
--	ret = erofs_verify_inode_data(inode, -1);
-+	ret = erofs_verify_inode_data(inode, -1, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -739,6 +769,56 @@ static void erofsfsck_hardlink_exit(void)
- 	}
+@@ -528,11 +541,6 @@ static inline unsigned int user_data_to_tag(u64 user_data)
+ 	return user_data & 0xffff;
  }
  
-+static int erofsfsck_verify_file_digest(struct erofs_inode *inode,
-+					const u8 *digest)
-+{
-+	u8 stored[32 + sizeof("sha256:") - 1];
-+	int ret;
-+
-+	ret = __erofs_getxattr(inode, fsckcfg.digest_xattr_name,
-+			       (char *)stored, sizeof(stored), true);
-+	if (ret == -ENODATA) {
-+		erofs_warn("no digest xattr for nid %llu, skipped",
-+			   inode->nid | 0ULL);
+-static inline unsigned int user_data_to_op(u64 user_data)
+-{
+-	return (user_data >> 16) & 0xff;
+-}
+-
+ static inline struct io_uring_sqe *erofsublk_alloc_sqe(struct io_uring *r)
+ {
+ 	unsigned int left = io_uring_sq_space_left(r);
+@@ -1259,7 +1267,14 @@ int erofs_ublk_is_recoverable(int dev_id)
+ 	memset(&dev, 0, sizeof(dev));
+ 	dev.ctrl_fd = ctrl_fd;
+ 
++	ret = ublk_ctrl_ring_init(&dev.ctrl_ring);
++	if (ret < 0) {
++		close(ctrl_fd);
 +		return 0;
-+	} else if (ret < 0)
-+		return ret;
-+
-+	if (ret != sizeof(stored) ||
-+	    memcmp(stored, "sha256:", sizeof("sha256:") - 1)) {
-+		erofs_err("unidentified digest xattr @ nid %llu (size=%d)",
-+			  inode->nid | 0ULL, ret);
-+		return -EFSCORRUPTED;
 +	}
 +
-+	if (memcmp(digest, stored + sizeof("sha256:") - 1, 32)) {
-+		erofs_err("digest MISMATCH @ nid %llu",
-+			  inode->nid | 0ULL);
-+		return -EFSCORRUPTED;
-+	}
-+	return 0;
-+}
-+
-+static int erofsfsck_calc_inode_data(struct erofs_inode *inode, int outfd)
+ 	ret = ublk_get_dev_info(&dev, dev_id);
++	io_uring_queue_exit(&dev.ctrl_ring);
+ 	close(ctrl_fd);
+ 
+ 	if (ret < 0)
+diff --git a/mount/main.c b/mount/main.c
+index 5955e2d209dc..dbf5cdddd265 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -51,6 +51,8 @@ struct loop_info {
+ #define EROFSMOUNT_RUNDIR		"/var/run/erofsmount"
+ #define EROFSMOUNT_NBD_RUNDIR		EROFSMOUNT_RUNDIR "/nbd"
+ #define EROFSMOUNT_NBD_REC_FMT		EROFSMOUNT_NBD_RUNDIR "/mountnbd_nbd%d"
++#define EROFSMOUNT_UBLK_RUNDIR		EROFSMOUNT_RUNDIR "/ublk"
++#define EROFSMOUNT_UBLK_REC_FMT		EROFSMOUNT_UBLK_RUNDIR "/mountublk_ublk%d"
+ 
+ #define EROFSMOUNT_FANOTIFY_STATE_DIR	EROFSMOUNT_RUNDIR "/fanotify"
+ 
+@@ -1004,6 +1006,17 @@ static int erofsmount_write_recovery_s3(FILE *f, struct erofsmount_source *sourc
+ }
+ #endif
+ 
++static int erofsmount_write_recovery_fp(FILE *f, struct erofsmount_source *source)
 +{
-+	int ret;
-+
-+	if (fsckcfg.digest_xattr_name &&
-+	    S_ISREG(inode->i_mode) && inode->i_size > 0) {
-+		struct sha256_state md;
-+		u8 out[32];
-+
-+		erofs_sha256_init(&md);
-+		ret = erofs_verify_inode_data(inode, outfd, &md);
-+		erofs_sha256_done(&md, out);
-+
-+		if (ret)
-+			return ret;
-+		return erofsfsck_verify_file_digest(inode, out);
-+	}
-+	return erofs_verify_inode_data(inode, outfd, NULL);
++	if (source->type == EROFSMOUNT_SOURCE_OCI)
++		return erofsmount_write_recovery_oci(f, source);
++	if (source->type == EROFSMOUNT_SOURCE_S3_OBJECT)
++		return erofsmount_write_recovery_s3(f, source);
++	if (source->type == EROFSMOUNT_SOURCE_LOCAL)
++		return erofsmount_write_recovery_local(f, source);
++	return -EOPNOTSUPP;
 +}
 +
- static inline int erofs_extract_file(struct erofs_inode *inode)
+ static char *erofsmount_write_recovery_info(struct erofsmount_source *source)
  {
- 	bool tryagain = true;
-@@ -774,8 +854,7 @@ again:
- 		return -errno;
+ 	char recp[] = EROFSMOUNT_NBD_RUNDIR "/mountnbd_XXXXXX";
+@@ -1028,21 +1041,37 @@ static char *erofsmount_write_recovery_info(struct erofsmount_source *source)
+ 		return ERR_PTR(-errno);
  	}
  
--	/* verify data chunk layout */
--	ret = erofs_verify_inode_data(inode, fd);
-+	ret = erofsfsck_calc_inode_data(inode, fd);
- 	close(fd);
- 	return ret;
- }
-@@ -791,7 +870,7 @@ static inline int erofs_extract_symlink(struct erofs_inode *inode)
- 	erofs_dbg("extract symlink to path: %s", fsckcfg.extract_path);
- 
- 	/* verify data chunk layout */
--	ret = erofs_verify_inode_data(inode, -1);
-+	ret = erofs_verify_inode_data(inode, -1, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -845,7 +924,7 @@ static int erofs_extract_special(struct erofs_inode *inode)
- 	erofs_dbg("extract special to path: %s", fsckcfg.extract_path);
- 
- 	/* verify data chunk layout */
--	ret = erofs_verify_inode_data(inode, -1);
-+	ret = erofs_verify_inode_data(inode, -1, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -928,13 +1007,13 @@ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
- 
- static int erofsfsck_extract_inode(struct erofs_inode *inode)
- {
--	int ret;
- 	char *oldpath;
-+	int ret;
- 
- 	if (!fsckcfg.extract_path || erofs_is_packed_inode(inode)) {
- verify:
- 		/* verify data chunk layout */
--		return erofs_verify_inode_data(inode, -1);
-+		return erofsfsck_calc_inode_data(inode, -1);
- 	}
- 
- 	oldpath = erofsfsck_hardlink_find(inode->nid);
-@@ -968,7 +1047,8 @@ verify:
- 			inode->i_mode, inode->nid | 0ULL);
- 		goto verify;
- 	}
--	if (ret && ret != -ECANCELED)
-+
-+	if (ret && (ret != -ECANCELED || fsckcfg.digest_xattr_name))
- 		return ret;
- 
- 	/* record nid and old path for hardlink */
-@@ -1097,6 +1177,25 @@ int main(int argc, char *argv[])
- 		goto exit_put_super;
- 	}
- 
-+	if (fsckcfg.digest_xattr_name == erofsfsck_nullstr) {
-+		fsckcfg.digest_xattr_name =
-+			erofs_xattr_get_ishare_prefix(&g_sbi);
-+		if (IS_ERR(fsckcfg.digest_xattr_name)) {
-+			err = PTR_ERR(fsckcfg.digest_xattr_name);
-+			erofs_err("failed to get ishare prefix: %s",
-+				  erofs_strerror(err));
-+			goto exit_put_super;
-+		}
-+
-+		if (!fsckcfg.digest_xattr_name) {
-+			erofs_err("image has no inode digest xattrs (was --xattr-inode-digest used during mkfs?)");
-+			err = -ENODATA;
-+			goto exit_put_super;
-+		}
-+		erofs_info("verifying digests using xattr \"%s\"",
-+			   fsckcfg.digest_xattr_name);
-+	}
-+
- 	if (fsckcfg.extract_path)
- 		erofsfsck_hardlink_init();
- 
-@@ -1177,6 +1276,8 @@ exit_hardlink:
- 	if (fsckcfg.extract_path)
- 		erofsfsck_hardlink_exit();
- exit_put_super:
-+	if (fsckcfg.digest_xattr_name != erofsfsck_nullstr)
-+		free(fsckcfg.digest_xattr_name);
- 	erofs_put_super(&g_sbi);
- exit_dev_close:
- 	erofs_dev_close(&g_sbi);
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 235688649592..5fe3e91a4054 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -35,9 +35,12 @@ int erofs_load_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *pa
- int erofs_xattr_insert_name_prefix(const char *prefix);
- int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
- 				  const char *prefix);
-+char *erofs_xattr_get_ishare_prefix(struct erofs_sb_info *sbi);
- void erofs_xattr_cleanup_name_prefixes(void);
- int erofs_xattr_flush_name_prefixes(struct erofs_importer *im, bool plain);
- int erofs_xattr_prefixes_init(struct erofs_sb_info *sbi);
-+int __erofs_getxattr(struct erofs_inode *vi, const char *name,
-+		     char *buffer, size_t buffer_size, bool hidden);
- int erofs_setxattr(struct erofs_inode *inode, int index, const char *name,
- 		   const void *value, size_t size);
- int erofs_vfs_setxattr(struct erofs_inode *inode, const char *name,
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 1891ac3f23ef..051fdd846146 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -1410,8 +1410,8 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
- 	return ret;
+-	if (source->type == EROFSMOUNT_SOURCE_OCI)
+-		err = erofsmount_write_recovery_oci(f, source);
+-	else if (source->type == EROFSMOUNT_SOURCE_S3_OBJECT)
+-		err = erofsmount_write_recovery_s3(f, source);
+-	else if (source->type == EROFSMOUNT_SOURCE_LOCAL)
+-		err = erofsmount_write_recovery_local(f, source);
+-	else
+-		err = -EOPNOTSUPP;
+-
++	err = erofsmount_write_recovery_fp(f, source);
+ 	fclose(f);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 	return strdup(recp) ?: ERR_PTR(-ENOMEM);
  }
  
--int erofs_getxattr(struct erofs_inode *vi, const char *name, char *buffer,
--		   size_t buffer_size)
-+int __erofs_getxattr(struct erofs_inode *vi, const char *name,
-+		     char *buffer, size_t buffer_size, bool hidden)
- {
- 	int ret;
- 	unsigned int prefix, prefixlen;
-@@ -1424,8 +1424,12 @@ int erofs_getxattr(struct erofs_inode *vi, const char *name, char *buffer,
- 	if (ret)
- 		return ret;
- 
--	if (!erofs_xattr_prefix_matches(name, &prefix, &prefixlen))
--		return -ENODATA;
-+	if (!erofs_xattr_prefix_matches(name, &prefix, &prefixlen)) {
-+		if (!hidden)
-+			return -ENODATA;
-+		prefixlen = 0;
-+		prefix = 0;
-+	}
- 	it.index = prefix;
- 	it.name = name + prefixlen;
- 	it.len = strlen(it.name);
-@@ -1445,6 +1449,12 @@ int erofs_getxattr(struct erofs_inode *vi, const char *name, char *buffer,
- 	return ret ? ret : it.buffer_ofs;
- }
- 
-+int erofs_getxattr(struct erofs_inode *vi, const char *name,
-+		   char *buffer, size_t buffer_size)
++static int erofsmount_ublk_write_recovery(struct erofsmount_source *source,
++					  const char *path)
 +{
-+	return __erofs_getxattr(vi, name, buffer, buffer_size, false);
++	FILE *f;
++	int err;
++
++	f = fopen(path, "w");
++	if (!f && errno == ENOENT) {
++		if (mkdir(EROFSMOUNT_RUNDIR, 0700) < 0 && errno != EEXIST)
++			return -errno;
++		if (mkdir(EROFSMOUNT_UBLK_RUNDIR, 0700) < 0 && errno != EEXIST)
++			return -errno;
++		f = fopen(path, "w");
++	}
++	if (!f)
++		return -errno;
++
++	err = erofsmount_write_recovery_fp(f, source);
++	fclose(f);
++	if (err)
++		(void)unlink(path);
++	return err;
 +}
 +
- int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size)
- {
- 	int ret;
-@@ -1515,6 +1525,44 @@ int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
+ #ifdef OCIEROFS_ENABLED
+ /* Parse input string in format: "image_ref platform layer [b64cred]" */
+ static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
+@@ -1438,6 +1467,62 @@ static int erofsmount_ublk_handler(void *ctx, struct erofs_ublk_request *rq)
  	return 0;
  }
  
-+char *erofs_xattr_get_ishare_prefix(struct erofs_sb_info *sbi)
++static int ublk_dev_id_from_path(const char *path)
 +{
-+	struct erofs_xattr_prefix_item *pf = NULL;
-+	unsigned int idx, base_index;
-+	size_t base_len, infix_len;
-+	char *name;
++	int dev_id;
 +
-+	if (!erofs_sb_has_ishare_xattrs(sbi))
-+		return NULL;
-+
-+	if (sbi->ishare_xattr_prefix_id & EROFS_XATTR_LONG_PREFIX) {
-+		idx = sbi->ishare_xattr_prefix_id & EROFS_XATTR_LONG_PREFIX_MASK;
-+		if (idx >= sbi->xattr_prefix_count)
-+			return NULL;
-+
-+		pf = &sbi->xattr_prefixes[idx];
-+		base_index = pf->prefix->base_index;
-+		infix_len = pf->infix_len;
-+	} else {
-+		base_index = sbi->ishare_xattr_prefix_id &
-+			EROFS_XATTR_LONG_PREFIX_MASK;
-+		infix_len = 0;
-+	}
-+	if (base_index >= ARRAY_SIZE(xattr_types))
-+		return ERR_PTR(-EFSCORRUPTED);
-+
-+	base_len = xattr_types[base_index].prefix_len;
-+	name = malloc(base_len + infix_len + 1);
-+	if (!name)
-+		return ERR_PTR(-ENOMEM);
-+
-+	memcpy(name, xattr_types[base_index].prefix, base_len);
-+	if (infix_len)
-+		memcpy(name + base_len, pf->prefix->infix, infix_len);
-+	name[base_len + infix_len] = '\0';
-+	return name;
++	if (sscanf(path, "/dev/ublkb%d", &dev_id) == 1)
++		return dev_id;
++	return -1;
 +}
 +
- void erofs_xattr_cleanup_name_prefixes(void)
++static int erofsmount_ublk_reattach(int dev_id)
++{
++	struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
++	char *recp;
++	FILE *f;
++	int err;
++
++	if (!erofs_ublk_is_recoverable(dev_id))
++		return -EINVAL;
++
++	if (asprintf(&recp, EROFSMOUNT_UBLK_REC_FMT, dev_id) <= 0)
++		return -ENOMEM;
++
++	f = fopen(recp, "r");
++	if (!f) {
++		err = -errno;
++		free(recp);
++		return err;
++	}
++
++	err = erofsmount_open_recovery_source(&ctx, f);
++	if (err) {
++		free(recp);
++		return err;
++	}
++
++	if (fork() == 0) {
++		err = erofs_ublk_recover_dev(dev_id, erofsmount_ublk_handler,
++					     ctx.vd);
++		if (err) {
++			erofs_err("ublk recover dev %d failed: %s",
++				  dev_id, strerror(-err));
++			erofs_io_close(ctx.vd);
++			exit(EXIT_FAILURE);
++		}
++		err = erofs_ublk_start(dev_id, -1);
++		erofs_ublk_destroy(dev_id);
++		erofs_io_close(ctx.vd);
++		(void)unlink(recp);
++		exit(err ? EXIT_FAILURE : EXIT_SUCCESS);
++	}
++
++	erofs_io_close(ctx.vd);
++	free(recp);
++	return 0;
++}
++
+ static int erofsmount_reattach(const char *target)
  {
- 	struct ea_type_node *tnode, *n;
-diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
-index 0f698da3b9b7..b2d35a7ded70 100644
---- a/man/fsck.erofs.1
-+++ b/man/fsck.erofs.1
-@@ -48,6 +48,10 @@ Specify the target inode by its path for checking or extraction. If both
- .BI "--[no-]xattrs"
- Whether to dump extended attributes during extraction (default off).
- .TP
-+.B "\-\-xattr-inode-digest"
-+Verify per-inode digests recorded as extended attributes during image
-+creation with \fBmkfs.erofs \-\-xattr-inode-digest\fR.
-+.TP
- \fB\-h\fR, \fB\-\-help\fR
- Display help string and exit.
- .TP
+ 	struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
+@@ -1450,7 +1535,14 @@ static int erofsmount_reattach(const char *target)
+ 	if (err < 0)
+ 		return -errno;
+ 
+-	if (!S_ISBLK(st.st_mode) || major(st.st_rdev) != EROFS_NBD_MAJOR)
++	if (!S_ISBLK(st.st_mode))
++		return -ENOTBLK;
++
++	nbdnum = ublk_dev_id_from_path(target);
++	if (nbdnum >= 0)
++		return erofsmount_ublk_reattach(nbdnum);
++
++	if (major(st.st_rdev) != EROFS_NBD_MAJOR)
+ 		return -ENOTBLK;
+ 
+ 	nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
+@@ -2101,6 +2193,7 @@ static int erofsmount_ublk(struct erofsmount_source *source,
+ 	if (pid == 0) {
+ 		struct erofsmount_nbd_ctx ctx = { .vd = &ctx._vd };
+ 		struct erofs_ublk_dev_info info;
++		char *recp = NULL;
+ 		struct stat st;
+ 
+ 		close(pipefd[0]);
+@@ -2114,7 +2207,7 @@ static int erofsmount_ublk(struct erofsmount_source *source,
+ 			.max_io_buf_bytes = EROFS_UBLK_DEF_MAX_IO_BUF_BYTES,
+ 			.dev_id = -1,
+ 			.blkbits = EROFS_UBLK_DEF_BLK_BITS,
+-			.flags = 0,
++			.flags = EROFS_UBLK_F_USER_RECOVERY,
+ 			.dev_size = source->type == EROFSMOUNT_SOURCE_LOCAL &&
+ 				erofs_io_fstat(ctx.vd, &st) == 0 ?
+ 					st.st_size : INT64_MAX,
+@@ -2123,20 +2216,32 @@ static int erofsmount_ublk(struct erofsmount_source *source,
+ 		dev_id = erofs_ublk_create_dev(&info, erofsmount_ublk_handler,
+ 					       ctx.vd);
+ 		if (dev_id < 0) {
+-			erofs_err("erofs_ublk_create_dev failed: %s",
+-				  strerror(-dev_id));
++			erofs_err("failed to erofs_ublk_create_dev: %s",
++				  erofs_strerror(dev_id));
+ 			exit(EXIT_FAILURE);
+ 		}
+ 
++		if (asprintf(&recp, EROFSMOUNT_UBLK_REC_FMT, dev_id) > 0) {
++			err = erofsmount_ublk_write_recovery(source, recp);
++			if (err)
++				erofs_warn("failed to write recovery info for ublk %d: %s",
++					   dev_id, erofs_strerror(err));
++		}
++
+ 		if (write(pipefd[1], &dev_id,
+ 			  sizeof(dev_id)) != sizeof(dev_id))
+ 			exit(EXIT_FAILURE);
+ 
+ 		err = erofs_ublk_start(dev_id, pipefd[1]);
+ 		if (err)
+-			erofs_err("erofs_ublk_start: %s", strerror(-err));
++			erofs_err("failed to erofs_ublk_start: %s",
++				  erofs_strerror(err));
+ 		erofs_ublk_destroy(dev_id);
+ 		erofs_io_close(ctx.vd);
++		if (recp) {
++			(void)unlink(recp);
++			free(recp);
++		}
+ 		exit(EXIT_SUCCESS);
+ 	}
+ 
+@@ -2167,15 +2272,6 @@ static int erofsmount_ublk(struct erofsmount_source *source,
+ 	return 0;
+ }
+ 
+-static int ublk_dev_id_from_path(const char *path)
+-{
+-	int dev_id;
+-
+-	if (sscanf(path, "/dev/ublkb%d", &dev_id) == 1)
+-		return dev_id;
+-	return -1;
+-}
+-
+ int erofsmount_umount(char *target)
+ {
+ 	char *device = NULL, *mountpoint = NULL;
 -- 
 2.43.5
 
