@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-3779-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3781-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hBSsHItiQmrW5wkAu9opvQ
-	(envelope-from <linux-erofs+bounces-3779-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jun 2026 14:18:19 +0200
+	id FwUHNo1iQmrY5wkAu9opvQ
+	(envelope-from <linux-erofs+bounces-3781-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jun 2026 14:18:21 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89FEC6D9F4E
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jun 2026 14:18:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC1356D9F55
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jun 2026 14:18:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=bombadil.20210309 header.b="b61Gv/gZ";
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3779-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3779-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=infradead.org header.s=bombadil.20210309 header.b=eedIQ8Qq;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3781-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3781-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=lst.de (policy=none);
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gplfs20DVz2yT0;
-	Mon, 29 Jun 2026 22:18:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gplfy0JS5z2yZc;
+	Mon, 29 Jun 2026 22:18:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782735493;
-	cv=none; b=aRSz8hPO+7ZphNUKNYSDc8oOKxeLywoFi6XBVxAcPbroyfLw/vSsoGd1uctdM4U+2SnYl7JIybWAiuvV6XgU1oVjarpw4epZbwr/BEDJp43nvZjgNEtv9qTK1Cbqll1vytSNf0lSH0zO3sZV7TQG/sjefupNGTJKcEQMhYtEcA6FcuFK0YHOpVVMQEUgzmbEBQL0q1WGd5h7MB4UETI1HTH3y164eQMW6lg4ZGIpI/yWMvitm+zm9AT/1PzwAOdsb4Gf7hqypBrtcxNqZeZRHrLitlNrR246fABpAL28qH5hgwpNGqlIX2dIFw8HpFrd7TEt8OjQM5zgJ94+N9UnUA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782735498;
+	cv=none; b=FqZqHXQvLOAcjBDs643LekyELuztfBDAyqOdehMR8fgQJJ9QbeTVz+mTEK91FyIPnV4Lxk5W65JoPbkY9VeTr5mDG4ASsUJy2jnzkIpi1Pr8v+3guI3mC5+frxJe2+58v7qyBG9lFkbVooYonUJ6e5kOXemy0joOCn6oJo5Dy6JCLznAHi4JvNP96RzpuOX3AVmaKUV4yAC1GLfGBzyJYb3flA75aXr0nmJfDPeIja7Jza+AK8q+cb5XJOE1p0HCkS0e3d09ONX8ONdg1S/ZoUrv+37gLljJw66c7o0yTMsjN3OqxfX3CCot937WWAK+YODrQoK4p3udmQGkCatJeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782735493; c=relaxed/relaxed;
-	bh=h42S6vF9jz0jHC3GNT/SpM3g946pL/rq1oM/rG26wEc=;
+	t=1782735498; c=relaxed/relaxed;
+	bh=3uv6XzvXDFaI2s9endu4pr1fplTSlVypCXcNeZT65c4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dri0mOBAFA+PXegl78YojNZeqMDRh2iivW4hpUmgoX+zI/T3CmZMjObZLyZavTHAjNAJdXUCvqoPFM+vgevRhL7OOqyYIfGwoUkLOOPfL/48XalUNT42Ku5z7pZXUZVTtgKWXehJOABhx+kkQoOZy5/rxcEWwJhw3L2iINbSHbpOlnzOOPyqOyzaD6LQY2nywFg6evcBgKTldKtBw8DbOze6M3gAtXZaKikMflRtVdFCPmZFbcYaTlu/yjQnyxq54EDT7d4TV1whno0Y5KElcL8pq4QZJvZKQCDkGHYflfyWb/TRiYkdY7viaLoGjCOse1C63/vCEOQpve0RtGiY2A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=lst.de; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=b61Gv/gZ; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+90a5730460baaf6f6760+8345+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+	 MIME-Version; b=o3uDeeuLsNk/CH6EwwoJ6ddSWYf6pKjuv+HSJ+gqzUP2SqEiLabGN2SiRtQ8Jw0G2gklZMzjna9av6aXCBX/JsvVjjjbQg79dTX4xK1PxdYRCyWOCuPyD/YFVXfwwtT2LPg1LcDqb3+F7ufLM+JY6rCLN/mPiycAf7PBovwE110kXwdgLX84YA2lZEzIrmXvV8yY3wGYgpLensYamJUw1g20fY+kRit5HRRdlLZJqPb9LXTCmFmkrNNhc02ptn+nKAJg1dhMt/etdCjvyplazFudC8vrJF3S4oUIiA1Lb3pi8mDV1BjlAJ0hgSWaUf2HL4U7gDjABLUki2t60QEzsQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=lst.de; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=eedIQ8Qq; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+90a5730460baaf6f6760+8345+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gplfr4vzTz2ySS
-	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jun 2026 22:18:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gplfx0w4Rz2xYh
+	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jun 2026 22:18:17 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=h42S6vF9jz0jHC3GNT/SpM3g946pL/rq1oM/rG26wEc=; b=b61Gv/gZCJM16zv6Ydc9uKDS5t
-	38JmFOyxa/9pITmkkkNJtNSqL3/ajXTzjIqAmb4BFqeBRfE5mCtV7QXjUGxvb/jHlbDIcWfaPN2Iq
-	KQ+p6ENl6KXr9NEtnhvNWD3UeULlhLXG7dJGoaxAA/i52Z26BkN912Ez4XzizX1iHYLqOx4YM/Yfu
-	uRQenjp8oMoTaMut683Bk8Ib5SddchLvYTFX77r1H+BskLsLwOiwfM2LwlNVerg/b/S52y3NuGEo6
-	HuWhMLmC8JRZvWZnSiOuBcS/5SgoK3Y4eYY70yZTAWsINuLtWGbH/tNjjilzjBrKtaGH3D/usUK7D
-	g91ZEw1Q==;
+	bh=3uv6XzvXDFaI2s9endu4pr1fplTSlVypCXcNeZT65c4=; b=eedIQ8QqTRxd6h5AkRYsGDJ6YS
+	4kv4Qn5bntDkBKjrWSpSeh+NCKdcvYQaj1/Wor3mrcNNW5A/NBxkRLYpc5DBNLH5ln9pOoH4OMSB0
+	QopCbNCZMcCi83A1nojoVmbbu6WX93YKMstLM1HAN2ru8wY+ZgphspFaXxG8KgGo6U1+VSuvunJcg
+	sPWjFbaM7XuoBn9QHr2yMJwqLoq/DoRHlWi8yZAM7hSWlhu5M/xWi/I/sRUtdozgFglmr4934qw7w
+	FbtaIiwSvaJmB5gWy8x7SWEk05EA+j9Y6DN9u2Z63wyuls6oyPysgk047jGC4L+/s4nZCSKoXXCi+
+	jLdF1unA==;
 Received: from clnet-b08-202.ikbnet.co.at ([83.175.123.202] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weAwB-0000000EX0O-0zYW;
-	Mon, 29 Jun 2026 12:18:07 +0000
+	id 1weAwG-0000000EX0p-3WTv;
+	Mon, 29 Jun 2026 12:18:13 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Christian Brauner <brauner@kernel.org>,
 	"Darrick J. Wong" <djwong@kernel.org>
@@ -63,9 +63,9 @@ Cc: Kelu Ye <yekelu1@huawei.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/3] fuse: call fuse_send_readpages explicitly from fuse_readahead
-Date: Mon, 29 Jun 2026 14:17:39 +0200
-Message-ID: <20260629121750.3392300-3-hch@lst.de>
+Subject: [PATCH 3/3] iomap: submit read bio after each extent
+Date: Mon, 29 Jun 2026 14:17:40 +0200
+Message-ID: <20260629121750.3392300-4-hch@lst.de>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260629121750.3392300-1-hch@lst.de>
 References: <20260629121750.3392300-1-hch@lst.de>
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [1.40 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.19)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [1.40 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3779-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3781-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:djwong@kernel.org,m:yekelu1@huawei.com,m:zhaoyifan28@huawei.com,m:ritesh.list@gmail.com,m:joannelkoong@gmail.com,m:linkinjeon@kernel.org,m:sj1557.seo@samsung.com,m:hyc.lee@gmail.com,m:almaz.alexandrovich@paragon-software.com,m:miklos@szeredi.hu,m:fuse-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:riteshlist@gmail.com,m:hyclee@gmail.com,s:lists@lfdr.de];
@@ -118,65 +118,89 @@ X-Spamd-Result: default: False [1.40 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,lst.de:email,lst.de:mid,lst.de:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp,lst.de:email,lst.de:mid,lst.de:from_mime,huawei.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 89FEC6D9F4E
+X-Rspamd-Queue-Id: EC1356D9F55
 
-From: Joanne Koong <joannelkoong@gmail.com>
+Currently the iomap buffered read path tries to build up read context
+(i.e. bios for the typical block based case) over multiple iomaps as
+long as the sector matches.  This does not take into account files
+that can map to multiple different devices.  While this could be fixed
+by a bdev check in iomap_bio_read_folio_range, the building up of I/O
+over iomaps actually was a problem for the not yet merged ext2 iomap
+port, as that does want to send out I/O at the end of an indirect
+block mapped range.
 
-Move the call to fuse_send_readpages from the iomap ->submit_read method
-to the fuse readahead implementation.
+So instead of adding more checks move over to a model where a bio only
+spans a single iomap.  Change ->submit_read to be called after each
+iteration so that the bio based users submit the bio after each iomap.
+Fuse is unchanged because the previous commit stopped using ->submit_read
+for it.
 
-fuse_read_folio() does not need to call fuse_send_readpages() because it
-always does reads synchronously (the iomap->submit_read method for this
-was a no-op since data->ia is always NULL for fuse_read_folio()).
-
-This prepares for an iomap fix that will call ->submit_read after each
-iomap.
-
-Signed-off-by: Joanne Koong <joannelkoong@gmail.com>
+Fixes: dfeab2e95a75 ("erofs: add multiple device support")
+Reported-by: Kelu Ye <yekelu1@huawei.com>
+Reported-by: Yifan Zhao <zhaoyifan28@huawei.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Tested-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- fs/fuse/file.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ fs/iomap/bio.c         |  2 ++
+ fs/iomap/buffered-io.c | 16 ++++++++--------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e052a0d44dee..ceada75310b8 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -981,19 +981,8 @@ static int fuse_iomap_read_folio_range_async(const struct iomap_iter *iter,
- 	return ret;
+diff --git a/fs/iomap/bio.c b/fs/iomap/bio.c
+index 0f31e35567b4..dc8ac7e370a5 100644
+--- a/fs/iomap/bio.c
++++ b/fs/iomap/bio.c
+@@ -87,6 +87,8 @@ void iomap_bio_submit_read_endio(const struct iomap_iter *iter,
+ 	if (iter->iomap.flags & IOMAP_F_INTEGRITY)
+ 		fs_bio_integrity_alloc(bio);
+ 	submit_bio(bio);
++
++	ctx->read_ctx = NULL;
  }
+ EXPORT_SYMBOL_GPL(iomap_bio_submit_read_endio);
  
--static void fuse_iomap_submit_read(const struct iomap_iter *iter,
--		struct iomap_read_folio_ctx *ctx)
--{
--	struct fuse_fill_read_data *data = ctx->read_ctx;
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 8d4806dc46d4..276720bc18dc 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -642,12 +642,12 @@ void iomap_read_folio(const struct iomap_ops *ops,
+ 		fsverity_readahead(ctx->vi, folio->index,
+ 				   folio_nr_pages(folio));
+ 
+-	while ((ret = iomap_iter(&iter, ops)) > 0)
++	while ((ret = iomap_iter(&iter, ops)) > 0) {
+ 		iter.status = iomap_read_folio_iter(&iter, ctx,
+ 				&bytes_submitted);
 -
--	if (data->ia)
--		fuse_send_readpages(data->ia, data->file, data->nr_bytes,
--				    data->fc->async_read);
--}
+-	if (ctx->read_ctx && ctx->ops->submit_read)
+-		ctx->ops->submit_read(&iter, ctx);
++		if (ctx->read_ctx && ctx->ops->submit_read)
++			ctx->ops->submit_read(&iter, ctx);
++	}
+ 
+ 	if (ctx->cur_folio)
+ 		iomap_read_end(ctx->cur_folio, bytes_submitted);
+@@ -718,12 +718,12 @@ void iomap_readahead(const struct iomap_ops *ops,
+ 		fsverity_readahead(ctx->vi, readahead_index(rac),
+ 				readahead_count(rac));
+ 
+-	while (iomap_iter(&iter, ops) > 0)
++	while (iomap_iter(&iter, ops) > 0) {
+ 		iter.status = iomap_readahead_iter(&iter, ctx,
+ 					&cur_bytes_submitted);
 -
- static const struct iomap_read_ops fuse_iomap_read_ops = {
- 	.read_folio_range = fuse_iomap_read_folio_range_async,
--	.submit_read = fuse_iomap_submit_read,
- };
+-	if (ctx->read_ctx && ctx->ops->submit_read)
+-		ctx->ops->submit_read(&iter, ctx);
++		if (ctx->read_ctx && ctx->ops->submit_read)
++			ctx->ops->submit_read(&iter, ctx);
++	}
  
- static int fuse_read_folio(struct file *file, struct folio *folio)
-@@ -1116,6 +1105,9 @@ static void fuse_readahead(struct readahead_control *rac)
- 		return;
- 
- 	iomap_readahead(&fuse_iomap_ops, &ctx, NULL);
-+	if (data.ia)
-+		fuse_send_readpages(data.ia, data.file, data.nr_bytes,
-+				    fc->async_read);
- }
- 
- static ssize_t fuse_cache_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 	if (ctx->cur_folio)
+ 		iomap_read_end(ctx->cur_folio, cur_bytes_submitted);
 -- 
 2.53.0
 
