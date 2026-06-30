@@ -1,52 +1,52 @@
-Return-Path: <linux-erofs+bounces-3787-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3788-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kwqjMYgvQ2rZTwoAu9opvQ
-	(envelope-from <linux-erofs+bounces-3787-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	id ZVmiMYgvQ2raTwoAu9opvQ
+	(envelope-from <linux-erofs+bounces-3788-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
 	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jun 2026 04:52:56 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BA466DFE7F
+	by mail.lfdr.de (Postfix) with ESMTPS id 37F846DFE81
 	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jun 2026 04:52:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=vBi+Pswy;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3787-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3787-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=uOMKZKmc;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3788-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3788-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gq73r46kkz2xHK;
-	Tue, 30 Jun 2026 12:52:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gq73s1xqJz2yZ6;
+	Tue, 30 Jun 2026 12:52:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782787960;
-	cv=none; b=cOdMnKiu484n7c+UzgA3pbcUfhIt+0LnV0ZzQO8DrmLeaknNPLqHrtwuxG6Fwkhvnl19B3kW87N/G42XONyC3ldgM/EgQttQzzhabGu1PtlrFcu4lzVseOP0z57il1uvXEEMePI94fadEPqq3pDs1VSGg+d+tyb82DgemzgYU15ECEE5t7zVkdndl5KM4MMt3TDLX0Ve0xsafdowrgiCfB7dcawmsGRuhdCJ2iIXOV3c+MmpbfG3kaVfytXTAbmxHfKK30C7B6B7a9fUB8qB2cBWnLfrqFQUh+vuGf6OJTRaQeE49kppFpD/KP+b/DgRmICNLuHGtv9Uz7zU6H+oQQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782787961;
+	cv=none; b=W4ppKOOEl6EP3jcKd38/5m+lQKBNOsnhjBVuKVkcZ8tehHt9HyIS7wmVv4pV0Thg08a+okKBqzRFujaCnoUKAmec7mmdq+6ZzByLyBw8ud5ax2WLZt+HafS0loU/iIyUnXhp04V3BfBWJIiBWWULzyD4RJMH54fe8/x3gz0yw9qx+R5BmFa/Qkxor9WuYED9GxUaL94vlKcbzGcefJ7vvbSzNBAtml6YxoWz8+WNTkLQ1KqXzv1m7LmM8uQj1BXIriZ6GFfECXAOCLZSVNvUbaV9F3UKjnyB5+WeRFBpw0v/A8pJjrL25W8JP2QA5zgluZlfiaTvlPchE+Y6gLC0xQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782787960; c=relaxed/relaxed;
-	bh=OGVZlrDg6gXKcEAbbEvD1WBHleNRRMtLiM+LXawwryI=;
+	t=1782787961; c=relaxed/relaxed;
+	bh=r2O/xV3m7KV4Mj0iYQPGTYCu4AC0PsfFbR/vkvbQwGk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n8L3hoGQGljA8ZyVKwi0w9tjlRVT4LKgtEibKJfY+e/2azjtbpbf5gTIxOx2t0tz0MUF+EyzlPiNHAZz2FKpP/dBo9gW1Yc3zv9AqmWNnYxFS2ig/dY0PwJCTDYcVssl1LaOwEbtsfIhnvJI5/pg7ZINW4Ou6yJPaehX4VXJOs1l+9agVbwTM/rK/RXYEUz4eJILvg5uEUfJXEkfHrRwbMrB1mQmTpQUTTIFUfQhwYvsA39K+cpsiDXUeS/1T1S4yrxxvZUGGfWPQeWIK/yoEVS6pN0bxpAkSBpNBn37bTkY3Zd5H+fvjdV4DOatbsRPXHRf1qNwbUhHUJn/iH8hlw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vBi+Pswy; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	 MIME-Version; b=UDakNmkNWembasKuYvfvSf5mpYAI34kLSukco9fGGy3VHKfjmEa/k2eXEyOoZ2IaLbxwUTXAT/wM1rP1T9B2Q7onxEiqApnHXGLsoN1eBHp/GcAlYTKxORYc0uE+ijJQmU0EnsQ913TJ6FWv/mSD0c37sQgmDl/8JBRKtuulk7PGIB5vMGg9JLhR0CA5oa6/pjQLgeE6xbWN4tItnl5wRZXQR7PY0dgu8WfXQVnSxtgXxLVivp64VeSbUZ1N/Odl91AytfAVP4gqfhdRDlAk2aqsh78c6u5EzP9jupukEXM2odbdTEwDHz1ljGyyRLmMAuck2BLg1Tju2OvxpochjQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uOMKZKmc; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gq73q5VC4z2yZ6
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gq73r2gvYz2ybR
 	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jun 2026 12:52:39 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1782787956; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=OGVZlrDg6gXKcEAbbEvD1WBHleNRRMtLiM+LXawwryI=;
-	b=vBi+PswyhpRDyEyGt9u/qqiEmAXEQZiJIc98sYLDMdAICKXUwN1pl3KvwEJEkjX283qXgoPSWo7r+Ng7maFKDdjNcPuznG2UzvEglOuy/ZDrm6xz1jLHQ6EsAf/BaE2nZlYjdsTI2V6hRdoS2jvc0vImvXdjhfK/IpL30ndeGUQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X5zS2q2_1782787952;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5zS2q2_1782787952 cluster:ay36)
+	bh=r2O/xV3m7KV4Mj0iYQPGTYCu4AC0PsfFbR/vkvbQwGk=;
+	b=uOMKZKmcNsD10vy5Ggt1m3hkxTvUSacTlMAQUw0dbASGB41oFFRszJ1zkmyRHnXsjB0sxrs/dBsdL7LN12Rj23+yp/7DMbYnwvY+b/RVfIDcU9LMS73U23TtzLuLTZIDrM3lLts0d09ffmDB5J7wFYryvhp5hnuhKHLIIBXnAbU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X5zS2qP_1782787953;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X5zS2qP_1782787953 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 30 Jun 2026 10:52:33 +0800
+          Tue, 30 Jun 2026 10:52:34 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 5/7] erofs-utils: lib: fix `STRING_NULL` in nbd.c
-Date: Tue, 30 Jun 2026 10:52:22 +0800
-Message-ID: <20260630025224.3955763-5-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6/7] erofs-utils: mount: fix `RESOURCE_LEAK`
+Date: Tue, 30 Jun 2026 10:52:23 +0800
+Message-ID: <20260630025224.3955763-6-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20260630025224.3955763-1-hsiangkao@linux.alibaba.com>
 References: <20260630025224.3955763-1-hsiangkao@linux.alibaba.com>
@@ -80,7 +80,7 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3787-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3788-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -94,28 +94,34 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	ALIAS_RESOLVED(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime,alibaba.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid,linux.alibaba.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2BA466DFE7F
+X-Rspamd-Queue-Id: 37F846DFE81
 
-Coverity-id: 647257
+Coverity-id: 647246
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/backends/nbd.c | 1 +
- 1 file changed, 1 insertion(+)
+ mount/main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/lib/backends/nbd.c b/lib/backends/nbd.c
-index c488053d99d3..db0df44990b6 100644
---- a/lib/backends/nbd.c
-+++ b/lib/backends/nbd.c
-@@ -82,6 +82,7 @@ long erofs_nbd_in_service(int nbdnum)
- 		return err;
- 	}
- 	close(fd);
-+	s[sizeof(s) - 1] = '\0';
- 	return strtol(s, NULL, 10);
- }
+diff --git a/mount/main.c b/mount/main.c
+index ffe718a0a90f..ec27dcb53eb3 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -1698,8 +1698,11 @@ static int erofsmount_loopmount(const char *source, const char *mountpoint,
+ 		return -errno;
  
+ 	num = ioctl(fd, LOOP_CTL_GET_FREE);
+-	if (num < 0)
+-		return -errno;
++	if (num < 0) {
++		dfd = -errno;
++		close(fd);
++		return dfd;
++	}
+ 	close(fd);
+ 
+ 	snprintf(device, sizeof(device), "/dev/loop%d", num);
 -- 
 2.43.5
 
