@@ -1,56 +1,48 @@
-Return-Path: <linux-erofs+bounces-3800-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3801-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id q/88OAs9RmpFMgsAu9opvQ
-	(envelope-from <linux-erofs+bounces-3800-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 12:27:23 +0200
+	id TwiNI4BfRmoXSAsAu9opvQ
+	(envelope-from <linux-erofs+bounces-3801-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 14:54:24 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 795006F5E4E
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 12:27:21 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 815286F7F5C
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 14:54:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=lst.de (policy=none);
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3800-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3800-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=MMYceTon;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3801-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3801-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=linux.alibaba.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4grY3T3kp5z2xLk;
-	Thu, 02 Jul 2026 20:27:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4grcK92pHLz2ynC;
+	Thu, 02 Jul 2026 22:54:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782988037;
-	cv=none; b=CrfEjDx5G0VyH9twyyGiD74L5riE29ep4dePF4aV4TJxs6bNVTIn6BKRDciGHDDxZm01DHEhMYnTWt/GSmTOY7s4emIPviTzKPn9o6OXRrpPd5jQmTPXmx03dFa0t/g12xWzb3KYtEp9z/gtRHTW21FUawkqPcPgpEsYGTPcgTKka5RWk7el4G8rEsxbj+FxsEhQtMXXupHdi8k4YiqcLPHa3ycivJw0X0RaeTCTLVwNsq9Xmjzw7Olp7t5iCEGP9sRiNChks/2Q2qlfFlLtdwDMoBrbYvsB4pjvVp5t4ut+HUpQx6b4oUxOaFeh/HNuytXTnHi9X3NlcoB/5j+tNQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782996861;
+	cv=none; b=GS9TC+l0U35fAym4/l9otMOs1LzFWq5u/plQSM2xcD3PeWdBxX4y0cemaqQegzBWd9BfT02M1NBJE3W754FiK+YTw4kcrBisWNHiO3Z6EqNkiAonPFEMPuL5cb6nPaQbveo/CLRF2ev5HJI5PMDrJN/Osv+afJQa8RL/3qi2hrW8morYUUI1WMrYDMze3UCwMVioGmsZxNM96OGJhvh7wNHklk4kEyER8HadvrzIcHi4Z4Cv1FwgXvwj8lojhHQ6SLrWh6jVIjqhwWMO3bd0GvAcpnde8l/3WMn9/Qu3INWZGsWzaDeHneVpZvZYJupCCGgIjY1fXEFHSh/F5WguoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782988037; c=relaxed/relaxed;
-	bh=2QSpOHJ4tbguE1GPlnnA7Qo/MJflg19F6M7cmaJHNU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrXGqKSaGclTnNwgL8Tn1tixru3Fdrox6OcN1g39TxRn5k0X3QvC3Cxt+5gzW7enKU/MGo/M5m4LmeC8+qSQ26/j4+0ZORm9D8ZPpARWGlq2wLWAeCD/YnhwoFWgvmbiNm5X0rbup59HJjmoDuoHRKiMfzt1tVRSeBQP179nEgdzS42gstep0H4vDQ6pNKc+zeAlzSYXabd166UaHKx+rqlzkWFaeX3FNGXRYJkFIrxNq7XFBbwo3wapnvBChJUnosWTfaFmJHvi7OV1u6IlMHqSkkXBRzabnhLLyB3st5xjsMiK9Hf9ADmHjWdtK5s7WQDPHoaQMwsbnh1RE/IvGQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org) smtp.mailfrom=lst.de
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1782996861; c=relaxed/relaxed;
+	bh=lGnzS5hZ5Fvf5v2QvUzvF1aUNQ32G07pyG9xm60BJuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EWkBW5lO4ORO/HdkOpcajPu9MJO7aXvShQ+tZmlrcuKFUO+X2Z+R7unQcr48c2aUE0OpEx63Al/1E6dI/zxyHgYSk95jyS51rswrNDiFHdVp3FHfyE52IQGXgGOoYfIr0krhJMdNjlx3XaJ3LOlNyUfRGjGeJb7fj3ObJSricH31KRgO8c7k79/ITFS0KRZVMbzCQOn4wHaQoi4qhDRWjggF3u5f1vGei5YSG0jKRbQ+IKae26soyqKQv+r4RrGo5bMMr01pPSAfgdi1TLiM+JglaYW6NiqpN+o3xvZFIDvvsrSYj4ip0iD8tN3GNQYNOzEaOkAY4LB+qFmE3P63JA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MMYceTon; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4grY3S06fXz2xJT
-	for <linux-erofs@lists.ozlabs.org>; Thu, 02 Jul 2026 20:27:13 +1000 (AEST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 35C9B68BEB; Thu,  2 Jul 2026 12:27:06 +0200 (CEST)
-Date: Thu, 2 Jul 2026 12:27:06 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Kelu Ye <yekelu1@huawei.com>, Yifan Zhao <zhaoyifan28@huawei.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Hyunchul Lee <hyc.lee@gmail.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, fuse-devel@lists.linux.dev,
-	ntfs3@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] iomap: consolidate bio submission
-Message-ID: <20260702102705.GB6252@lst.de>
-References: <20260629121750.3392300-2-hch@lst.de> <20260701-davon-kniegelenk-gedehnt-96476b242a09@brauner>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4grcK71zjjz2yYq
+	for <linux-erofs@lists.ozlabs.org>; Thu, 02 Jul 2026 22:54:17 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782996853; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=lGnzS5hZ5Fvf5v2QvUzvF1aUNQ32G07pyG9xm60BJuQ=;
+	b=MMYceTonJPqqJEdGbxiNTiRfXX94FjfDPGcn5HgnhBsX2UyvulsbgkhqmTEC/fNS98j1L7I59cExC/YVSzqJH3WhHO4vNTWaVJSuv42B1NA0I5TRLEgPomyur+shC2q+0nAR8YKqi7bYWDr+UuykGnGwCTalRm16YhBnua/6Vxw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0X6Em1iF_1782996849;
+Received: from 30.180.134.80(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X6Em1iF_1782996849 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 02 Jul 2026 20:54:10 +0800
+Message-ID: <75a94b5a-011a-4b7f-bd98-5b40d756f842@linux.alibaba.com>
+Date: Thu, 2 Jul 2026 20:54:09 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,53 +54,89 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260701-davon-kniegelenk-gedehnt-96476b242a09@brauner>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs-utils: fsck: add concurrent extraction and
+ decompression
+To: Nithurshen <nithurshen.dev@gmail.com>, linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org, hsiangkao@alibaba.com
+References: <20260702081030.10038-1-nithurshen.dev@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260702081030.10038-1-nithurshen.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.10 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:djwong@kernel.org,m:hch@lst.de,m:yekelu1@huawei.com,m:zhaoyifan28@huawei.com,m:ritesh.list@gmail.com,m:joannelkoong@gmail.com,m:linkinjeon@kernel.org,m:sj1557.seo@samsung.com,m:hyc.lee@gmail.com,m:almaz.alexandrovich@paragon-software.com,m:miklos@szeredi.hu,m:fuse-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:stable@vger.kernel.org,m:riteshlist@gmail.com,m:hyclee@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-3800-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3801-lists,linux-erofs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:hsiangkao@alibaba.com,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[kernel.org,lst.de,huawei.com,gmail.com,samsung.com,paragon-software.com,szeredi.hu,lists.linux.dev,lists.ozlabs.org,vger.kernel.org];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[kernel.org,alibaba.com];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,lst.de:from_mime,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 795006F5E4E
+X-Rspamd-Queue-Id: 815286F7F5C
 
-On Wed, Jul 01, 2026 at 03:27:40PM +0200, Christian Brauner wrote:
-> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-> Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Hmm, both this mail and the merge commit in git reference the first
-commit instead of the cower letter.  Is there an issue with your
-automation that made it miss the cover letter?
+
+On 2026/7/2 16:10, Nithurshen wrote:
+> This patch introduces a multi-threaded pipeline for fsck.erofs,
+> combining parallel directory traversal with background pcluster
+> decompression to significantly reduce extraction time.
+> 
+> Key architectural changes include:
+> 
+> - Thread-Safe State: Removes the global dirstack array and
+>    fsckcfg.extract_path. These are replaced with per-task localized
+>    paths and thread-local linked lists to eliminate data races.
+> - Concurrent Traversal: Refactors erofsfsck_dirent_iter to allocate
+>    task structures and dispatch inode processing to a background
+>    workqueue (z_erofs_mt_wq).
+> - Asynchronous Decompression: Introduces z_erofs_mt_read_ctx to
+>    batch pcluster reads and decouple decompression from main I/O.
+>    Limits batch size dynamically (32 for LZ4, 8 for compute-heavy
+>    algorithms) to balance CPU cache hits and memory overhead.
+> - Memory & Deadlock Safety: Implements inline backpressure during
+>    directory iteration. If pending inodes exceed workqueue capacity,
+>    execution falls back to synchronous processing to prevent
+>    recursive thread-pool starvation and unbounded memory growth.
+> - Synchronization Primitives: Adds portable condition variable
+>    wrappers (erofs_cond_t) to ensure the main thread safely waits
+>    for all pending background inodes before exiting.
+> 
+> Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
+
+What's the relationship with the previous two patches?
+
+Thanks,
+Gao Xiang
 
