@@ -1,94 +1,83 @@
-Return-Path: <linux-erofs+bounces-3802-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3803-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 6PDtG69gRmq4SAsAu9opvQ
-	(envelope-from <linux-erofs+bounces-3802-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 14:59:27 +0200
+	id UAhyMpVwRmpvVAsAu9opvQ
+	(envelope-from <linux-erofs+bounces-3803-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 16:07:17 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8C816F8071
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 14:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8FE66F8B0B
+	for <lists+linux-erofs@lfdr.de>; Thu, 02 Jul 2026 16:07:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=JUhLPtBO;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3802-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3802-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("lists.ozlabs.org:s=201707:i=2")
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=lst.de (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3803-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3803-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4grcQz25v9z2ypm;
-	Thu, 02 Jul 2026 22:59:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4grdxG2phBz2yVP;
+	Fri, 03 Jul 2026 00:07:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1782997163;
-	cv=pass; b=NRjrlW/aMQhH6TYa38WtJzoEwwpBLpFmwQy6KcRPdWzxpzFLOs8J09PkrXdeVvEqDU7ODKkOr8WCFzVIumqNC5ruFsoHk3IamZOnJtK5Hhwu4HTnKe70DRyWp+aaJtZUHZ9ZsHcAnVqdTTQSlUvdfmisMPib83rJ6s2MOu2y76XqZ8K2IZMD56p91o0RhQDcc8CZu6WtBr4VqTWEkP8JuSksv+421fKyv66aILyzofoWuqyGpnpak2zPJQZ6lfX+6n4x0j+1SXMW7BcLNIPo5LR/BgeEixBG0mSh0OIC+RhshYKwbdMHfsDmpyasq/SpnIkm+nqgVTE6A1hZ7zfxpw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1782997163; c=relaxed/relaxed;
-	bh=rZEnktGYS3FaSvMJHBvWp/Cz6mAa6hG1ZLvsr/GD/no=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FGihsgK6Zo/1Y3fyfEmcL5skaynUwzyFigl2OBFf2BD9zkVi8zeLwa3J2mv5T6NohXt5hHQIOsG9Xvhng1PQdYcoRLzHRzLKsr+ClN2LtHLD/8hI5i7/3VjPzVaBewJO041aQXKtCMN8bbOhm+8ucKkb639HsgFEWW6QscgsLZiku6xSi4Nv6Z1G1lvxX+x/Wu214LeNARZoVaJ4neLQ95EQX4uqNCu/0CKFkNk7GaM4QQnS6BhGm/eP2mtlKvFwZWMfKmziY955QeMBBrwsC808G0NH/au4wF3RDZfaqkGM0CECLlvlrUqi+ClPEvoleZlJbnIfNaKqyUeUntQIhQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=JUhLPtBO; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b12d; helo=mail-yx1-xb12d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Received: from mail-yx1-xb12d.google.com (mail-yx1-xb12d.google.com [IPv6:2607:f8b0:4864:20::b12d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783001234;
+	cv=none; b=Hemwvk114LoGe+jl/znXohp/Ay8Fj/B2+YKy0TPgyNIc7Tau8I+ojtIUHOFPhU2xRcZH1YcIMoQz0kOMz4otZkV1vhnDJWGGRCQFFtC3oo3PTMAYOL9YSEjSh5qegK84HtiMwEY27kavo6l+qjvlV9QZmunSe7hPgR+0KHNj5NL/e9DUEsj+P2KPUmD2HJo8dmBztpXIHCljHTrgRZa3uQUJkdR7XHPj0M6SW1YZ7UUlYoCjgVXoRcDtOy2R2RR9jcACn7yMNDw++0Jq4duAGTlr24tFsxodEXqRVxoM9vw+hfTTSuKJAm6sHxIeQxtbZBCSCLEV4LtA+sd2Lc4+mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1783001234; c=relaxed/relaxed;
+	bh=+nEHDZS1++8Q/bmxLvAJQa/55le8Uz9H1iW8kDWU5TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfSShwXFM7qiPf7yBH0PedJWkGLekLcD2JwAzpybgkkMMylUykAmT07TJf9w9krDZ0RulaG5wbtqbz6/Xb1mAmqtuFqM/UumYnB5PP1uVXsCxJBN28bDMHOFi6iu2/N+FBVkELOlqaFLevU9zu6yqrLecYjiXWjidpDk2yFFihNCPCEmzfLqCUN009AE6s7K4/Sp2/emL6h2Nis4yYkNg2J9hns4g2VqiOtBPGcwDgq3H9984iUiswH3M0ErciPb9SB7IRfUmqhzK4UBMvFmWdTzB/0ZLfIHD3xaqv+qXHSkfDCfzLWLBE/bbBQV/r5zCN2l2syeRDLPmiaXym7zrg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org) smtp.mailfrom=lst.de
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4grcQy0zCFz2ypW
-	for <linux-erofs@lists.ozlabs.org>; Thu, 02 Jul 2026 22:59:21 +1000 (AEST)
-Received: by mail-yx1-xb12d.google.com with SMTP id 956f58d0204a3-664c1cf7445so2314897d50.2
-        for <linux-erofs@lists.ozlabs.org>; Thu, 02 Jul 2026 05:59:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782997159; cv=none;
-        d=google.com; s=arc-20260327;
-        b=WfZuvaBChgmJICwg8NlWRTb3DBCDh6ilA2Skvgp9iE0MEOpMDK8zwFHc/NfYsOO9H3
-         lNRyEoB3F4Wf1YJlBRfpCFlx206X1TW2M3w0j4OadkLB2bJZ0TSmEBxuvyGCYQVwkyRP
-         WUx/Lmzgc8N9yHDpez2Oa/JY2ohzkug9KFzQOr9HVC0eG7FZfxBIP3XyLGIkM4YUpjhO
-         ifvj+PPhc66jLVXI0Xqno64f8eJ7vhAdtOJwjF6rOyyydJQ3EdYYOFnBmbSg9tl65tcQ
-         BzM1XzlQUX7PP7veMD68ydhNxSVW68kCLi5EmAptkDl0mi7Imbx4xV32JdBpL9eaU/Kp
-         xmKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=rZEnktGYS3FaSvMJHBvWp/Cz6mAa6hG1ZLvsr/GD/no=;
-        fh=LkPzkD36zDjIMdtiFtaEJ+rRd7z8TGwO22EJBZEEqoQ=;
-        b=skj78+ABXMKpVQ5squZDpm/u5HhTgPHYr8wAUGid5rBWxP9DZ3DRYJS6A+D/PcveX3
-         ZUiA2VBYtUeE2HKuBhPqRGJqwcaGYV9sOw812s+x1au1Fvc+f5VR9FN1WGDbxuadmA3P
-         n7FtRAQ6ThJYzA6U0fXcnHZ/cVgy5aDRXQj2MMKdk63+U6APPOmfGZCepsEJqjTmosmL
-         xoYiSZLWXBszLzDJSYJ+LWlMhnLvy1ZimOqYpT5C7S6qAMILWVZpfh527flv2ZdBiCJW
-         9Tr44Hidprh2pC6ke0Fm3pdJKbIbqmp7eSUKU5tduJM+NWjdVBtMsqi2rbyD3iX1RQ55
-         DmYg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782997159; x=1783601959; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rZEnktGYS3FaSvMJHBvWp/Cz6mAa6hG1ZLvsr/GD/no=;
-        b=JUhLPtBOH0UgkGyFq5OGQlLtBdMs2ZEjTyfyXSSW55jk6WG8PRha3mYq2yrv4titep
-         EXT/1iXfHaNbrAKMOn673HW32es5Y6vwN8EvsLrheTG7ahuTCMlSAAAIhd/C51JPHBZC
-         gRutIct7NwnYGwfjbaHpVmDOrX30uH+aGoQzd9vxuRNmUiPxtYrGlMPvZWKvBhAYvEnK
-         0aqnqAflx8nHRXAVW36xz4Ga7OgDQ4sMqUJI1ghBysup/CuHyVzL3zhbQvt1lPf6+iBv
-         +VAbgjfaRkVu+bfoddCqSJC1DpNuSOvr1kdVF1v2ThdoY83FxBU1oisj2+Km5W42xvqb
-         4ZVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782997159; x=1783601959;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rZEnktGYS3FaSvMJHBvWp/Cz6mAa6hG1ZLvsr/GD/no=;
-        b=sJ/B53JYR49TTeLpHwOdyQVE15E9utVabQkuPRf+R0qOX4bzHWZ3Ule2QVzzWQUgkD
-         qckl3t+tC4Lrx4AECwErcxsR5rRPaXaLjFdf+znYqLaxLVS/uvHyJb+LX+TYuxMLs2Hc
-         9LVHeTdEVtqfajLXOUazD8PadhUNH7r2A9goWp8Q6eTrcza8vP0OqQIuGcJ+9R1FbGy8
-         cLZlQmdcLJ5jvfdegUrS719cxoUuwZFf5IrQ/lxQMVD7UB8yCi+11IHdL1/8cWuk1V37
-         O7d9C8e87ILwT6sldJd4rTOWhNOuiWzh6jzdsWUSouyWHp+mnZNdJfdtNAQu8OiuiRzE
-         aQ+Q==
-X-Gm-Message-State: AOJu0YyRQfX/NAKkAh/l4L7m2qYJ2kQy/uDQf+JRTG9Ad5HRh1mF950q
-	lWQxqvZFFaqsRAV4zlcKHjcRnIsox/El1lD+pHid1K2BYx7sjXnHyW3Cu+kLWRGEttRYJxDGAMv
-	UIukOQv7ZzHAz65A4jxSgOLQcy378wc0=
-X-Gm-Gg: AfdE7clL3uwQ+X++JelQnsOHYEwC+6cdrw9xmj7eY7el01Ci5GjB3HJ0OBLCCHiH/ot
-	Fll6VUohnerTz0j5gQRncanlVCDKbwDEXIA02Lom4NjTD3l+SRia5KChIsmuekQ1JCD3lfg4F71
-	j+WbMTaTcREYu+NyYpR/3L8RTebYlBUy699oF7j4TV2zPEcrLTAdKvyt11ELWbL45nogu92Tbnd
-	PqKuP/GYsn/nvgU7pIfcx/qgjJ3HVrSLwSkucMpdlik4hu0u7IxFkdOnxhYQvgACy6fUuXxdPW7
-	X2c7UviEwoybT4SwFJdQLbERchJ7Mg0=
-X-Received: by 2002:a05:690e:4089:b0:665:a15a:71aa with SMTP id
- 956f58d0204a3-665a15a74f2mr4921847d50.72.1782997158624; Thu, 02 Jul 2026
- 05:59:18 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4grdxF1H55z2ySD
+	for <linux-erofs@lists.ozlabs.org>; Fri, 03 Jul 2026 00:07:12 +1000 (AEST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 90D9968BEB; Thu,  2 Jul 2026 16:07:05 +0200 (CEST)
+Date: Thu, 2 Jul 2026 16:07:05 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: brauner@kernel.org, hch@lst.de, djwong@kernel.org, willy@infradead.org,
+	hsiangkao@linux.alibaba.com, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Dan Williams <djbw@kernel.org>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Baokun Li <libaokun@linux.alibaba.com>,
+	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Zhang Yi <yi.zhang@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	Hyunchul Lee <hyc.lee@gmail.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	"open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
+	"open list:FILESYSTEM DIRECT ACCESS (DAX)" <nvdimm@lists.linux.dev>,
+	"open list:EROFS FILE SYSTEM" <linux-erofs@lists.ozlabs.org>,
+	"open list:EXT2 FILE SYSTEM" <linux-ext4@vger.kernel.org>,
+	"open list:F2FS FILE SYSTEM" <linux-f2fs-devel@lists.sourceforge.net>,
+	"open list:FUSE FILESYSTEM [CORE]" <fuse-devel@lists.linux.dev>,
+	"open list:GFS2 FILE SYSTEM" <gfs2@lists.linux.dev>,
+	"open list:NTFS3 FILESYSTEM" <ntfs3@lists.linux.dev>
+Subject: Re: [PATCH v2 17/18] iomap: pass iomap_next_fn directly instead of
+ struct iomap_ops
+Message-ID: <20260702140705.GE21339@lst.de>
+References: <20260701000949.1666714-1-joannelkoong@gmail.com> <20260701000949.1666714-18-joannelkoong@gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -100,165 +89,58 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260702081030.10038-1-nithurshen.dev@gmail.com> <75a94b5a-011a-4b7f-bd98-5b40d756f842@linux.alibaba.com>
-In-Reply-To: <75a94b5a-011a-4b7f-bd98-5b40d756f842@linux.alibaba.com>
-From: Nithurshen Karthikeyan <nithurshen.dev@gmail.com>
-Date: Thu, 2 Jul 2026 18:29:04 +0530
-X-Gm-Features: AVVi8CcjFkzCauRWKu2N2vIjII7lox-ng5DWzLV8UrGM-1_Yq0VndUPb6S36v14
-Message-ID: <CANRYsKjDbs6_FekTRpJeEw124m9D-mQJu-GvvUP2ms8y9uxK=Q@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: fsck: add concurrent extraction and decompression
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, hsiangkao@alibaba.com
-Content-Type: multipart/alternative; boundary="0000000000004683860655a060aa"
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260701000949.1666714-18-joannelkoong@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [0.10 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
+	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:hsiangkao@alibaba.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-3802-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3803-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:joannelkoong@gmail.com,m:brauner@kernel.org,m:hch@lst.de,m:djwong@kernel.org,m:willy@infradead.org,m:hsiangkao@linux.alibaba.com,m:linux-fsdevel@vger.kernel.org,m:linux-xfs@vger.kernel.org,m:axboe@kernel.dk,m:clm@fb.com,m:dsterba@suse.com,m:viro@zeniv.linux.org.uk,m:jack@suse.cz,m:djbw@kernel.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linkinjeon@kernel.org,m:sj1557.seo@samsung.com,m:yuezhang.mo@sony.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:libaokun@linux.alibaba.com,m:ojaswin@linux.ibm.com,m:ritesh.list@gmail.com,m:yi.zhang@huawei.com,m:jaegeuk@kernel.org,m:miklos@szeredi.hu,m:agruenba@redhat.com,m:mikulas@artax.karlin.mff.cuni.cz,m:hyc.lee@gmail.com,m:almaz.alexandrovich@paragon-software.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:linux-block@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lin
+ ux-btrfs@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-erofs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-f2fs-devel@lists.sourceforge.net,m:fuse-devel@lists.linux.dev,m:gfs2@lists.linux.dev,m:ntfs3@lists.linux.dev,m:riteshlist@gmail.com,m:hyclee@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FREEMAIL_CC(0.00)[lists.ozlabs.org,kernel.org,alibaba.com];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,lst.de,infradead.org,linux.alibaba.com,vger.kernel.org,kernel.dk,fb.com,suse.com,zeniv.linux.org.uk,suse.cz,gmail.com,google.com,huawei.com,vivo.com,samsung.com,sony.com,mit.edu,dilger.ca,linux.ibm.com,szeredi.hu,redhat.com,artax.karlin.mff.cuni.cz,paragon-software.com,wdc.com,lists.linux.dev,lists.ozlabs.org,lists.sourceforge.net];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,lists.ozlabs.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,lst.de:mid,lst.de:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C8C816F8071
+X-Rspamd-Queue-Id: B8FE66F8B0B
 
---0000000000004683860655a060aa
-Content-Type: text/plain; charset="UTF-8"
+Looks good:
 
-On Thu, 2 Jul, 2026, 18:24 Gao Xiang, <hsiangkao@linux.alibaba.com> wrote:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
->
->
-> On 2026/7/2 16:10, Nithurshen wrote:
-> > This patch introduces a multi-threaded pipeline for fsck.erofs,
-> > combining parallel directory traversal with background pcluster
-> > decompression to significantly reduce extraction time.
-> >
-> > Key architectural changes include:
-> >
-> > - Thread-Safe State: Removes the global dirstack array and
-> >    fsckcfg.extract_path. These are replaced with per-task localized
-> >    paths and thread-local linked lists to eliminate data races.
-> > - Concurrent Traversal: Refactors erofsfsck_dirent_iter to allocate
-> >    task structures and dispatch inode processing to a background
-> >    workqueue (z_erofs_mt_wq).
-> > - Asynchronous Decompression: Introduces z_erofs_mt_read_ctx to
-> >    batch pcluster reads and decouple decompression from main I/O.
-> >    Limits batch size dynamically (32 for LZ4, 8 for compute-heavy
-> >    algorithms) to balance CPU cache hits and memory overhead.
-> > - Memory & Deadlock Safety: Implements inline backpressure during
-> >    directory iteration. If pending inodes exceed workqueue capacity,
-> >    execution falls back to synchronous processing to prevent
-> >    recursive thread-pool starvation and unbounded memory growth.
-> > - Synchronization Primitives: Adds portable condition variable
-> >    wrappers (erofs_cond_t) to ensure the main thread safely waits
-> >    for all pending background inodes before exiting.
-> >
-> > Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
->
-> What's the relationship with the previous two patches?
->
+In terms of merge logistics, I wonder if we should delay this and
+the previous patch to the next merge window so that we can minimize the
+cross-subsystem merge pain with more file system iomap conversion.
+If none of them actually happen until rc6 or so, orif  the merges aren't
+painful we could still pick them up late in the merge window.
 
-I made then into one atomic patch, since you wanted them merged at once.
-
-Thanks,
-Nithurshen
-
-Thanks,
-> Gao Xiang
->
-
---0000000000004683860655a060aa
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto"><div><br><br><div class=3D"gmail_quote gmail_quote_contai=
-ner"><div dir=3D"ltr" class=3D"gmail_attr">On Thu, 2 Jul, 2026, 18:24 Gao X=
-iang, &lt;<a href=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.al=
-ibaba.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><br>
-<br>
-On 2026/7/2 16:10, Nithurshen wrote:<br>
-&gt; This patch introduces a multi-threaded pipeline for fsck.erofs,<br>
-&gt; combining parallel directory traversal with background pcluster<br>
-&gt; decompression to significantly reduce extraction time.<br>
-&gt; <br>
-&gt; Key architectural changes include:<br>
-&gt; <br>
-&gt; - Thread-Safe State: Removes the global dirstack array and<br>
-&gt;=C2=A0 =C2=A0 fsckcfg.extract_path. These are replaced with per-task lo=
-calized<br>
-&gt;=C2=A0 =C2=A0 paths and thread-local linked lists to eliminate data rac=
-es.<br>
-&gt; - Concurrent Traversal: Refactors erofsfsck_dirent_iter to allocate<br=
->
-&gt;=C2=A0 =C2=A0 task structures and dispatch inode processing to a backgr=
-ound<br>
-&gt;=C2=A0 =C2=A0 workqueue (z_erofs_mt_wq).<br>
-&gt; - Asynchronous Decompression: Introduces z_erofs_mt_read_ctx to<br>
-&gt;=C2=A0 =C2=A0 batch pcluster reads and decouple decompression from main=
- I/O.<br>
-&gt;=C2=A0 =C2=A0 Limits batch size dynamically (32 for LZ4, 8 for compute-=
-heavy<br>
-&gt;=C2=A0 =C2=A0 algorithms) to balance CPU cache hits and memory overhead=
-.<br>
-&gt; - Memory &amp; Deadlock Safety: Implements inline backpressure during<=
-br>
-&gt;=C2=A0 =C2=A0 directory iteration. If pending inodes exceed workqueue c=
-apacity,<br>
-&gt;=C2=A0 =C2=A0 execution falls back to synchronous processing to prevent=
-<br>
-&gt;=C2=A0 =C2=A0 recursive thread-pool starvation and unbounded memory gro=
-wth.<br>
-&gt; - Synchronization Primitives: Adds portable condition variable<br>
-&gt;=C2=A0 =C2=A0 wrappers (erofs_cond_t) to ensure the main thread safely =
-waits<br>
-&gt;=C2=A0 =C2=A0 for all pending background inodes before exiting.<br>
-&gt; <br>
-&gt; Signed-off-by: Nithurshen &lt;<a href=3D"mailto:nithurshen.dev@gmail.c=
-om" target=3D"_blank" rel=3D"noreferrer">nithurshen.dev@gmail.com</a>&gt;<b=
-r>
-<br>
-What&#39;s the relationship with the previous two patches?<br></blockquote>=
-</div></div><div dir=3D"auto"><br></div><div dir=3D"auto">I made then into =
-one atomic patch, since you wanted them merged at once.</div><div dir=3D"au=
-to"><br></div><div dir=3D"auto">Thanks,</div><div dir=3D"auto">Nithurshen</=
-div><div dir=3D"auto"><br></div><div dir=3D"auto"><div class=3D"gmail_quote=
- gmail_quote_container"><blockquote class=3D"gmail_quote" style=3D"margin:0=
- 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-Thanks,<br>
-Gao Xiang<br>
-</blockquote></div></div></div>
-
---0000000000004683860655a060aa--
 
