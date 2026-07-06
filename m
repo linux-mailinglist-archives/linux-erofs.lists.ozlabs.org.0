@@ -1,90 +1,67 @@
-Return-Path: <linux-erofs+bounces-3821-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3822-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZrzUNfVGS2oyOgEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3821-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 08:11:01 +0200
+	id gXzqJA5iS2r/QQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3822-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 10:06:38 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB01770CCC7
-	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 08:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6D3270DE6A
+	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 10:06:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=WKmdhEL0;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3821-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3821-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=envs.net header.s=modoboa header.b=K3fkFcXT;
+	dmarc=pass (policy=quarantine) header.from=envs.net;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3822-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3822-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gtv9t2FQdz3bp7;
-	Mon, 06 Jul 2026 16:10:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gtxlH1lGCz3bps;
+	Mon, 06 Jul 2026 18:06:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783318258;
-	cv=none; b=JX1oUSEUJMPwvzeUMLChQb+Rhrs/QNRrTIvRTCzQ+Smv1vfL0ixWRv9bt9rxltJU/nviH2p0w7tVFNZdREvMxn5a0Be4duM8tYcGTAqHKggxsMmSaT/jL3L5eeaOcEkQ00HBlGErQhDUPIwk788sQqIaxg/zJcW+/mNBNNgTDZNWC7iOUskY/7KT+QyI+LH+g8gEHDSWIrUA2J8FhDM5MIcbTx8uUKbWm1rH4UAXR9O6TFffxayIfWoiHF7xZqaP1WA1iuHLJkXAXGEZT1nRQ0+ucqz6HCwFFOc0QYPXeqPqbcvtxedHX3GkgxKQIzfQuM+e5+EkIckyMvwrISGw5A==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783325195;
+	cv=none; b=G+BBC5FDR0JBH4BFS4q2YnNO2ILDpZ6aELLhudUYcQRNrWU3UwuVzw2Pp5Dm4DPUeL7OVu57O6wq5B/P5QkiXQAiZZa/A3XkfcWLtZXk7pCweikbRHewKuxIs5Q7w/XLtQe9Vcs1uveutWaW8KmAMJqVcaRtrVQ/qRSh5QQa9BMo+BeH/GGThmwaMgLz20Dwk9k9FHx3EaFpMFopS27kr5vvxZTjLGT2rpP0n5OdzKrccm9ZgCktHc0khCDiyvaq7kDu+FSHi4SRw6u35fwCDeKbp7ElWTlEJssFQNPuuccYoiwHYB8XLrWkyHKwPTJXhI9wD4zQtGPU8ej4P7z+fw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783318258; c=relaxed/relaxed;
-	bh=fvJEvhNPNK/ZYEv3wDsDhZhcFXRYDrLPOYRoEXsW8tY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OLoH/Hn23bpAPCRNhornsT5JpWTGty0RnhriW3iJQpUBa0q9eiIqjSZa71CCfvf0//BEjuWkKV/Y4PWUnwp0T28Hto4Zhjadv9U5mAk7F8CLq3e2rjzPj2TMWswYRV7dIFjx82ZmMdb6hQ2JcaJt0DrHCXmgvxDBmYZ0cHzHeOlO+z0yH65OMNYsXvS0f1aEGCzoM7G83MJzcX3z/FDxvUjUC4yE8l1vVk4tr9AUT6p2RzaFpYZyb8nzTFNOB/8fDkz9F5sLVjU1upEWO/APg+v9NCmqe4IZmONTJe9qkSlxux7xdfiDNpUuD36FpJfe29LtrfYcwp46QtBnPg83Ng==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=WKmdhEL0; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::102d; helo=mail-pj1-x102d.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+	t=1783325195; c=relaxed/relaxed;
+	bh=Ca3qkNHic8rR3X/AP7JbZLGtPa++G6cubzXyiDrZHTQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=k4+tCHXEphSpMN7x8l5xS2NvQtN799rCU77kMspFpqEq1rfJ9YgNQhTz/V9st4zxzpIUVRnIlAzx/Hqt1nRk7EZbs/lnX4Gn5IT0dPiRws02WlWK/20AincNgCFssXdzldDNeik4bQzrwQUgXtQaApmR0YWRvNZ3qr/Q5YaqBLhhEIeoU0M5X7hA6frNZZHPLFT1pUQ9ygdXN7xZSc67/qmAYDjVDS2T65WnP1BM2ikqftcIpDzf15gyYgCfOrfBywY8OBRueCaSMIzmKgW/yJrrCI0is1UbFY1UnkbxCZujLHKT9bffFzOiUHQWxjN5OKXjEAKuTS+uP/fRP60/Jg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=K3fkFcXT; dkim-atps=neutral; spf=pass (client-ip=157.180.15.194; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org) smtp.mailfrom=envs.net
+X-Greylist: delayed 401 seconds by postgrey-1.37 at boromir; Mon, 06 Jul 2026 18:06:32 AEST
+Received: from mail.envs.net (mail.envs.net [157.180.15.194])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gtv9s3nbQz2yfS
-	for <linux-erofs@lists.ozlabs.org>; Mon, 06 Jul 2026 16:10:56 +1000 (AEST)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-3811f512167so2291906a91.3
-        for <linux-erofs@lists.ozlabs.org>; Sun, 05 Jul 2026 23:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783318254; x=1783923054; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fvJEvhNPNK/ZYEv3wDsDhZhcFXRYDrLPOYRoEXsW8tY=;
-        b=WKmdhEL0AUkk/HYIa9avUEId8DlTCE1Jf7rNa9K9lsYMgoj7ixIeKCFwtb0h2exKwP
-         XlyffTs6msJW/Qi3auzYcI9c0LqHfn9cRizh+U6/n6vXam+Dyeu2SgbFDs1SYh+svOux
-         1lOQtMzo3CLGUCDzhWgOPS6VcqfEeg653Z5nE9bJH/F4R8/IegFAgMm4Ufos6C5INr2B
-         12bWaOTG1gBfbN5Tfwq81cIPeETlsmUFhd2xPz3tXwGnW1ZaIWYW9WprbwIhKASOOW3Y
-         zTRYfGwqDtQYC7TwCgIQauk50qOaAemmcV/NFM1cHfIJiC0M+sV7aR8Xt354DhZEFyGQ
-         MYqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783318254; x=1783923054;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fvJEvhNPNK/ZYEv3wDsDhZhcFXRYDrLPOYRoEXsW8tY=;
-        b=emOhQ/ln0bAyOoVrS4swY+7QSn06QtqmZW3lO8BrnqhUJ+rdktvSoYu2uyRKC/Lq9V
-         riVCqKl5ooAN3U5zXOXLi4beormcjfz95vMP4KCuq/OWTBVUGVyAsh909sVRA72fHHjU
-         Bmd4GeCgWS2yvDrw+Q+x0szv0/oiZ/2t3jBUYanaHMfzBbdk/1+cmVIRfZpdoJtBVt5f
-         Ff0QxIth9HDkDMsivJ9Ycl5Nz7lAdWKyyT62+kHv8JTNqILF3jsTmuRpXWFYXll4E/EP
-         rP9Dc/Hidq+CKa/a/nguOEhhn/BFNGi0h3yCpSC7OTkExNZ3/dvaBLJZRkPRwvF4x/v5
-         Q4IA==
-X-Forwarded-Encrypted: i=1; AHgh+RrTkpeCPyB9+PL8JCnUlKzPWatd8Q1E/PCePw/OzeR74ykjuMf66a+EMOXgHWA/daZfjh+jpM1kIwngrQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yw35yPZD36nf4hdvDi/zGnLmQ9AHw/Aze2Qli9MP3cEVJrDxVqT
-	HAU/00j+p3sLVqBjEeQvxVqGIb2xV3DFK9qxRKrJ6QhgfTUxhRjjEkiR
-X-Gm-Gg: AfdE7cmyNUrDdvNwMIO3O1dROOj0t1RpEAQQkFTmYE+48LlBcL7m4wr6NNuGec9H/I8
-	Bb8vpsi3l1uwcmlsPx7LnqwYbOS/MQuJMuZAAXh9rlgb9XZL98CtBW2z/kSCAY8lY1DrRHIILpW
-	Sod8og9YOH/3EPZMa0Jvid8eMs5e3lac1orZwEGjdJuLHkk3FVaUMfmyUKf4uTUIRv3/Ssdsp0z
-	i9sQbZC11+vMto3vgZSuvxaQjnbjK34wL78bvc5f8ez8OLtaw3MomoJ7uAlRs/r6+U+Ogx5jnQa
-	eTiYPkjBcpn7TQblrqxh2IW76k4nsuZZEE5U4eul4ZF5DKpmehwOBBoGTgKCJv32kCHWdNGt9uA
-	O+9oIN6XT/GdFWHmUJwtuX6KWhWyEXzvGFzW+MbF6hlVkOyRki4lXOBBMq9T0S6d70+Uexj7For
-	Urmp9BLE0HSzV8ugTkXlnu2k/6nr0K40Uxi/34Azc9aHLy4w==
-X-Received: by 2002:a17:90b:4c4c:b0:381:b1ad:c9e4 with SMTP id 98e67ed59e1d1-3829f4e8866mr8651885a91.26.1783318254322;
-        Sun, 05 Jul 2026 23:10:54 -0700 (PDT)
-Received: from localhost.localdomain ([157.15.11.68])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f1595e912sm55055475eec.31.2026.07.05.23.10.51
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 05 Jul 2026 23:10:54 -0700 (PDT)
-From: Nithurshen <nithurshen.dev@gmail.com>
-To: nithurshen.dev@gmail.com
-Cc: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org
-Subject: [PATCH 1/2 v3] fsck.erofs: add multi-threaded decompression
-Date: Mon,  6 Jul 2026 11:40:48 +0530
-Message-ID: <20260706061048.16349-1-nithurshen.dev@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260706060525.14018-1-nithurshen.dev@gmail.com>
-References: <20260706060525.14018-1-nithurshen.dev@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gtxlD1rXpz3bp7
+	for <linux-erofs@lists.ozlabs.org>; Mon, 06 Jul 2026 18:06:32 +1000 (AEST)
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id 79F561C00C5;
+	Mon,  6 Jul 2026 07:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1783324786; bh=Ca3qkNHic8rR3X/AP7JbZLGtPa++G6cubzXyiDrZHTQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=K3fkFcXTmWAtZpSzkntrcpMQFAZBx34Ryl4GBXh+I8ofkkf9L4OFOtCd+C3kJtcGD
+	 ffzP6VIbTrFk+hiCgGrQK2UhA18pTLAlOmSBCeLJN/wiuOCWHU/CXkSZtWBk4UmLgS
+	 mx97XK9isjFgpvUGEZwhxjam6z8f6AuU7Zgk8oaFcYNGzw/vVGaSis0D0YNUvjMLQO
+	 uQIcpCH0pVBsVAl3uN6NW9ph+gC5pp/ipYNCOgaYWqFY8HLWeXCMjyDYzWEWl9MZHz
+	 DkaOK18YhL6R3/xJp5J/62dln07JtcaD+scBB29rI+awbo1NdP3dOfH+pmJh0R0RWG
+	 68VtGsOR4bobxoTw46WdqzPvZ/E1jcpBYtbKjTg1EoUGG9bVO5oXJtMtJ87JM0+/UA
+	 UXHvrZQKB4FrWk0uE1IYPACyhURCtpy9yCTi2BVP6e+/wa2+Ubb98htXMeksbM4ayb
+	 JZ8K+hcQEVYZsMK5OycSzHo98LKSPuv4xAoBidXBcONhY1xEclHv699zkKktNmjZRN
+	 h72CQMn703xugWQFjnz4EG/XlcxAElnv5pNzW9HP7NRNyRHIYMJMLT130iqvbBR0ei
+	 aFk+iivogBAbK2l7G7vuLCEwawYr98EeDKQZV7OteT88hBOcXrmmNnPqc5x2VzJzIa
+	 iRDMddZSNZu89B4KmKT1vit0=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id A2ZTFu_HqxWi; Mon,  6 Jul 2026 07:59:44 +0000 (UTC)
+Received: from localhost.localdomain (unknown [120.239.111.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Mon,  6 Jul 2026 07:59:44 +0000 (UTC)
+From: Bingwu Zhang <xtex@envs.net>
+Date: Mon, 06 Jul 2026 15:59:17 +0800
+Subject: [PATCH] erofs-utils: lib: fix memory leak in erofs_fragment_commit
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -96,98 +73,124 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260706-fix-frag-leak-v1-1-ffcb9d0c983c@astrafall.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ5AMBCF4avIrE3SdtGKq4hF1ZRBkBaRiLsrl
+ l/y3n9BpMAUocwuCHRw5GVOkHkGrrdzR8htMiihtDBCo+cTfbAdTmRH9MZq56VRUheQPmugNPh
+ 6Vf077s1AbnsjcN8Pn84ZonEAAAA=
+X-Change-ID: 20260706-fix-frag-leak-f7a6cf172168
+To: Gao Xiang <xiang@kernel.org>
+Cc: linux-erofs <linux-erofs@lists.ozlabs.org>, 
+ Bingwu Zhang <xtex@astrafall.org>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=openssh-sha256; t=1783324784; l=2681;
+ i=xtex@astrafall.org; h=from:subject:message-id;
+ bh=vR2c6MjTR1daO06vJStSVsbim6Z7UuAtZZwm4AE4sNw=;
+ b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgL1erbbl1jNM9AtzeLFJ5FKVqr/ylJ
+ MBUj5+W9IwwCl4AAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
+ QGXCpcBU8QEL+ovTG+VmNndTAya7axQVpD/exEBNPjjhA0tiOR9z3K2WkNFofO4SezmeDFbwJ4E
+ /qyWNcOr4kw8=
+X-Developer-Key: i=xtex@astrafall.org; a=openssh;
+ fpr=SHA256:IEYEjkZlkUTr5U9GiDAmZU/4eZus2t2RsxusyhQqwao
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[envs.net,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[envs.net:s=modoboa];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3821-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,m:xtex@astrafall.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3822-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	TO_DN_ALL(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER(0.00)[xtex@envs.net,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[xtex@envs.net,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[envs.net:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[envs.net:from_mime,envs.net:dkim,astrafall.org:mid,astrafall.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CB01770CCC7
+X-Rspamd-Queue-Id: A6D3270DE6A
 
-Hi Xiang,
+From: Bingwu Zhang <xtex@astrafall.org>
 
-Please find the updated multi-threaded decompression implementation for
-fsck.erofs. This version introduces an algorithm-aware asynchronous
-worker pool, dynamically sized based on system CPUs, to significantly
-accelerate the extraction of computationally expensive images.
+erofs_fragment_pack may initialize fi->list as a
+new list head instead of adding it to a bucket.
+If fi->pos is non-zero, the fragmentitem and
+data buffer is not released by erofs_fragment_commit,
+leading to a memory leak.
 
-Benchmarks were performed on an ARM64 environment, extracting the 8.2 GB
-Linux repository downloaded from Github.
+Signed-off-by: Bingwu Zhang <xtex@astrafall.org>
+---
+Reproducer:
+mkfs.erofs -d9 -Eztailpacking -Einline_data \
+	-Efragments -zzstd --zD data.erofs data
 
-Extraction Time (Seconds):
+Direct leak of 5080 byte(s) in 127 object(s) allocated from:
+    #0 0x559bf549b788 in malloc (/home/xtex/src/erofs/erofs-utils/mkfs/mkfs.erofs+0x10f788)
+    #1 0x559bf554391e in erofs_fragment_pack /home/xtex/src/erofs/erofs-utils/lib/fragments.c:205:7
+    #2 0x559bf554426a in erofs_pack_file_from_fd /home/xtex/src/erofs/erofs-utils/lib/fragments.c:302:7
+    #3 0x559bf552e89f in erofs_write_compress_dir /home/xtex/src/erofs/erofs-utils/lib/compress.c:2074:8
+    #4 0x559bf5507421 in erofs_write_dir_file /home/xtex/src/erofs/erofs-utils/lib/inode.c:744:9
+    #5 0x559bf5507421 in erofs_mkfs_jobfn /home/xtex/src/erofs/erofs-utils/lib/inode.c:1654:9
+    #6 0x559bf5507421 in z_erofs_mt_dfops_worker /home/xtex/src/erofs/erofs-utils/lib/inode.c:1723:9
+    #7 0x559bf5498fca in asan_thread_start(void*) asan_interceptors.cpp.o
 
-| Algorithm | 4k | 8k | 16k | 32k | 64k |
-| --- | --- | --- | --- | --- | --- |
-| lz4hc(MT) | 9.36 | 8.31 | 8.27 | 8.54 | 6.94 |
-| lz4hc(ST) | 4.40 | 5.77 | 3.65 | 5.45 | 3.36 |
-| zstd(MT) | 9.26 | 8.68 | 8.89 | 8.11 | 7.94 |
-| zstd(ST) | 5.23 | 4.52 | 4.62 | 4.11 | 4.02 |
-| lzma(MT) | 23.72 | 24.79 | 25.90 | 26.92 | 27.77 |
-| lzma(ST) | 56.37 | 65.06 | 71.07 | 74.69 | 81.63 |
+Indirect leak of 7135 byte(s) in 127 object(s) allocated from:
+    #0 0x559bf549b788 in malloc (/home/xtex/src/erofs/erofs-utils/mkfs/mkfs.erofs+0x10f788)
+    #1 0x559bf55439c5 in erofs_fragment_pack /home/xtex/src/erofs/erofs-utils/lib/fragments.c:218:13
+    #2 0x559bf554426a in erofs_pack_file_from_fd /home/xtex/src/erofs/erofs-utils/lib/fragments.c:302:7
+    #3 0x559bf552e89f in erofs_write_compress_dir /home/xtex/src/erofs/erofs-utils/lib/compress.c:2074:8
+    #4 0x559bf5507421 in erofs_write_dir_file /home/xtex/src/erofs/erofs-utils/lib/inode.c:744:9
+    #5 0x559bf5507421 in erofs_mkfs_jobfn /home/xtex/src/erofs/erofs-utils/lib/inode.c:1654:9
+    #6 0x559bf5507421 in z_erofs_mt_dfops_worker /home/xtex/src/erofs/erofs-utils/lib/inode.c:1723:9
+    #7 0x559bf5498fca in asan_thread_start(void*) asan_interceptors.cpp.o
+---
+ lib/fragments.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Performance Analysis:
-The implementation provides a significant speedup for LZMA (up to 2.9x)
-as the heavy decompression workload effectively amortizes the thread
-synchronization overhead.
+diff --git a/lib/fragments.c b/lib/fragments.c
+index 13afce3be537..f137e41b7365 100644
+--- a/lib/fragments.c
++++ b/lib/fragments.c
+@@ -325,6 +325,10 @@ int erofs_fragment_commit(struct erofs_inode *inode, u32 tofh)
+ 
+ 	if (fi->pos) {
+ 		inode->fragmentoff = fi->pos - len;
++		if (list_empty(&fi->list)) {
++			free(fi->data);
++			free(fi);
++		}
+ 		return 0;
+ 	}
+ 
 
-However, for fast algorithms like LZ4 and ZSTD, the current MT overhead
-(futex contention and scheduling) leads to slower performance compared
-to the synchronous baseline.
+---
+base-commit: 30711d4b2e234fe3e8aaeb779ade4cb609b0d920
+change-id: 20260706-fix-frag-leak-f7a6cf172168
 
-I have tried various batch sizes for fast algorithms, but the time did
-not improve. (I tried from 32 to 256 batch sizes)
+Best regards,
+--  
+Bingwu Zhang <xtex@astrafall.org>
 
-Can we fall back to synchronous extraction here?
-
-Verification:
-
-* Deadlocks/Race Conditions: Verified via GDB backtrace analysis and
-stress testing.
-* Memory Leaks: Verified via rigorous buffer ownership tracking and
-ensuring all task resources are cleaned up upon worker completion.
-* Integrity: All configurations passed bit-for-bit integrity checks
-between the extracted and original directory for all algorithms and
-chunk sizes.
-
-All concurrency primitives and memory paths have been verified to the
-best of my knowledge.
-
-Thanks,
-Nithurshen
 
