@@ -1,74 +1,74 @@
-Return-Path: <linux-erofs+bounces-3826-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3827-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id X1cDLqnJS2oSaQEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3826-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 17:28:41 +0200
+	id 8jztFrHJS2oUaQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3827-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 17:28:49 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4D65712979
-	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 17:28:40 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0097712981
+	for <lists+linux-erofs@lfdr.de>; Mon, 06 Jul 2026 17:28:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=MeGy+Oq+;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=MeGy+Oq+;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=Bpnupj0E;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=bdPDQ4Kx;
 	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3826-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3826-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3827-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3827-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gv7YL5SCZz3bqh;
-	Tue, 07 Jul 2026 01:28:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gv7YV30hSz3bqV;
+	Tue, 07 Jul 2026 01:28:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783351718;
-	cv=none; b=VXYlPKSq14nknuUL8l+aFAopM1wD5hd3+JvdQgVQoctIn8ck42alCHUAIobyOz7yzywgkX+wAcEBM6iOtFryxNOyidW0VFJ/boLNBrOsGgEmWEvspL/XQb1fdYgzIpCe0h/4SXMXL3aGzXWru/eBHOxCD+k0eybDHiFJeNodXkp5DwLnqeibHiiJ13JSCgKRmtuCxS5GfEjkzJmSleyxKyMRiW9sGaYITa3ZD4Bmx3B/Ohf1E23polwXLi+HNGGic+MCF+AFKpIJRn/qE/q04pYmPjUy7RL5WMmG6Ts/fK5aAmxRzr34mELI9bHVi3xp8+7+OAbz4gFh8kk2aRINOQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783351726;
+	cv=none; b=HLiB52cy15mKONBmQlTlLWvwtcdZhvFpoQF9CM/2EGTI6RWWDgLdHEIBA45FGbYj92I7tKO5vlc+8QO9/rsUZYnPS6HaNLPW9mqn4uU3L2129H9UwALbmLJQgKxQHa7DkuT1/UBUUUPQ/Pm7ns3k7zMGr0gsxnaoUnkhjadeLHmG19j6J3cG83yi1AbNFXnai359v0hf7lzykMkzyamNQI0NU/poMge6gFlGcQnbTZMVaLKdO4+annMcbi+WGe5qPGkAUmTS7/bwTvzKfhkx5oY0St62GHNZekcKd1Qe57Jw+UnO6hmKZR3qDVP2lZRM7SUI63D6YCRlWeFreJ+bgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783351718; c=relaxed/relaxed;
-	bh=forfFVNHXdcKUrAO6tYWFvQxC3xkWQUr9XOJVlaCNVg=;
+	t=1783351726; c=relaxed/relaxed;
+	bh=w7ShGW+upZHR5mu8dwZINAuw/Lvw06ThB7+ja2GcOFA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=D7KvVriLeyCX3OOOvouo6bz9bt9LoUGbHdWaSx5pnXIr7hGjSA6DJ9U58XIR2oPxXavV5hg+qRfYf1yKfQ1Z6b9mmIYhep0wj8bkAr2ZdNkV7wXJ8VW+QsuxNrDX56Fi+6ULuVhsbZKr1y9BW1ys+4lALtAvJnULvAzwbk2HYEoR0pNFv6cWvxii1NywiurX44yVUhp7grgJUEDFS5atsenpe8YetQlt2yeD34SKBg66RaNPEVfwQI+II0d9buXskB2G1P3rnoYtOUiDhASks7B/FyXKy+kfXLgEi+4JLBgpTqgmiFtPJi/jAgPutiX+xZB8+BFCipB9PfCiUjOaDw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MeGy+Oq+; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MeGy+Oq+; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:content-type; b=iNLU1oHeHg+ACLXE7KRFLTASSFdXTVSROHTkeG6FLvrv65M+uwR2cHvhEIcO3E92mMIV5lGUZ1giJg70AeWicXQQ9BirSZu3ZPWR4y+m86ywa6t7bY5m5RJEDJ/qu6IJAPlTITe8qS7friLepqeCQXlAWEF8sEHyqmjLLMv006t7QGPlvhrCVs+10HWZyvmISzUns9z0cH9uyp09i7Z8mCRd4+k4VzPBT9SsrhWw8B8gjkX7qXfkOCkBjE34HCjATjOYveTVT/4LFPYD+tIq7eEkXs4IMyPm+1DzPbYCXKSynJjclNbb0yRGkowdW2YBcva/5uyKnnX8XFMokwfeDg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Bpnupj0E; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bdPDQ4Kx; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gv7YK5ktSz2yVZ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 07 Jul 2026 01:28:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gv7YT3XfCz2yVZ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 07 Jul 2026 01:28:45 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783351714;
+	s=mimecast20190719; t=1783351721;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=forfFVNHXdcKUrAO6tYWFvQxC3xkWQUr9XOJVlaCNVg=;
-	b=MeGy+Oq+FcEoHKflzfHKICRQgp2e69CvqJ256bALJLRhj3TextXZrMeEp/2pfFM+WrGiom
-	fV2cPaGopFeebw+7h+I5XDISyK79C+ON408pKU3wIa43/wKAvvWc1j/bVOB4pP5drsk1ur
-	GAu0gxqpddL/rpjqJiGS2B83NGjT+Rk=
+	bh=w7ShGW+upZHR5mu8dwZINAuw/Lvw06ThB7+ja2GcOFA=;
+	b=Bpnupj0EUGtXxCmNfl69kBKplwCmGKalyWrOyZr6VvZtGUOxCoIr+As1Qa6jtC210O0Z96
+	Dn9gjpTLDR44f3zBF0HA58M7RYLjIXvAFvBCl/7vBOXuqjjzmQqJiEKPIMFfm6Chd6LLhn
+	8nwpTul8xf428DLOHHYcL7r7G3hu9dU=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783351714;
+	s=mimecast20190719; t=1783351722;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=forfFVNHXdcKUrAO6tYWFvQxC3xkWQUr9XOJVlaCNVg=;
-	b=MeGy+Oq+FcEoHKflzfHKICRQgp2e69CvqJ256bALJLRhj3TextXZrMeEp/2pfFM+WrGiom
-	fV2cPaGopFeebw+7h+I5XDISyK79C+ON408pKU3wIa43/wKAvvWc1j/bVOB4pP5drsk1ur
-	GAu0gxqpddL/rpjqJiGS2B83NGjT+Rk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=w7ShGW+upZHR5mu8dwZINAuw/Lvw06ThB7+ja2GcOFA=;
+	b=bdPDQ4KxXIieWXLulfkeRxfuORBqXAzOYGkiC0dvK2kGloCfsnHNHsGc0uWrZ1rZFcR/S/
+	FcRBqsEc3o+Atn9tZfvo9bPWX9meaD3JZJF+q1wKZ0F8iX3n3OtBzT3PNyGMBKTictyYWH
+	Hu3keg9p88zAArbCBfqVQWwpPsqv0Ps=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-189-FunbdqJFPQy1m90ySFxkbA-1; Mon,
- 06 Jul 2026 11:28:28 -0400
-X-MC-Unique: FunbdqJFPQy1m90ySFxkbA-1
-X-Mimecast-MFC-AGG-ID: FunbdqJFPQy1m90ySFxkbA_1783351705
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-qgmVMkBrMGaVF3wszalw7A-1; Mon,
+ 06 Jul 2026 11:28:38 -0400
+X-MC-Unique: qgmVMkBrMGaVF3wszalw7A-1
+X-Mimecast-MFC-AGG-ID: qgmVMkBrMGaVF3wszalw7A_1783351713
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 618C01955F21;
-	Mon,  6 Jul 2026 15:28:24 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1342B1805A09;
+	Mon,  6 Jul 2026 15:28:33 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.44.33.159])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3EF0736918;
-	Mon,  6 Jul 2026 15:28:16 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 226193652A;
+	Mon,  6 Jul 2026 15:28:25 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Matthew Wilcox <willy@infradead.org>,
@@ -94,9 +94,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-block@vger.kernel.org
-Subject: [PATCH v5 03/21] Add a function to kmap one page of a multipage bio_vec
-Date: Mon,  6 Jul 2026 16:27:18 +0100
-Message-ID: <20260706152737.1231312-4-dhowells@redhat.com>
+Subject: [PATCH v5 04/21] iov_iter: Make iov_iter_get_pages*() wrap iov_iter_extract_pages()
+Date: Mon,  6 Jul 2026 16:27:19 +0100
+Message-ID: <20260706152737.1231312-5-dhowells@redhat.com>
 In-Reply-To: <20260706152737.1231312-1-dhowells@redhat.com>
 References: <20260706152737.1231312-1-dhowells@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
@@ -111,15 +111,14 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: _7XsnEf2YflnRTBwH1fccJDE8Lx9ulJS2OuiY54BSRU_1783351705
+X-Mimecast-MFC-PROC-ID: hmCJhxLiK2rBKJK6Ulo6YnTKmsmTv4_kC6zbxw4MnGY_1783351713
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
-X-Spam-Status: No, score=2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_PASS,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Level: **
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.20 / 15.00];
@@ -127,13 +126,13 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[redhat.com,manguebit.org,kernel.dk,kernel.org,samba.org,chenxiaosong.com,auristor.com,codewreck.org,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3826-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-3827-lists,linux-erofs=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
@@ -152,17 +151,18 @@ X-Spamd-Result: default: False [-1.20 / 15.00];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.dev:email,kernel.dk:email]
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,kernel.dk:email,linux.dev:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D4D65712979
+X-Rspamd-Queue-Id: A0097712981
 
-Add a function to kmap one page of a multipage bio_vec by offset (which is
-added to the offset in the bio_vec internally).  The caller is responsible
-for calculating how much of the page is then available.
+Make iov_iter_get_pages*() wrap iov_iter_extract_pages() for kernel
+iterator types (e.g. ITER_BVEC, ITER_FOLIOQ, ITER_XARRAY).  The pages
+obtained have their refcounts incremented afterwards if they're not slab
+pages.  ITER_KVEC is left returning -EFAULT.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Paulo Alcantara (Red Hat) <pc@manguebit.org>
+Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.org>
 cc: Matthew Wilcox <willy@infradead.org>
 cc: Christoph Hellwig <hch@infradead.org>
 cc: Jens Axboe <axboe@kernel.dk>
@@ -170,35 +170,210 @@ cc: linux-block@vger.kernel.org
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- include/linux/bvec.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ lib/iov_iter.c | 164 ++++++-------------------------------------------
+ 1 file changed, 19 insertions(+), 145 deletions(-)
 
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index 92837e2743f1..53cf36e73967 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -343,4 +343,22 @@ static inline phys_addr_t bvec_phys(const struct bio_vec *bvec)
- 	return page_to_phys(bvec->bv_page) + bvec->bv_offset;
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index c2484551a4e8..31afc9687eb6 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -910,118 +910,34 @@ static int want_pages_array(struct page ***res, size_t size,
+ 	return count;
  }
  
-+/**
-+ * bvec_kmap_partial - Map part of a bvec into the kernel virtual address space
-+ * @bvec: bvec to map
-+ * @offset: Offset into bvec
-+ *
-+ * Map the page containing the byte at @offset into the kernel virtual address
-+ * space.  The caller is responsible for making sure this doesn't overrun.
-+ *
-+ * Call kunmap_local on the returned address to unmap.
+-static ssize_t iter_folioq_get_pages(struct iov_iter *iter,
++/*
++ * Wrap iov_iter_extract_pages() and then pin the non-slab pages we got back.
++ * This only works for non-user iterator types as get_pages uses get_user_pages
++ * not pin_user_pages.
 + */
-+static inline void *bvec_kmap_partial(struct bio_vec *bvec, size_t offset)
-+{
-+	offset += bvec->bv_offset;
-+
-+	return kmap_local_page(bvec->bv_page + (offset >> PAGE_SHIFT)) +
-+		(offset & ~PAGE_MASK);
-+}
-+
- #endif /* __LINUX_BVEC_H */
++static ssize_t iter_get_kernel_pages(struct iov_iter *iter,
+ 				     struct page ***ppages, size_t maxsize,
+ 				     unsigned maxpages, size_t *_start_offset)
+ {
+-	const struct folio_queue *folioq = iter->folioq;
+ 	struct page **pages;
+-	unsigned int slot = iter->folioq_slot;
+-	size_t extracted = 0, count = iter->count, iov_offset = iter->iov_offset;
++	ssize_t ret, done;
+ 
+-	if (slot >= folioq_nr_slots(folioq)) {
+-		folioq = folioq->next;
+-		slot = 0;
+-		if (WARN_ON(iov_offset != 0))
+-			return -EIO;
+-	}
++	ret = iov_iter_extract_pages(iter, ppages, maxsize, maxpages,
++				     0, _start_offset);
++	if (ret <= 0)
++		return ret;
+ 
+-	maxpages = want_pages_array(ppages, maxsize, iov_offset & ~PAGE_MASK, maxpages);
+-	if (!maxpages)
+-		return -ENOMEM;
+-	*_start_offset = iov_offset & ~PAGE_MASK;
+ 	pages = *ppages;
++	for (done = ret + *_start_offset; done > 0; done -= PAGE_SIZE) {
++		struct folio *folio = page_folio(*pages);
+ 
+-	for (;;) {
+-		struct folio *folio = folioq_folio(folioq, slot);
+-		size_t offset = iov_offset, fsize = folioq_folio_size(folioq, slot);
+-		size_t part = PAGE_SIZE - offset % PAGE_SIZE;
+-
+-		if (offset < fsize) {
+-			part = umin(part, umin(maxsize - extracted, fsize - offset));
+-			count -= part;
+-			iov_offset += part;
+-			extracted += part;
+-
+-			*pages = folio_page(folio, offset / PAGE_SIZE);
+-			get_page(*pages);
+-			pages++;
+-			maxpages--;
+-		}
+-
+-		if (maxpages == 0 || extracted >= maxsize)
+-			break;
+-
+-		if (iov_offset >= fsize) {
+-			iov_offset = 0;
+-			slot++;
+-			if (slot == folioq_nr_slots(folioq) && folioq->next) {
+-				folioq = folioq->next;
+-				slot = 0;
+-			}
+-		}
+-	}
+-
+-	iter->count = count;
+-	iter->iov_offset = iov_offset;
+-	iter->folioq = folioq;
+-	iter->folioq_slot = slot;
+-	return extracted;
+-}
+-
+-static ssize_t iter_xarray_populate_pages(struct page **pages, struct xarray *xa,
+-					  pgoff_t index, unsigned int nr_pages)
+-{
+-	XA_STATE(xas, xa, index);
+-	struct folio *folio;
+-	unsigned int ret = 0;
+-
+-	rcu_read_lock();
+-	for (folio = xas_load(&xas); folio; folio = xas_next(&xas)) {
+-		if (xas_retry(&xas, folio))
+-			continue;
+-
+-		/* Has the folio moved or been split? */
+-		if (unlikely(folio != xas_reload(&xas))) {
+-			xas_reset(&xas);
+-			continue;
+-		}
+-
+-		pages[ret] = folio_file_page(folio, xas.xa_index);
+-		folio_get(folio);
+-		if (++ret == nr_pages)
+-			break;
++		if (!folio_test_slab(folio))
++			folio_get(folio);
++		pages++;
+ 	}
+-	rcu_read_unlock();
+ 	return ret;
+ }
+ 
+-static ssize_t iter_xarray_get_pages(struct iov_iter *i,
+-				     struct page ***pages, size_t maxsize,
+-				     unsigned maxpages, size_t *_start_offset)
+-{
+-	unsigned nr, offset, count;
+-	pgoff_t index;
+-	loff_t pos;
+-
+-	pos = i->xarray_start + i->iov_offset;
+-	index = pos >> PAGE_SHIFT;
+-	offset = pos & ~PAGE_MASK;
+-	*_start_offset = offset;
+-
+-	count = want_pages_array(pages, maxsize, offset, maxpages);
+-	if (!count)
+-		return -ENOMEM;
+-	nr = iter_xarray_populate_pages(*pages, i->xarray, index, count);
+-	if (nr == 0)
+-		return 0;
+-
+-	maxsize = min_t(size_t, nr * PAGE_SIZE - offset, maxsize);
+-	i->iov_offset += maxsize;
+-	i->count -= maxsize;
+-	return maxsize;
+-}
+-
+ /* must be done on non-empty ITER_UBUF or ITER_IOVEC one */
+ static unsigned long first_iovec_segment(const struct iov_iter *i, size_t *size)
+ {
+@@ -1044,22 +960,6 @@ static unsigned long first_iovec_segment(const struct iov_iter *i, size_t *size)
+ 	BUG(); // if it had been empty, we wouldn't get called
+ }
+ 
+-/* must be done on non-empty ITER_BVEC one */
+-static struct page *first_bvec_segment(const struct iov_iter *i,
+-				       size_t *size, size_t *start)
+-{
+-	struct page *page;
+-	size_t skip = i->iov_offset, len;
+-
+-	len = i->bvec->bv_len - skip;
+-	if (*size > len)
+-		*size = len;
+-	skip += i->bvec->bv_offset;
+-	page = i->bvec->bv_page + skip / PAGE_SIZE;
+-	*start = skip % PAGE_SIZE;
+-	return page;
+-}
+-
+ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		   struct page ***pages, size_t maxsize,
+ 		   unsigned int maxpages, size_t *start)
+@@ -1095,36 +995,10 @@ static ssize_t __iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		iov_iter_advance(i, maxsize);
+ 		return maxsize;
+ 	}
+-	if (iov_iter_is_bvec(i)) {
+-		struct page **p;
+-		struct page *page;
+ 
+-		page = first_bvec_segment(i, &maxsize, start);
+-		n = want_pages_array(pages, maxsize, *start, maxpages);
+-		if (!n)
+-			return -ENOMEM;
+-		p = *pages;
+-		for (int k = 0; k < n; k++) {
+-			struct folio *folio = page_folio(page + k);
+-			p[k] = page + k;
+-			if (!folio_test_slab(folio))
+-				folio_get(folio);
+-		}
+-		maxsize = min_t(size_t, maxsize, n * PAGE_SIZE - *start);
+-		i->count -= maxsize;
+-		i->iov_offset += maxsize;
+-		if (i->iov_offset == i->bvec->bv_len) {
+-			i->iov_offset = 0;
+-			i->bvec++;
+-			i->nr_segs--;
+-		}
+-		return maxsize;
+-	}
+-	if (iov_iter_is_folioq(i))
+-		return iter_folioq_get_pages(i, pages, maxsize, maxpages, start);
+-	if (iov_iter_is_xarray(i))
+-		return iter_xarray_get_pages(i, pages, maxsize, maxpages, start);
+-	return -EFAULT;
++	if (iov_iter_is_kvec(i))
++		return -EFAULT;
++	return iter_get_kernel_pages(i, pages, maxsize, maxpages, start);
+ }
+ 
+ ssize_t iov_iter_get_pages2(struct iov_iter *i, struct page **pages,
 
 
