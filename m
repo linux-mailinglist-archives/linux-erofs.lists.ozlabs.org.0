@@ -1,54 +1,52 @@
-Return-Path: <linux-erofs+bounces-3854-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3855-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rLeuHoL9TGp4tAEAu9opvQ
-	(envelope-from <linux-erofs+bounces-3854-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 07 Jul 2026 15:22:10 +0200
+	id Mpm+KrIBTWqJtQEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3855-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 07 Jul 2026 15:40:02 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B59EB71BD61
-	for <lists+linux-erofs@lfdr.de>; Tue, 07 Jul 2026 15:22:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4252F71C060
+	for <lists+linux-erofs@lfdr.de>; Tue, 07 Jul 2026 15:40:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=OiwVnYFc;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=IWgTG8Mr;
 	dmarc=pass (policy=none) header.from=linux.alibaba.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3854-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3854-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3855-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3855-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gvhht1dMqz2xWY;
-	Tue, 07 Jul 2026 23:22:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gvj5V5CW7z2xWY;
+	Tue, 07 Jul 2026 23:39:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783430526;
-	cv=none; b=nh2fUFlPPybVQ1pz0Um63ALB6OjKpzmxXYiISoPIFfjEbcT8m2Ii1z3MlosZHJtRpNtqtEgMbxzAIptyNDNwsiqm1Q2BAB6SIhz3jHFaoQVxwpsuDVo7WKxiedExxTfYsCvzP8gqc89OzDC5VjqDg3iO+HxJ3e523LVsGHtJ0BKhf5di9S72qZ1qrWN82T6cvPuR9B0aIaFkmibUYMbfzDhcpht1yvNrs5I7vZbwL7UBDCSMCmnW3ZUPTCOA9AkH8L4nZIeifHtaa1VhFaV/OJjpP1AxgjpPpOR543KreiBgK272zhGlIBHekL45kGy9QH0jTViBbm9RGTN1+nqo0g==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783431598;
+	cv=none; b=Kk/29qABoIC34fzGD4Nn+PXNpC4Z4Bh44BWM9mQQlMjl5zyFD1+KfWRncvXnZd3Xgkcm+71bFibnHnYMAzICZd4dZBvdAJwup/xYvPt7ii23T5EZ5xv1DwYQ/ve51sFxSRLCGiFtCi9mgtQo4QoV8y1EIBoPLeP3Xg6ehxOSSIRi4jF414mfcim1CMrWgn0lJiF0f0sev+APVfLBv3RbNX2g1m6MT54tNk8FDbdhUh3TaHkNB8OE3dk+HkwoJrXFREmr4qfGGEmNM155U01RBl0UccXTXbjEPMjKekywJ7RYkLQSHt8Whs3KlvqDHFMeJd4+OE2VrQGYBZcoSaghAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783430526; c=relaxed/relaxed;
-	bh=a5hsotvxZtzR80XULwNX5K5SDey/8iDcL/FmljrpJ4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cp8nEX0W3DK4ux3UXRmnNxdu8ZV2XNzdi2JGLuNr4cAf9qdkoRn3GrpL/yF6Uz1Mza1vHA15reinCnlknKP5t94F2GCJFJ3aDzTBMQ7lh1aeCclvosbbehlRU2ER0arACNcZiHXhIa7/t/IEQXm/bdCOGWihlwdnXPa8nhP3oWgLyVjHmy5EFXfmepN+LlqusQKdf7GCQiHcexQBvB6vL+SWwSIxSkC61kH3Y3QFJsAD49gkIzGnqX2dwclIp4tRWquxOiSQj5lJ0lt82i8Teu09VmaQnZNKsEilhA+QS7yvEY6hE7F1J5OQKsZdYbCaw0TkfUdsMAme9nF/psiigg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OiwVnYFc; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	t=1783431598; c=relaxed/relaxed;
+	bh=ow3ueylzDqfZ4A7Q4jx1GAQKDOjhMGDqaY2Vm+GmbVI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eDuuC6Dl3NNF//NcVlaf3vP6RzeK1I6mPzrMSwoePC7CIiL4oli9LJ8OdW7yEXKN+qahRmVYtM+2jfQ8xeX70K77+Vw3aHWGocus48PNPHteI4X0Qw/6++fyWoznEK6wHWNyl/YU9K38nR6RHDO8Liw5kBhp5ltFJiir139CzFSEEfPg8g1O0cJqLZhRgmTugpGsMfb7z/j2AbAOFwzdMdGqxOhRFK5Yde8K8YxCqTIoqVj8Be3YFssugjcQUfvXqCP8Ag1PTwiyb83dDVxbptz4IgSGrYKhk1O3P2+GQuiPDURgvXjtm9IjWqXzaZIoAd2sRWjA3CoIU6lTGzMBDg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IWgTG8Mr; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gvhhq59Q1z2xF8
-	for <linux-erofs@lists.ozlabs.org>; Tue, 07 Jul 2026 23:22:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gvj5R1Y1Dz2xF8
+	for <linux-erofs@lists.ozlabs.org>; Tue, 07 Jul 2026 23:39:53 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1783430518; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=a5hsotvxZtzR80XULwNX5K5SDey/8iDcL/FmljrpJ4s=;
-	b=OiwVnYFcbKDGdZs2pS1bMMO1eVEgbLrmWpDB+zPVf+P8yW/n06QfsVXvt1Sv3c9hMJ0W5rvH2Xs8XUjZtGVcCbo9AH7u7WfDYsmQa/KYAlNIxPkUBcNtylMI6p6zw0H93ZzpkMV9BpoWiMaf4TRfMbeEB55lJ0JQD4odptjNeGU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X6dnFPA_1783430512;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X6dnFPA_1783430512 cluster:ay36)
+	t=1783431589; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=ow3ueylzDqfZ4A7Q4jx1GAQKDOjhMGDqaY2Vm+GmbVI=;
+	b=IWgTG8Mr31OKNmSjXFCrb/P1VK1axHybtKHVpYBQ3O3FX9tsfk93xckiQkabudckx1kcEEeEVtcuALaIyZMAos8cWgLx2jl8K3RGLO/mbMr/yNdnTAG+BorKkmgfyOET/Zk9Gv/NTqmwir2wP5Lg1yz0iaznmmsgYPq7rpnoBHE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0X6dqLjQ_1783431580;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X6dqLjQ_1783431580 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 07 Jul 2026 21:21:56 +0800
+          Tue, 07 Jul 2026 21:39:46 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Yifan Zhao <zhaoyifan28@huawei.com>,
-	Alberto Salvia Novella <es20490446e@gmail.com>
-Subject: [PATCH] erofs: relax sanity check for tail pclusters on ztailpacking images
-Date: Tue,  7 Jul 2026 21:21:52 +0800
-Message-ID: <20260707132152.1176967-1-hsiangkao@linux.alibaba.com>
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: get rid of erofs_is_ishare_inode() helper
+Date: Tue,  7 Jul 2026 21:39:39 +0800
+Message-ID: <20260707133939.1204354-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -72,65 +70,65 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3854-lists,linux-erofs=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,linux.alibaba.com,huawei.com,gmail.com];
+	TAGGED_FROM(0.00)[bounces-3855-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_THREE(0.00)[3];
 	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,huawei.com:email,linux.alibaba.com:from_mime,linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:from_mime,linux.alibaba.com:dkim,linux.alibaba.com:mid,lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,alibaba.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B59EB71BD61
+X-Rspamd-Queue-Id: 4252F71C060
 
-If the tail data can be inlined into the inode meta block, it should
-be converted into a regular tail pcluster.
+Just open-code it for simplicity since FS_ONDEMAND no longer exists.
 
-In principle, it should be converted into an uncompressed pcluster if
-there is not enough gain to use compression (map->m_llen < map->m_plen);
-but since there are various shipped images, relax the condition for
-ztailpacking tail pclusters instead of reporting corruption incorrectly.
-
-Reported-by: Yifan Zhao <zhaoyifan28@huawei.com>
-Reported-by: Alberto Salvia Novella <es20490446e@gmail.com>
-Closes: https://github.com/erofs/erofs-utils/issues/51
-Fixes: a5242d37c83a ("erofs: error out obviously illegal extents in advance")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zmap.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/erofs/ishare.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index bab521613552..f6b0172a6acc 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -732,7 +732,9 @@ static int z_erofs_map_sanity_check(struct inode *inode,
- 				  map->m_algorithmformat, EROFS_I(inode)->nid);
- 			return -EFSCORRUPTED;
- 		}
--		if (EROFS_MAP_FULL(map->m_flags) && map->m_llen < map->m_plen) {
-+		if (EROFS_MAP_FULL(map->m_flags) && map->m_llen < map->m_plen &&
-+		    (map->m_la + map->m_llen < inode->i_size ||
-+		     !erofs_sb_has_ztailpacking(sbi))) {
- 			erofs_err(inode->i_sb, "too much compressed data @ la %llu of nid %llu",
- 				  map->m_la, EROFS_I(inode)->nid);
- 			return -EFSCORRUPTED;
+diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+index 0868c12fc15b..a1a20a5ba548 100644
+--- a/fs/erofs/ishare.c
++++ b/fs/erofs/ishare.c
+@@ -12,12 +12,6 @@
+ 
+ static struct vfsmount *erofs_ishare_mnt;
+ 
+-static inline bool erofs_is_ishare_inode(struct inode *inode)
+-{
+-	/* assumed FS_ONDEMAND is excluded with FS_PAGE_CACHE_SHARE feature */
+-	return inode->i_sb->s_type == &erofs_anon_fs_type;
+-}
+-
+ static int erofs_ishare_iget5_eq(struct inode *inode, void *data)
+ {
+ 	struct erofs_inode_fingerprint *fp1 = &EROFS_I(inode)->fingerprint;
+@@ -179,7 +173,7 @@ struct inode *erofs_real_inode(struct inode *inode, bool *need_iput)
+ 	struct inode *realinode;
+ 
+ 	*need_iput = false;
+-	if (!erofs_is_ishare_inode(inode))
++	if (inode->i_sb != erofs_ishare_mnt->mnt_sb)
+ 		return inode;
+ 
+ 	vi_share = EROFS_I(inode);
 -- 
 2.43.5
 
