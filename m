@@ -1,95 +1,60 @@
-Return-Path: <linux-erofs+bounces-3869-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3870-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id shrnMLywTmrvSQIAu9opvQ
-	(envelope-from <linux-erofs+bounces-3869-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 08 Jul 2026 22:19:08 +0200
+	id KyQCKK+VT2rOkAIAu9opvQ
+	(envelope-from <linux-erofs+bounces-3870-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Jul 2026 14:35:59 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD6AC72A285
-	for <lists+linux-erofs@lfdr.de>; Wed, 08 Jul 2026 22:19:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5EBB7310A7
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Jul 2026 14:35:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=MRWCP1o8;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=GMXHvn3u;
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3869-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3869-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=huawei.com header.s=dkim header.b=ScofmLPM;
+	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3870-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3870-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gwTvW4fv4z306S;
-	Thu, 09 Jul 2026 06:19:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gwvZf26WPz3c9w;
+	Thu, 09 Jul 2026 22:35:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783541943;
-	cv=none; b=DFZ5PHsSSAbp06pibQ8efk2XiaQFnwp1YHZRSMrPJB0dRP/AoGK9yFsG0s3O80clwy0ghdGvln1rcg6fGjdLxygCk37BrKVJ+iYNNyZLkP6JtAHI34+crNHgMVWUDxkcTrriLj+/TWT5Xt/Fv2XYyZ0zfb3LPIthIC0aRceRe4h0SXFqX6vNpT/Kc+AnBYyvInDSfnN7E81JriJSllbURZ5PDAc/FOeFdigyNtYKgCqPgyatzw2/MgUTDs+DgxcbX8C+WGWH2T+nmXoGOXCY9PFnCY0rzv16Hn1VFHmhwrIN7a0b2arebEC+Eo2ostvzlQ7dZ+QEAJFF2y6ZF+C06A==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783600554;
+	cv=none; b=jmom2SfbWlcWC9OIH6RyGw0BBNNb3X7oQlZbyzmt9G8HdLE/qQE8dvMfHCT9G5R41Mm837geVknOMUwaIvMOOalI+Y8iyU7lsaG7s6lHp5VgWIYOPU09448PY4q6zbUeaG7lTNQk1Xso329XjyulJVmi7O90fwmHv5FQvC+kuEbd8HuUnS6ptOiwVyLMY0DJnpzLpE8oYEym15xEZmwTTZbtKovrqUAgc3kHXRgr+5+Yzv2IM9pN2ISuBBOkatKQTlV5HwyoSr/3KOMnQPvFCOAjsZGiO0Ga7qMisJz0EReny5BPDZPSToKAqzX2z10+mOvgJgI+HNA7k0f2ypft4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783541943; c=relaxed/relaxed;
-	bh=OGpY+aCWdZdLzAr9IVTEaSTpbEI6iVGt97cU+sVsvo8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Q+Cb4A67rWMwbUcUR0Z67FdXStEjaBBRt4xPePOQRNlc58Kff5qcluHGwF01nbR6kpMaBNGjRRJQvKkz13mpIFame8xschnJkYuhfJVga4ekI5ANMhnchA2gf/aPcM0L2eFEuuy3C7K3ieSUzxJc6jU7WD6/RVVeYxAA6QjiJUd8srqU8gNvTg5dun4hkGnJGwHhb9i6VCNP1jVR0apoVWGHxgVl6u2D1e2w8pWbo9HxfbUOUoIzQmPN1jplH8wT5tBluZdv38yCNaYohEWaf2wl7DXzts6scPEMlkw1xHx0iEnB8f/jqDHt7c/ax/6dB0wvQ4aKvhWvQ+9r6HyS3A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MRWCP1o8; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=GMXHvn3u; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=gscrivan@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	t=1783600554; c=relaxed/relaxed;
+	bh=2c2WLhMpxXGd2zZ8xVVz1EOs2xJcw3p15TLm0SoZHu8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LpqTqh70u+HedEyA16cemIPZB1TFBHyUcZuw5rjw77ILYlIl/3l69AXoJz0y9a40SFMjDFuxTDAjofNud12sEyzQ0g4iyjEAM+H+uPpt57X6Y+sDdMWILbpxihZ47e+kopUvNQ7S0gKIXHwPVVSiyJRPguJmioqACmUDne6k3ljVbAyCb0IBBYJhf7g/os/GNkPHp604aC1HoXaKhDE83kiUfngToH2IwX/aZFhjR0KGHYUN8XMBg6EVh/m2D6qwDVRK9JHfScS/0TcOYJAtVZsae23JKspcJkDiOSk73xJ8fXk0eGpaRiVtLaMfROth209mE0HE1uuOxItK7W9QPg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ScofmLPM; dkim-atps=neutral; spf=pass (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gwTvV3QCXz2y7r
-	for <linux-erofs@lists.ozlabs.org>; Thu, 09 Jul 2026 06:19:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783541936;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OGpY+aCWdZdLzAr9IVTEaSTpbEI6iVGt97cU+sVsvo8=;
-	b=MRWCP1o8+qkc4HY/vYCKRog5pxyqcwFyzUd2/qVogrZADESkj2Lhonj74oSXSQIMeHnMw8
-	8ij8itkkZSgQk6/EXOFIrvflXphL1MyWefeNouQGL/ThsEWKaMfRyueOJD1VlvKQf9BHxK
-	FWOAF2/kYSe+ZTUjITor/o0WWWLbsMU=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783541937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OGpY+aCWdZdLzAr9IVTEaSTpbEI6iVGt97cU+sVsvo8=;
-	b=GMXHvn3uFBQSQiPeukMmUWFxbGOblCok7f9cYGOLwITHcKTAzblx2CNLtWAKogpJ88aVqH
-	YDmSS8qMbMhBhKbwz1y+Kix7pJdzDo3pLrgRY2I8/zNRGumkq4sfcjVSYYqiC2zVoskxit
-	sCZKJFGj6VFA+BEjfvPFZ6fnnqnCbf0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-299-PDZBUIGbPQCbZd3K1nH1Ag-1; Wed,
- 08 Jul 2026 16:18:50 -0400
-X-MC-Unique: PDZBUIGbPQCbZd3K1nH1Ag-1
-X-Mimecast-MFC-AGG-ID: PDZBUIGbPQCbZd3K1nH1Ag_1783541929
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61D4E1800350;
-	Wed,  8 Jul 2026 20:18:48 +0000 (UTC)
-Received: from localhost (unknown [10.44.33.4])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48D6F195604C;
-	Wed,  8 Jul 2026 20:18:47 +0000 (UTC)
-From: Giuseppe Scrivano <gscrivan@redhat.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  linux-unionfs@vger.kernel.org,
-  linux-fsdevel@vger.kernel.org,  linux-api@vger.kernel.org,  Al Viro
- <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,  Gao
- Xiang <hsiangkao@linux.alibaba.com>,  linux-erofs mailing list
- <linux-erofs@lists.ozlabs.org>
-Subject: Re: [PATCH] ovl: add ioctls to retrieve layer file descriptors
-In-Reply-To: <CAOQ4uxgbNhdzKN7tvRmFDpt-8CZWh9pVcMLv25HxJzA0_0WfSg@mail.gmail.com>
-	(Amir Goldstein's message of "Wed, 8 Jul 2026 21:01:53 +0200")
-References: <20260708095831.3381978-1-gscrivan@redhat.com>
-	<CAJfpegsJON=1_84PCGMjASYPFL=Wqsz7dnTAbO3Tdz5DfRQU+g@mail.gmail.com>
-	<878q7l8y4y.fsf@redhat.com>
-	<CAJfpegvQ06=2E0V_ADgxwmo7e5weTfOMozmBB-QVNLLWYAm8WQ@mail.gmail.com>
-	<87wlv57dt1.fsf@redhat.com>
-	<CAJfpegtTixwWSh9M-9NbwP0nUbJJ9rh0rxqO7BzgK7Su_RpM+A@mail.gmail.com>
-	<87o6gh79yi.fsf@redhat.com>
-	<CAOQ4uxgbNhdzKN7tvRmFDpt-8CZWh9pVcMLv25HxJzA0_0WfSg@mail.gmail.com>
-Date: Wed, 08 Jul 2026 22:18:44 +0200
-Message-ID: <87jyr56xqz.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gwvZZ2pqdz3c9k
+	for <linux-erofs@lists.ozlabs.org>; Thu, 09 Jul 2026 22:35:48 +1000 (AEST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=2c2WLhMpxXGd2zZ8xVVz1EOs2xJcw3p15TLm0SoZHu8=;
+	b=ScofmLPMBdIGTW3JVpSBDYWlwdl0Wz56AYMxOTGEos7gJJhz40kclutKcCghVp40oTi6OazGk
+	yeDncZ3I7S3Lt6E+fTI9ZnDtpq8OpyH6NeOSr4aSuYa5FD3bol65LTIZ2FZhxWzPYih34ofnLQ4
+	D/aBdZEpfEsCx9he5QpzTPo=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4gwvMj2wGyz1prlm;
+	Thu,  9 Jul 2026 20:26:25 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2238E40577;
+	Thu,  9 Jul 2026 20:35:42 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 9 Jul
+ 2026 20:35:41 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>, <hsiangkao@linux.alibaba.com>
+CC: <zhukeqian1@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [PATCH] erofs-utils: lib: fix ztailpacking fallback across lclusters
+Date: Thu, 9 Jul 2026 20:34:11 +0800
+Message-ID: <20260709123411.1166770-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -101,147 +66,253 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: IRhUck_42zDFYUbwhNQ2_MAZ9DVWV8C6zHRQM7l9Kos_1783541929
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-3870-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3869-lists,linux-erofs=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:amir73il@gmail.com,m:miklos@szeredi.hu,m:linux-unionfs@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-api@vger.kernel.org,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	HAS_XOIP(0.00)[];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_THREE(0.00)[4];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns,szeredi.hu:email]
+	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	TO_DN_NONE(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AD6AC72A285
+X-Rspamd-Queue-Id: A5EBB7310A7
 
-Amir Goldstein <amir73il@gmail.com> writes:
+With ztailpacking, the final compressed pcluster is first stored as
+inline data.  If the inode metadata area cannot hold it, mkfs falls back
+to a normal tail block and drops the inline pcluster marker.
 
-> On Wed, Jul 8, 2026 at 5:55=E2=80=AFPM Giuseppe Scrivano <gscrivan@redhat=
-.com> wrote:
->>
->> Miklos Szeredi <miklos@szeredi.hu> writes:
->>
->> > On Wed, 8 Jul 2026 at 16:32, Giuseppe Scrivano <gscrivan@redhat.com> w=
-rote:
->> >
->> >> Amir suggested to add that functionality when I've asked for some
->> >> feedback before sending the patch here.  I am fine to drop it if this=
- is
->> >> the consensus although I see its utility from user space.
->
-> I was thinking that getting the number of layers or info would be
-> a good idea to complement getting a layer fd.
->
-> I agree that the same information is probably available via statmount
-> by parsing the upperdir/lowerdir/datadir mount options.
->
->> >
->> > How about a completely different interface:
->> >
->> > int get_fd_opt(const char *name, unsigned int index, unsigned int flag=
-s);
->> >
->> > Enumerating layers would be as easy as passing an index stating from
->> > zero and stopping when -ERANGE is received.
->> >
->> > It would work for all filesystems that use files as options.  No more
->> > fs specific ioctls.
->>
->> Is a new syscall really justified for such a narrow use case?
->>
->
-> I feel the same way.
->
-> Giuseppe,
->
-> Could you add some high level context in this thread on why you need
-> this functionality.
-> I think it's this composefs-rs work. right?
-> https://github.com/giuseppe/composefs-rs/commits/reuse-mounts-and-prevent=
--gc-overlay/
->
-> I must say this seems a bit upside down to me.
->
-> If you want to keep a pool of mounted erofs images, you could do that
-> in userspace -
-> create a service that indexes mounted erofs images by unique mount point =
-paths.
-> Then you can introspect the overlayfs mount options referring to those
-> mount points.
+The current fallback path assumes that the inline tail pcluster belongs
+to the EOF lcluster.  That is not always true: the tail pcluster can
+start in the previous lcluster and end at EOF, while its raw size still
+fits in one block.  In that case, patching the EOF lcluster is
+semantically wrong.
 
-A first issue is that the mount options won't have this information
-anymore, as we use /proc/self/fd/$i paths as lower dirs so we are sure
-the fd points exactly to the file we have measured its fs-verity digest
-before using it.
+Let's keep raw tail data whenever it fits in one block, and convert the
+corresponding lcluster index to PLAIN during fallback.
 
-I know this can be achieved with a system daemon, but do we really need
-one if this information is already known to the kernel?
+Reported-by: Alberto Salvia Novella <es20490446e@gmail.com>
+Closes: https://github.com/erofs/erofs-utils/issues/51
+Assisted-by: Codex:GPT-5.5
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ include/erofs/internal.h |   5 +-
+ lib/compress.c           | 109 ++++++++++++++++++++++++++++-----------
+ 2 files changed, 83 insertions(+), 31 deletions(-)
 
-Combined with listmount/statmount for discovery and fs-verity for
-validation, the entire mechanism is stateless from userspace.
-
-More in general we need a way to introspect overlay mounts to know where
-they are pointing to since paths can be hidden using /proc/*/fd
-symlinks, or files get replaced.
-
-Another similar request:
-https://github.com/systemd/systemd/issues/35017#issuecomment-2457333218
-
-> Going through the kernel to get an fd and reuse that fd for a new
-> overlayfs mount
-> sounds like a strange way of accomplishing this.
->
-> If the overlayfs mounter is unprivileged, it would have to go through
-> systemd-mountfsd
-> to request a mount of erofs trusted image, right?
-
-off-topic but for now we are considering FUSE to deal with mounting
-EROFS as it would serve only the metadata anyway in a composefs setup.
-
-Regards,
-Giuseppe
-
-> Can't the same service provide the "is_image_mounted" query which provide=
-s
-> the mount path?
->
-> I am not against introspection of overlayfs, but I'd like to understand
-> the use cases before finalizing the uapi.
->
-> Thanks,
-> Amir.
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 2cc9cc8..bdde41f 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -212,8 +212,11 @@ struct erofs_diskbuf;
+ 
+ enum erofs_idata_type {
+ 	EROFS_IDATA_TYPE_RAW,
+-	EROFS_IDATA_TYPE_COMPRESSED_DEFAULT,
++	EROFS_IDATA_TYPE_COMPRESSED,
++	/* compressed idata follows a final 2B compacted index pack */
+ 	EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B,
++	/* compressed idata follows a final single-entry 4B pack after a 2B pack */
++	EROFS_IDATA_TYPE_COMPRESSED_4B1_PREV2B,
+ };
+ 
+ #define EROFS_I_BLKADDR_DEV_ID_BIT		48
+diff --git a/lib/compress.c b/lib/compress.c
+index f7ad5a1..ec90f65 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -483,7 +483,7 @@ static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
+ {
+ 	inode->z_advise |= Z_EROFS_ADVISE_INLINE_PCLUSTER;
+ 	inode->idata_size = len;
+-	inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED_DEFAULT;
++	inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED;
+ 
+ 	inode->idata = malloc(inode->idata_size);
+ 	if (!inode->idata)
+@@ -664,7 +664,7 @@ frag_packing:
+ 		ictx->fragemitted = true;
+ 	/* tailpcluster should be less than 1 block */
+ 	} else if (may_inline && len == e->length && compressedsize < blksz) {
+-		if (ctx->clusterofs + len <= blksz) {
++		if (len <= blksz) {
+ 			inode->eof_tailraw = malloc(len);
+ 			if (!inode->eof_tailraw)
+ 				return -ENOMEM;
+@@ -962,6 +962,14 @@ int z_erofs_convert_to_compacted_format(struct erofs_inode *inode,
+ 		dummy_head = true;
+ 	}
+ 
++	if (inode->idata_size) {
++		if (compacted_2b && !compacted_4b_end)
++			inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B;
++		else if (compacted_2b && compacted_4b_end == 1)
++			inode->idata_type =
++				EROFS_IDATA_TYPE_COMPRESSED_4B1_PREV2B;
++	}
++
+ 	/* generate compacted_4b_initial */
+ 	while (compacted_4b_initial) {
+ 		in = parse_legacy_indexes(cv, 2, in);
+@@ -974,8 +982,6 @@ int z_erofs_convert_to_compacted_format(struct erofs_inode *inode,
+ 
+ 	/* generate compacted_2b */
+ 	if (compacted_2b) {
+-		if (!compacted_4b_end && inode->idata_size)
+-			inode->idata_type = EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B;
+ 		do {
+ 			in = parse_legacy_indexes(cv, 16, in);
+ 			out = write_compacted_indexes(out, cv, &blkaddr,
+@@ -1205,11 +1211,65 @@ out:
+ 	return metabuf;
+ }
+ 
++static void z_erofs_patch_tail_compacted_index(struct erofs_inode *inode,
++					       bool previous,
++					       unsigned int type)
++{
++	const unsigned int totalidx = BLK_ROUND_UP(inode->sbi, inode->i_size);
++	const unsigned int lobits = max_t(unsigned int, inode->z_lclusterbits,
++				ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
++	u8 *base = inode->compressmeta;
++	u8 *pack = base + inode->extent_isize;
++	unsigned int bitpos, bitoff;
++	u8 *out;
++	u32 v;
++
++	DBG_BUGON(!totalidx);
++	DBG_BUGON(inode->z_lclusterbits > 14);
++
++	if (inode->idata_type == EROFS_IDATA_TYPE_COMPRESSED_END_OF_2B) {
++		pack -= 32;
++		bitpos = 14 * (previous ? 14 : 15);
++		goto out;
++	}
++
++	/* Last compacted index pack is 4B */
++	pack -= 8;
++	if (!(totalidx & 1)) {
++		bitpos = previous ? 0 : 16;
++		goto out;
++	}
++
++	if (!previous) {
++		bitpos = 0;
++		goto out;
++	}
++
++	/* Second to last compacted index pack is 2B */
++	if (inode->idata_type == EROFS_IDATA_TYPE_COMPRESSED_4B1_PREV2B) {
++		pack -= 32;
++		bitpos = 14 * 15;
++	} else {
++		pack -= 8;
++		bitpos = 16;
++	}
++out:
++	DBG_BUGON(pack < base);
++	bitoff = bitpos & 7;
++	out = pack + bitpos / 8;
++	v = get_unaligned_le32(out);
++	v &= ~(Z_EROFS_LI_LCLUSTER_TYPE_MASK << (lobits + bitoff));
++	v |= type << (lobits + bitoff);
++	put_unaligned_le32(v, out);
++}
++
+ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	const unsigned int type = Z_EROFS_LCLUSTER_TYPE_PLAIN;
+ 	struct z_erofs_map_header *h = inode->compressmeta;
++	erofs_off_t rawstart;
++	erofs_blk_t head_lcn, eof_lcn;
+ 
+ 	h->h_advise = cpu_to_le16(le16_to_cpu(h->h_advise) &
+ 				  ~Z_EROFS_ADVISE_INLINE_PCLUSTER);
+@@ -1218,38 +1278,27 @@ void z_erofs_drop_inline_pcluster(struct erofs_inode *inode)
+ 	if (!inode->eof_tailraw)
+ 		return;
+ 	DBG_BUGON(inode->idata_type == EROFS_IDATA_TYPE_RAW);
++	DBG_BUGON(!inode->i_size);
++	DBG_BUGON(inode->eof_tailrawsize > erofs_blksiz(sbi));
++	DBG_BUGON(inode->eof_tailrawsize > inode->i_size);
++
++	rawstart = inode->i_size - inode->eof_tailrawsize;
++	head_lcn = rawstart >> sbi->blkszbits;
++	eof_lcn = (inode->i_size - 1) >> sbi->blkszbits;
++	DBG_BUGON(head_lcn != eof_lcn && head_lcn + 1 != eof_lcn);
+ 
+-	/* patch the EOF lcluster to uncompressed type first */
++	/* patch the tail pcluster head to uncompressed type first */
+ 	if (inode->datalayout == EROFS_INODE_COMPRESSED_FULL) {
+ 		struct z_erofs_lcluster_index *di =
+-			(inode->compressmeta + inode->extent_isize) -
+-			sizeof(struct z_erofs_lcluster_index);
++			(void *)((u8 *)inode->compressmeta +
++				 Z_EROFS_LEGACY_MAP_HEADER_SIZE +
++				 head_lcn *
++				 sizeof(struct z_erofs_lcluster_index));
+ 
+ 		di->di_advise = cpu_to_le16(type);
+ 	} else if (inode->datalayout == EROFS_INODE_COMPRESSED_COMPACT) {
+-		/* handle the last compacted 4B/2B pack */
+-		unsigned int lclusterbits = inode->z_lclusterbits;
+-		unsigned int lobits, eofs, base, pos, v;
+-		u8 *out;
+-
+-		lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
+-
+-		if (inode->idata_type == EROFS_IDATA_TYPE_COMPRESSED_DEFAULT) {
+-			eofs = inode->extent_isize -
+-				(4 << (BLK_ROUND_UP(sbi, inode->i_size) & 1));
+-			base = round_down(eofs, 8);
+-			pos = 16 /* encodebits */ * ((eofs - base) / 4);
+-			out = inode->compressmeta + base + pos / 8;
+-		} else {
+-			out = inode->compressmeta + inode->extent_isize -
+-				sizeof(__le32) - sizeof(__le16);
+-			lobits = 16 - 14 /* encodebits */ + lobits;
+-		}
+-
+-		v = (get_unaligned_le16(out) & (BIT(lobits) - 1)) |
+-			(type << lobits);
+-		*out = v & 0xff;
+-		*(out + 1) = v >> 8;
++		z_erofs_patch_tail_compacted_index(inode, head_lcn != eof_lcn,
++						   type);
+ 	} else {
+ 		DBG_BUGON(1);
+ 		return;
+-- 
+2.47.3
 
 
