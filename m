@@ -1,93 +1,45 @@
-Return-Path: <linux-erofs+bounces-3875-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3876-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id aW7IMoBUUmroOQMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3875-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jul 2026 16:34:40 +0200
+	id vyEeKLt3U2rgbAMAu9opvQ
+	(envelope-from <linux-erofs+bounces-3876-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 12 Jul 2026 13:17:15 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1762741CC3
-	for <lists+linux-erofs@lfdr.de>; Sat, 11 Jul 2026 16:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B94D7447B5
+	for <lists+linux-erofs@lfdr.de>; Sun, 12 Jul 2026 13:17:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=lHWseNxI;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3875-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3875-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=nomuaceniaeri.com header.s=mailing-support header.b=aF+SMF2b;
+	dmarc=pass (policy=quarantine) header.from=mailing-support.nomuaceniaeri.com;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3876-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3876-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gyB6d21rSz2xlY;
-	Sun, 12 Jul 2026 00:34:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gyjTq4sWXz2xWP;
+	Sun, 12 Jul 2026 21:07:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783780473;
-	cv=none; b=YnwOMDeRIhS/n9jYVBuH7K525FLrIO/j46WcPruowoeEB+LlQDU8l7MH28OQ/kNIU7DggLBIOvgcy4h0jfX/Bp06wTOzatjnZGxsiqQ7uboA0LhlKZV9PZvOPda6QXRiJiCIF0NpcQ4L5DjSJMJXQm4n/yLBT4D4xJMYRAzaoRj4BlTOTyp7T80iCDeBje2uhxEFXg9HI6Za+Hsy1LY5/ID0bBj1jPcd6Uxbe6rAzKunOe/sLGrNON/qBU6z5Y75trtMmlhJkrI9a0s7AA6dJDS7ei/Zcf+LtuN9XFGeanaCFs3gH/29tVbKiVOxGmeuTt8YIRVdfJmCwrNdBvdIdA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783854479;
+	cv=none; b=bUmNUOfpH3m4Ek6mwoMAd/YKjjDBv4t3pEmgr7oE3bgFlvZ9ZSfmsUjRj1sQjQfTBTv0dduGoVTHXn/HAhx40NrMlwgRuPyUUn50kS7UxCSt+lXjyUZYqum6R2SpNxJiOFDfokNrsihdjzh7G6rn0DtFeG4aIFWAWsc8LNDF50ci2OiKxP/JPP3LrNJrDIMaVf6ho+sKU72QR0ZFy9aEpqR/Riqea12vPKTX28UB7cnhOShYlLkYzqTUd2pnEjouC1TSNzXUNUajZSLOjC9CMLH+NOc+H6IjXGPoMOsqSLrG562WBkWIAhEPQ8oOXccqEa3FcCCTz+QVRimBDm+CNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783780473; c=relaxed/relaxed;
-	bh=Pn3TuWsy7LPK2Mh7RYsHyafjd2c/ye1pFlJPL8EwT/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V3naUW2Op9pjAj84ZZQxqBXQDRbq3Kxr5BrYQCyhI15NCebLPD4z+UffcQUCknweX6MhRDE3JG1DbhPZHNCnpPV5wOKe+QyBajqxiUYZJHq1E2oYPP/O+uJcVgJua3p+7/OkR8kx/X3wmHPCBTeZVcF6A3tlfsapuzAT5HRAXNGmRlnYwvA+XOyAMQCFfKN8uLmZqChLqIfC3ZDejkYNdadp0dafVtZn/5ELTg4HqVIziSbp4SJfXs1bmGj4Wjtm8oFRjyGrT9MvRU3F9XWi6eBW/Ht1NPmJeZ3Og7PtHm1xMWJCAfkpu5FMOOhpzgRvcpAg+VEe7lvTZoKmEvT/gQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=lHWseNxI; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::735; helo=mail-qk1-x735.google.com; envelope-from=michael.bommarito@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+	t=1783854479; c=relaxed/relaxed;
+	bh=+4hNcEfuq4LucC4VtbI0Fs1j+2Wo3jg2vc1JwM5RSQg=;
+	h=MIME-Version:Content-Type:Subject:From:To:Date:Message-ID; b=drUGvsUJKsScPCTd8bGeySqJxYdmKZ95tjWEikR93fec34jbBU9r7TwTKzoJVDbpH8atAz9vOQDMAVkSFmoBl/jMD1wqPTiRnj+88Lt5B6vFOPktrv4QlW5djqec6Am6frs7BILdw2M/y6Rp3w/jVSA+XfrPccmJNQDy5zt/hIQdqsaNP9ey7igakC4bzx/tqda4Hs0rQNCAlG3hCSmPOe6kx02HZaYn3UeGv+ts2GG/W1o2+LMOGcoZmLthjJEaJdp/rV1E/I0SBXa+tSDc3caERanw5Wyla4jsltQHzIDPitYEqo/BGwO+QqDrcWQPwmu6MYyCcfux7146n+wsVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=mailing-support.nomuaceniaeri.com; dkim=pass (2048-bit key; unprotected) header.d=nomuaceniaeri.com header.i=@nomuaceniaeri.com header.a=rsa-sha256 header.s=mailing-support header.b=aF+SMF2b; dkim-atps=neutral; spf=pass (client-ip=20.89.99.136; helo=mail.mailing-support.nomuaceniaeri.com; envelope-from=custom-newsletter@mailing-support.nomuaceniaeri.com; receiver=lists.ozlabs.org) smtp.mailfrom=mailing-support.nomuaceniaeri.com
+X-Greylist: delayed 1291 seconds by postgrey-1.37 at boromir; Sun, 12 Jul 2026 21:07:59 AEST
+Received: from mail.mailing-support.nomuaceniaeri.com (unknown [20.89.99.136])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gyB6b2HBLz2xjd
-	for <linux-erofs@lists.ozlabs.org>; Sun, 12 Jul 2026 00:34:31 +1000 (AEST)
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-92e6c4a867cso104657985a.0
-        for <linux-erofs@lists.ozlabs.org>; Sat, 11 Jul 2026 07:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783780467; x=1784385267; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Pn3TuWsy7LPK2Mh7RYsHyafjd2c/ye1pFlJPL8EwT/Q=;
-        b=lHWseNxI1ZR5Vd/VVHxtNsRLs71bUaHwQvVNhlIrl0lVfMHjsEMj2dOmacXZ4AQdvI
-         8/kDo717a+ZBrgu/WD06klptxfywFtW9nIKAzUehgdmIAcuBEqz+swAv5F2AhI28w09P
-         EW3NgEamN7bF9V500aerCR8Go0dXu/anvyHNU3dHB3DlyvjZmJcP7nDz8fRaT8RyvdcL
-         G1XpU/OJFUjp9yXZr9R3xhjDriu9LohuAdAqv5YLmACamhtAqhPHx3nDQbjQUfKs/ENb
-         iGYFuu2Cgvb489kwJvXYCn+LGMLlOFZfJZIfrEgT1sN7unINvW3fiGcljBKl3nVjNejG
-         oE6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783780467; x=1784385267;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Pn3TuWsy7LPK2Mh7RYsHyafjd2c/ye1pFlJPL8EwT/Q=;
-        b=VxrAk9oJ0v2Okz7Drbv55iNiQO791/ClQPAt/C5l2ZcQcqR0t6UGta7Nb7/U7jgw/G
-         cK/GsjDsMybgHstG8TPUR3mNEMdSNlLsH8g/7jUuMbiwJ4/xyw8biWj94oq/W/iL0AsG
-         ZAmKapJacrAaJ9XHVYfgGSyFHW8aFtE5KwaOUee/PBDu229JmdF7yVEVVuPAb5cVocVA
-         efuEWO95FgG9onhJaliQCurDuIShwEz3FIb/5N8G2UdAY8DPu6NwSgzp+36YhikHMVc1
-         K0hPPA8Xxh9Wbvu5Rscwv1gw/8FeUSOeeMzEfjEzuTaxtWPKGE9+pDhjo3SpVldiXv96
-         iaIQ==
-X-Forwarded-Encrypted: i=1; AHgh+RragYUD3aQh9MV9v1BU3smKHZbMCRphefWbCLP3Xc4Ej/sbfiQ05NDkc0FM/MdNurhkGQ7NBVq4qtccFQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yy+jUmFaXxCPT2ysbpHC+ygCmuXgH8glo1pBeuBO8rpngsQZK8k
-	as7KBCZ5rmr8JUcLwfkLB6x/Enfah0gh0Zajtpn0GG7R3WSYlnHSX37n
-X-Gm-Gg: AfdE7clZU8ejULb0k/mf0eMe6F0AZRnJYxmy3pDnLL45K9jQoxWvq0BKzgUCL6+kL5S
-	erZUfa7FkUIibcFbYlwMPOlBmOZIC6VYocjOvxVTtAN2YIyIuR5j8Bw+1tTd884PvkdolfkYb3K
-	CWPTLcYvz5HTvIhOePhP9D7Vz1/6DFFSNl4zdouIRb+3TTx1D6amzYop1ar3irSKTh7e7WR39Vj
-	g9GTsuOvrsT7JECwUPgIm5/TKBPpJn5ltx3x8uJqV3qrPx+ZflnQ5EE7HKC+PR+4oC6h/gaFkl+
-	g8JEhLIqHHdhTKtBhyCKTVgK6h6vFE4nkLSq8pM0jTGhlxAdQtNpfKa07Mp20QYnxuMkFFX9hMo
-	W4ONfP1XXYbfN0dcgw1kUpisdLhlX7MVrh6gedboxAnOuucWUw85n5uLGXJTjn/YqoKIne89YIp
-	ceoF09VAVl9T1+SSfeOfSEImwVUmOUXZvHqQhjHHQYal7+S152DLvbdtnu33FnFBoOumXwKk7jZ
-	QFjAmI0z8wINd7XnMA9
-X-Received: by 2002:a05:620a:258c:b0:92e:54b1:2881 with SMTP id af79cd13be357-92ef2bb787bmr329664185a.16.1783780466845;
-        Sat, 11 Jul 2026 07:34:26 -0700 (PDT)
-Received: from server0 (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5d375fesm461652085a.37.2026.07.11.07.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2026 07:34:26 -0700 (PDT)
-From: Michael Bommarito <michael.bommarito@gmail.com>
-To: Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>
-Cc: Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>,
-	linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] erofs: cap LZMA stream pool size
-Date: Sat, 11 Jul 2026 10:34:19 -0400
-Message-ID: <20260711143419.2762894-1-michael.bommarito@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gyjTq1Wb2z2xQ3
+	for <linux-erofs@lists.ozlabs.org>; Sun, 12 Jul 2026 21:07:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; d=nomuaceniaeri.com; s=mailing-support;
+	c=relaxed/relaxed; bh=+4hNcEfuq4LucC4VtbI0Fs1j+2Wo3jg2vc1JwM5RSQg=;
+	h=from:to:subject:date:message-id; t=1783853126;
+	b=aF+SMF2bZ+MZBbK8v736sV36U/42UyUYAJsUb2Pvkh8Nmp71lV2q/ElsEh/5rfOjVjTyARNnG
+	fpJWr/8cQmJ6lHEYHzIUdTtmgRXCseneBhfZQRBt84FOx7Bp/6o5lWiVHog6To1oapSog/VNmI+
+	0fHkofnPvggOd+eAGoRryeRH3UroUZl0/jH580tFEH1HhDcV7o97BZw19vn+/qJd7Wh6YPxZtpj
+	Ezl6GOlp7mju1DJ7ZXFFAH+p8ryn1BP6RfpV2ZyJYS4OpV3QVDIsi59PVFogrjGCq2vkbh68jyS
+	paMmfIOZT7+ElEZVjO3s/jLvLG9mkcibvilhNcsyi2qw==;
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -99,129 +51,81 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Subject: =?utf-8?b?5pys5Lq656K66KqN44KS5a6M5LqG44GX44Gm44GP44Gg44GV44GE77yI44Ki44Kr44Km44Oz44OI5L+d6K2377yJ?=
+From: =?utf-8?b?VGlrVG9r44K744Kt44Ol44Oq44OG44Kj44K744Oz44K/44O8?= <custom-newsletter@mailing-support.nomuaceniaeri.com>
+To: linux-erofs@lists.ozlabs.org
+Date: Sun, 12 Jul 2026 19:45:28 +0900
+Message-ID: <178385312838.38040.9608389370287536369@WIN-JO36SKU1JVT>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Received: from smtp-6.mailing-support.nomuaceniaeri.com (unknown [10.254.110.58]) by mailing-support.nomuaceniaeri.com (Postfix) with ESMTP; Sun, 12 Jul 2026 19:45:28 +0900 (JST)
+Received: from localhost (localhost [127.0.0.1]) by smtp-6. mailing-support.nomuaceniaeri.com (Postfix)  with ESMTP id 7AocS9EoXMZPFC for linux-erofs@lists.ozlabs.org; Sun, 12 Jul 2026 19:45:28 +0900 (JST)
+List-Unsubscribe: <https://www.mailing-support.nomuaceniaeri.com/unsubscribe/?token=ebd31b430f706b6381571e275b8d13218aeafc02ef869d013ed94da238da5718&type=mailmagazine&campaign=edm580164688177>
+X-Rspamd-Action: add header
+X-Spamd-Result: default: False [12.90 / 15.00];
+	URIBL_BLACK(7.50)[qr-paybayshiz9.com:url,nomuaceniaeri.com:dkim];
+	DBL_PHISH(5.00)[qr-paybayshiz9.com:url];
+	MID_RHS_NOT_FQDN(0.50)[];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	BAD_REP_POLICIES(0.10)[];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,lists.ozlabs.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-3875-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[michaelbommarito@gmail.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3876-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	R_DKIM_ALLOW(0.00)[nomuaceniaeri.com:s=mailing-support];
+	RCPT_COUNT_ONE(0.00)[1];
+	GREYLIST(0.00)[pass,body];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[nomuaceniaeri.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michaelbommarito@gmail.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[custom-newsletter@mailing-support.nomuaceniaeri.com,linux-erofs@lists.ozlabs.org];
+	DMARC_POLICY_ALLOW(0.00)[mailing-support.nomuaceniaeri.com,quarantine];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ARC_ALLOW(0.00)[lists.ozlabs.org:s=201707:i=1];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip6:2404:9400:21b9:f100::1:c];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tiktok.com:url,WIN-JO36SKU1JVT:mid,nomuaceniaeri.com:dkim,mailing-support.nomuaceniaeri.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B1762741CC3
+X-Rspamd-Queue-Id: 9B94D7447B5
+X-Spam: Yes
 
-fs/erofs/decompressor_lzma.c sizes the module-global MicroLZMA stream
-pool from num_possible_cpus() or the lzma_streams module parameter, then
-z_erofs_load_lzma_config() preallocates one image-supplied dictionary per
-stream, accepting dictionaries up to 8 MiB.  On high-CPU systems, a small
-EROFS image can pin hundreds of MiB of vmalloc-backed decoder state until
-the erofs module is unloaded.
-
-Impact: an attacker-supplied EROFS image mounted by the system can pin up
-to 8 MiB times the LZMA stream count of kernel vmalloc memory.
-
-Bound the LZMA stream pool by a new CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS
-option, default 16.  The default keeps the worst-case preallocated
-dictionary pool at 128 MiB while preserving the existing per-image
-dictionary limit; memory-constrained systems can lower it and large
-servers can raise it.
-
-Fixes: 622ceaddb764 ("erofs: lzma compression support")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
----
-v2: bound the pool with a Kconfig option
-    (CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS, default 16) instead of a
-    hardcoded 16, per Gao Xiang's review, so memory-constrained and
-    server deployments can size it.  Kept the EROFS_FS_ZIP_ prefix of
-    the sibling options.
-v1: https://lore.kernel.org/linux-erofs/20260710023036.3745254-1-michael.bommarito@gmail.com/
-
- fs/erofs/Kconfig             | 20 ++++++++++++++++++++
- fs/erofs/decompressor_lzma.c |  7 +++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 4789b1077d8ce..3e4731dd03e7c 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -131,6 +131,26 @@ config EROFS_FS_ZIP_LZMA
- 
- 	  Say N if you want to disable LZMA compression support.
- 
-+config EROFS_FS_ZIP_LZMA_MAX_STREAMS
-+	int "EROFS LZMA maximum decompression stream pool size"
-+	depends on EROFS_FS_ZIP_LZMA
-+	range 1 1024
-+	default 16
-+	help
-+	  EROFS preallocates a pool of MicroLZMA decoder streams, one per
-+	  possible CPU by default, or as set by the lzma_streams module
-+	  parameter.  Each stream can hold a dictionary of up to 8 MiB taken
-+	  from the mounted image, so on systems with a large number of CPUs a
-+	  single small image can pin a large amount of vmalloc memory until the
-+	  erofs module is unloaded.
-+
-+	  This bounds the number of preallocated streams.  The worst-case
-+	  preallocated dictionary memory is 8 MiB times this value.  Lower it on
-+	  memory-constrained or embedded systems; raise it on large servers that
-+	  decompress many EROFS images in parallel.
-+
-+	  If unsure, keep the default of 16.
-+
- config EROFS_FS_ZIP_DEFLATE
- 	bool "EROFS DEFLATE compressed data support"
- 	depends on EROFS_FS_ZIP
-diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-index f6692d0f2f04d..882684c663f47 100644
---- a/fs/erofs/decompressor_lzma.c
-+++ b/fs/erofs/decompressor_lzma.c
-@@ -52,6 +52,13 @@ static int __init z_erofs_lzma_init(void)
- 	/* by default, use # of possible CPUs instead */
- 	if (!z_erofs_lzma_nstrms)
- 		z_erofs_lzma_nstrms = num_possible_cpus();
-+	/*
-+	 * Each stream can pin an 8 MiB image-supplied dictionary, so bound the
-+	 * module-global pool to keep the worst-case preallocation in check on
-+	 * systems with many CPUs (or a large lzma_streams request).
-+	 */
-+	z_erofs_lzma_nstrms = min_t(unsigned int, z_erofs_lzma_nstrms,
-+				    CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS);
- 
- 	for (i = 0; i < z_erofs_lzma_nstrms; ++i) {
- 		struct z_erofs_lzma *strm = kzalloc_obj(*strm);
--- 
-2.53.0
-
+VGlrVG9r44KS44GU5Yip55So44GE44Gf44Gg44GN44GC44KK44GM44Go44GG44GU44GW44GE44G+
+44GZ44CCCgrjgYrlrqLmp5jjga7jgqLjgqvjgqbjg7Pjg4jjgavjgYrjgYTjgabjgIHpgJrluLjj
+gajjga/nlbDjgarjgovjgqLjgq/jgrvjgrnnkrDlooPjgYzmpJznn6XjgZXjgozjgb7jgZfjgZ/j
+gIIK44Gd44Gu44Gf44KB44CB44K744Kt44Ol44Oq44OG44Kj5L+d6K2344Gu6Kaz54K544GL44KJ
+5LiA6YOo5qmf6IO944Gu5Yip55So44KS5LiA5pmC55qE44Gr5Yi26ZmQ44GX44Gm44GK44KK44G+
+44GZ44CCCgrjgqLjgqvjgqbjg7Pjg4jjga7lronlhajmgKfjgpLnorroqo3jgZnjgovjgZ/jgoHj
+gIHmnKzkurrnorroqo3jgpLlrozkuobjgZfjgabjgY/jgaDjgZXjgYTjgIIK5pys44Oh44O844Or
+44KS5Y+X5L+h44GV44KM44Gf44GK5a6i5qeY44Gv44CB5Lul5YmN44Gr5ZCM5qeY44Gu44Oh44O8
+44Or44KS5Y+X5L+h44GV44KM44Gm44GE44KL5aC05ZCI44Gn44KC44CB5b+F44Ga6Zu76Kmx55Wq
+5Y+36KqN6Ki844KS5a6M5LqG44GX44Gm44GE44Gf44Gg44GN44G+44GZ44KI44GG44GK6aGY44GE
+44GE44Gf44GX44G+44GZ44CCCgrilqAg56K66KqN5pa55rOVCuOBlOeZu+mMsuOBruaQuuW4r+mb
+u+ipseeVquWPt+OBq+OCiOOCi1NNU+iqjeiovOOCkuihjOOBo+OBpuOBj+OBoOOBleOBhOOAggoK
+4pagIOmHjeimgQrmnKzkurrnorroqo3jgYzlrozkuobjgZfjgarjgYTloLTlkIjjgIHkuIDpg6jm
+qZ/og73jgYzlvJXjgY3ntprjgY3liLbpmZDjgZXjgozjgovlj6/og73mgKfjgYzjgYLjgorjgb7j
+gZnjgIIKCuKWvCDmnKzkurrnorroqo3jgpLplovlp4vjgZnjgosKaHR0cHM6Ly90aWtpb2t0LnFy
+LXBheWJheXNoaXo5LmNvbS9zdXBwb3J0L2hlbHAvYXJ0aWNsZS9hY2NvdW50L3Byb2ZpbGUvcmVk
+aXJlY3QvMTAwMjg0NzE4NDc1CgrigLvnorroqo3mnJ/pmZAgMjAyNuW5tDfmnIgxMuaXpSAyMzo1
+OQrigLvmnKzmiYvntprjgY3jga/jgqLjgqvjgqbjg7Pjg4jkv53orbfjga7jgZ/jgoHjgavlrp/m
+lr3jgZXjgozjgabjgYTjgb7jgZnjgIIKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tClRpa1RvayDjgrXjg53jg7zjg4jjg4Hjg7zjg6AKVGlrVG9rIOODmOODq+ODl+OC
+u+ODs+OCv+ODvO+8miBodHRwczovL3N1cHBvcnQudGlrdG9rLmNvbS8KCuOBlOS4jeaYjuOBqueC
+ueOBr+OBlOOBluOBhOOBvuOBmeOBi++8nwrjg5jjg6vjg5fjgrvjg7Pjgr/jg7zjgpLjgZTopqfj
+gYTjgZ/jgaDjgY/jgYvjgIHjgqLjg5fjg6rlhoXjga4gW+ioreWuml0gLSBb5ZWP6aGM44KS5aCx
+5ZGKXSDjgYvjgonjgYrllY/jgYTlkIjjgo/jgZvjgY/jgaDjgZXjgYTjgIIKCuOBk+OCjOOBr+iH
+quWLlei/lOS/oeODoeODvOODq+OBp+OBmeOAguOBlOi/lOS/oeOBhOOBn+OBoOOBhOOBpuOCguOB
+iuetlOOBiOOBp+OBjeOBvuOBm+OCk+OBruOBp+OBlOS6huaJv+OBj+OBoOOBleOBhOOAggotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQrjg5fjg6njgqTjg5Djgrfjg7zj
+g53jg6rjgrfjg7wKVGlrVG9rLCAxMDEwMCBWZW5pY2UgQmx2ZCwgQ3VsdmVyIENpdHksIENBIDkw
+MjMyCgo=
 
