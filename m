@@ -1,48 +1,48 @@
-Return-Path: <linux-erofs+bounces-3880-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3881-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UpxGD4x7VGoImgMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3880-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 07:45:48 +0200
+	id ratPEFeBVGrqmgMAu9opvQ
+	(envelope-from <linux-erofs+bounces-3881-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 08:10:31 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3AD74753B
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 07:45:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44BB5747727
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 08:10:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=S5NlGMQm;
+	dkim=pass header.d=linux.alibaba.com header.s=default header.b=GWSKLyhn;
 	dmarc=pass (policy=none) header.from=linux.alibaba.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3880-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3880-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3881-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3881-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gzBHX6D8Bz2xlv;
-	Mon, 13 Jul 2026 15:45:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gzBr241pbz2xlv;
+	Mon, 13 Jul 2026 16:10:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783921544;
-	cv=none; b=l5t+qCe7T05TrjovvmmHPWToQwMlPTEccSTuTUQinKPplxDxwIi+e5XFUB8FIIRZpKxEoE/NTWf7bOzABR16x/6wYZXCugvXOm8+zB95BpZo1xBmql3kLuPGDwa3RIi2Www5alEy+X0Y98+BVuwSu2WyvLTADgvCkah2yEkiN0KobtYdbesGvXEAxpydhn8GMIjoMmvQmbIniA4cUSyV2PtiGKVpeRIfpEa99vZX2qJEGXzBDFTK50WaBvxxeMjUYT6TzBjUaGkPGS22HqnnnaQBjyLfwY5XcnaFCjX2ql4Rt3Lym2Kv0GZuCGNL/a8yy9WWwTkjJ73hICK+mZR3lA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783923026;
+	cv=none; b=K/2iT11AF30PmrMhyKn/AYak3uu+lAsYmNZf4pPWtppj7Q3wJDzYL7KqVGTt3RNuCSUUYFaraMgJckqi/C2vk6whPhnQkB6sjou5phLqAI+l4lrugMyo+w6Cl+jZmw0qC4IMnQHLhpNqaogsq1GWDiyZPbjUQ9CvGMXiGN1kTcSarxrwEVoPc8ygTDev/Unj6yja9Wc8xEowkz+C/900qmQH2GCwO1Vw5UHkWR3RaCJnsm7St1n4RwEU0ddiZcw0AqkyVNCbiSPpA2A78LLuq0v7v1glMmyv0H+tgXLMZjT3JBFe0mlwMcK9162eDDzwezbg5Iat8AJBAmP7F3f5yQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783921544; c=relaxed/relaxed;
-	bh=uFekaIWvGGMu29Ps5oGZE7SikNcDlsQ2OFFA9vRlC+o=;
+	t=1783923026; c=relaxed/relaxed;
+	bh=1SMTFYvRuB2vL+mgHf0VCkl/61cqdKhN04NrXntKSqA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mvkn6BfxlA6gYneJHuCXZ3653+mKlZ3O0pxW/6yQ3NFak1I8Hr/6X/tnCRsvfUPxHPMkrUXT6KjRvkcgfJBWY0+Wk+PA7W0Yil14ZE7Zl/vIUkF2oVCtTRBB7bCgO+wOphWDdsPV9c7UTWw2+QPf1+koripFi/5XjcK1XMW5nfwNPGhLrXY9kE9kjyQ3kx9OT8Qnlo/Flq0n9U7D9yMAp4nn5EdNtzvg4RyBGQO0i8dUzArnbPhziPQthABfwz2iHedX3eTYLaxd6NLlckqEvsHT4Ze/UJVq8cBWaKfZ/ZVLjOpbY6J0wLZXDpMI9WnNfMD5QCm0u6sTyEYr0xSl5Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=S5NlGMQm; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	 In-Reply-To:Content-Type; b=DBBrS63yiqkItN0UejYaifdwDGoit5zPnzH7zuT6xARP4X1dC6YPtsq/VGDEs4HoHs4YW6G+neRheGNegGSBRDLEMdxCtsyu/rOC69qyk/g29tj5dKEDtW8cD1LmYdPfQ35rwjCL2ywOLPb6z/Kke1+s3/1oIytu+//JEZkWpddiU43VpWdmI2uL4EIkZuS+VAjbjpjCNgNBg+YCrCH1ou3YHvyR35Jf+pk7z40JS96GFxprdB/d3aEZB9Bvv/JyxiQvs86xIUZrPty7CwHnNf4qNEbU/0zX48DzWcecuIsn6qILm6Z/qLlvtxWP2D4edDTZby9K68Jfo+xbj+kwsQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=GWSKLyhn; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzBHV0YqVz2xjN
-	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 15:45:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzBr008phz2xjN
+	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 16:10:22 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1783921530; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=uFekaIWvGGMu29Ps5oGZE7SikNcDlsQ2OFFA9vRlC+o=;
-	b=S5NlGMQmRrMmkTzJZNSc1ZzJnyeKbAQiYOgRp+1IHjIu2R/czqm+Y2xrqKNKBp0cVMVzlrzzhtM8sRxjZBSl9t2STX82PxeDEO0PBQzQ8sXTaNSsa+1Ug6rbV3wFZFZIcr82t1OzNarzMvs7SFoQ7EcfwUeLnpNWdba+1IwFBns=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X6u6xjW_1783921527;
-Received: from 30.221.131.243(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X6u6xjW_1783921527 cluster:ay36)
+	t=1783923019; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=1SMTFYvRuB2vL+mgHf0VCkl/61cqdKhN04NrXntKSqA=;
+	b=GWSKLyhnSCVE2GIAuUfx58W1VQb7pnt4xwY5a1AMEZ7OGYxTGkvlqFckERA4Q68by4tyopokL8XiuJwAh5GkgFqmvzh6Z5Hb68aj5kTsbaKtRbsW0nX5mKH1T107tSSL/llFpcolq0iASq0ntp9vA3KtltpocydrxhT/0tq0ibo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X6u73ps_1783923013;
+Received: from 30.221.131.243(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0X6u73ps_1783923013 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 13 Jul 2026 13:45:28 +0800
-Message-ID: <8829ed0e-5ebc-4832-b9bf-9efdfeb128c7@linux.alibaba.com>
-Date: Mon, 13 Jul 2026 13:45:26 +0800
+          Mon, 13 Jul 2026 14:10:14 +0800
+Message-ID: <d8f92099-83b3-4161-9c17-ec97919f41a1@linux.alibaba.com>
+Date: Mon, 13 Jul 2026 14:10:13 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,14 +55,16 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: accept source file descriptor via fsconfig
-To: Aleksa Sarai <cyphar@cyphar.com>, Giuseppe Scrivano <gscrivan@redhat.com>
-Cc: linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- Christian Brauner <brauner@kernel.org>
-References: <20260711071137.4130824-1-gscrivan@redhat.com>
- <2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
+Subject: Re: [PATCH v2] erofs: cap LZMA stream pool size
+To: Michael Bommarito <michael.bommarito@gmail.com>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>
+Cc: Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20260711143419.2762894-1-michael.bommarito@gmail.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
+In-Reply-To: <20260711143419.2762894-1-michael.bommarito@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -71,8 +73,9 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.20 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
@@ -81,122 +84,133 @@ X-Spamd-Result: default: False [-9.20 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cyphar@cyphar.com,m:gscrivan@redhat.com,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:brauner@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-3880-lists,linux-erofs=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3881-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:michael.bommarito@gmail.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:michaelbommarito@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,lists.ozlabs.org,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:from_mime,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4B3AD74753B
+X-Rspamd-Queue-Id: 44BB5747727
 
-Hi Aleksa,
+Hi Michael,
 
-On 2026/7/13 12:52, Aleksa Sarai wrote:
-> On 2026-07-11, Giuseppe Scrivano <gscrivan@redhat.com> wrote:
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index 86fa5c6a0c70..3040d4cf9b85 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -386,6 +386,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
->>   enum {
->>   	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
->>   	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
->> +	Opt_source_fd,
->>   };
->>   
->>   static const struct constant_table erofs_param_cache_strategy[] = {
->> @@ -413,6 +414,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
->>   	fsparam_flag_no("directio",	Opt_directio),
->>   	fsparam_u64("fsoffset",		Opt_fsoffset),
->>   	fsparam_flag("inode_share",	Opt_inode_share),
->> +	fsparam_fd("source",		Opt_source_fd),
->>   	{}
->>   };
->>   
->> @@ -524,6 +526,11 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->>   		else
->>   			set_opt(&sbi->opt, INODE_SHARE);
->>   		break;
->> +	case Opt_source_fd:
->> +		if (sbi->dif0.file)
->> +			return -EINVAL;
->> +		sbi->dif0.file = get_file(param->file);
->> +		break;
+On 2026/7/11 22:34, Michael Bommarito wrote:
+> fs/erofs/decompressor_lzma.c sizes the module-global MicroLZMA stream
+> pool from num_possible_cpus() or the lzma_streams module parameter, then
+> z_erofs_load_lzma_config() preallocates one image-supplied dictionary per
+> stream, accepting dictionaries up to 8 MiB.  On high-CPU systems, a small
+> EROFS image can pin hundreds of MiB of vmalloc-backed decoder state until
+> the erofs module is unloaded.
 > 
-> I don't think this handling is right for a few reasons:
+> Impact: an attacker-supplied EROFS image mounted by the system can pin up
+> to 8 MiB times the LZMA stream count of kernel vmalloc memory.
 > 
->   1. AFAICS this shadows the default "source" handling logic (because
->      -ENOPARAM is not returned for the non-fd case), which means that
->      this regresses existing erofs users -- everyone already uses
->      "source" today. I must really be missing something if this worked
->      when you tested it.
+> Bound the LZMA stream pool by a new CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS
+> option, default 16.  The default keeps the worst-case preallocated
+> dictionary pool at 128 MiB while preserving the existing per-image
+> dictionary limit; memory-constrained systems can lower it and large
+> servers can raise it.
 > 
->      Additionally, fsparam_fd unfortunately permits strings (where the
->      string is the numerical value of the fd number), meaning that this
->      will call get_file(<garbage>) if someone uses FSCONFIG_SET_STRING.
->      You will need to check param->type at least to avoid that.
+> Fixes: 622ceaddb764 ("erofs: lzma compression support")
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+> ---
+> v2: bound the pool with a Kconfig option
+>      (CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS, default 16) instead of a
+>      hardcoded 16, per Gao Xiang's review, so memory-constrained and
+>      server deployments can size it.  Kept the EROFS_FS_ZIP_ prefix of
+>      the sibling options.
+> v1: https://lore.kernel.org/linux-erofs/20260710023036.3745254-1-michael.bommarito@gmail.com/
 > 
->      I meant to send a patch for this earlier this year, but a nicer
->      solution would be to have a custom helper similar to fs_lookup_param
->      except that it permits FSCONFIG_SET_FD, FSCONFIG_SET_PATH,
->      FSCONFIG_SET_PATH_EMPTY, and FSCONFIG_SET_STRING. This is sorely
->      missing and people keep accidentally creating unusable interfaces as
->      a result. I mentioned this in an LPC talk last year[1].
+>   fs/erofs/Kconfig             | 20 ++++++++++++++++++++
+>   fs/erofs/decompressor_lzma.c |  7 +++++++
+>   2 files changed, 27 insertions(+)
 > 
->      proc_parse_pidns_param was my minimal version that only accepts
->      FSCONFIG_SET_FD and FSCONFIG_SET_STRING, and if you don't want to
->      add dirfd support yet then you should use something more like that.
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 4789b1077d8ce..3e4731dd03e7c 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -131,6 +131,26 @@ config EROFS_FS_ZIP_LZMA
+>   
+>   	  Say N if you want to disable LZMA compression support.
+>   
+> +config EROFS_FS_ZIP_LZMA_MAX_STREAMS
+> +	int "EROFS LZMA maximum decompression stream pool size"
+> +	depends on EROFS_FS_ZIP_LZMA
+> +	range 1 1024
+> +	default 16
+> +	help
+> +	  EROFS preallocates a pool of MicroLZMA decoder streams, one per
+> +	  possible CPU by default, or as set by the lzma_streams module
+> +	  parameter.  Each stream can hold a dictionary of up to 8 MiB taken
+> +	  from the mounted image, so on systems with a large number of CPUs a
+> +	  single small image can pin a large amount of vmalloc memory until the
+> +	  erofs module is unloaded.
+> +
+> +	  This bounds the number of preallocated streams.  The worst-case
+> +	  preallocated dictionary memory is 8 MiB times this value.  Lower it on
+> +	  memory-constrained or embedded systems; raise it on large servers that
+> +	  decompress many EROFS images in parallel.
+> +
+> +	  If unsure, keep the default of 16.
+> +
 
-Yes, I tried this patch just now, it seems it regresses the default
-"source" as you said.  I have to withdraw my rvb.
+Currently z_erofs_lzma_nstrms is exposed as a module parameter
+too, I hope if users specify a non-zero "lzma_streams", it won't
+be limited to this setting.
 
-Just check the codebase, it seems at least the minimal change is that
-it needs a way for the default "source" to fall back to
-vfs_parse_fs_param_source().
+So after a second thought, I hope "EROFS_FS_ZIP_LZMA_MAX_STREAMS"
+may be called "EROFS_FS_ZIP_LZMA_DEFAULT_MAX_STREAMS"?
 
-My initial rough thought for source_fd support for a filesystem was
-not simple as this too, but I never tried to seek time to implement
-myself according to my priority list.  As you said, I think in order
-to better parse both source or source_fd cases, it should be better
-to have better vfs helpers to parse both cases in a clean way;
-I think then that should also enable bdev-backed source fds [1].
+And I wonder if the description can be simplified and closer to
+the end users rather than the internal details.
 
-> 
->   2. On a slightly less critical note, fc->source has special handling in
->      the VFS in a few places and AFAICS this is the first example of
->      someone adding an implementation of "source" that does not set
->      fc->source to a proper value, which deserves some additional review.
-> 
->      (At at quick glance it seems this just means that some stuff in
->      procfs will show as "none" rather than fc->source debugging, but
->      again it probably needs a closer look.)
-  
-Yes, "none" is useless for source fd cases, it'd be better to have
-a path instead.
+>   config EROFS_FS_ZIP_DEFLATE
+>   	bool "EROFS DEFLATE compressed data support"
+>   	depends on EROFS_FS_ZIP
+> diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+> index f6692d0f2f04d..882684c663f47 100644
+> --- a/fs/erofs/decompressor_lzma.c
+> +++ b/fs/erofs/decompressor_lzma.c
+> @@ -52,6 +52,13 @@ static int __init z_erofs_lzma_init(void)
+>   	/* by default, use # of possible CPUs instead */
+>   	if (!z_erofs_lzma_nstrms)
+>   		z_erofs_lzma_nstrms = num_possible_cpus();
+> +	/*
+> +	 * Each stream can pin an 8 MiB image-supplied dictionary, so bound the
+> +	 * module-global pool to keep the worst-case preallocation in check on
+> +	 * systems with many CPUs (or a large lzma_streams request).
+> +	 */
 
-[1] https://github.com/composefs/composefs-rs/issues/346#issuecomment-4903974902
+The comment here is unneeded I think since developers can just
+check the description of "EROFS_FS_ZIP_LZMA_DEFAULT_MAX_STREAMS"
+I guess.
 
 Thanks,
 Gao Xiang
 
-> 
-> [1]: https://youtu.be/NX5IzF6JXp0?t=72
-> 
+> +	z_erofs_lzma_nstrms = min_t(unsigned int, z_erofs_lzma_nstrms,
+> +				    CONFIG_EROFS_FS_ZIP_LZMA_MAX_STREAMS);
+>   
+>   	for (i = 0; i < z_erofs_lzma_nstrms; ++i) {
+>   		struct z_erofs_lzma *strm = kzalloc_obj(*strm);
 
 
