@@ -1,90 +1,84 @@
-Return-Path: <linux-erofs+bounces-3882-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3883-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BVJuDq2NVGr2nAMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3882-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 09:03:09 +0200
+	id RY1SO7OcVGr8oAMAu9opvQ
+	(envelope-from <linux-erofs+bounces-3883-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 10:07:15 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DE55747C4D
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 09:03:08 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24B347487FA
+	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 10:07:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=AoPNP9JA;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3882-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3882-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=POjcks6k;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=POjcks6k;
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3883-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3883-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gzD0p15DMz2yMm;
-	Mon, 13 Jul 2026 17:03:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gzFQk01Jtz2xjN;
+	Mon, 13 Jul 2026 18:07:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783926186;
-	cv=none; b=niqNLDgFqPr8Gy9MFrH6xKli7OQf/6R4hs9WCFOhQ0lHgiq7tp/4i2srH6JiaOI96+8+cWmaQ4R4GiSPFvJaLxAC5NB7/RjWsaj1ezqQHvgKfDbFXSJvABo58IoLOEZ+MalsSnv68IKSOZM8BhRlKNg1JQoq5anDElDPwfKWfokgZUKFfrlXsIGRrJ7/B+ODX2ECNcUxQwou40enfhFzoX2wT72svsj7hUJH6ENPX9OqhlaG1JtsFogaMwy9b27Qh3jV9ZiiR7xgAeOov5EIGTNKFndgxE+a73/NghgYOYyRxSybdEjGiAnbFEANZ50TgIr1o705hSvJWGFIa0HENw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783930029;
+	cv=none; b=Pi2GwSUoR0xkZI15LJi49WC10omXN3AGsl+sSIDjGb8b/5XxJX+VZdwv3Yp1KGdc4D+90DomXHCqHaIzUJK9N3CXgwwqugFCVe5HoTJRRYxkv5LVY+uoDzRpPtgSYzepBiE7i4ox/zJLRhdpJMTQ7CL72fMMXFRdUj92YzXIHPxPJLYedS2FGEz7aViKaZ+9vFeAwN9p4UudK8Z+a/ZTw4OHRrTTjXwmGqxpE8fqo/McyAiOKE9Yk8gF34Y6YrcDF6L/LA//frkx1IuZkuq4p4BjsRtHNTjK6lg9pOaTHTZQy0LkX04/NxF2E+Re/W4dP+cXAkMTtdpPBFgNQf8y2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783926186; c=relaxed/relaxed;
-	bh=zw2JR2XT9SDeD7zFWjFU3B/b6o5B2sNEaXRYz9vEIpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OHUt4jdFP5lDoZya8J9r4zz60wOMD5HX2l8FA9AROLGJ8br7Hje8cozxuZHsr25qZBsfDoYhlcqcsWtL65sZUownvbk+W5llgvCeaQibWfdtAtM4g+961QEnI29BxudJDfG/1PS+XlKBeBxvCQujUjuTWS/TnFuN2pe5hEOap5RP+Mjujx6xQUQnWPv3cqAToqTmyf8Xgm1Efjl3FIYM36XCwQi8ohZqq0vYM6E6gF6XWsDdpPDCj+0I3uNCZUJzC+peZloTw+vl376aKzliCCz2/WaoloD4PYgVSMbyknRLlpUtMowfYx8GNTCc9WoIvoHBy4HhKLe5IXO8K+5YWg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=AoPNP9JA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1032; helo=mail-pj1-x1032.google.com; envelope-from=nithurshen.dev@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+	t=1783930029; c=relaxed/relaxed;
+	bh=/4wY4RWP4QXhnzIcRy9eHDGE2HmFl9OBs3bjfxxy2g4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=iJl4N+59utbZwKtTniaUtwWX41xNc9kWcG77xDkWVmEJtMbagcGW9fOUlYa1JZ459Qrw6Ukrn3S9g/li4Op/ddV4dBd8YTVCwMREgo9r7wiuvtkkgCaVB2esOoTyBQF7WxQcUr8rTuaj6i6xbmGrYegkoww7bW1CoN5ONr8cD8L48v+P4l+Ylrg1xNMogk+6B0v/MBEiBVoaZZN3+cU16BEUYb/NrLshP6CZnC/bIQG31ecbJZsQlX/1xkrHihXs9IyY8848DgjY+V4wJ/Y6AQ4nYVzDUexKm+lVUvkKkO53WvLukOBXMU2M5jw4urw+H3wNhbYGBgd40DQa0y9DUQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=POjcks6k; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=POjcks6k; dkim-atps=neutral; spf=permerror (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=gscrivan@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzD0n0V5Zz2xqM
-	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 17:03:04 +1000 (AEST)
-Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-3810c5d691bso2210734a91.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 00:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783926183; x=1784530983; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=zw2JR2XT9SDeD7zFWjFU3B/b6o5B2sNEaXRYz9vEIpE=;
-        b=AoPNP9JAqMsw2UBDFJwROLBiRoZ3KhmawXYMl7EJL8MgTfeekV6vIyAexEPsVbHQ+u
-         o9eH/MH55gWzV79bnH84kc1HiwHgyp+UTNfH05G4ZhGqQrn6rpuwhV3QPJ/7arukCFCL
-         0n1GI5PMiQVMw3hLRjP9K/J4QGV5ssgKGLMeE1Ke/jdGdmmas1Z2Ft1NTS7TSpMNDM7m
-         z7ZY5tl52LkOW2AunK2N7dlcWMemX7HTL7CxkIBon9Kh7Vd23NYGCkxf/eEG7cR0djJn
-         3PLX1X4z4c0iRF8d64XyvqQ2iNX7HGwUIV/g341AaofdxZd57pDJAkWoxxB4Zby2psVt
-         11tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783926183; x=1784530983;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zw2JR2XT9SDeD7zFWjFU3B/b6o5B2sNEaXRYz9vEIpE=;
-        b=D3jjAC39j7/a5Qd/BRrXac0bam4MaqUhnHSZi3bnepVlDVekQSjlcJDSELhtAvALH0
-         PhEEM5oHjGqFGNZk1CaHHuJVJI1OAbrWhZpEeGd+02iJPzJtBKSQu4/RGyya/NYxE7Sq
-         aeEcbL44KaREIW00CG0gqC/AsfGC08m148CYFoaABWyE1Fat70SRnnNQ2EtFtHOzqtA4
-         SU+Ysf48yHtHVp8diI+FWj5DHG23WaBF5/vCzD+FPkdodIZ9WMRd1fMCpu8FKhwKc50e
-         UvzLikQ6eHGoa9i2bqfcFO6oMuvEVJliwLv/ttdgOeOmq+xzw+8KcIcT/wd61ka0JWci
-         TnZQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrcB814l70FqaujdHDK144LFtWF5zVQIicIQ1DGzSRhryIPmuaZoOyjiUPtDvnQgq6RbP4DuhU2l2J/WQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxhbkYriw08Qxp6kzUFHmQLgvxZI/dNQ3bsyC/ELaFV4ECyNpnU
-	KFCkJHnvCBztF4TAVIiHFclFENpTHoNocmSgBsJbMG37jVfPM9E/XjkINADQWw==
-X-Gm-Gg: AfdE7ckm8+Hb9ynYqDbguZTehHo8P98IqgV0Y/QiLtdAME2lLp4FhcUNdKWnsRj2ld3
-	E2IHLyYWdSlyC2Jdo+2koYhwVwzVyB3HWeV8SmHJiEBP8GKQ1C0/pbdW3do+W27C/tdwXWuEPDb
-	+0Sq8Nstu0cRaivVvc9n3rMT/y86g+4TV9wM0uy1Hjnxd/gtxGMCRpHmZJxTbiw5fDTEC9uX+w3
-	gvpmdrHevQmagk3qpRSY3DABGLmM8hLl5FNSwQAIiq2AacNv0hPy8Sh9PfcU3GFdqqhgqHNQwGE
-	tpKyyYscPtSm1TOyD1fSmeYheMJnNfORNuQ4uirI1fUKusj7hs/V5GlcfF1ehRMXv2v2KRhN++U
-	391NrsAM0ZyA+Wm3rb5pOaU8Apkf8dydIrwFRAe9IoUilciC4KqgbbvsiRH+EAHkrdgI5EDRMU0
-	axN6EoUP3mGoM1Xa1vXjbAo0EL3s6nc4RmXAcABlL4fL7yqA==
-X-Received: by 2002:a17:90b:5585:b0:387:e0bb:57f4 with SMTP id 98e67ed59e1d1-38dc779922amr7635224a91.37.1783926182644;
-        Mon, 13 Jul 2026 00:03:02 -0700 (PDT)
-Received: from localhost.localdomain ([157.15.11.68])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-313c50c70c9sm23437708eec.29.2026.07.13.00.02.59
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 13 Jul 2026 00:03:02 -0700 (PDT)
-From: Nithurshen <nithurshen.dev@gmail.com>
-To: nithurshen.dev@gmail.com
-Cc: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org
-Subject: [PATCH 1/2 v4] fsck.erofs: add multi-threaded decompression
-Date: Mon, 13 Jul 2026 12:32:49 +0530
-Message-ID: <20260713070249.75652-1-nithurshen.dev@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260706060525.14018-1-nithurshen.dev@gmail.com>
-References: <20260706060525.14018-1-nithurshen.dev@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzFQh3586z2xRw
+	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 18:07:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783930020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/4wY4RWP4QXhnzIcRy9eHDGE2HmFl9OBs3bjfxxy2g4=;
+	b=POjcks6k7bMObl2uE/71LlxGoUDlCUCwre77DWJkksxbr7vxkttDCqN6aWECjHSJB77mK7
+	EL2IRRG3qz84zX7EJbTbkIy2bsD+tO7Bz8LYASefIgwajH7Zp2TeaBDfkequ8W5Eiui9G+
+	bDdeHAf+/8q3YWm5uVI+fSyL4ZYg2qA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783930020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/4wY4RWP4QXhnzIcRy9eHDGE2HmFl9OBs3bjfxxy2g4=;
+	b=POjcks6k7bMObl2uE/71LlxGoUDlCUCwre77DWJkksxbr7vxkttDCqN6aWECjHSJB77mK7
+	EL2IRRG3qz84zX7EJbTbkIy2bsD+tO7Bz8LYASefIgwajH7Zp2TeaBDfkequ8W5Eiui9G+
+	bDdeHAf+/8q3YWm5uVI+fSyL4ZYg2qA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-jjp8OdHTOKujZDzlc68Ukw-1; Mon,
+ 13 Jul 2026 04:06:58 -0400
+X-MC-Unique: jjp8OdHTOKujZDzlc68Ukw-1
+X-Mimecast-MFC-AGG-ID: jjp8OdHTOKujZDzlc68Ukw_1783930017
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09E7A1955DDC;
+	Mon, 13 Jul 2026 08:06:57 +0000 (UTC)
+Received: from localhost (unknown [10.44.33.216])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2FFA2180058F;
+	Mon, 13 Jul 2026 08:06:55 +0000 (UTC)
+From: Giuseppe Scrivano <gscrivan@redhat.com>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: linux-erofs@lists.ozlabs.org,  linux-fsdevel@vger.kernel.org,  Christian
+ Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2] erofs: accept source file descriptor via fsconfig
+In-Reply-To: <2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
+	(Aleksa Sarai's message of "Mon, 13 Jul 2026 14:52:25 +1000")
+References: <20260711071137.4130824-1-gscrivan@redhat.com>
+	<2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Mon, 13 Jul 2026 10:06:54 +0200
+Message-ID: <871pd748kh.fsf@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -96,821 +90,228 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: KI4O40JnEUzQv7LbxHR_H-Elw4v0UcUfX0Mx-s7pJgM_1783930017
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,GB_FAKE_RF_SHORT,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,
+	SPF_HELO_PASS,T_SPF_PERMERROR autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	*  0.0 T_SPF_PERMERROR SPF: test of record failed (permerror)
+	* -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+	*      [54.186.198.63 listed in zen.spamhaus.org]
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [170.10.133.124 listed in list.dnswl.org]
+	*  1.0 GB_FAKE_RF_SHORT Fake reply or forward with url shortener
+	* -0.0 RCVD_IN_MSPIKE_H4 RBL: Very Good reputation (+4)
+	*      [170.10.133.124 listed in wl.mailspike.net]
+	* -0.0 RCVD_IN_MSPIKE_WL Mailspike good senders
+	* -0.0 DKIMWL_WL_HIGH DKIMwl.org - High trust sender
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [3.30 / 15.00];
+	SPAM_FLAG(5.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-3882-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-3883-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:nithurshen.dev@gmail.com,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,m:xiang@kernel.org,m:nithurshendev@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:cyphar@cyphar.com,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:brauner@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_NONE(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nithurshendev@gmail.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cyphar.com:email,youtu.be:url,lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4DE55747C4D
+X-Rspamd-Queue-Id: 24B347487FA
 
-Currently, fsck.erofs extracts files synchronously. When decompressing
-heavily packed images, the main thread spends the majority of its time
-blocked on a combination of synchronous I/O syscalls and CPU-heavy
-decompression routines, bottlenecking overall extraction speed.
+Aleksa Sarai <cyphar@cyphar.com> writes:
 
-This patch introduces a scalable, multi-threaded decompression framework
-using the existing erofs_workqueue infrastructure to decouple compute
-from the main thread's I/O.
+> On 2026-07-11, Giuseppe Scrivano <gscrivan@redhat.com> wrote:
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index 86fa5c6a0c70..3040d4cf9b85 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -386,6 +386,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
+>>  enum {
+>>  	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+>>  	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
+>> +	Opt_source_fd,
+>>  };
+>>  
+>>  static const struct constant_table erofs_param_cache_strategy[] = {
+>> @@ -413,6 +414,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+>>  	fsparam_flag_no("directio",	Opt_directio),
+>>  	fsparam_u64("fsoffset",		Opt_fsoffset),
+>>  	fsparam_flag("inode_share",	Opt_inode_share),
+>> +	fsparam_fd("source",		Opt_source_fd),
+>>  	{}
+>>  };
+>>  
+>> @@ -524,6 +526,11 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+>>  		else
+>>  			set_opt(&sbi->opt, INODE_SHARE);
+>>  		break;
+>> +	case Opt_source_fd:
+>> +		if (sbi->dif0.file)
+>> +			return -EINVAL;
+>> +		sbi->dif0.file = get_file(param->file);
+>> +		break;
+>
+> I don't think this handling is right for a few reasons:
+>
+>  1. AFAICS this shadows the default "source" handling logic (because
+>     -ENOPARAM is not returned for the non-fd case), which means that
+>     this regresses existing erofs users -- everyone already uses
+>     "source" today. I must really be missing something if this worked
+>     when you tested it.
+>
+>     Additionally, fsparam_fd unfortunately permits strings (where the
+>     string is the numerical value of the fd number), meaning that this
+>     will call get_file(<garbage>) if someone uses FSCONFIG_SET_STRING.
+>     You will need to check param->type at least to avoid that.
+>
+>     I meant to send a patch for this earlier this year, but a nicer
+>     solution would be to have a custom helper similar to fs_lookup_param
+>     except that it permits FSCONFIG_SET_FD, FSCONFIG_SET_PATH,
+>     FSCONFIG_SET_PATH_EMPTY, and FSCONFIG_SET_STRING. This is sorely
+>     missing and people keep accidentally creating unusable interfaces as
+>     a result. I mentioned this in an LPC talk last year[1].
+>
+>     proc_parse_pidns_param was my minimal version that only accepts
+>     FSCONFIG_SET_FD and FSCONFIG_SET_STRING, and if you don't want to
+>     add dirfd support yet then you should use something more like that.
+>
+>  2. On a slightly less critical note, fc->source has special handling in
+>     the VFS in a few places and AFAICS this is the first example of
+>     someone adding an implementation of "source" that does not set
+>     fc->source to a proper value, which deserves some additional review.
+>
+>     (At at quick glance it seems this just means that some stuff in
+>     procfs will show as "none" rather than fc->source debugging, but
+>     again it probably needs a closer look.)
+>
+> [1]: https://youtu.be/NX5IzF6JXp0?t=72
 
-To prevent massive scheduling overhead (futex contention) where worker
-threads spend more CPU time waking up than actually decompressing small
-clusters, this implementation introduces a batching context. Because
-different compression algorithms exhibit vastly different scheduling
-thresholds, the batch limit is algorithm-aware.
+sorry, I underestimated the blast of the patch.  I didn't realize it
+changes the default handling and that is why I've limited my testing to
+the new case only.
 
-Signed-off-by: Nithurshen <nithurshen.dev@gmail.com>
----
- fsck/main.c              | 127 ++++++++++++---
- include/erofs/cond.h     |  31 ++++
- include/erofs/internal.h |  20 ++-
- include/erofs/lock.h     |   2 +
- lib/data.c               | 334 ++++++++++++++++++++++++++++++++++++---
- lib/global.c             |  11 +-
- 6 files changed, 473 insertions(+), 52 deletions(-)
- create mode 100644 include/erofs/cond.h
+Would you be fine if I amend the following fixup?
 
-diff --git a/fsck/main.c b/fsck/main.c
-index b2d8f1a..b74ae68 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -16,6 +16,7 @@
- #include "../lib/compressor.h"
- #include "../lib/liberofs_compress.h"
- #include "../lib/liberofs_sha256.h"
-+#include "erofs/internal.h"
- 
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
- 
-@@ -526,6 +527,13 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
- 	u64 pchunk_len = 0;
- 	u64 raw_size = 0, buffer_size = 0;
- 	char *raw = NULL, *buffer = NULL;
-+	struct z_erofs_mt_read_ctx *ctx = NULL;
-+
-+	if (!digest) {
-+		ctx = z_erofs_mt_read_ctx_alloc(outfd, true);
-+		if (!ctx)
-+			return -ENOMEM;
-+	}
- 
- 	erofs_dbg("verify data chunk of nid(%llu): type(%d)",
- 		  inode->nid | 0ULL, inode->datalayout);
-@@ -569,7 +577,7 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
- 						(const u8 *)zeros, chunk);
- 					remain -= chunk;
- 				}
--			} else if (outfd >= 0) {
-+			} else if (!ctx && outfd >= 0) {
- 				ret = lseek(outfd, map.m_llen, SEEK_CUR);
- 				if (ret < 0) {
- 					ret = -errno;
-@@ -592,8 +600,9 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
- 			alloc_rawsize = map.m_plen;
- 		}
- 
--		if (alloc_rawsize > raw_size) {
--			char *newraw = realloc(raw, alloc_rawsize);
-+		if (!ctx) {
-+			if (alloc_rawsize > raw_size) {
-+				char *newraw = realloc(raw, alloc_rawsize);
- 
- 			if (!newraw) {
- 				ret = -ENOMEM;
-@@ -602,9 +611,22 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
- 			raw = newraw;
- 			raw_size = alloc_rawsize;
- 		}
-+	}
- 
- 		if (compressed) {
--			if (map.m_llen > buffer_size) {
-+			char *c_raw = raw;
-+			char *c_buf = buffer;
-+
-+			if (ctx) {
-+				c_raw = malloc(alloc_rawsize);
-+				c_buf = calloc(1, map.m_llen);
-+				if (!c_raw || !c_buf) {
-+					free(c_raw);
-+					free(c_buf);
-+					ret = -ENOMEM;
-+					goto out;
-+				}
-+			} else if (map.m_llen > buffer_size) {
- 				char *newbuffer;
- 
- 				buffer_size = map.m_llen;
-@@ -614,45 +636,98 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd,
- 					goto out;
- 				}
- 				buffer = newbuffer;
-+				c_buf = buffer;
- 			}
--			ret = z_erofs_read_one_data(inode, &map, raw, buffer,
--						    0, map.m_llen, false);
--			if (ret)
-+
-+			ret = z_erofs_read_one_data(inode, &map, c_raw, c_buf,
-+						    0, map.m_llen, false,
-+						    map.m_la, ctx);
-+			if (ret) {
-+				if (ctx) {
-+					free(c_raw);
-+					free(c_buf);
-+				}
- 				goto out;
-+			}
- 
--			if (digest)
--				erofs_sha256_process(digest,
--					(const u8 *)buffer, map.m_llen);
--			if (outfd >= 0 && write(outfd, buffer, map.m_llen) < 0)
--				goto fail_eio;
-+			if (!ctx) {
-+				if (digest)
-+					erofs_sha256_process(digest,
-+						(const u8 *)c_buf, map.m_llen);
-+				if (outfd >= 0 && write(outfd, c_buf, map.m_llen) < 0)
-+					goto fail_eio;
-+			}
- 		} else {
-+			char *c_raw = raw;
- 			u64 p = 0;
-+			erofs_off_t m_llen = map.m_llen;
-+
-+			if (ctx) {
-+				c_raw = calloc(1, alloc_rawsize);
-+				if (!c_raw) {
-+					ret = -ENOMEM;
-+					goto out;
-+				}
-+			}
- 
- 			do {
--				u64 count = min_t(u64, alloc_rawsize,
--						  map.m_llen);
-+				u64 count = min_t(u64, alloc_rawsize, m_llen);
- 
--				ret = erofs_read_one_data(inode, &map, raw, p, count);
--				if (ret)
-+				ret = erofs_read_one_data(inode, &map, c_raw, p, count);
-+				if (ret) {
-+					if (ctx)
-+						free(c_raw);
- 					goto out;
-+				}
- 
--				if (digest)
--					erofs_sha256_process(digest,
--						(const u8 *)raw, count);
--				if (outfd >= 0 && write(outfd, raw, count) < 0)
--					goto fail_eio;
--				map.m_llen -= count;
-+				if (!ctx) {
-+					if (digest)
-+						erofs_sha256_process(digest,
-+							(const u8 *)c_raw, count);
-+					if (outfd >= 0 && write(outfd, c_raw, count) < 0)
-+						goto fail_eio;
-+				} else if (outfd >= 0) {
-+					if (pwrite(outfd, c_raw, count, map.m_la + p) < 0) {
-+						free(c_raw);
-+						goto fail_eio;
-+					}
-+				}
-+				m_llen -= count;
- 				p += count;
--			} while (map.m_llen);
-+			} while (m_llen);
-+
-+			if (ctx)
-+				free(c_raw);
- 		}
- 	}
- 
-+	if (ctx) {
-+		int wait_err;
-+
-+		z_erofs_mt_read_enqueue(ctx);
-+		wait_err = z_erofs_mt_read_ctx_wait(ctx);
-+		if (wait_err < 0 && ret == 0)
-+			ret = wait_err;
-+	}
-+
- 	if (fsckcfg.print_comp_ratio) {
- 		if (!erofs_is_packed_inode(inode))
- 			fsckcfg.logical_blocks += BLK_ROUND_UP(inode->sbi, inode->i_size);
- 		fsckcfg.physical_blocks += BLK_ROUND_UP(inode->sbi, pchunk_len);
- 	}
- out:
-+	if (ctx) {
-+		/* use ftruncate to handle trailing unmapped blocks (holes) */
-+		if (outfd >= 0 && ret == 0) {
-+			if (ftruncate(outfd, inode->i_size) < 0) {
-+				erofs_err("failed to truncate file to %llu: %d", 
-+						(unsigned long long)inode->i_size, errno);
-+				if (ret == 0) 
-+					ret = -errno;
-+			}
-+		}
-+		z_erofs_mt_read_ctx_free(ctx);
-+	}
- 	if (raw)
- 		free(raw);
- 	if (buffer)
-@@ -1127,7 +1202,9 @@ int main(int argc, char *argv[])
- {
- 	int err;
- 
--	erofs_init_configure();
-+	err = liberofs_global_init();
-+	if (err)
-+		return 1;
- 
- 	fsckcfg.physical_blocks = 0;
- 	fsckcfg.logical_blocks = 0;
-@@ -1283,7 +1360,7 @@ exit_dev_close:
- 	erofs_dev_close(&g_sbi);
- exit:
- 	erofs_blob_closeall(&g_sbi);
--	erofs_exit_configure();
-+	liberofs_global_exit();
- 	return err ? 1 : 0;
- }
- 
-diff --git a/include/erofs/cond.h b/include/erofs/cond.h
-new file mode 100644
-index 0000000..90ec838
---- /dev/null
-+++ b/include/erofs/cond.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+#ifndef __EROFS_COND_H
-+#define __EROFS_COND_H
-+
-+#include "lock.h"
-+
-+#if defined(HAVE_PTHREAD_H) && defined(EROFS_MT_ENABLED)
-+#include <pthread.h>
-+
-+typedef pthread_cond_t erofs_cond_t;
-+
-+static inline void erofs_cond_init(erofs_cond_t *cond)
-+{
-+	pthread_cond_init(cond, NULL);
-+}
-+#define erofs_cond_wait		pthread_cond_wait
-+#define erofs_cond_signal	pthread_cond_signal
-+#define erofs_cond_broadcast	pthread_cond_broadcast
-+#define erofs_cond_destroy	pthread_cond_destroy
-+
-+#else
-+typedef struct {} erofs_cond_t;
-+
-+static inline void erofs_cond_init(erofs_cond_t *cond) {}
-+static inline int erofs_cond_wait(erofs_cond_t *cond, erofs_mutex_t *mutex) { return 0; }
-+static inline int erofs_cond_signal(erofs_cond_t *cond) { return 0; }
-+static inline int erofs_cond_broadcast(erofs_cond_t *cond) { return 0; }
-+static inline int erofs_cond_destroy(erofs_cond_t *cond) { return 0; }
-+#endif
-+
-+#endif
-\ No newline at end of file
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 2cc9cc8..6d3d407 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -25,6 +25,11 @@ typedef unsigned short umode_t;
- #ifdef HAVE_PTHREAD_H
- #include <pthread.h>
- #endif
-+#ifdef HAVE_PTHREAD_H
-+#include <pthread.h>
-+#endif
-+#include <erofs/lock.h>
-+#include "erofs/cond.h"
- #include <stdlib.h>
- #include <string.h>
- #include "atomic.h"
-@@ -62,6 +67,7 @@ struct erofs_buf {
- #define erofs_pos(sbi, nr)      ((erofs_off_t)(nr) << (sbi)->blkszbits)
- #define BLK_ROUND_UP(sbi, addr)	\
- 	(roundup(addr, erofs_blksiz(sbi)) >> (sbi)->blkszbits)
-+#define Z_EROFS_PCLUSTER_MAX_BATCH_SIZE 32
- 
- struct erofs_buffer_head;
- struct erofs_bufmgr;
-@@ -451,6 +457,17 @@ struct z_erofs_paramset {
- 	char *extraopts;
+It addresses both the issues you've reported.  An EROFS image file
+mounted via its path still works and shows correctly in mountinfo and
+"source" is also populated when mounting from a file descriptor.
+
+# /root/erofs-test/erofs-mount-via-fd /root/erofs.blob /mnt
+# grep /mnt /proc/self/mountinfo
+671 42 0:83 / /mnt ro,relatime shared:666 - erofs /root/erofs.blob ro,seclabel,user_xattr,acl,cache_strategy=readaround
+
+# mount /root/erofs.blob /mnt/
+# grep /mnt /proc/self/mountinfo
+671 42 0:83 / /mnt rw,relatime shared:666 - erofs /root/erofs.blob ro,seclabel,user_xattr,acl,cache_strategy=readaround
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 3040d4cf9b85..7818872ab1e5 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -386,7 +386,6 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
+ enum {
+ 	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+ 	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
+-	Opt_source_fd,
  };
  
-+struct z_erofs_decompress_task;
-+struct z_erofs_mt_read_ctx;
-+
-+struct z_erofs_mt_read_ctx *z_erofs_mt_read_ctx_alloc(int outfd, bool free_out);
-+int z_erofs_mt_read_ctx_wait(struct z_erofs_mt_read_ctx *ctx);
-+void z_erofs_mt_read_ctx_free(struct z_erofs_mt_read_ctx *ctx);
-+void z_erofs_mt_read_enqueue(struct z_erofs_mt_read_ctx *ctx);
-+
-+int z_erofs_mt_workers_init(void);
-+void z_erofs_mt_workers_exit(void);
-+
- int liberofs_global_init(void);
- void liberofs_global_exit(void);
+ static const struct constant_table erofs_param_cache_strategy[] = {
+@@ -414,7 +413,6 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+ 	fsparam_flag_no("directio",	Opt_directio),
+ 	fsparam_u64("fsoffset",		Opt_fsoffset),
+ 	fsparam_flag("inode_share",	Opt_inode_share),
+-	fsparam_fd("source",		Opt_source_fd),
+ 	{}
+ };
  
-@@ -487,7 +504,8 @@ int erofs_read_one_data(struct erofs_inode *inode, struct erofs_map_blocks *map,
- 			char *buffer, u64 offset, size_t len);
- int z_erofs_read_one_data(struct erofs_inode *inode,
- 			struct erofs_map_blocks *map, char *raw, char *buffer,
--			erofs_off_t skip, erofs_off_t length, bool trimmed);
-+			erofs_off_t skip, erofs_off_t length, bool trimmed,
-+			erofs_off_t out_offset, struct z_erofs_mt_read_ctx *ctx);
- void *erofs_read_metadata(struct erofs_sb_info *sbi, erofs_nid_t nid,
- 			  erofs_off_t *offset, int *lengthp);
- int z_erofs_parse_cfgs(struct erofs_sb_info *sbi, struct erofs_super_block *dsb);
-diff --git a/include/erofs/lock.h b/include/erofs/lock.h
-index 884f23e..e08b76e 100644
---- a/include/erofs/lock.h
-+++ b/include/erofs/lock.h
-@@ -15,6 +15,7 @@ static inline void erofs_mutex_init(erofs_mutex_t *lock)
- }
- #define erofs_mutex_lock	pthread_mutex_lock
- #define erofs_mutex_unlock	pthread_mutex_unlock
-+#define erofs_mutex_destroy	pthread_mutex_destroy
+@@ -447,6 +445,14 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 	struct erofs_device_info *dif;
+ 	int opt, ret;
  
- #define EROFS_DEFINE_MUTEX(lock)	\
- 	erofs_mutex_t lock = PTHREAD_MUTEX_INITIALIZER
-@@ -35,6 +36,7 @@ typedef struct {} erofs_mutex_t;
- static inline void erofs_mutex_init(erofs_mutex_t *lock) {}
- static inline void erofs_mutex_lock(erofs_mutex_t *lock) {}
- static inline void erofs_mutex_unlock(erofs_mutex_t *lock) {}
-+static inline void erofs_mutex_destroy(erofs_mutex_t *lock) {}
- 
- #define EROFS_DEFINE_MUTEX(lock)	\
- 	erofs_mutex_t lock = {}
-diff --git a/lib/data.c b/lib/data.c
-index 1bb9269..6bcd5b1 100644
---- a/lib/data.c
-+++ b/lib/data.c
-@@ -9,6 +9,228 @@
- #include "erofs/trace.h"
- #include "erofs/decompress.h"
- #include "liberofs_fragments.h"
-+#include "erofs/lock.h"
-+
-+#ifdef EROFS_MT_ENABLED
-+#include "erofs/config.h"
-+
-+struct z_erofs_percpu_queue {
-+	erofs_mutex_t lock;
-+	erofs_cond_t cond;
-+	struct z_erofs_decompress_task *head;
-+	struct z_erofs_decompress_task *tail;
-+	int pending_tasks;
-+	bool shutdown;
-+	pthread_t thread;
-+} __attribute__((aligned(64)));
-+
-+static struct z_erofs_percpu_queue *worker_queues;
-+static int num_workers;
-+#endif
-+
-+struct z_erofs_mt_read_ctx {
-+	erofs_mutex_t lock;
-+	erofs_cond_t cond;
-+	int pending_tasks;
-+	int final_err;
-+	int outfd;
-+	bool free_out;
-+	struct z_erofs_decompress_task *current_task;
-+};
-+
-+struct z_erofs_mt_read_ctx *z_erofs_mt_read_ctx_alloc(int outfd, bool free_out)
-+{
-+	struct z_erofs_mt_read_ctx *ctx = calloc(1, sizeof(*ctx));
-+	if (!ctx)
-+		return NULL;
-+
-+	erofs_mutex_init(&ctx->lock);
-+	erofs_cond_init(&ctx->cond);
-+	ctx->outfd = outfd;
-+	ctx->free_out = free_out;
-+	return ctx;
-+}
-+
-+int z_erofs_mt_read_ctx_wait(struct z_erofs_mt_read_ctx *ctx)
-+{
-+	int err;
-+	if (!ctx)
++	if (strcmp(param->key, "source") == 0 &&
++	    param->type == fs_value_is_file) {
++		if (sbi->dif0.file || fc->source)
++			return -EINVAL;
++		sbi->dif0.file = get_file(param->file);
 +		return 0;
-+
-+	erofs_mutex_lock(&ctx->lock);
-+	while (ctx->pending_tasks > 0)
-+		erofs_cond_wait(&ctx->cond, &ctx->lock);
-+	err = ctx->final_err;
-+	erofs_mutex_unlock(&ctx->lock);
-+
-+	return err;
-+}
-+
-+void z_erofs_mt_read_ctx_free(struct z_erofs_mt_read_ctx *ctx)
-+{
-+	if (!ctx)
-+		return;
-+	
-+	erofs_mutex_destroy(&ctx->lock);
-+	erofs_cond_destroy(&ctx->cond);
-+	free(ctx);
-+}
-+
-+struct z_erofs_decompress_item {
-+	struct z_erofs_decompress_req req;
-+	char *raw_buf;
-+	char *out_buf;
-+	erofs_off_t out_offset;
-+	unsigned int out_length;
-+};
-+
-+struct z_erofs_decompress_task {
-+	struct z_erofs_decompress_task *next;
-+	struct z_erofs_mt_read_ctx *ctx;
-+	struct z_erofs_decompress_item items[Z_EROFS_PCLUSTER_MAX_BATCH_SIZE];
-+	unsigned int nr_reqs;
-+};
-+
-+static void z_erofs_process_task(struct z_erofs_decompress_task *task)
-+{
-+	struct z_erofs_mt_read_ctx *ctx = task->ctx;
-+	int i, ret = 0, first_err = 0;
-+
-+	for (i = 0; i < task->nr_reqs; ++i) {
-+		struct z_erofs_decompress_item *item = &task->items[i];
-+		ret = z_erofs_decompress(&item->req);
-+
-+		if (ret >= 0 && ctx && ctx->outfd >= 0) {
-+			if (pwrite(ctx->outfd, item->out_buf,
-+				   item->out_length, item->out_offset) < 0)
-+				ret = -errno;
-+		}
-+
-+		if (ret < 0 && !first_err)
-+			first_err = ret;
-+
-+		free(item->raw_buf);
-+		if (ctx && ctx->free_out)
-+			free(item->out_buf);
 +	}
 +
-+	if (ctx) {
-+		erofs_mutex_lock(&ctx->lock);
-+		if (first_err < 0 && !ctx->final_err)
-+			ctx->final_err = first_err;
-+		ctx->pending_tasks--;
-+		if (!ctx->pending_tasks)
-+			erofs_cond_signal(&ctx->cond);
-+		erofs_mutex_unlock(&ctx->lock);
-+	}
-+	free(task);
-+}
-+
-+#ifdef EROFS_MT_ENABLED
-+static void *z_erofs_worker_thread(void *arg)
-+{
-+	struct z_erofs_percpu_queue *q = arg;
-+
-+	while (1) {
-+		erofs_mutex_lock(&q->lock);
-+		while (!q->head && !q->shutdown)
-+			erofs_cond_wait(&q->cond, &q->lock);
-+
-+		if (q->shutdown && !q->head) {
-+			erofs_mutex_unlock(&q->lock);
-+			break;
-+		}
-+
-+		struct z_erofs_decompress_task *tasks = q->head;
-+		q->head = q->tail = NULL;
-+		q->pending_tasks = 0;
-+		erofs_mutex_unlock(&q->lock);
-+
-+		while (tasks) {
-+			struct z_erofs_decompress_task *task = tasks;
-+			tasks = tasks->next;
-+			z_erofs_process_task(task);
-+		}
-+	}
-+	return NULL;
-+}
-+
-+int z_erofs_mt_workers_init(void)
-+{
-+	int i;
-+	num_workers = erofs_get_available_processors();
-+	if (num_workers < 1)
-+		num_workers = 1;
-+	
-+	worker_queues = calloc(num_workers, sizeof(*worker_queues));
-+	if (!worker_queues)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_workers; ++i) {
-+		erofs_mutex_init(&worker_queues[i].lock);
-+		erofs_cond_init(&worker_queues[i].cond);
-+		worker_queues[i].head = worker_queues[i].tail = NULL;
-+		worker_queues[i].pending_tasks = 0;
-+		worker_queues[i].shutdown = false;
-+		pthread_create(&worker_queues[i].thread, NULL, z_erofs_worker_thread, &worker_queues[i]);
-+	}
-+	return 0;
-+}
-+
-+void z_erofs_mt_workers_exit(void)
-+{
-+	int i;
-+	if (!worker_queues) return;
-+	for (i = 0; i < num_workers; ++i) {
-+		erofs_mutex_lock(&worker_queues[i].lock);
-+		worker_queues[i].shutdown = true;
-+		erofs_cond_signal(&worker_queues[i].cond);
-+		erofs_mutex_unlock(&worker_queues[i].lock);
-+
-+		pthread_join(worker_queues[i].thread, NULL);
-+		erofs_cond_destroy(&worker_queues[i].cond);
-+		erofs_mutex_destroy(&worker_queues[i].lock);
-+	}
-+	free(worker_queues);
-+	worker_queues = NULL;
-+}
-+#endif
-+
-+void z_erofs_mt_read_enqueue(struct z_erofs_mt_read_ctx *ctx)
-+{
-+#ifdef EROFS_MT_ENABLED
-+	static int next_worker = 0;
-+#endif
-+
-+	if (!ctx || !ctx->current_task)
-+		return;
-+
-+	struct z_erofs_decompress_task *task = ctx->current_task;
-+	ctx->current_task = NULL;
-+
-+#ifdef EROFS_MT_ENABLED
-+	if (num_workers > 0) {
-+		int target = next_worker;
-+		next_worker = (next_worker + 1) % num_workers;
-+		struct z_erofs_percpu_queue *q = &worker_queues[target];
-+
-+		erofs_mutex_lock(&q->lock);
-+		task->next = NULL;
-+		if (!q->tail) {
-+			q->head = q->tail = task;
-+		} else {
-+			q->tail->next = task;
-+			q->tail = task;
-+		}
-+		q->pending_tasks++;
-+		erofs_cond_signal(&q->cond);
-+		erofs_mutex_unlock(&q->lock);
-+		return;
-+	}
-+#endif
-+	task->next = NULL;
-+	z_erofs_process_task(task);
-+}
- 
- void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
- {
-@@ -277,20 +499,29 @@ static int erofs_read_raw_data(struct erofs_inode *inode, char *buffer,
- 
- int z_erofs_read_one_data(struct erofs_inode *inode,
- 			struct erofs_map_blocks *map, char *raw, char *buffer,
--			erofs_off_t skip, erofs_off_t length, bool trimmed)
-+			erofs_off_t skip, erofs_off_t length, bool trimmed,
-+			erofs_off_t out_offset, struct z_erofs_mt_read_ctx *ctx)
- {
- 	struct erofs_sb_info *sbi = inode->sbi;
- 	struct erofs_map_dev mdev;
--	int ret = 0;
-+	struct z_erofs_decompress_task *task;
-+	struct z_erofs_decompress_item *item;
-+	int ret = 0, idx, batch_limit;
- 
- 	if (map->m_flags & __EROFS_MAP_FRAGMENT) {
- 		if (__erofs_unlikely(inode->nid == sbi->packed_nid)) {
- 			erofs_err("fragment should not exist in the packed inode %llu",
--				  sbi->packed_nid | 0ULL);
--			return -EFSCORRUPTED;
-+				sbi->packed_nid | 0ULL);
-+			ret = -EFSCORRUPTED;
-+			goto err_out;
-+		}
-+		ret = erofs_packedfile_read(sbi, buffer, length - skip,
-+					inode->fragmentoff + skip);
-+		if (ret >= 0 && ctx && ctx->outfd >= 0) {
-+			if (pwrite(ctx->outfd, buffer, length - skip, out_offset) < 0)
-+				ret = -errno;
- 		}
--		return erofs_packedfile_read(sbi, buffer, length - skip,
--				   inode->fragmentoff + skip);
-+		goto err_out;
+ 	opt = fs_parse(fc, erofs_fs_parameters, param, &result);
+ 	if (opt < 0)
+ 		return opt;
+@@ -526,11 +532,6 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		else
+ 			set_opt(&sbi->opt, INODE_SHARE);
+ 		break;
+-	case Opt_source_fd:
+-		if (sbi->dif0.file)
+-			return -EINVAL;
+-		sbi->dif0.file = get_file(param->file);
+-		break;
  	}
- 
- 	/* no device id here, thus it will always succeed */
-@@ -300,31 +531,84 @@ int z_erofs_read_one_data(struct erofs_inode *inode,
- 	ret = erofs_map_dev(sbi, &mdev);
- 	if (ret) {
- 		DBG_BUGON(1);
--		return ret;
-+		goto err_out;
- 	}
- 
- 	ret = erofs_dev_read(sbi, mdev.m_deviceid, raw, mdev.m_pa, map->m_plen);
- 	if (ret < 0)
-+		goto err_out;
-+
-+	if (!ctx) {
-+		ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
-+				.sbi = sbi,
-+				.in = raw,
-+				.out = buffer,
-+				.decodedskip = skip,
-+				.interlaced_offset =
-+					map->m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED ?
-+						erofs_blkoff(sbi, map->m_la) : 0,
-+				.inputsize = map->m_plen,
-+				.decodedlength = length,
-+				.alg = map->m_algorithmformat,
-+				.partial_decoding = trimmed ? true :
-+					!(map->m_flags & EROFS_MAP_FULL_MAPPED) ||
-+						(map->m_flags & EROFS_MAP_PARTIAL_REF),
-+				});
- 		return ret;
-+	}
- 
--	ret = z_erofs_decompress(&(struct z_erofs_decompress_req) {
--			.sbi = sbi,
--			.in = raw,
--			.out = buffer,
--			.decodedskip = skip,
--			.interlaced_offset =
--				map->m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED ?
--					erofs_blkoff(sbi, map->m_la) : 0,
--			.inputsize = map->m_plen,
--			.decodedlength = length,
--			.alg = map->m_algorithmformat,
--			.partial_decoding = trimmed ? true :
--				!(map->m_flags & EROFS_MAP_FULL_MAPPED) ||
--					(map->m_flags & EROFS_MAP_PARTIAL_REF),
--			 });
--	if (ret < 0)
--		return ret;
-+	task = ctx->current_task;
-+	if (!task) {
-+		task = calloc(1, sizeof(*task));
-+		if (!task) {
-+			ret = -ENOMEM;
-+			goto err_out;
-+		}
-+		task->ctx = ctx;
-+		ctx->current_task = task;
-+
-+		erofs_mutex_lock(&ctx->lock);
-+		ctx->pending_tasks++;
-+		erofs_mutex_unlock(&ctx->lock);
-+	}
-+
-+	idx = task->nr_reqs++;
-+	item = &task->items[idx];
-+
-+	item->req = (struct z_erofs_decompress_req) {
-+		.sbi = sbi,
-+		.in = raw,
-+		.out = buffer,
-+		.decodedskip = skip,
-+		.interlaced_offset =
-+			map->m_algorithmformat == Z_EROFS_COMPRESSION_INTERLACED ?
-+				erofs_blkoff(sbi, map->m_la) : 0,
-+		.inputsize = map->m_plen,
-+		.decodedlength = length,
-+		.alg = map->m_algorithmformat,
-+		.partial_decoding = trimmed ? true :
-+			!(map->m_flags & EROFS_MAP_FULL_MAPPED) ||
-+				(map->m_flags & EROFS_MAP_PARTIAL_REF),
-+	};
-+	item->raw_buf = raw;
-+	item->out_buf = buffer;
-+	item->out_offset = out_offset;
-+	item->out_length = length;
-+
-+	batch_limit = (map->m_algorithmformat == Z_EROFS_COMPRESSION_LZ4) ?
-+					Z_EROFS_PCLUSTER_MAX_BATCH_SIZE : 8;
-+
-+	if (task->nr_reqs >= batch_limit)
-+		z_erofs_mt_read_enqueue(ctx);
  	return 0;
+ }
+@@ -779,6 +780,18 @@ static int erofs_fc_get_tree(struct fs_context *fc)
+ 			return PTR_ERR(file);
+ 		sbi->dif0.file = file;
+ 	}
++	if (!fc->source) {
++		char *buf, *p;
 +
-+err_out:
-+	if (ctx) {
-+		if (ctx->free_out)
-+			free(buffer);
-+		free(raw);
++		buf = kmalloc(PATH_MAX, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++		p = file_path(file, buf, PATH_MAX);
++		fc->source = kstrdup(IS_ERR(p) ? "(fd)" : p, GFP_KERNEL);
++		kfree(buf);
++		if (!fc->source)
++			return -ENOMEM;
 +	}
-+	return ret;
- }
- 
- static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
-@@ -387,7 +671,7 @@ static int z_erofs_read_data(struct erofs_inode *inode, char *buffer,
- 		}
- 
- 		ret = z_erofs_read_one_data(inode, &map, raw,
--				buffer + end - offset, skip, length, trimmed);
-+				buffer + end - offset, skip, length, trimmed, 0, NULL);
- 		if (ret < 0)
- 			break;
- 	}
-diff --git a/lib/global.c b/lib/global.c
-index 938aa0a..8bb9da0 100644
---- a/lib/global.c
-+++ b/lib/global.c
-@@ -12,6 +12,7 @@
- #include "erofs/err.h"
- #include "erofs/config.h"
- #include "liberofs_compress.h"
-+#include "erofs/internal.h"
- 
- static EROFS_DEFINE_MUTEX(erofs_global_mutex);
- #ifdef HAVE_LIBCURL
-@@ -27,6 +28,11 @@ int liberofs_global_init(void)
- #ifdef S3EROFS_ENABLED
- 	xmlInitParser();
- #endif
-+#ifdef EROFS_MT_ENABLED
-+	err = z_erofs_mt_workers_init();
-+	if (err)
-+		goto out_unlock;
-+#endif
- #ifdef HAVE_LIBCURL
- 	if (!erofs_global_curl_initialized) {
- 		if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
-@@ -35,8 +41,8 @@ int liberofs_global_init(void)
- 		}
- 		erofs_global_curl_initialized = true;
- 	}
--out_unlock:
- #endif
-+out_unlock:
- 	erofs_mutex_unlock(&erofs_global_mutex);
- 	return err;
- }
-@@ -45,6 +51,9 @@ void liberofs_global_exit(void)
- {
- 	erofs_mutex_lock(&erofs_global_mutex);
- 	z_erofs_mt_global_exit();
-+#ifdef EROFS_MT_ENABLED
-+	z_erofs_mt_workers_exit();
-+#endif
- #ifdef HAVE_LIBCURL
- 	if (erofs_global_curl_initialized) {
- 		curl_global_cleanup();
--- 
-2.53.0
+ 	if (!S_ISREG(file_inode(file)->i_mode) ||
+ 	    !file->f_mapping->a_ops->read_folio) {
+ 		errorfc(fc, "source is unsupported");
+
+Regards,
+Giuseppe
 
 
