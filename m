@@ -1,86 +1,66 @@
-Return-Path: <linux-erofs+bounces-3886-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3887-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RgzxJdm8VGp1qQMAu9opvQ
-	(envelope-from <linux-erofs+bounces-3886-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 12:24:25 +0200
+	id l5Z/O8GHVWrVpgAAu9opvQ
+	(envelope-from <linux-erofs+bounces-3887-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jul 2026 02:50:10 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95449749C19
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Jul 2026 12:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F84774FE96
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jul 2026 02:50:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=XRpBEOWS;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=XRpBEOWS;
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3886-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3886-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dkim=pass header.d=cyphar.com header.s=MBO0001 header.b=IGKrcvi8;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3887-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3887-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=reject) header.from=cyphar.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4gzJT12sZPz2yMm;
-	Mon, 13 Jul 2026 20:24:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4gzggx0PCxz2yY0;
+	Tue, 14 Jul 2026 10:50:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783938261;
-	cv=none; b=MfEKnDYFrQBrr25oqVqPmfQ4QksgHxqks49wohioAzU0iJ+rjqqqSCpDNx9OO46yOIqkbySnqmgSk0Ry1VIrPLltDO+1RSD7j++VR3p1Ovbdv0/WBaRCA2fZGvMbHG5ARNcfwg7k7uytBJb8KwmcQ6lCm3WfE29b6NwhFGms2UEh9CgFgiD3rBLBrHztUHsL0M/TpnjaZevaGKa8k3kTEwl5hBnKKjboiznPW3hT3o1WpF3EIS4nGhNIqJW517kyO/Ryqc8xdaXlSaKcYzHXUaEWc865OSnepSt1Vp4ElysiUYKJ+DXIzXtbRWYCcRkYrM3h4/kXk/rIbxjAI/byNA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1783990204;
+	cv=none; b=P6DrNlIQsFIwNd1r0UeU+Zt3Nh2dn/szDbBBI7ZDht/Qdzi0MF2IYoSLKbZmJthuBKJ7l2jsOOq8VvSQRgya2/mCHYM8JK1OA3bv2sNTtgMf7CutxHu/tpg8Obr3k0xKeWeyILPgRskA97U7i8P6dhcTotcvcd3OVVItIhAfc47NJKaFnBhXQFHGUwjcY07GspWA0tjvywfZ6P90lUrsYziRIhRkCchu8+gHyv02HHRH+crznZAMGHgPXtA7nGOIfn9IC3lK8F7pnNbt4qdscOfV3gZGK5ZiEeW8s9rl2vOdsgWW6fDTnEupHDapwJqEsjIJ2GEWqkbCxjIYZAQ11Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1783938261; c=relaxed/relaxed;
-	bh=r4/TX7BTpjZY4DlYI5thl0aKFZApPkQRFTRSMk72/cI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RoeFfjn3LB6ccBVd7oqa51rq2zK+p9E7VwbBDbibQqiKEUDyD63XXFAHktxxmQoW8egOMFPNUD0rnrp6eKT1pnv6uuDcIPFj1pXjlMuaidUfnuLSuiG8Am8Yb1x4JV7AQFJwhRslFatLZn1tcxXTqeN98jvdpbVGRitzlQXH+OKyQ8kcOU9K5lAOtTRIblkbDaAdvGH82bZypH9QxWWZR8SdHXmMQAP/fGTrzwwYwaXiRfnYPFAUqG7waW7gpDiKPFxV07HU31KYFjJf5RfxO4jH9Knz1Z/wyqvmMrkCvmfRvT7CVGl6fBVpoMLjxByn4pTkm9WI3WMNELwWPcUN5Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XRpBEOWS; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XRpBEOWS; dkim-atps=neutral; spf=permerror (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=gscrivan@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	t=1783990204; c=relaxed/relaxed;
+	bh=pi+aB6YMCYhiJWt1pTb8a7/h/MvI2o3bfTPFrZ8+JGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FxN9GrS2Mbp5HNH8DKtaj6Bur9TNbahol0UawnUjp8OJWvlYL7NzBkemJ5gCAbULWxpNdN65kNRpDN883ZXequJEgeT4IirJVaBXbE5+cV44+uSLN3w3uQXaTAxqcm08YMzgBMDp4UOSoqnto07C38n49dqgAjMs5UBMbiMxabE8CSa9ImlYXaltigAAYpvHmt38KxlHKlSZJD7jpaKa/uAJpB37bhwbEQDpJGs9E1s5xQZWpp0faPmzvrObSaQjDCR/mxMfhX9DbGXT0xhZ0MrRhhRsdrXHsCV6xWfDob2RcyEj6h7BRBK9LzEuu1XhLt9l6PpAy436cevSlu5WHw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; dkim=pass (2048-bit key; secure) header.d=cyphar.com header.i=@cyphar.com header.a=rsa-sha256 header.s=MBO0001 header.b=IGKrcvi8; dkim-atps=neutral; spf=pass (client-ip=2001:67c:2050:0:465::201; helo=mout-p-201.mailbox.org; envelope-from=cyphar@cyphar.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyphar.com
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050:0:465::201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bit raw public key) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzJSz6bYlz2xjN
-	for <linux-erofs@lists.ozlabs.org>; Mon, 13 Jul 2026 20:24:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783938254;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4gzggv553Gz2y8p
+	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Jul 2026 10:50:02 +1000 (AEST)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4gzggf1WJhzMlBb;
+	Tue, 14 Jul 2026 02:49:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1783990190;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r4/TX7BTpjZY4DlYI5thl0aKFZApPkQRFTRSMk72/cI=;
-	b=XRpBEOWSIOr+/OX4C8OhXL11IYbAeaOwBfQoKNUcBYeGahalnUu+M2NE/vC2wusD7u+h9L
-	mI/eWtiQv1r1sRvWntjT3ZrIGhNXHh3Tt8RPPFfq9Hn01n3wV4Z4kF29dlbYahCO8w2ElX
-	VYibBTsRxuM3G3eVi2pC1TCRiSKHHmM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783938254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r4/TX7BTpjZY4DlYI5thl0aKFZApPkQRFTRSMk72/cI=;
-	b=XRpBEOWSIOr+/OX4C8OhXL11IYbAeaOwBfQoKNUcBYeGahalnUu+M2NE/vC2wusD7u+h9L
-	mI/eWtiQv1r1sRvWntjT3ZrIGhNXHh3Tt8RPPFfq9Hn01n3wV4Z4kF29dlbYahCO8w2ElX
-	VYibBTsRxuM3G3eVi2pC1TCRiSKHHmM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-7-5HXs3xKSOE-PL7mtLAzyDw-1; Mon,
- 13 Jul 2026 06:24:11 -0400
-X-MC-Unique: 5HXs3xKSOE-PL7mtLAzyDw-1
-X-Mimecast-MFC-AGG-ID: 5HXs3xKSOE-PL7mtLAzyDw_1783938250
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E9A421955D5E;
-	Mon, 13 Jul 2026 10:24:09 +0000 (UTC)
-Received: from localhost (unknown [10.44.33.216])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2863830001A1;
-	Mon, 13 Jul 2026 10:24:08 +0000 (UTC)
-From: Giuseppe Scrivano <gscrivan@redhat.com>
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: linux-erofs@lists.ozlabs.org,  linux-fsdevel@vger.kernel.org,  Christian
- Brauner <brauner@kernel.org>
+	bh=pi+aB6YMCYhiJWt1pTb8a7/h/MvI2o3bfTPFrZ8+JGo=;
+	b=IGKrcvi8eH0ST6ZUbo9P6C/vNbv8IDtvnryd9IJarNgZWvLIhwYT9opCPqND/YPvIvynlN
+	HPg7GyryTaIgN1E/00FvtOywg5lzHW6C0hSjivQNLrxmnvQqhvYvlltYqkV41IgLYcDoZE
+	89nOSpUTlTpzMbmXJBOPd7TYcvprJnYDDIrRTCTNI7iopz7qbjahdDgpxBsYrYsx0RTvvZ
+	MXqLxi/rvA3kDXi6wnzPAYW0KML0jdtcK2TOrHmFoZ4xKiDBXG4NKGWNHcnUEUSe550vxi
+	P6iNARi7dQmN1PgyDXNViT0a86PvGvIKPB9vHJn728k44+CAPa2VCrXYd1I1nA==
+Date: Tue, 14 Jul 2026 10:49:40 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Giuseppe Scrivano <gscrivan@redhat.com>
+Cc: linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
 Subject: Re: [PATCH v2] erofs: accept source file descriptor via fsconfig
-In-Reply-To: <2026-07-13-chief-single-carnival-graders-7dI4ue@cyphar.com>
-	(Aleksa Sarai's message of "Mon, 13 Jul 2026 18:33:51 +1000")
+Message-ID: <2026-07-14-drafty-folded-woes-volumes-Z93P4V@cyphar.com>
 References: <20260711071137.4130824-1-gscrivan@redhat.com>
-	<2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
-	<871pd748kh.fsf@redhat.com>
-	<2026-07-13-chief-single-carnival-graders-7dI4ue@cyphar.com>
-Date: Mon, 13 Jul 2026 12:24:07 +0200
-Message-ID: <87wluz2nnc.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <2026-07-13-dandy-better-exposure-wager-9hBmfv@cyphar.com>
+ <871pd748kh.fsf@redhat.com>
+ <2026-07-13-chief-single-carnival-graders-7dI4ue@cyphar.com>
+ <87wluz2nnc.fsf@redhat.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -92,294 +72,127 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: oUgVz9w0-vHk3oLzkxp5kO_CuyrlGsP_3kZ5yQ_ddkg_1783938250
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_PASS,
-	T_SPF_PERMERROR autolearn=disabled version=4.0.1
-X-Spam-Report: 
-	*  0.0 T_SPF_PERMERROR SPF: test of record failed (permerror)
-	* -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
-	*       domain
-	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-	*      envelope-from domain
-	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-	*      valid
-	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
-	*      trust
-	*      [170.10.129.124 listed in list.dnswl.org]
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [54.186.198.63 listed in zen.spamhaus.org]
-	* -0.0 RCVD_IN_MSPIKE_H3 RBL: Good reputation (+3)
-	*      [170.10.129.124 listed in wl.mailspike.net]
-	* -0.0 RCVD_IN_MSPIKE_WL Mailspike good senders
-	* -0.0 DKIMWL_WL_HIGH DKIMwl.org - High trust sender
-X-Spam-Level: ***
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aaxxywpo7g3ddiom"
+Content-Disposition: inline
+In-Reply-To: <87wluz2nnc.fsf@redhat.com>
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.30 / 15.00];
-	SPAM_FLAG(5.00)[];
+X-Spamd-Result: default: False [-4.30 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	DMARC_POLICY_ALLOW(-0.50)[cyphar.com,reject];
+	R_DKIM_ALLOW(-0.20)[cyphar.com:s=MBO0001];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER(0.00)[cyphar@cyphar.com,linux-erofs@lists.ozlabs.org];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3886-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-3887-lists,linux-erofs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:cyphar@cyphar.com,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:brauner@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS(0.00)[m:gscrivan@redhat.com,m:linux-erofs@lists.ozlabs.org,m:linux-fsdevel@vger.kernel.org,m:brauner@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cyphar@cyphar.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[cyphar.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FROM_HAS_DN(0.00)[]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cyphar.com:from_mime,cyphar.com:url,cyphar.com:mid,cyphar.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 95449749C19
+X-Rspamd-Queue-Id: 4F84774FE96
 
-Aleksa Sarai <cyphar@cyphar.com> writes:
 
-> On 2026-07-13, Giuseppe Scrivano <gscrivan@redhat.com> wrote:
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index 3040d4cf9b85..7818872ab1e5 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -386,7 +386,6 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
->>  enum {
->>  	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
->>  	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
->> -	Opt_source_fd,
->>  };
->>  
->>  static const struct constant_table erofs_param_cache_strategy[] = {
->> @@ -414,7 +413,6 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
->>  	fsparam_flag_no("directio",	Opt_directio),
->>  	fsparam_u64("fsoffset",		Opt_fsoffset),
->>  	fsparam_flag("inode_share",	Opt_inode_share),
->> -	fsparam_fd("source",		Opt_source_fd),
->>  	{}
->>  };
->>  
->> @@ -447,6 +445,14 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->>  	struct erofs_device_info *dif;
->>  	int opt, ret;
->>  
->> +	if (strcmp(param->key, "source") == 0 &&
->> +	    param->type == fs_value_is_file) {
->> +		if (sbi->dif0.file || fc->source)
->> +			return -EINVAL;
->> +		sbi->dif0.file = get_file(param->file);
->> +		return 0;
->> +	}
->> +
->>  	opt = fs_parse(fc, erofs_fs_parameters, param, &result);
->>  	if (opt < 0)
->>  		return opt;
->
-> Shortcutting parsing this way is not really idiomatic, the better way is
-> to create a helper -- in this case you can almost certainly just use
-> very similar logic to proc_parse_pidns_param() to get something minimal
-> working.
->
-> Defining your own version of "source" in fs_parameter_spec is fine, you
-> just need to make sure you handle FSCONFIG_SET_STRING properly -- there
-> are some other examples in the tree you can look at for inspiration
-> (mostly remote filesystems AFAICS). You could even return -ENOPARAM to
-> fallback to the basic implementation if that makes it easier for you,
-> but it would probably be better to handle it all in one place.
->
->> @@ -526,11 +532,6 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->>  		else
->>  			set_opt(&sbi->opt, INODE_SHARE);
->>  		break;
->> -	case Opt_source_fd:
->> -		if (sbi->dif0.file)
->> -			return -EINVAL;
->> -		sbi->dif0.file = get_file(param->file);
->> -		break;
->>  	}
->>  	return 0;
->>  }
->> @@ -779,6 +780,18 @@ static int erofs_fc_get_tree(struct fs_context *fc)
->>  			return PTR_ERR(file);
->>  		sbi->dif0.file = file;
->>  	}
->> +	if (!fc->source) {
->> +		char *buf, *p;
->> +
->> +		buf = kmalloc(PATH_MAX, GFP_KERNEL);
->> +		if (!buf)
->> +			return -ENOMEM;
->> +		p = file_path(file, buf, PATH_MAX);
->> +		fc->source = kstrdup(IS_ERR(p) ? "(fd)" : p, GFP_KERNEL);
->> +		kfree(buf);
->> +		if (!fc->source)
->> +			return -ENOMEM;
->> +	}
->
-> And this would also live in the parser helper.
+--aaxxywpo7g3ddiom
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] erofs: accept source file descriptor via fsconfig
+MIME-Version: 1.0
 
-thanks for the hints.
+On 2026-07-13, Giuseppe Scrivano <gscrivan@redhat.com> wrote:
+> thanks for the hints.
+>=20
+> I'll prepare a v3 if you are fine with the version below:
 
-I'll prepare a v3 if you are fine with the version below:
+No worries, and this seems more reasonable at a first glance.
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 86fa5c6a0c70..72c85cc53085 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -386,6 +386,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
- enum {
- 	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
- 	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
-+	Opt_source,
- };
- 
- static const struct constant_table erofs_param_cache_strategy[] = {
-@@ -402,17 +403,18 @@ static const struct constant_table erofs_dax_param_enums[] = {
- };
- 
- static const struct fs_parameter_spec erofs_fs_parameters[] = {
--	fsparam_flag_no("user_xattr",	Opt_user_xattr),
--	fsparam_flag_no("acl",		Opt_acl),
--	fsparam_enum("cache_strategy",	Opt_cache_strategy,
-+	fsparam_flag_no("user_xattr",		Opt_user_xattr),
-+	fsparam_flag_no("acl",			Opt_acl),
-+	fsparam_enum("cache_strategy",		Opt_cache_strategy,
- 		     erofs_param_cache_strategy),
--	fsparam_flag("dax",             Opt_dax),
--	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
--	fsparam_string("device",	Opt_device),
--	fsparam_string("domain_id",	Opt_domain_id),
--	fsparam_flag_no("directio",	Opt_directio),
--	fsparam_u64("fsoffset",		Opt_fsoffset),
--	fsparam_flag("inode_share",	Opt_inode_share),
-+	fsparam_flag("dax",			Opt_dax),
-+	fsparam_enum("dax",			Opt_dax_enum, erofs_dax_param_enums),
-+	fsparam_string("device",		Opt_device),
-+	fsparam_string("domain_id",		Opt_domain_id),
-+	fsparam_flag_no("directio",		Opt_directio),
-+	fsparam_u64("fsoffset",			Opt_fsoffset),
-+	fsparam_flag("inode_share",		Opt_inode_share),
-+	fsparam_file_or_string("source",	Opt_source),
- 	{}
- };
- 
-@@ -437,6 +439,38 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- 	return false;
- }
- 
-+static int erofs_fc_parse_source(struct fs_context *fc,
-+				 struct fs_parameter *param)
-+{
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
-+
-+	if (fc->source || sbi->dif0.file)
-+		return invalf(fc, "Multiple sources");
-+
-+	switch (param->type) {
-+	case fs_value_is_string:
-+		fc->source = param->string;
-+		param->string = NULL;
-+		return 0;
-+	case fs_value_is_file: {
-+		char *buf, *p;
-+
-+		sbi->dif0.file = get_file(param->file);
-+		buf = kmalloc(PATH_MAX, GFP_KERNEL);
-+		if (!buf)
-+			return -ENOMEM;
-+		p = file_path(param->file, buf, PATH_MAX);
-+		fc->source = kstrdup(IS_ERR(p) ? "(fd)" : p, GFP_KERNEL);
-+		kfree(buf);
-+		if (!fc->source)
-+			return -ENOMEM;
-+		return 0;
-+	}
-+	default:
-+		return invalf(fc, "Invalid source type");
-+	}
-+}
-+
- static int erofs_fc_parse_param(struct fs_context *fc,
- 				struct fs_parameter *param)
- {
-@@ -524,6 +558,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		else
- 			set_opt(&sbi->opt, INODE_SHARE);
- 		break;
-+	case Opt_source:
-+		return erofs_fc_parse_source(fc, param);
- 	}
- 	return 0;
- }
-@@ -752,14 +788,18 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
--	int ret;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
-+	struct file *file = sbi->dif0.file;
- 
--	ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
--		IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
--			GET_TREE_BDEV_QUIET_LOOKUP : 0);
--	if (IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) && ret == -ENOTBLK) {
--		struct erofs_sb_info *sbi = fc->s_fs_info;
--		struct file *file;
-+	if (!IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) || !file) {
-+		int ret;
-+
-+		ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
-+			IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
-+				GET_TREE_BDEV_QUIET_LOOKUP : 0);
-+		if (!IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ||
-+		    ret != -ENOTBLK)
-+			return ret;
- 
- 		if (!fc->source)
- 			return invalf(fc, "No source specified");
-@@ -767,12 +807,13 @@ static int erofs_fc_get_tree(struct fs_context *fc)
- 		if (IS_ERR(file))
- 			return PTR_ERR(file);
- 		sbi->dif0.file = file;
--
--		if (S_ISREG(file_inode(sbi->dif0.file)->i_mode) &&
--		    sbi->dif0.file->f_mapping->a_ops->read_folio)
--			return get_tree_nodev(fc, erofs_fc_fill_super);
- 	}
--	return ret;
-+	if (!S_ISREG(file_inode(file)->i_mode) ||
-+	    !file->f_mapping->a_ops->read_folio) {
-+		errorfc(fc, "source is unsupported");
-+		return -EINVAL;
-+	}
-+	return get_tree_nodev(fc, erofs_fc_fill_super);
- }
- 
- static int erofs_fc_reconfigure(struct fs_context *fc)
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 86fa5c6a0c70..72c85cc53085 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+=2E..
+> @@ -437,6 +439,38 @@ static bool erofs_fc_set_dax_mode(struct fs_context =
+*fc, unsigned int mode)
+>  	return false;
+>  }
+> =20
+> +static int erofs_fc_parse_source(struct fs_context *fc,
+> +				 struct fs_parameter *param)
+> +{
+> +	struct erofs_sb_info *sbi =3D fc->s_fs_info;
+> +
+> +	if (fc->source || sbi->dif0.file)
+> +		return invalf(fc, "Multiple sources");
+> +
+> +	switch (param->type) {
+> +	case fs_value_is_string:
+> +		fc->source =3D param->string;
+> +		param->string =3D NULL;
+> +		return 0;
+> +	case fs_value_is_file: {
+> +		char *buf, *p;
+> +
+> +		sbi->dif0.file =3D get_file(param->file);
 
-Regards,
-Giuseppe
+A very minor nit, but you can actually steal the file reference here
+with
 
+		sbi->dif0.file =3D no_free_ptr(param->file);
+
+A few other places do this. (You'll also need to change the param->file
+reference below.)
+
+> +		buf =3D kmalloc(PATH_MAX, GFP_KERNEL);
+> +		if (!buf)
+> +			return -ENOMEM;
+> +		p =3D file_path(param->file, buf, PATH_MAX);
+> +		fc->source =3D kstrdup(IS_ERR(p) ? "(fd)" : p, GFP_KERNEL);
+
+I think that /proc/self/fd/%d would be a more useful name for debugging
+if file_path() fails (not that it is really possible here AFAICS). But
+I'm not really too fussed.
+
+--=20
+Aleksa Sarai
+Founding Engineer at Amutable
+https://www.cyphar.com/
+
+--aaxxywpo7g3ddiom
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCalWHpBsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMiwyLDIACgkQKJf60rfpRG9cyAEA0mkCZe8zd2ugT6dnuZH7
+QOJsOhGBEvEDsJWFGj/8K7oA/3pYpGWn5E8exPFb5/7UnaBOBC7QE6oul3Fi+q4W
+044N
+=6wik
+-----END PGP SIGNATURE-----
+
+--aaxxywpo7g3ddiom--
 
