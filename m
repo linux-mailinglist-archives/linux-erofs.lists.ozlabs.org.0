@@ -1,80 +1,94 @@
-Return-Path: <linux-erofs+bounces-3897-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-3898-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id okqsKpVaVmp73wAAu9opvQ
-	(envelope-from <linux-erofs+bounces-3897-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jul 2026 17:49:41 +0200
+	id uH24HxYAV2qhEAEAu9opvQ
+	(envelope-from <linux-erofs+bounces-3898-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jul 2026 05:35:50 +0200
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A757569AE
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jul 2026 17:49:40 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E35EA75A503
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jul 2026 05:35:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=JsnL6hvC;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=JsnL6hvC;
-	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3897-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 112.213.38.117 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3897-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=mfYqIBuU;
+	spf=pass (mail.lfdr.de: domain of "linux-erofs+bounces-3898-lists+linux-erofs=lfdr.de@lists.ozlabs.org" designates 2404:9400:21b9:f100::1 as permitted sender) smtp.mailfrom="linux-erofs+bounces-3898-lists+linux-erofs=lfdr.de@lists.ozlabs.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("lists.ozlabs.org:s=201707:i=1")
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4h03dt2VTxz2yRl;
-	Wed, 15 Jul 2026 01:49:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4h0MJY3Lpmz2xd2;
+	Wed, 15 Jul 2026 13:35:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1784044178;
-	cv=none; b=kpgqWXF9DUB0q0JZr0cSgXlUVfM92uMLkADPm22bFFslpfqDVjCB8KsjbdbQW//25FA139PAOKfly6MD11v5YqR8mqx0aoKCgsFXrk3KpXjsyLLPpAU9ci9NK6m4tl/l4f5JkcxoMtSkSw44APCpnWGd54pk4L++PE73lLf0UyhG9RjFY1cobT4J8eldV9SqpfkunkKvLg34NF9J7EaqBzi3GDK5kB9GJRnB31iIUKD2kJO6O6MylZb0CEpvUZW+SQwRAnA8GYaGvtBUh5dtSCCgxwfSqNEXJOekxz3pMWUoq13RnQ/rGXurD30maQX2fYcnI0+7H4gE4qxuQyDu3w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1784086541;
+	cv=none; b=lRPPjhbcmsjRjagrXL7V0duj9rHid0K9I/1mjQgzY9Bjq2LlPBcSl60Prg6IuDeI+7DF2NHKuviNb3DbJkYLhUVkmxAZMTYMpf/AczDclYRMjTXRsBVgHtXQ6LVjX/yRA/CoRTcH1QqDzGStzbg8i9l8AklSA8PIBUNp0bt0rXzE5CIkTxpPCsKTQ8EW193fUQJj6bByN2NX/qoi4lIsdck9kQ4PAVqyQvy7SZWopSUWlDvrtOE7LHEoqHz9BXuV0uyEhpoJEOPxg/Xunuqesmj/IbloqmiwhtwQ5gs2kWbKdr46pRL+9abG2R2k4g1QHtNR24OdEoWXM17Soh9ScQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1784044178; c=relaxed/relaxed;
-	bh=9TVNAefQIHlIju9nW2K1pjBGhSVRpHAkFR/Z5h4ZMBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=T9lWUA+WDsGDiQKQ4vJgL2yOZsSnbzHW2L4CVhWcHcoKk8tvf6wyZ8BTV4PSqxm55x7Z2Y2EUw/Zrguy3pCZ11yx5Bj1mWRgHqb4WbvBmTULNATCzjL2pAGGv55yrnafIkIvU2WhDI5d19V+/+3RqA7y2bCPVAj/wtqlqLac3tXmxlfNEw87XEchZyo/PRPLRqMVVzoozo0ic87UWPkImjnXdVOSt2PhMY25r19iv5ml4NhnP2V0RsXTiNoj5Vzz+bptydNNxaWUjFioOCvKXCUM1K/kqFuBkeQ2FoHMD1nhFkYIL6oT2XnCKWJxZeB1m+8EbsfkuUPXHlJ+LEVh/A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JsnL6hvC; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JsnL6hvC; dkim-atps=neutral; spf=permerror (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=gscrivan@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	t=1784086541; c=relaxed/relaxed;
+	bh=MooPe2m60nY/UfQ0cAm3E3HG16yigXKlWgLFH1SifDA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eNumJmU2k0hwKNOwgJ8A6gTvAIRd2v94dCf6KXFh0leyER/uhQ8laa4MNoZ2e6AX8U6ahQt7/je7LEGiumg0q28fhbv7jR2ey/cEfxliTp5I4ntSL/xhOLicoImvOFQOZ1ybfQu/aqLOUA5+l4Bpi+jcrP9Iw2M1d5U8sg2Zx+fvaixuuds9Z4C1Hija+z2G8I7ILmCggRrOUwGUem7xybnkKXKyai4GJdsXHVQzAyWHJyogVeGKDNzOzW0yrdFXtO/ihK/ulyD57oANAHHbI8AujQakgbAXM4yPGb377yQ3gbebpI84FbTwXbEzQMhnxj6imIA/sapEvRf8t2vL5g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=mfYqIBuU; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1034; helo=mail-pj1-x1034.google.com; envelope-from=aditya.ansh182@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4h03ds20K0z2y7W
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jul 2026 01:49:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784044171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9TVNAefQIHlIju9nW2K1pjBGhSVRpHAkFR/Z5h4ZMBo=;
-	b=JsnL6hvC/er34RGFAoRRK69UxuCyVKdwI3AkV2sZ75fVjv5hCnpbUp8mZW/kB/bXVC64cH
-	Ah4icvgztyxsKR9CpbC1bzKvO2pF7R9toN5w7BACHHSQNkTWUNJamoC7NSCOAJM81m3PpK
-	CfXB98eEF34FMk9IOvow95p5xxonelk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784044171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9TVNAefQIHlIju9nW2K1pjBGhSVRpHAkFR/Z5h4ZMBo=;
-	b=JsnL6hvC/er34RGFAoRRK69UxuCyVKdwI3AkV2sZ75fVjv5hCnpbUp8mZW/kB/bXVC64cH
-	Ah4icvgztyxsKR9CpbC1bzKvO2pF7R9toN5w7BACHHSQNkTWUNJamoC7NSCOAJM81m3PpK
-	CfXB98eEF34FMk9IOvow95p5xxonelk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-482-guchUtRkMS2J_SbIUgNtjg-1; Tue,
- 14 Jul 2026 11:49:27 -0400
-X-MC-Unique: guchUtRkMS2J_SbIUgNtjg-1
-X-Mimecast-MFC-AGG-ID: guchUtRkMS2J_SbIUgNtjg_1784044166
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E07631800350;
-	Tue, 14 Jul 2026 15:49:25 +0000 (UTC)
-Received: from oxygen.redhat.com (unknown [10.44.32.17])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3048414;
-	Tue, 14 Jul 2026 15:49:23 +0000 (UTC)
-From: Giuseppe Scrivano <gscrivan@redhat.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: cyphar@cyphar.com,
-	hsiangkao@linux.alibaba.com,
-	linux-fsdevel@vger.kernel.org,
-	gscrivan@redhat.com
-Subject: [PATCH v3] erofs: accept source file descriptor via fsconfig
-Date: Tue, 14 Jul 2026 17:48:27 +0200
-Message-ID: <20260714154917.489993-1-gscrivan@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4h0MJW6m9bz2xLk
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jul 2026 13:35:38 +1000 (AEST)
+Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-38759bcd877so4333701a91.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 14 Jul 2026 20:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784086536; x=1784691336; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MooPe2m60nY/UfQ0cAm3E3HG16yigXKlWgLFH1SifDA=;
+        b=mfYqIBuU/9PSFN+0Z9B4C63Tgd2pxWIaURmVksHF4SNRwnYJUzWDNBU8E4mq+ENOMy
+         Zv6hLbB1FdqQTO5PlwYnLJkvISqVlU85LdHJowVLq+WWuzDBGDXvGhxYKPbbtOrlSRE7
+         InJLDNOMzoSpxWyEBF7JHzXHRbTp+wGBJ4l0/bEQhUgTzsr+FGE89HL9aoWBiliIHKZq
+         jn489CLaofbajhWZU3nUcY0hHC5TVdavJ+YvbMEVZ5OHytOfFdDDyG0lrxuFHh2x6Bai
+         vLWshDZxXMxBQM5MBFL3l0Xm6nuM/elvoANZqafpz5HYfTpLtQmvZElAfCZ+IeCT017h
+         MAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784086536; x=1784691336;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MooPe2m60nY/UfQ0cAm3E3HG16yigXKlWgLFH1SifDA=;
+        b=AaIywYvsQ78yfdkFCEc5/GEyr3PfOBH7M40QG4hqKFIChk7HSmZzds/xY/uj4u1fb9
+         aoETQ/NIFLt0z+gJDdhGYvcUqmJMX4sUyfreItDBb5A6YjymdgXupSKWVowq7iIkCTK/
+         d085FhctgeWuucMQUtrG1TLXMkxmnNuL1Dwuz3KYR0D3ev54XZxZ9zeko14AqWu3mncC
+         yZCPBK9GG2MxeUYd1o5S+2EmSn9kOVqsux+6e3FLWpSfszWiszzTOOtp3VsZoKC4+c3t
+         2wSIRtOjzOHTXMd3g7Yw3/STOlGppslQ6m/jWFblnNICeuL2pwmyTKgXdYLoNpMJeXIN
+         3t5A==
+X-Forwarded-Encrypted: i=1; AHgh+RrffrZo3xCK+GnUFD+bvH2BlowNTxrmmUu7h3ZcAp1PRcJHM8OF2YdNt1ohQdNzo4RmdOgEmY1W9GKIlA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Yx73XPlRPMkSeidZMDG8gW8WT6ityLYhGszHqLJWiw/e2eJUNSx
+	itXlwx2es2+rfLKahgY8N1t1wvS6f5OYseooBNjA2Q7jRWHQoPcckvsb
+X-Gm-Gg: AfdE7ckZijv62BqR8I8/xv++2RSaNwMfFqxdKTrc/hp5K7GkFDlmVX5nIglZxKG7hvn
+	Wlb4PeN++TaeIrmkByC2JQ41eaanqXsalj4VCISGc3QEFn0S2mnK1UkQGV8e/REfJDT/ubNwhqa
+	0CrFODeIAZPm4mNsRSqzqjJnrT126pfZ07S7qE28tR0t41HYUvDc4SI93WIUCEPY2s+l/Juyv7Q
+	lCw5e10qPYOBpOdjuY1mygdm/SOsARhaJW23cPXtfqEho22OQd/cr40z0yGW++C41vtqiWnOJOy
+	8FgdAzmq7sz2oq8PWQlXbPNeO4oF8Go7AOJFkCGiOsXhNynW6C5OXA79P/Ox9XEmeKHnsH3wgrE
+	TnGCpdnoJyJ1HFwqSC5RomjgTPaY7wITSw+KsGu/JSC8W37fsp9mNJDkhdtPLX8/GgJkVJJhfR2
+	e84KnahkOVNYai+swRgznxmwPPPPOkwKlFMXVfs6BXYAH4hEVpt9+2FGPJA7FTQ23S8c0nSM0qj
+	17ssGNgmuE8q7BibO7T6aoGJEXvKXy5JKiq53qKfKXGwY/QDuw0R2F+uFPQ6ZSllcO8jvXnjs6e
+	PGIaqhsOUoko7t3gPiZXwotfWQ==
+X-Received: by 2002:a17:90b:55cc:b0:381:22d6:f7a3 with SMTP id 98e67ed59e1d1-38e2a030362mr1122604a91.18.1784086535924;
+        Tue, 14 Jul 2026 20:35:35 -0700 (PDT)
+Received: from cs-1047136853211-default.asia-southeast1-a.c.z168d0f9edf9bc766-tp.internal (19.141.142.34.bc.googleusercontent.com. [34.142.141.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38e172cba1fsm2303382a91.5.2026.07.14.20.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 20:35:35 -0700 (PDT)
+From: Aditya Prakash Srivastava <aditya.ansh182@gmail.com>
+To: Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>,
+	linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Aditya Prakash Srivastava <aditya.ansh182@gmail.com>
+Subject: [PATCH] erofs: modernize device IDR to XArray
+Date: Wed, 15 Jul 2026 03:35:07 +0000
+Message-ID: <20260715033507.1666-1-aditya.ansh182@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -86,197 +100,228 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
-X-Mimecast-MFC-PROC-ID: RyzAZodmxzbZe-12HlJKDWdrtxe0QHs1UNYuLGDbIZs_1784044166
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SPF_PERMERROR
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.20 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.20 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-3897-lists,linux-erofs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-3898-lists,linux-erofs=lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[gmail.com,linux.alibaba.com,google.com,huawei.com,vivo.com,lists.ozlabs.org,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[adityaansh182@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:aditya.ansh182@gmail.com,m:adityaansh182@gmail.com,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[gscrivan@redhat.com,linux-erofs@lists.ozlabs.org];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[adityaansh182@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:from_smtp,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C2A757569AE
+X-Rspamd-Queue-Id: E35EA75A503
 
-Allow userspace to pass an already-opened file descriptor as the mount
-source instead of a path string.  This is useful for tools that already
-hold an fd to the image, such as composefs reusing an existing erofs
-backing file.
+Currently, EROFS maintains a list of extra devices using a legacy IDR
+structure (`sbi->devs->tree`). Modernize this to use a standard, more
+efficient XArray instead.
 
-Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
+This migration simplifies device management, removes legacy boilerplate,
+and aligns EROFS device tracking with modern Linux kernel storage subsystem
+conventions:
+1. Convert `sbi->devs->tree` from a legacy IDR to an XArray initialized
+   with `XA_FLAGS_ALLOC` flags.
+2. Use `xa_alloc()` to safely register devices under `xa_limit_32b` limits.
+3. Use `xa_load()` for direct, fast lookups.
+4. Replace custom IDR traversal wrappers with modern `xa_for_each()`
+   iterators.
+5. Replace custom IDR releasing callback helpers with a clean
+   `xa_for_each()` loop and clean up the tree with `xa_destroy()`.
+
+Signed-off-by: Aditya Prakash Srivastava <aditya.ansh182@gmail.com>
 ---
+ fs/erofs/data.c     |  6 +++---
+ fs/erofs/internal.h |  2 +-
+ fs/erofs/super.c    | 43 +++++++++++++++++++++++--------------------
+ 3 files changed, 27 insertions(+), 24 deletions(-)
 
-v2: https://lore.kernel.org/linux-fsdevel/20260711071137.4130824-1-gscrivan@redhat.com/
-v1: https://lore.kernel.org/linux-fsdevel/ak5GfvVfWLJU1EwK@debian/
-
- fs/erofs/super.c | 87 ++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 65 insertions(+), 22 deletions(-)
-
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 9aa48c8d67d1..34a1a7d71559 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -211,13 +211,13 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+ 	struct erofs_dev_context *devs = EROFS_SB(sb)->devs;
+ 	struct erofs_device_info *dif;
+ 	erofs_off_t startoff;
+-	int id;
++	unsigned long id;
+ 
+ 	erofs_fill_from_devinfo(map, sb, &EROFS_SB(sb)->dif0);
+ 	map->m_bdev = sb->s_bdev;	/* use s_bdev for the primary device */
+ 	if (map->m_deviceid) {
+ 		down_read(&devs->rwsem);
+-		dif = idr_find(&devs->tree, map->m_deviceid - 1);
++		dif = xa_load(&devs->tree, map->m_deviceid - 1);
+ 		if (!dif) {
+ 			up_read(&devs->rwsem);
+ 			return -ENODEV;
+@@ -231,7 +231,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
+ 		up_read(&devs->rwsem);
+ 	} else if (devs->extra_devices && !devs->flatdev) {
+ 		down_read(&devs->rwsem);
+-		idr_for_each_entry(&devs->tree, dif, id) {
++		xa_for_each(&devs->tree, id, dif) {
+ 			if (!dif->uniaddr)
+ 				continue;
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 580f8d9f14e7..f6126a7bfbc7 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -64,7 +64,7 @@ struct erofs_mount_opts {
+ };
+ 
+ struct erofs_dev_context {
+-	struct idr tree;
++	struct xarray tree;
+ 	struct rw_semaphore rwsem;
+ 
+ 	unsigned int extra_devices;
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 86fa5c6a0c70..d7baf9f34dc0 100644
+index 86fa5c6a0c70..08e6a9c57d59 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -386,6 +386,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
- enum {
- 	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
- 	Opt_device, Opt_domain_id, Opt_directio, Opt_fsoffset, Opt_inode_share,
-+	Opt_source,
- };
+@@ -188,7 +188,8 @@ static int erofs_scan_devices(struct super_block *sb,
+ 	erofs_off_t pos;
+ 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 	struct erofs_device_info *dif;
+-	int id, err = 0;
++	int err = 0;
++	unsigned long id;
  
- static const struct constant_table erofs_param_cache_strategy[] = {
-@@ -402,17 +403,18 @@ static const struct constant_table erofs_dax_param_enums[] = {
- };
+ 	sbi->total_blocks = sbi->dif0.blocks;
+ 	if (!erofs_sb_has_device_table(sbi))
+@@ -217,20 +218,22 @@ static int erofs_scan_devices(struct super_block *sb,
+ 	pos = le16_to_cpu(dsb->devt_slotoff) * EROFS_DEVT_SLOT_SIZE;
+ 	down_read(&sbi->devs->rwsem);
+ 	if (sbi->devs->extra_devices) {
+-		idr_for_each_entry(&sbi->devs->tree, dif, id) {
++		xa_for_each(&sbi->devs->tree, id, dif) {
+ 			err = erofs_init_device(&buf, sb, dif, &pos);
+ 			if (err)
+ 				break;
+ 		}
+ 	} else {
+ 		for (id = 0; id < ondisk_extradevs; id++) {
++			u32 id_val;
++
+ 			dif = kzalloc_obj(*dif);
+ 			if (!dif) {
+ 				err = -ENOMEM;
+ 				break;
+ 			}
  
- static const struct fs_parameter_spec erofs_fs_parameters[] = {
--	fsparam_flag_no("user_xattr",	Opt_user_xattr),
--	fsparam_flag_no("acl",		Opt_acl),
--	fsparam_enum("cache_strategy",	Opt_cache_strategy,
-+	fsparam_flag_no("user_xattr",		Opt_user_xattr),
-+	fsparam_flag_no("acl",			Opt_acl),
-+	fsparam_enum("cache_strategy",		Opt_cache_strategy,
- 		     erofs_param_cache_strategy),
--	fsparam_flag("dax",             Opt_dax),
--	fsparam_enum("dax",		Opt_dax_enum, erofs_dax_param_enums),
--	fsparam_string("device",	Opt_device),
--	fsparam_string("domain_id",	Opt_domain_id),
--	fsparam_flag_no("directio",	Opt_directio),
--	fsparam_u64("fsoffset",		Opt_fsoffset),
--	fsparam_flag("inode_share",	Opt_inode_share),
-+	fsparam_flag("dax",			Opt_dax),
-+	fsparam_enum("dax",			Opt_dax_enum, erofs_dax_param_enums),
-+	fsparam_string("device",		Opt_device),
-+	fsparam_string("domain_id",		Opt_domain_id),
-+	fsparam_flag_no("directio",		Opt_directio),
-+	fsparam_u64("fsoffset",			Opt_fsoffset),
-+	fsparam_flag("inode_share",		Opt_inode_share),
-+	fsparam_file_or_string("source",	Opt_source),
- 	{}
- };
- 
-@@ -437,6 +439,40 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- 	return false;
- }
- 
-+static int erofs_fc_parse_source(struct fs_context *fc,
-+				 struct fs_parameter *param)
-+{
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
-+
-+	if (fc->source || sbi->dif0.file)
-+		return invalf(fc, "Multiple sources");
-+
-+	switch (param->type) {
-+	case fs_value_is_string:
-+		fc->source = param->string;
-+		param->string = NULL;
-+		return 0;
-+	case fs_value_is_file: {
-+		char *buf __free(kfree) = kmalloc(PATH_MAX, GFP_KERNEL);
-+		char *p;
-+
-+		if (!buf)
-+			return -ENOMEM;
-+		p = file_path(param->file, buf, PATH_MAX);
-+		if (IS_ERR(p))
-+			return PTR_ERR(p);
-+		fc->source = kstrdup(p, GFP_KERNEL);
-+		if (!fc->source)
-+			return -ENOMEM;
-+		sbi->dif0.file = no_free_ptr(param->file);
-+		return 0;
-+	}
-+	default:
-+		WARN_ON_ONCE(true);
-+		return -EINVAL;
-+	}
-+}
-+
- static int erofs_fc_parse_param(struct fs_context *fc,
- 				struct fs_parameter *param)
- {
-@@ -524,6 +560,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		else
- 			set_opt(&sbi->opt, INODE_SHARE);
+-			err = idr_alloc(&sbi->devs->tree, dif, 0, 0, GFP_KERNEL);
++			err = xa_alloc(&sbi->devs->tree, &id_val, dif, xa_limit_32b, GFP_KERNEL);
+ 			if (err < 0) {
+ 				kfree(dif);
+ 				break;
+@@ -480,7 +483,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		if (!erofs_fc_set_dax_mode(fc, result.uint_32))
+ 			return -EINVAL;
  		break;
-+	case Opt_source:
-+		return erofs_fc_parse_source(fc, param);
- 	}
+-	case Opt_device:
++	case Opt_device: {
++		u32 id;
++
+ 		dif = kzalloc_obj(*dif);
+ 		if (!dif)
+ 			return -ENOMEM;
+@@ -490,7 +495,7 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 			return -ENOMEM;
+ 		}
+ 		down_write(&sbi->devs->rwsem);
+-		ret = idr_alloc(&sbi->devs->tree, dif, 0, 0, GFP_KERNEL);
++		ret = xa_alloc(&sbi->devs->tree, &id, dif, xa_limit_32b, GFP_KERNEL);
+ 		up_write(&sbi->devs->rwsem);
+ 		if (ret < 0) {
+ 			kfree(dif->path);
+@@ -499,6 +504,7 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		}
+ 		++sbi->devs->extra_devices;
+ 		break;
++	}
+ 	case Opt_domain_id:
+ 		if (!IS_ENABLED(CONFIG_EROFS_FS_PAGE_CACHE_SHARE)) {
+ 			errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
+@@ -797,24 +803,21 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
  	return 0;
  }
-@@ -752,14 +790,18 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
  
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
--	int ret;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
-+	struct file *file = sbi->dif0.file;
- 
--	ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
--		IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
--			GET_TREE_BDEV_QUIET_LOOKUP : 0);
--	if (IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) && ret == -ENOTBLK) {
--		struct erofs_sb_info *sbi = fc->s_fs_info;
--		struct file *file;
-+	if (!IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) || !file) {
-+		int ret;
-+
-+		ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
-+			IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
-+				GET_TREE_BDEV_QUIET_LOOKUP : 0);
-+		if (!IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ||
-+		    ret != -ENOTBLK)
-+			return ret;
- 
- 		if (!fc->source)
- 			return invalf(fc, "No source specified");
-@@ -767,12 +809,13 @@ static int erofs_fc_get_tree(struct fs_context *fc)
- 		if (IS_ERR(file))
- 			return PTR_ERR(file);
- 		sbi->dif0.file = file;
+-static int erofs_release_device_info(int id, void *ptr, void *data)
+-{
+-	struct erofs_device_info *dif = ptr;
 -
--		if (S_ISREG(file_inode(sbi->dif0.file)->i_mode) &&
--		    sbi->dif0.file->f_mapping->a_ops->read_folio)
--			return get_tree_nodev(fc, erofs_fc_fill_super);
- 	}
--	return ret;
-+	if (!S_ISREG(file_inode(file)->i_mode) ||
-+	    !file->f_mapping->a_ops->read_folio) {
-+		errorfc(fc, "source is unsupported");
-+		return -EINVAL;
+-	fs_put_dax(dif->dax_dev, NULL);
+-	if (dif->file)
+-		fput(dif->file);
+-	kfree(dif->path);
+-	kfree(dif);
+-	return 0;
+-}
+-
+ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ {
++	struct erofs_device_info *dif;
++	unsigned long index;
++
+ 	if (!devs)
+ 		return;
+-	idr_for_each(&devs->tree, &erofs_release_device_info, NULL);
+-	idr_destroy(&devs->tree);
++	xa_for_each(&devs->tree, index, dif) {
++		fs_put_dax(dif->dax_dev, NULL);
++		if (dif->file)
++			fput(dif->file);
++		kfree(dif->path);
++		kfree(dif);
 +	}
-+	return get_tree_nodev(fc, erofs_fc_fill_super);
++	xa_destroy(&devs->tree);
+ 	kfree(devs);
  }
  
- static int erofs_fc_reconfigure(struct fs_context *fc)
+@@ -858,7 +861,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	}
+ 	fc->s_fs_info = sbi;
+ 
+-	idr_init(&sbi->devs->tree);
++	xa_init_flags(&sbi->devs->tree, XA_FLAGS_ALLOC);
+ 	init_rwsem(&sbi->devs->rwsem);
+ 	erofs_default_options(sbi);
+ 	fc->ops = &erofs_context_ops;
 -- 
-2.55.0
+2.47.3
 
 
